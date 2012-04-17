@@ -1,0 +1,12 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}People{% endblock %}
+{% block body_content %}
+<table border>
+{% for person in person_list %}
+  <tr><td> {{ person|linky|safe }} </td></tr>
+{% empty %}
+  <tr><td>No people yet</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

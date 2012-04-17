@@ -1,0 +1,18 @@
+{% load progdb_filters %}
+<td>
+{% for i in items %}
+  {% ifequal i.room r %}
+    {% ifequal i.start s %}
+      {{ i|linky|safe }}
+      <br/>
+      {% for p in people %}
+        {% ifequal p.item i %}
+          <span class="personname">{{ p.person|linky|safe }}<br/></span>
+        {% endifequal %}
+      {% endfor %}
+    {% endifequal %}
+  {% endifequal %}
+{% endfor %}
+<br/>
+<span class="FillSlot"><a href="/progdb/fill/d/{{ day.id }}/g/{{ grid.id }}/r/{{ r.id }}/s/{{ s.id }}/u/">Fill slot</a></span>
+</td>

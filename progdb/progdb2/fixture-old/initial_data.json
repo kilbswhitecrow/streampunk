@@ -1,0 +1,557 @@
+[
+  {
+    "pk": 1, 
+    "model": "progdb2.conday", 
+    "fields": {
+      "date": "2012-04-06", 
+      "visible": true, 
+      "name": "Friday", 
+      "order": 2
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.conday", 
+    "fields": {
+      "date": "2012-04-07", 
+      "visible": true, 
+      "name": "Saturday", 
+      "order": 2
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.conday", 
+    "fields": {
+      "date": "2012-04-08", 
+      "visible": true, 
+      "name": "Sunday", 
+      "order": 2
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.conday", 
+    "fields": {
+      "date": "2012-04-09", 
+      "visible": true, 
+      "name": "Monday", 
+      "order": 2
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "progdb2.slotlength", 
+    "fields": {
+      "length": 120, 
+      "name": "2 hours"
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "progdb2.slotlength", 
+    "fields": {
+      "length": 90, 
+      "name": "90mins"
+    }
+  }, 
+  {
+    "pk": 22, 
+    "model": "progdb2.slotlength", 
+    "fields": {
+      "length": 60, 
+      "name": "1 hour"
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "progdb2.slotlength", 
+    "fields": {
+      "length": 30, 
+      "name": "30mins"
+    }
+  }, 
+  {
+    "pk": 83, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "1am", 
+      "start": 1500, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "1-2am"
+    }
+  }, 
+  {
+    "pk": 82, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "Midnight", 
+      "start": 1440, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "Midnight-1am"
+    }
+  }, 
+  {
+    "pk": 81, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "11pm", 
+      "start": 1380, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "11pm-Midnight"
+    }
+  }, 
+  {
+    "pk": 80, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "10pm", 
+      "start": 1320, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "10-11pm"
+    }
+  }, 
+  {
+    "pk": 79, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "9pm", 
+      "start": 1260, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "9-10pm"
+    }
+  }, 
+  {
+    "pk": 78, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "8pm", 
+      "start": 1200, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "8-9pm"
+    }
+  }, 
+  {
+    "pk": 77, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "7pm", 
+      "start": 1140, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "7-8pm"
+    }
+  }, 
+  {
+    "pk": 76, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "6pm", 
+      "start": 1080, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "6-7pm"
+    }
+  }, 
+  {
+    "pk": 75, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "5pm", 
+      "start": 1020, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "5-6pm"
+    }
+  }, 
+  {
+    "pk": 74, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "4pm", 
+      "start": 960, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "4-5pm"
+    }
+  }, 
+  {
+    "pk": 73, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "3pm", 
+      "start": 900, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "3-4pm"
+    }
+  }, 
+  {
+    "pk": 72, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "2pm", 
+      "start": 840, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "2-3pm"
+    }
+  }, 
+  {
+    "pk": 71, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "1pm", 
+      "start": 780, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "1-2pm"
+    }
+  }, 
+  {
+    "pk": 70, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "Noon", 
+      "start": 720, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "Noon-1pm"
+    }
+  }, 
+  {
+    "pk": 69, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "11am", 
+      "start": 660, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "11am-Noon"
+    }
+  }, 
+  {
+    "pk": 68, 
+    "model": "progdb2.slot", 
+    "fields": {
+      "startText": "10am", 
+      "start": 600, 
+      "length": 22, 
+      "visible": true, 
+      "slotText": "10-11am"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.grid", 
+    "fields": {
+      "slots": [
+        80, 
+        81, 
+        82, 
+        83
+      ], 
+      "name": "10pm-2am"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.grid", 
+    "fields": {
+      "slots": [
+        76, 
+        77, 
+        78, 
+        79
+      ], 
+      "name": "6-10pm"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.grid", 
+    "fields": {
+      "slots": [
+        72, 
+        73, 
+        74, 
+        75
+      ], 
+      "name": "2-6pm"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "progdb2.grid", 
+    "fields": {
+      "slots": [
+        68, 
+        69, 
+        70, 
+        71
+      ], 
+      "name": "10am-2pm"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.revision", 
+    "fields": {
+      "colour": "black", 
+      "baseline": "2012-03-01 00:00:00", 
+      "description": "First draft"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "progdb2.itemkind", 
+    "fields": {
+      "gridOrder": 50, 
+      "name": "Game", 
+      "isDefault": false, 
+      "description": "A item with rules and a winner"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "progdb2.itemkind", 
+    "fields": {
+      "gridOrder": 40, 
+      "name": "Exercise", 
+      "isDefault": false, 
+      "description": "A physical activity"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "progdb2.itemkind", 
+    "fields": {
+      "gridOrder": 30, 
+      "name": "Workshop", 
+      "isDefault": false, 
+      "description": "An activity that involves everyone attending"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.itemkind", 
+    "fields": {
+      "gridOrder": 20, 
+      "name": "Talk", 
+      "isDefault": false, 
+      "description": "Someone presenting a talk or speech"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.itemkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "name": "Panel", 
+      "isDefault": true, 
+      "description": "Standard Panel discussion"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "progdb2.itemkind", 
+    "fields": {
+      "gridOrder": 200, 
+      "name": "Other", 
+      "isDefault": false, 
+      "description": "Something that doesn't fit into these categories"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "progdb2.seatingkind", 
+    "fields": {
+      "gridOrder": 40, 
+      "name": "Empty", 
+      "isDefault": false, 
+      "description": "No chairs or tables"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.seatingkind", 
+    "fields": {
+      "gridOrder": 30, 
+      "name": "Boardroom", 
+      "isDefault": false, 
+      "description": "Chairs around a single table in the middle of the room"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.seatingkind", 
+    "fields": {
+      "gridOrder": 20, 
+      "name": "Chairs around wall", 
+      "isDefault": false, 
+      "description": "Chairs against the walls, with the centre space empty"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.seatingkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "name": "Theatre", 
+      "isDefault": true, 
+      "description": "Chairs in rows facing the front"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "progdb2.seatingkind", 
+    "fields": {
+      "gridOrder": 50, 
+      "name": "Cabaret", 
+      "isDefault": false, 
+      "description": "Chairs around circular tables"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.personrole", 
+    "fields": {
+      "gridOrder": 30, 
+      "name": "Speaker", 
+      "isDefault": false, 
+      "description": "Presenting a talk or lecture"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.personrole", 
+    "fields": {
+      "gridOrder": 20, 
+      "name": "Moderator", 
+      "isDefault": false, 
+      "description": "Running a panel"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.personrole", 
+    "fields": {
+      "gridOrder": 10, 
+      "name": "Panellist", 
+      "isDefault": true, 
+      "description": "On a panel, but not running it"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "progdb2.personrole", 
+    "fields": {
+      "gridOrder": 40, 
+      "name": "Interviewer", 
+      "isDefault": false, 
+      "description": "Interviewing a guest"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "progdb2.personrole", 
+    "fields": {
+      "gridOrder": 50, 
+      "name": "Interviewee", 
+      "isDefault": false, 
+      "description": "Being interviewed"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "progdb2.personstatus", 
+    "fields": {
+      "gridOrder": 20, 
+      "name": "Invited", 
+      "isDefault": false, 
+      "description": "Has been invited, not yet confirmed"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.personstatus", 
+    "fields": {
+      "gridOrder": 10, 
+      "name": "Proposed", 
+      "isDefault": true, 
+      "description": "Would be good for this item, but not contacted yet"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.personstatus", 
+    "fields": {
+      "gridOrder": 30, 
+      "name": "Confirmed", 
+      "isDefault": false, 
+      "description": "Has confirmed item participation"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 95, 
+      "name": "Everywhere", 
+      "hasProj": "No", 
+      "visible": true, 
+      "privNotes": "", 
+      "description": "For items that are in no fixed location, e.g. a treasure hunt."
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 99, 
+      "name": "Nowhere", 
+      "hasProj": "No", 
+      "visible": false, 
+      "privNotes": "", 
+      "description": "For items that have not yet been allocated a room, or that do not need one."
+    }
+  },
+  {
+    "pk": 2, 
+    "model": "progdb2.gender", 
+    "fields": {
+      "gridOrder": 20, 
+      "name": "Male", 
+      "isDefault": false, 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.gender", 
+    "fields": {
+      "gridOrder": 30, 
+      "name": "Female", 
+      "isDefault": false, 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.gender", 
+    "fields": {
+      "gridOrder": 100, 
+      "name": "TBA", 
+      "isDefault": true, 
+      "description": ""
+    }
+  }
+]

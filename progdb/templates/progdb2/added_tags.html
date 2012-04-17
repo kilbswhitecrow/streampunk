@@ -1,0 +1,38 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}Added tags{% endblock %}
+{% block body_content %}
+
+<p>
+Added these tags:<br/>
+<table border>
+{% for tag in tags %}
+  <tr><td>{{ tag|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No tags added!</td></tr>
+{% endfor %}
+</table>
+</p>
+
+<p>
+...to these items:<br/>
+<table border>
+{% for item in items %}
+  <tr><td>{{ item|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No items selected</td></tr>
+{% endfor %}
+</table>
+</p>
+
+<p>
+...and to these people:<br/>
+<table border>
+{% for person in people %}
+  <tr><td>{{ person|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No people selected</td></tr>
+{% endfor %}
+</table>
+</p>
+{% endblock %}

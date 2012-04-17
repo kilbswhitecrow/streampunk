@@ -1,0 +1,114 @@
+[
+  {
+    "pk": 5, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 10, 
+      "name": "Main Hall", 
+      "hasProj": "Yes", 
+      "visible": true, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "Where your main set pieces go"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 20, 
+      "name": "Second Hall", 
+      "hasProj": "No", 
+      "visible": true, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "Where your medium-sized items go."
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 30, 
+      "name": "Programme 1", 
+      "hasProj": "No", 
+      "visible": true, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "Small room for panels"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 40, 
+      "name": "Programme 2", 
+      "hasProj": "Yes", 
+      "visible": true, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "Another small room for panels"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 60, 
+      "name": "Video", 
+      "hasProj": "No", 
+      "visible": true, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "Room set up for showing videos, movies, etc."
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 80, 
+      "name": "Ops", 
+      "hasProj": "TBA", 
+      "visible": false, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "Operations room. Scheduled public items should not appear here."
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 95, 
+      "name": "Everywhere", 
+      "hasProj": "No", 
+      "visible": true, 
+      "privNotes": "", 
+      "isDefault": false, 
+      "description": "For items that are in no fixed location, e.g. a treasure hunt."
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "gridOrder": 99, 
+      "name": "Nowhere", 
+      "hasProj": "No", 
+      "visible": false, 
+      "privNotes": "", 
+      "isDefault": true, 
+      "description": "For items that have not yet been allocated a room, or that do not need one."
+    }
+  }
+]

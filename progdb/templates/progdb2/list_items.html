@@ -1,0 +1,12 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}Items{% endblock %}
+{% block body_content %}
+<table border>
+{% for item in item_list %}
+  <tr><td>{{ item|linky:item.title|safe }}</td></tr>
+{% empty %}
+  <tr><td>No items yet</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

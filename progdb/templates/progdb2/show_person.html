@@ -1,0 +1,51 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}Person: {{ person }}{% endblock %}
+{% block body_content %}
+<table border>
+<tr><th>Name</th><td>
+  {{ person.firstName }}
+  {{ person.middleName }}
+  {{ person.lastName }}
+</td></tr>
+<tr><th>Badge</th><td>{{ person.badge }}</td></tr>
+<tr><th>Mem num</th><td>{{ person.memnum }}</td></tr>
+<tr><th>Email</th><td>{{ person.email }}</td></tr>
+<tr><th>Dist Email?</th><td>{{ person.distEmail }}</td></tr>
+<tr><th>Contact details</th><td>{{ person.contact }}</td></tr>
+<tr><th>Public Notes</th><td>{{ person.pubNotes }}</td></tr>
+<tr><th>Private Notes</th><td>{{ person.privNotes }}</td></tr>
+<tr><th>Gender</th><td>{{ person.gender }}</td></tr>
+<tr><th>Complete?</th><td>{{ person.complete }}</td></tr>
+</table>
+
+<p><a href="/progdb/edit_person/{{ person.id }}/">Edit person</a>.</p>
+
+<h2>Items</h2>
+<table border="1">
+{% for item in person_items %}
+<tr>
+  <td>{{ item.item|linky|safe }}</td>
+  <td>{{ item.role }}</td>
+  <td>{{ item.status }}</td>
+  <td><a href="/progdb/remove_person/{{ person.id }}/from_item/{{ item.item.id }}/">Remove</a></td>
+</tr>
+{% empty %}
+<tr><td>Not on any items</td></tr>
+{% endfor %}
+</table>
+
+<p><a href="/progdb/add_person/{{ person.id }}/to_item/">Add {{ person }} to an item</a>.</p>
+
+<p><a href="/progdb/show_referer/">Show referer</a></p>
+
+<h2>Tags</h2>
+<table border="1">
+{% for tag in person_tags %}
+<tr><td>{{ tag|linky|safe }}</td></tr>
+{% empty %}
+<tr><td>No tags yet</td></tr>
+{% endfor %}
+</table>
+<p><a href="/progdb/edit_tags_for_person/{{person.id}}/">Edit tags for {{ person }}</a>.</p>
+{% endblock %}

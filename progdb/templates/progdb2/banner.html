@@ -1,0 +1,20 @@
+<div id="banner">
+<table border="1">
+<tr>
+  <td><a href="/progdb/main/">Main</a></td>
+  <td><a href="/admin/">Admin</a></td>
+  <td><a href="/progdb/list_grids/">Grids</a></td>
+  <td><a href="/progdb/list_people/">People</a></td>
+  <td><a href="/progdb/list_items/">Items</a></td>
+  <td><a href="/progdb/list_rooms/">Rooms</a></td>
+  <td><a href="/progdb/list_tags/">Tags</a></td>
+  <td>
+{% if user.is_authenticated %}
+    {{ user.username }}. <a href="/progdb/logout/">Log out</a>
+{% else %}
+    <a href="/progdb/login/">Log in</a>
+{% endif %}
+  </td>
+</tr>
+</table>
+</div>
