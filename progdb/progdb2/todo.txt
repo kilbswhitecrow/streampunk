@@ -97,10 +97,20 @@ Lindsey:
 	Need to model personel changes, too.
 
 Model corrections:
-(all applied, at present)
-	My class-methods for find_default() should really be methods on
+	- Need isUndefined on: Slot Lengths, Slots, ConDay
+	- Add an optional label to Availability, for common defn (all con, one for each day).
+	- Add __unicode__() methods to: Availability, Check, KitRequest, KitThing, KitBundle, Kit*Assignment, RoomCapacity
+	- My class-methods for find_default() should really be methods on
 	custom managers, since it's a common query.
+	- KitRequest.nodes should be KitRequest.notes
+	- Remove hasProj/needsProj
+	- Remove ItemAvailability. Duh.
+	- Add RoomRoutes:
+		TimeWalking
+		AllOnFlat
+		inRadioRange
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have
   that converted to mins.
+- Availabilities should default to: first con day, last con day, etc.

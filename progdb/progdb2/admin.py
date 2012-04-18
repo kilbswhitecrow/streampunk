@@ -1,5 +1,9 @@
 from django.contrib import admin
-from progdb.progdb2.models import SlotLength, Slot, Grid, ConDay, ItemKind, SeatingKind, PersonStatus, PersonRole, Room, Revision, Tag, ItemPerson, Item, Person, Gender
+from progdb.progdb2.models import SlotLength, Slot, Grid, ConDay, ItemKind, SeatingKind, PersonStatus, PersonRole
+from progdb.progdb2.models import RoomCapacity, Room, Revision, Tag, ItemPerson, Item, Person, Gender, CheckResult, Check
+from progdb.progdb2.models import FrontLayoutKind, KitKind, KitRole, KitDepartment, KitSource, KitBasis, KitStatus
+from progdb.progdb2.models import MediaStatus, KitRequest, KitThing, KitBundle, KitRoomAssignment, KitItemAssignment
+from progdb.progdb2.models import Availability, KitAvailability, RoomAvailability, PersonAvailability
 
 admin.site.register(SlotLength)
 admin.site.register(Slot)
@@ -16,4 +20,23 @@ admin.site.register(Tag)
 admin.site.register(ItemPerson)
 admin.site.register(Item)
 admin.site.register(Person)
-
+admin.site.register(RoomCapacity)
+admin.site.register(CheckResult)
+admin.site.register(Check)
+admin.site.register(FrontLayoutKind)
+admin.site.register(KitKind)
+admin.site.register(KitRole)
+admin.site.register(KitDepartment)
+admin.site.register(KitSource)
+admin.site.register(KitBasis)
+admin.site.register(KitStatus)
+admin.site.register(MediaStatus)
+admin.site.register(KitRequest)
+admin.site.register(KitThing)
+admin.site.register(KitBundle)
+admin.site.register(KitRoomAssignment)
+admin.site.register(KitItemAssignment)
+admin.site.register(Availability)
+admin.site.register(KitAvailability)
+admin.site.register(RoomAvailability)
+admin.site.register(PersonAvailability)

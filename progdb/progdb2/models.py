@@ -13,6 +13,20 @@ YesNo = (
   ( 'No', 'No'),
 )
 
+class Availability(models.Model):
+  label = models.CharField(max_length=24, blank=True)
+  fromWhen = models.DateTimeField()
+  toWhen = models.DateTimeField()
+
+class KitAvailability(Availability):
+  pass
+
+class RoomAvailability(Availability):
+  pass
+
+class PersonAvailability(Availability):
+  pass
+
 class ConDay(models.Model):
   """
   A ConDay is how we map from a given date to
@@ -23,6 +37,7 @@ class ConDay(models.Model):
   order = models.IntegerField()
   visible = models.BooleanField()
   isDefault = models.BooleanField()
+  isUndefined = models.BooleanField()
 
   class Meta:
     ordering = [ '-isDefault', 'date' ]
@@ -48,6 +63,7 @@ class SlotLength(models.Model):
   name = models.CharField(max_length=30)
   length = models.IntegerField(default=60)
   isDefault = models.BooleanField()
+  isUndefined = models.BooleanField()
 
   class Meta:
     ordering = [ 'isDefault', 'length' ]
@@ -70,6 +86,7 @@ class Slot(models.Model):
   slotText = models.CharField(max_length=20)
   visible = models.BooleanField(default=True)
   isDefault = models.BooleanField()
+  isUndefined = models.BooleanField()
 
   class Meta:
     ordering = [ 'isDefault', 'start' ]
@@ -115,6 +132,7 @@ class EnumTable(models.Model):
   "Various name/value choices, with a default choice."
   name = models.CharField(max_length=64)
   isDefault = models.BooleanField()
+  isUndefined = models.BooleanField()
   gridOrder = models.IntegerField(default=1)
   description = models.TextField(blank=True)
 
@@ -142,6 +160,11 @@ class SeatingKind(EnumTable):
   room should be laid out.
   """
   pass
+
+class FrontLayoutKind(EnumTable):
+  """
+  Used to describe how the front of the room should be laid out.
+  """
 
 class PersonRole(EnumTable):
   """
@@ -179,6 +202,73 @@ class Tag(models.Model):
   def __unicode__(self):
     return self.name
 
+class KitKind(EnumTable):
+  pass
+
+class KitRole(EnumTable):
+  pass
+
+class KitDepartment(EnumTable):
+  pass
+
+class KitSource(EnumTable):
+  pass
+
+class KitBasis(EnumTable):
+  pass
+
+class MediaStatus(EnumTable):
+  pass
+
+class KitStatus(EnumTable):
+  pass
+
+class KitRequest(models.Model):
+  kind = models.ForeignKey(KitKind, default=KitKind.find_default)
+  count = models.SmallIntegerField(default=1)
+  setupAssistance = models.BooleanField()
+  notes = models.TextField(blank=True)
+  status = models.ForeignKey(KitStatus, default=KitStatus.find_default)
+
+class KitThing(models.Model):
+  name = models.CharField(max_length=64)
+  description = models.TextField(blank=True)
+  kind = models.ForeignKey(KitKind, default=KitKind.find_default)
+  count = models.SmallIntegerField(default=1)
+  role = models.ForeignKey(KitRole, default=KitRole.find_default)
+  source = models.ForeignKey(KitSource, default=KitSource.find_default)
+  department = models.ForeignKey(KitDepartment, default=KitDepartment.find_default)
+  basis = models.ForeignKey(KitBasis, default=KitBasis.find_default)
+  status = models.ForeignKey(KitStatus, default=KitStatus.find_default)
+  cost = models.IntegerField(default=0)
+  insurance = models.IntegerField(default=0)
+  nodes = models.TextField(blank=True)
+  coordinator = models.CharField(max_length=64)
+  availability = models.ManyToManyField(KitAvailability, null=True, blank=True)
+
+class KitBundle(models.Model):
+  name = models.CharField(max_length=64)
+  status = models.ForeignKey(KitStatus, default=KitStatus.find_default)
+  things = models.ManyToManyField(KitThing)
+
+class KitRoomAssignment(models.Model):
+  room = models.ForeignKey('Room')
+  thing = models.ForeignKey(KitThing)
+  bundle = models.ForeignKey(KitBundle, null=True, blank=True)
+  fromDay = models.ForeignKey(ConDay, related_name='kitroomfrom_set')
+  fromSlot = models.ForeignKey(Slot, related_name='kitroomfrom_set')
+  toDay = models.ForeignKey(ConDay, related_name='kitroomto_set')
+  toSlot = models.ForeignKey(Slot, related_name='kitroomto_set')
+  
+class KitItemAssignment(models.Model):
+  item = models.ForeignKey('Item')
+  thing = models.ForeignKey(KitThing)
+  bundle = models.ForeignKey(KitBundle, null=True, blank=True)
+
+class RoomCapacity(models.Model):
+  layout = models.ForeignKey(SeatingKind, default=SeatingKind.find_default)
+  count = models.IntegerField()
+
 class Room(models.Model):
   """
   A Room is where a programme item can take place.
@@ -191,10 +281,28 @@ class Room(models.Model):
   description = models.TextField(blank=True)
   visible = models.BooleanField(default=True)
   isDefault = models.BooleanField()
+  isUndefined = models.BooleanField()
+  CanClash = models.BooleanField()
   disabledAccess = models.BooleanField(default=True)
-  hasProj = models.CharField(max_length=4, choices=YesNo, default='TBA')
   gridOrder = models.IntegerField(default=50)
   privNotes = models.TextField(blank=True)
+  techNotes = models.TextField(blank=True)
+  needsSound = models.BooleanField()
+  naturalLight = models.BooleanField()
+  securable = models.BooleanField()
+  controlLightsInRoom = models.BooleanField()
+  controlAirConInRoom = models.BooleanField()
+  accessibleOnFlat = models.BooleanField()
+  hasWifi = models.BooleanField()
+  hasCableRuns = models.BooleanField()
+  openableWindows = models.BooleanField()
+  closableCurtains = models.BooleanField()
+  inRadioRange = models.BooleanField()
+  kit = models.ManyToManyField(KitThing, through='KitRoomAssignment')
+  parent = models.ForeignKey('self', null=True, blank=True)
+  capacities = models.ManyToManyField(RoomCapacity, null=True, blank=True)
+  availability = models.ManyToManyField(RoomAvailability, null=True, blank=True)
+  
 
   class Meta:
     ordering = [ 'isDefault', 'gridOrder' ]
@@ -224,7 +332,9 @@ class Person(models.Model):
   gender = models.ForeignKey(Gender, default=Gender.find_default)
   complete = models.CharField(max_length=4, choices=YesNo, default='No')
   distEmail = models.CharField(max_length=4, choices=YesNo, default='No')
+  recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
   tags = models.ManyToManyField(Tag,null=True,blank=True)
+  availability = models.ManyToManyField(PersonAvailability, null=True, blank=True)
 
   class Meta:
     verbose_name_plural = 'People'
@@ -334,6 +444,7 @@ class Item(models.Model):
   room = models.ForeignKey(Room, default=Room.find_default)
   kind = models.ForeignKey(ItemKind, default=ItemKind.find_default)
   seating = models.ForeignKey(SeatingKind, default=SeatingKind.find_default)
+  frontLayout = models.ForeignKey(FrontLayoutKind, default=FrontLayoutKind.find_default)
   revision = models.ForeignKey(Revision, default=Revision.objects.latest)
   visible = models.BooleanField(default=True)
   expAudience = models.IntegerField(default=30)
@@ -341,13 +452,20 @@ class Item(models.Model):
   stewards = models.IntegerField(default=0)
   budget = models.IntegerField(default=0)
   techNeeded = models.CharField(max_length=4, choices=YesNo, default='TBA')
-  projNeeded = models.CharField(max_length=4, choices=YesNo, default='TBA')
   complete = models.CharField(max_length=4, choices=YesNo, default='No')
   privNotes = models.TextField(blank=True)
   techNotes = models.TextField(blank=True)
   pubBring = models.TextField(blank=True)
   tags = models.ManyToManyField(Tag,null=True,blank=True)
   people = models.ManyToManyField(Person, through='ItemPerson')
+  kitRequests = models.ForeignKey(KitRequest, null=True, blank=True)
+  kit = models.ManyToManyField(KitThing, through='KitItemAssignment')
+  audienceMics = models.BooleanField(default=False)
+  allTechCrew = models.BooleanField(default=False)
+  needsReset = models.BooleanField(default=False)
+  needsCleanUp = models.BooleanField(default=False)
+  mediaStatus = models.ForeignKey(MediaStatus, default=MediaStatus.find_default)
+  follows = models.ForeignKey('self', null=True, blank=True)
 
   objects = models.Manager()
   scheduled = ScheduledManager()
@@ -395,6 +513,7 @@ class ItemPerson(models.Model):
   status = models.ForeignKey(PersonStatus, default=PersonStatus.find_default)
   visible = models.CharField(max_length=4, choices=YesNo, default='Yes')
   distEmail = models.CharField(max_length=4, choices=YesNo, default='No')
+  recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
 
   class Meta:
     verbose_name = 'Items-People'
@@ -405,16 +524,19 @@ class ItemPersonForm(ModelForm):
   class Meta:
     model = ItemPerson
 
+class CheckResult(EnumTable):
+  pass
+
+class Check(models.Model):
+  name = models.TextField(max_length=120)
+  description = models.TextField(max_length=256)
+  module = models.TextField(max_length=48)
+  result = models.ForeignKey(CheckResult, default=CheckResult.find_default)
+
 # Outstanding things that need thinking about:
-# - Tech, in its entirety. Does anyone care?
 # - Availability. Just make it a separate table, and add
-#   ManyToMany for rooms?
-# - Item Sequencing. Just a separate table, add when need.
 # - Item Moves. Add when we need that.
-# - Room divisions
-# - Room capacities
 # - Con Data, in various forms.
-# - Revisions
 
 # Things that need something better than the admin interface:
 # The slot form: need to be able to enter a time, and have that converted to mins.

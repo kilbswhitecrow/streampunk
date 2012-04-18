@@ -55,6 +55,15 @@
     }
   }, 
   {
+    "pk": 25, 
+    "model": "progdb2.slotlength", 
+    "fields": {
+      "length": 0, 
+      "name": "None", 
+      "isDefault": false
+    }
+  }, 
+  {
     "pk": 21, 
     "model": "progdb2.slotlength", 
     "fields": {
@@ -351,9 +360,10 @@
     "model": "progdb2.gender", 
     "fields": {
       "gridOrder": 20, 
+      "description": "", 
       "name": "Male", 
       "isDefault": false, 
-      "description": ""
+      "isUndefined": false
     }
   }, 
   {
@@ -361,9 +371,10 @@
     "model": "progdb2.gender", 
     "fields": {
       "gridOrder": 30, 
+      "description": "", 
       "name": "Female", 
       "isDefault": false, 
-      "description": ""
+      "isUndefined": false
     }
   }, 
   {
@@ -371,9 +382,10 @@
     "model": "progdb2.gender", 
     "fields": {
       "gridOrder": 100, 
+      "description": "", 
       "name": "TBA", 
       "isDefault": true, 
-      "description": ""
+      "isUndefined": true
     }
   }, 
   {
@@ -381,9 +393,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 0, 
+      "description": "", 
       "name": "TBA", 
       "isDefault": true, 
-      "description": ""
+      "isUndefined": true
     }
   }, 
   {
@@ -391,9 +404,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 10, 
+      "description": "Standard Panel discussion", 
       "name": "Panel", 
       "isDefault": true, 
-      "description": "Standard Panel discussion"
+      "isUndefined": false
     }
   }, 
   {
@@ -401,9 +415,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 20, 
+      "description": "Someone presenting a talk or speech", 
       "name": "Talk", 
       "isDefault": false, 
-      "description": "Someone presenting a talk or speech"
+      "isUndefined": false
     }
   }, 
   {
@@ -411,9 +426,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 30, 
+      "description": "An activity that involves everyone attending", 
       "name": "Workshop", 
       "isDefault": false, 
-      "description": "An activity that involves everyone attending"
+      "isUndefined": false
     }
   }, 
   {
@@ -421,9 +437,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 40, 
+      "description": "A physical activity", 
       "name": "Exercise", 
       "isDefault": false, 
-      "description": "A physical activity"
+      "isUndefined": false
     }
   }, 
   {
@@ -431,9 +448,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 50, 
+      "description": "A item with rules and a winner", 
       "name": "Game", 
       "isDefault": false, 
-      "description": "A item with rules and a winner"
+      "isUndefined": false
     }
   }, 
   {
@@ -441,9 +459,10 @@
     "model": "progdb2.itemkind", 
     "fields": {
       "gridOrder": 200, 
+      "description": "Something that doesn't fit into these categories", 
       "name": "Other", 
       "isDefault": false, 
-      "description": "Something that doesn't fit into these categories"
+      "isUndefined": false
     }
   }, 
   {
@@ -451,9 +470,10 @@
     "model": "progdb2.seatingkind", 
     "fields": {
       "gridOrder": 0, 
+      "description": "", 
       "name": "TBA", 
       "isDefault": true, 
-      "description": ""
+      "isUndefined": true
     }
   }, 
   {
@@ -461,9 +481,10 @@
     "model": "progdb2.seatingkind", 
     "fields": {
       "gridOrder": 10, 
+      "description": "Chairs in rows facing the front", 
       "name": "Theatre", 
       "isDefault": true, 
-      "description": "Chairs in rows facing the front"
+      "isUndefined": false
     }
   }, 
   {
@@ -471,9 +492,10 @@
     "model": "progdb2.seatingkind", 
     "fields": {
       "gridOrder": 20, 
+      "description": "Chairs against the walls, with the centre space empty", 
       "name": "Chairs around wall", 
       "isDefault": false, 
-      "description": "Chairs against the walls, with the centre space empty"
+      "isUndefined": false
     }
   }, 
   {
@@ -481,9 +503,10 @@
     "model": "progdb2.seatingkind", 
     "fields": {
       "gridOrder": 30, 
+      "description": "Chairs around a single table in the middle of the room", 
       "name": "Boardroom", 
       "isDefault": false, 
-      "description": "Chairs around a single table in the middle of the room"
+      "isUndefined": false
     }
   }, 
   {
@@ -491,9 +514,10 @@
     "model": "progdb2.seatingkind", 
     "fields": {
       "gridOrder": 40, 
+      "description": "No chairs or tables", 
       "name": "Empty", 
       "isDefault": false, 
-      "description": "No chairs or tables"
+      "isUndefined": false
     }
   }, 
   {
@@ -501,9 +525,32 @@
     "model": "progdb2.seatingkind", 
     "fields": {
       "gridOrder": 50, 
+      "description": "Chairs around circular tables", 
       "name": "Cabaret", 
       "isDefault": false, 
-      "description": "Chairs around circular tables"
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.frontlayoutkind", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "Unknown layout for front of room.", 
+      "name": "TBA", 
+      "isDefault": false, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.frontlayoutkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "Table, chairs for panellists, microphones if necessary.", 
+      "name": "Panel", 
+      "isDefault": true, 
+      "isUndefined": false
     }
   }, 
   {
@@ -511,9 +558,10 @@
     "model": "progdb2.personrole", 
     "fields": {
       "gridOrder": 0, 
+      "description": "", 
       "name": "TBA", 
       "isDefault": true, 
-      "description": ""
+      "isUndefined": true
     }
   }, 
   {
@@ -521,9 +569,10 @@
     "model": "progdb2.personrole", 
     "fields": {
       "gridOrder": 10, 
+      "description": "On a panel, but not running it", 
       "name": "Panellist", 
       "isDefault": true, 
-      "description": "On a panel, but not running it"
+      "isUndefined": false
     }
   }, 
   {
@@ -531,9 +580,10 @@
     "model": "progdb2.personrole", 
     "fields": {
       "gridOrder": 20, 
+      "description": "Running a panel", 
       "name": "Moderator", 
       "isDefault": false, 
-      "description": "Running a panel"
+      "isUndefined": false
     }
   }, 
   {
@@ -541,9 +591,10 @@
     "model": "progdb2.personrole", 
     "fields": {
       "gridOrder": 30, 
+      "description": "Presenting a talk or lecture", 
       "name": "Speaker", 
       "isDefault": false, 
-      "description": "Presenting a talk or lecture"
+      "isUndefined": false
     }
   }, 
   {
@@ -551,9 +602,10 @@
     "model": "progdb2.personrole", 
     "fields": {
       "gridOrder": 40, 
+      "description": "Interviewing a guest", 
       "name": "Interviewer", 
       "isDefault": false, 
-      "description": "Interviewing a guest"
+      "isUndefined": false
     }
   }, 
   {
@@ -561,9 +613,10 @@
     "model": "progdb2.personrole", 
     "fields": {
       "gridOrder": 50, 
+      "description": "Being interviewed", 
       "name": "Interviewee", 
       "isDefault": false, 
-      "description": "Being interviewed"
+      "isUndefined": false
     }
   }, 
   {
@@ -571,9 +624,10 @@
     "model": "progdb2.personstatus", 
     "fields": {
       "gridOrder": 20, 
+      "description": "Has been invited, not yet confirmed", 
       "name": "Invited", 
       "isDefault": false, 
-      "description": "Has been invited, not yet confirmed"
+      "isUndefined": false
     }
   }, 
   {
@@ -581,9 +635,10 @@
     "model": "progdb2.personstatus", 
     "fields": {
       "gridOrder": 10, 
+      "description": "Would be good for this item, but not contacted yet", 
       "name": "Proposed", 
       "isDefault": true, 
-      "description": "Would be good for this item, but not contacted yet"
+      "isUndefined": false
     }
   }, 
   {
@@ -591,9 +646,10 @@
     "model": "progdb2.personstatus", 
     "fields": {
       "gridOrder": 30, 
+      "description": "Has confirmed item participation", 
       "name": "Confirmed", 
       "isDefault": false, 
-      "description": "Has confirmed item participation"
+      "isUndefined": false
     }
   }, 
   {
@@ -601,9 +657,10 @@
     "model": "progdb2.personstatus", 
     "fields": {
       "gridOrder": 0, 
+      "description": "", 
       "name": "TBA", 
       "isDefault": true, 
-      "description": ""
+      "isUndefined": true
     }
   }, 
   {
@@ -613,6 +670,347 @@
       "colour": "black", 
       "baseline": "2012-03-01 00:00:00", 
       "description": "First draft"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": true, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "Screen", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "10", 
+      "name": "Microphone", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Projector", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "Computer-to-stereo XLR converter", 
+      "name": "DI Box", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Roving Microphone", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Television", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "DVD player", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "Portable CD player", 
+      "name": "Boom-box", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "iPod", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "progdb2.kitkind", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Blu-Ray player", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitrole", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": true, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitdepartment", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": false, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitdepartment", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Tech", 
+      "isDefault": true, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.kitdepartment", 
+    "fields": {
+      "gridOrder": 20, 
+      "description": "", 
+      "name": "Green Room", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.kitdepartment", 
+    "fields": {
+      "gridOrder": 30, 
+      "description": "", 
+      "name": "Programme Ops", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitbasis", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": true, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.kitbasis", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "20", 
+      "name": "Borrow", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitbasis", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Hire", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.kitbasis", 
+    "fields": {
+      "gridOrder": 30, 
+      "description": "", 
+      "name": "Buy", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitstatus", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": true, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitstatus", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "Awaiting Sign-off", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.kitstatus", 
+    "fields": {
+      "gridOrder": 15, 
+      "description": "", 
+      "name": "Awaiting purchase", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.kitstatus", 
+    "fields": {
+      "gridOrder": 30, 
+      "description": "", 
+      "name": "Awaiting delivery", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "progdb2.kitstatus", 
+    "fields": {
+      "gridOrder": 40, 
+      "description": "", 
+      "name": "Delivered", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.mediastatus", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": true, 
+      "isUndefined": true
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.mediastatus", 
+    "fields": {
+      "gridOrder": 10, 
+      "description": "", 
+      "name": "No media required", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.mediastatus", 
+    "fields": {
+      "gridOrder": 20, 
+      "description": "", 
+      "name": "Media needs sending to Tech", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.mediastatus", 
+    "fields": {
+      "gridOrder": 30, 
+      "description": "", 
+      "name": "Media received by Tech", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.checkresult", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "Check returns a list of programme items.", 
+      "name": "Item List", 
+      "isDefault": true, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.checkresult", 
+    "fields": {
+      "gridOrder": 2, 
+      "description": "Check returns a list of people.", 
+      "name": "Person list", 
+      "isDefault": false, 
+      "isUndefined": false
     }
   }
 ]
