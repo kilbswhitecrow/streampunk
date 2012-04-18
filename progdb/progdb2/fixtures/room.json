@@ -4,15 +4,17 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "CanClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
       "techNotes": "", 
       "naturalLight": false, 
       "hasWifi": false, 
-      "inRadioRange": false, 
-      "availability": [], 
+      "inRadioRange": true, 
+      "availability": [
+        7
+      ], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -20,13 +22,17 @@
       "gridOrder": 10, 
       "description": "Where your main set pieces go", 
       "parent": null, 
-      "capacities": [], 
+      "capacities": [
+        1, 
+        2, 
+        3
+      ], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Main Hall", 
       "controlLightsInRoom": false, 
       "privNotes": "", 
-      "needsSound": false
+      "needsSound": true
     }
   }, 
   {
@@ -34,7 +40,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "CanClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -42,7 +48,9 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": false, 
-      "availability": [], 
+      "availability": [
+        7
+      ], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -50,13 +58,15 @@
       "gridOrder": 20, 
       "description": "Where your medium-sized items go.", 
       "parent": null, 
-      "capacities": [], 
+      "capacities": [
+        4
+      ], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Second Hall", 
       "controlLightsInRoom": false, 
       "privNotes": "", 
-      "needsSound": false
+      "needsSound": true
     }
   }, 
   {
@@ -64,23 +74,29 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "CanClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
       "techNotes": "", 
       "naturalLight": false, 
       "hasWifi": false, 
-      "inRadioRange": false, 
-      "availability": [], 
+      "inRadioRange": true, 
+      "availability": [
+        7
+      ], 
       "hasCableRuns": false, 
-      "securable": false, 
+      "securable": true, 
       "isDefault": false, 
       "isUndefined": false, 
       "gridOrder": 30, 
       "description": "Small room for panels", 
       "parent": null, 
-      "capacities": [], 
+      "capacities": [
+        5, 
+        6, 
+        7
+      ], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Programme 1", 
@@ -94,7 +110,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "CanClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -102,7 +118,9 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": false, 
-      "availability": [], 
+      "availability": [
+        7
+      ], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -110,7 +128,9 @@
       "gridOrder": 40, 
       "description": "Another small room for panels", 
       "parent": null, 
-      "capacities": [], 
+      "capacities": [
+        7
+      ], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Programme 2", 
@@ -124,7 +144,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "CanClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -132,7 +152,9 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": false, 
-      "availability": [], 
+      "availability": [
+        7
+      ], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -140,7 +162,9 @@
       "gridOrder": 60, 
       "description": "Room set up for showing videos, movies, etc.", 
       "parent": null, 
-      "capacities": [], 
+      "capacities": [
+        7
+      ], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Video", 

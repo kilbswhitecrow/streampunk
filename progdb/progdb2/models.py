@@ -13,10 +13,28 @@ YesNo = (
   ( 'No', 'No'),
 )
 
+class DefUndefManager(models.Manager):
+  """
+  A manager that has extra methods for finding the default/undefined
+  values based on fields.
+  """
+  def find_default(self):
+    return self.get(isDefault=True)
+  def find_undefined(self):
+    return self.get(isUndefined=True)
+
+
 class Availability(models.Model):
   label = models.CharField(max_length=24, blank=True)
   fromWhen = models.DateTimeField()
   toWhen = models.DateTimeField()
+
+  def __unicode__(self):
+    if self.label:
+      return "%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
+    else:
+      return "%s - %s" % (self.fromWhen, self.toWhen)
+    
 
 class KitAvailability(Availability):
   pass
@@ -38,6 +56,7 @@ class ConDay(models.Model):
   visible = models.BooleanField()
   isDefault = models.BooleanField()
   isUndefined = models.BooleanField()
+  objects = DefUndefManager()
 
   class Meta:
     ordering = [ '-isDefault', 'date' ]
@@ -45,25 +64,13 @@ class ConDay(models.Model):
   def __unicode__(self):
     return self.name
 
-  @classmethod
-  def find_default(cls):
-    return cls.objects.filter(isDefault=True)[0]
-
-  def clean_isDefault(self):
-    v = self.cleaned_data['isDefault']
-    if v:
-      numTrue = ConDay.objects.filter(isDefault=True).count()
-      if numTrue > 0:
-        from django.core.exceptions import ValidationError
-        raise ValidationError('Only one ConDay can be the default')
-    return v
-
 class SlotLength(models.Model):
   "A SlotLength is how long a given item may run."
   name = models.CharField(max_length=30)
   length = models.IntegerField(default=60)
   isDefault = models.BooleanField()
   isUndefined = models.BooleanField()
+  objects = DefUndefManager()
 
   class Meta:
     ordering = [ 'isDefault', 'length' ]
@@ -71,32 +78,25 @@ class SlotLength(models.Model):
   def __unicode__(self):
     return self.name
 
-  @classmethod
-  def find_default(cls):
-    return cls.objects.filter(isDefault=True)[0]
-
 class Slot(models.Model):
   """
   a Slot is a potential position in the day at which
   an item may start.
   """
   start = models.IntegerField()
-  length = models.ForeignKey(SlotLength, default=SlotLength.find_default)
+  length = models.ForeignKey(SlotLength, default=SlotLength.objects.find_default)
   startText = models.CharField(max_length=20)
   slotText = models.CharField(max_length=20)
   visible = models.BooleanField(default=True)
   isDefault = models.BooleanField()
   isUndefined = models.BooleanField()
+  objects = DefUndefManager()
 
   class Meta:
     ordering = [ 'isDefault', 'start' ]
 
   def __unicode__(self):
     return self.startText
-
-  @classmethod
-  def find_default(cls):
-    return cls.objects.filter(isDefault=True)[0]
 
 class Grid(models.Model):
   """
@@ -128,6 +128,9 @@ class Revision(models.Model):
   def __unicode__(self):
     return self.description
 
+class EnumManager(DefUndefManager):
+  pass
+
 class EnumTable(models.Model):
   "Various name/value choices, with a default choice."
   name = models.CharField(max_length=64)
@@ -136,13 +139,11 @@ class EnumTable(models.Model):
   gridOrder = models.IntegerField(default=1)
   description = models.TextField(blank=True)
 
+  objects = EnumManager()
+
   class Meta:
     ordering = [ 'gridOrder' ]
     abstract = True
-
-  @classmethod
-  def find_default(cls):
-    return cls.objects.filter(isDefault=True)[0]
 
   def __unicode__(self):
     return self.name
@@ -224,32 +225,41 @@ class KitStatus(EnumTable):
   pass
 
 class KitRequest(models.Model):
-  kind = models.ForeignKey(KitKind, default=KitKind.find_default)
+  kind = models.ForeignKey(KitKind, default=KitKind.objects.find_default)
   count = models.SmallIntegerField(default=1)
   setupAssistance = models.BooleanField()
   notes = models.TextField(blank=True)
-  status = models.ForeignKey(KitStatus, default=KitStatus.find_default)
+  status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
+
+  def __unicode__(self):
+    return "%s: %d" % (self.kind, self.count)
 
 class KitThing(models.Model):
   name = models.CharField(max_length=64)
   description = models.TextField(blank=True)
-  kind = models.ForeignKey(KitKind, default=KitKind.find_default)
+  kind = models.ForeignKey(KitKind, default=KitKind.objects.find_default)
   count = models.SmallIntegerField(default=1)
-  role = models.ForeignKey(KitRole, default=KitRole.find_default)
-  source = models.ForeignKey(KitSource, default=KitSource.find_default)
-  department = models.ForeignKey(KitDepartment, default=KitDepartment.find_default)
-  basis = models.ForeignKey(KitBasis, default=KitBasis.find_default)
-  status = models.ForeignKey(KitStatus, default=KitStatus.find_default)
+  role = models.ForeignKey(KitRole, default=KitRole.objects.find_default)
+  source = models.ForeignKey(KitSource, default=KitSource.objects.find_default)
+  department = models.ForeignKey(KitDepartment, default=KitDepartment.objects.find_default)
+  basis = models.ForeignKey(KitBasis, default=KitBasis.objects.find_default)
+  status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
   cost = models.IntegerField(default=0)
   insurance = models.IntegerField(default=0)
   nodes = models.TextField(blank=True)
   coordinator = models.CharField(max_length=64)
   availability = models.ManyToManyField(KitAvailability, null=True, blank=True)
 
+  def __unicode__(self):
+    return self.name
+
 class KitBundle(models.Model):
   name = models.CharField(max_length=64)
-  status = models.ForeignKey(KitStatus, default=KitStatus.find_default)
+  status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
   things = models.ManyToManyField(KitThing)
+
+  def __unicode__(self):
+    return self.name
 
 class KitRoomAssignment(models.Model):
   room = models.ForeignKey('Room')
@@ -259,15 +269,24 @@ class KitRoomAssignment(models.Model):
   fromSlot = models.ForeignKey(Slot, related_name='kitroomfrom_set')
   toDay = models.ForeignKey(ConDay, related_name='kitroomto_set')
   toSlot = models.ForeignKey(Slot, related_name='kitroomto_set')
+
+  def __unicode__(self):
+    return "%s in %s" % (self.thing, self.room)
   
 class KitItemAssignment(models.Model):
   item = models.ForeignKey('Item')
   thing = models.ForeignKey(KitThing)
   bundle = models.ForeignKey(KitBundle, null=True, blank=True)
 
+  def __unicode__(self):
+    return "%s to %s" % (self.thing, self.item)
+
 class RoomCapacity(models.Model):
-  layout = models.ForeignKey(SeatingKind, default=SeatingKind.find_default)
+  layout = models.ForeignKey(SeatingKind, default=SeatingKind.objects.find_default)
   count = models.IntegerField()
+
+  def __unicode__(self):
+    return "%s: %d" % (self.layout, self.count)
 
 class Room(models.Model):
   """
@@ -302,17 +321,13 @@ class Room(models.Model):
   parent = models.ForeignKey('self', null=True, blank=True)
   capacities = models.ManyToManyField(RoomCapacity, null=True, blank=True)
   availability = models.ManyToManyField(RoomAvailability, null=True, blank=True)
-  
+  objects = DefUndefManager()
 
   class Meta:
     ordering = [ 'isDefault', 'gridOrder' ]
 
   def __unicode__(self):
     return self.name
-
-  @classmethod
-  def find_default(cls):
-    return cls.objects.filter(isDefault=True)[0]
 
 class Person(models.Model):
   """
@@ -329,7 +344,7 @@ class Person(models.Model):
   pubNotes = models.TextField(blank=True)
   privNotes = models.TextField(blank=True)
   contact = models.TextField(blank=True)
-  gender = models.ForeignKey(Gender, default=Gender.find_default)
+  gender = models.ForeignKey(Gender, default=Gender.objects.find_default)
   complete = models.CharField(max_length=4, choices=YesNo, default='No')
   distEmail = models.CharField(max_length=4, choices=YesNo, default='No')
   recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
@@ -410,19 +425,19 @@ class Person(models.Model):
 
 class ScheduledManager(models.Manager):
   def get_query_set(self):
-    def_day = ConDay.find_default()
-    def_slot = Slot.find_default()
-    def_len = SlotLength.find_default()
-    def_room = Room.find_default()
-    return super(ScheduledManager, self).get_query_set().exclude(day=def_day).exclude(start=def_slot).exclude(length=def_len).exclude(room=def_room)
+    undef_day = ConDay.objects.find_undefined()
+    undef_slot = Slot.objects.find_undefined()
+    undef_len = SlotLength.objects.find_undefined()
+    undef_room = Room.objects.find_undefined()
+    return super(ScheduledManager, self).get_query_set().exclude(day=undef_day).exclude(start=undef_slot).exclude(length=undef_len).exclude(room=undef_room)
 
 class UnscheduledManager(models.Manager):
   def get_query_set(self):
-    def_day = ConDay.find_default()
-    def_slot = Slot.find_default()
-    def_len = SlotLength.find_default()
-    def_room = Room.find_default()
-    return super(UnscheduledManager, self).get_query_set().filter(Q(day=def_day) | Q(start=def_slot) | Q(length=def_len) | Q(room=def_room))
+    undef_day = ConDay.objects.find_undefined()
+    undef_slot = Slot.objects.find_undefined()
+    undef_len = SlotLength.objects.find_undefined()
+    undef_room = Room.objects.find_undefined()
+    return super(UnscheduledManager, self).get_query_set().filter(Q(day=undef_day) | Q(start=undef_slot) | Q(length=undef_len) | Q(room=undef_room))
 
 class Item(models.Model):
   """
@@ -438,13 +453,13 @@ class Item(models.Model):
   title = models.CharField(max_length=128, blank=True)
   shortname = models.CharField(max_length=32, blank=True)
   blurb = models.TextField(blank=True)
-  day = models.ForeignKey(ConDay, null=True, default=ConDay.find_default)
-  start = models.ForeignKey(Slot, null=True, default=Slot.find_default)
-  length = models.ForeignKey(SlotLength, default=SlotLength.find_default)
-  room = models.ForeignKey(Room, default=Room.find_default)
-  kind = models.ForeignKey(ItemKind, default=ItemKind.find_default)
-  seating = models.ForeignKey(SeatingKind, default=SeatingKind.find_default)
-  frontLayout = models.ForeignKey(FrontLayoutKind, default=FrontLayoutKind.find_default)
+  day = models.ForeignKey(ConDay, null=True, default=ConDay.objects.find_default)
+  start = models.ForeignKey(Slot, null=True, default=Slot.objects.find_default)
+  length = models.ForeignKey(SlotLength, default=SlotLength.objects.find_default)
+  room = models.ForeignKey(Room, default=Room.objects.find_default)
+  kind = models.ForeignKey(ItemKind, default=ItemKind.objects.find_default)
+  seating = models.ForeignKey(SeatingKind, default=SeatingKind.objects.find_default)
+  frontLayout = models.ForeignKey(FrontLayoutKind, default=FrontLayoutKind.objects.find_default)
   revision = models.ForeignKey(Revision, default=Revision.objects.latest)
   visible = models.BooleanField(default=True)
   expAudience = models.IntegerField(default=30)
@@ -464,7 +479,7 @@ class Item(models.Model):
   allTechCrew = models.BooleanField(default=False)
   needsReset = models.BooleanField(default=False)
   needsCleanUp = models.BooleanField(default=False)
-  mediaStatus = models.ForeignKey(MediaStatus, default=MediaStatus.find_default)
+  mediaStatus = models.ForeignKey(MediaStatus, default=MediaStatus.objects.find_default)
   follows = models.ForeignKey('self', null=True, blank=True)
 
   objects = models.Manager()
@@ -509,8 +524,8 @@ class ItemPerson(models.Model):
   """
   item = models.ForeignKey(Item)
   person = models.ForeignKey(Person)
-  role = models.ForeignKey(PersonRole, default=PersonRole.find_default)
-  status = models.ForeignKey(PersonStatus, default=PersonStatus.find_default)
+  role = models.ForeignKey(PersonRole, default=PersonRole.objects.find_default)
+  status = models.ForeignKey(PersonStatus, default=PersonStatus.objects.find_default)
   visible = models.CharField(max_length=4, choices=YesNo, default='Yes')
   distEmail = models.CharField(max_length=4, choices=YesNo, default='No')
   recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
@@ -531,7 +546,10 @@ class Check(models.Model):
   name = models.TextField(max_length=120)
   description = models.TextField(max_length=256)
   module = models.TextField(max_length=48)
-  result = models.ForeignKey(CheckResult, default=CheckResult.find_default)
+  result = models.ForeignKey(CheckResult, default=CheckResult.objects.find_default)
+
+  def __unicode__(self):
+    return self.name
 
 # Outstanding things that need thinking about:
 # - Availability. Just make it a separate table, and add

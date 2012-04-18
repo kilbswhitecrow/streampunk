@@ -3,55 +3,60 @@
     "pk": 5, 
     "model": "progdb2.conday", 
     "fields": {
-      "date": "2012-04-09", 
-      "visible": false, 
       "name": "TBA", 
+      "visible": false, 
+      "date": "2012-04-09", 
+      "order": 0, 
       "isDefault": true, 
-      "order": 0
+      "isUndefined": true
     }
   }, 
   {
     "pk": 1, 
     "model": "progdb2.conday", 
     "fields": {
-      "date": "2012-04-06", 
-      "visible": true, 
       "name": "Friday", 
+      "visible": true, 
+      "date": "2012-04-06", 
+      "order": 2, 
       "isDefault": false, 
-      "order": 2
+      "isUndefined": false
     }
   }, 
   {
     "pk": 2, 
     "model": "progdb2.conday", 
     "fields": {
-      "date": "2012-04-07", 
-      "visible": true, 
       "name": "Saturday", 
+      "visible": true, 
+      "date": "2012-04-07", 
+      "order": 2, 
       "isDefault": false, 
-      "order": 2
+      "isUndefined": false
     }
   }, 
   {
     "pk": 3, 
     "model": "progdb2.conday", 
     "fields": {
-      "date": "2012-04-08", 
-      "visible": true, 
       "name": "Sunday", 
+      "visible": true, 
+      "date": "2012-04-08", 
+      "order": 2, 
       "isDefault": false, 
-      "order": 2
+      "isUndefined": false
     }
   }, 
   {
     "pk": 4, 
     "model": "progdb2.conday", 
     "fields": {
-      "date": "2012-04-09", 
-      "visible": true, 
       "name": "Monday", 
+      "visible": true, 
+      "date": "2012-04-09", 
+      "order": 2, 
       "isDefault": false, 
-      "order": 2
+      "isUndefined": false
     }
   }, 
   {
@@ -60,7 +65,8 @@
     "fields": {
       "length": 0, 
       "name": "None", 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": true
     }
   }, 
   {
@@ -69,7 +75,8 @@
     "fields": {
       "length": 30, 
       "name": "30mins", 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -78,7 +85,8 @@
     "fields": {
       "length": 90, 
       "name": "90mins", 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -87,7 +95,8 @@
     "fields": {
       "length": 120, 
       "name": "2 hours", 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -96,7 +105,8 @@
     "fields": {
       "length": 60, 
       "name": "1 hour", 
-      "isDefault": true
+      "isDefault": true, 
+      "isUndefined": false
     }
   }, 
   {
@@ -108,7 +118,8 @@
       "startText": "10am", 
       "start": 600, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -120,7 +131,8 @@
       "startText": "11am", 
       "start": 660, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -132,7 +144,8 @@
       "startText": "Noon", 
       "start": 720, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -144,7 +157,8 @@
       "startText": "1pm", 
       "start": 780, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -156,7 +170,8 @@
       "startText": "2pm", 
       "start": 840, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -168,7 +183,8 @@
       "startText": "3pm", 
       "start": 900, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -180,7 +196,8 @@
       "startText": "4pm", 
       "start": 960, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -192,7 +209,8 @@
       "startText": "5pm", 
       "start": 1020, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -204,7 +222,8 @@
       "startText": "6pm", 
       "start": 1080, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -216,7 +235,8 @@
       "startText": "7pm", 
       "start": 1140, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -228,7 +248,8 @@
       "startText": "8pm", 
       "start": 1200, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -240,7 +261,8 @@
       "startText": "9pm", 
       "start": 1260, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -252,7 +274,8 @@
       "startText": "10pm", 
       "start": 1320, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -264,7 +287,8 @@
       "startText": "11pm", 
       "start": 1380, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -276,7 +300,8 @@
       "startText": "Midnight", 
       "start": 1440, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -288,7 +313,8 @@
       "startText": "1am", 
       "start": 1500, 
       "length": 22, 
-      "isDefault": false
+      "isDefault": false, 
+      "isUndefined": false
     }
   }, 
   {
@@ -300,7 +326,8 @@
       "startText": "TBA", 
       "start": 0, 
       "length": 22, 
-      "isDefault": true
+      "isDefault": true, 
+      "isUndefined": true
     }
   }, 
   {
@@ -406,7 +433,7 @@
       "gridOrder": 10, 
       "description": "Standard Panel discussion", 
       "name": "Panel", 
-      "isDefault": true, 
+      "isDefault": false, 
       "isUndefined": false
     }
   }, 
@@ -483,7 +510,7 @@
       "gridOrder": 10, 
       "description": "Chairs in rows facing the front", 
       "name": "Theatre", 
-      "isDefault": true, 
+      "isDefault": false, 
       "isUndefined": false
     }
   }, 
@@ -1012,5 +1039,35 @@
       "isDefault": false, 
       "isUndefined": false
     }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitavailability", 
+    "fields": {}
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.roomavailability", 
+    "fields": {}
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.personavailability", 
+    "fields": {}
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.personavailability", 
+    "fields": {}
+  }, 
+  {
+    "pk": 5, 
+    "model": "progdb2.personavailability", 
+    "fields": {}
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.personavailability", 
+    "fields": {}
   }
 ]

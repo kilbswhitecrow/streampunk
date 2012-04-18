@@ -3,7 +3,7 @@ from progdb.progdb2.models import SlotLength, Slot, Grid, ConDay, ItemKind, Seat
 from progdb.progdb2.models import RoomCapacity, Room, Revision, Tag, ItemPerson, Item, Person, Gender, CheckResult, Check
 from progdb.progdb2.models import FrontLayoutKind, KitKind, KitRole, KitDepartment, KitSource, KitBasis, KitStatus
 from progdb.progdb2.models import MediaStatus, KitRequest, KitThing, KitBundle, KitRoomAssignment, KitItemAssignment
-from progdb.progdb2.models import Availability, KitAvailability, RoomAvailability, PersonAvailability
+from progdb.progdb2.models import KitAvailability, RoomAvailability, PersonAvailability
 
 admin.site.register(SlotLength)
 admin.site.register(Slot)
@@ -36,7 +36,6 @@ admin.site.register(KitThing)
 admin.site.register(KitBundle)
 admin.site.register(KitRoomAssignment)
 admin.site.register(KitItemAssignment)
-admin.site.register(Availability)
 admin.site.register(KitAvailability)
 admin.site.register(RoomAvailability)
 admin.site.register(PersonAvailability)

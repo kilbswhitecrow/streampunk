@@ -86,25 +86,12 @@ Lindsey:
 
 	Information on when hotel should resupply water/feed tech.
 
-- Availability. Just make it a separate table, and add
-  ManyToMany for rooms?
-- Item Sequencing. Just a separate table, add when need.
 - Item Moves. Add when we need that.
-- Room divisions
-- Room capacities
 - Con Data, in various forms.
 - Revisions
 	Need to model personel changes, too.
 
 Model corrections:
-	- Need isUndefined on: Slot Lengths, Slots, ConDay
-	- Add an optional label to Availability, for common defn (all con, one for each day).
-	- Add __unicode__() methods to: Availability, Check, KitRequest, KitThing, KitBundle, Kit*Assignment, RoomCapacity
-	- My class-methods for find_default() should really be methods on
-	custom managers, since it's a common query.
-	- KitRequest.nodes should be KitRequest.notes
-	- Remove hasProj/needsProj
-	- Remove ItemAvailability. Duh.
 	- Add RoomRoutes:
 		TimeWalking
 		AllOnFlat

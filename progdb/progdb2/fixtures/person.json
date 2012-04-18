@@ -11,9 +11,15 @@
       "lastName": "Book", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "Yes", 
       "privNotes": "", 
+      "availability": [
+        3
+      ], 
+      "gender": 2, 
       "badge": "Shepherd Book", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -28,9 +34,15 @@
       "lastName": "Cobb", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "Yes", 
       "privNotes": "", 
+      "availability": [
+        4
+      ], 
+      "gender": 2, 
       "badge": "", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -45,9 +57,16 @@
       "lastName": "Giles", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [
+        5, 
+        6
+      ], 
+      "gender": 2, 
       "badge": "Ripper", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "Yes"
     }
   }, 
   {
@@ -62,9 +81,15 @@
       "lastName": "Harris", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [
+        3
+      ], 
+      "gender": 2, 
       "badge": "Xander", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -79,9 +104,13 @@
       "lastName": "Reynolds", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [], 
+      "gender": 1, 
       "badge": "Mal", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -96,9 +125,15 @@
       "lastName": "Rosenburg", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [
+        3
+      ], 
+      "gender": 3, 
       "badge": "", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -113,9 +148,13 @@
       "lastName": "Summers", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [], 
+      "gender": 1, 
       "badge": "She who hangs out in graveyards", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -130,9 +169,15 @@
       "lastName": "Summers", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [
+        5
+      ], 
+      "gender": 3, 
       "badge": "Dawnie", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -147,9 +192,15 @@
       "lastName": "Tam", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [
+        4
+      ], 
+      "gender": 3, 
       "badge": "", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }, 
   {
@@ -164,9 +215,15 @@
       "lastName": "Tam", 
       "pubNotes": "", 
       "contact": "", 
+      "distEmail": "No", 
       "privNotes": "", 
+      "availability": [
+        4
+      ], 
+      "gender": 2, 
       "badge": "", 
-      "email": ""
+      "email": "", 
+      "recordingOkay": "No"
     }
   }
 ]
