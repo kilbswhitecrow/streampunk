@@ -4,9 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
-from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay
+from django.forms.models import modelformset_factory
+from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, Check
 from progdb2.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
-from progdb2.forms import TagForm, RoomForm
+from progdb2.forms import TagForm, RoomForm, CheckModelFormSet
 from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
 
 def main_page(request):
@@ -49,6 +50,7 @@ def show_room(request, rm):
   rid = int(rm)
   room = Room.objects.get(id = rid)
   room_items = room.item_set.all()
+  avail = room.availability.all()
   return render_to_response('progdb2/show_room.html',
                             locals(),
                             context_instance=RequestContext(request))
@@ -91,6 +93,7 @@ def show_person(request, p):
   person_name = "%s" % person
   person_tags = person.tags.all()
   person_items = ItemPerson.objects.filter(person=person)
+  avail = person.availability.all()
   return render_to_response('progdb2/show_person.html',
                             locals(),
                             context_instance=RequestContext(request))
@@ -299,3 +302,28 @@ def fill_slot_sched(request, d, g, r, s):
 
 def fill_slot_unsched(request, d, g, r, s):
   return fill_slot_gen(request, d, g, r, s, FillSlotUnschedForm, 'u')
+
+def list_checks(request):
+  CheckFormSet = modelformset_factory(Check, extra=0, formset=CheckModelFormSet, fields=())
+  if request.method == 'POST':
+    formset = CheckFormSet(request.POST)
+    if formset.is_valid():
+      checkOutputs = []
+      for form in formset:
+        if form.cleaned_data['enable']:
+          check = form.instance
+          module = check.module
+          importcmd = "import progdb2.checks.%s" % (module,)
+          runcmd = "checkOutput = progdb2.checks.%s.run_check(check)" % (module,)
+          exec(importcmd)
+          exec(runcmd)
+          checkOutputs.append(checkOutput)
+      return render_to_response('progdb2/checkresults.html',
+                               locals(),
+                                context_instance=RequestContext(request))
+
+  else:
+    formset = CheckFormSet()
+  return render_to_response('progdb2/checks.html',
+                           locals(),
+                            context_instance=RequestContext(request))

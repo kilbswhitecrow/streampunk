@@ -13,9 +13,7 @@
       "contact": "", 
       "distEmail": "Yes", 
       "privNotes": "", 
-      "availability": [
-        3
-      ], 
+      "availability": [ ], 
       "gender": 2, 
       "badge": "Shepherd Book", 
       "email": "", 
@@ -36,9 +34,7 @@
       "contact": "", 
       "distEmail": "Yes", 
       "privNotes": "", 
-      "availability": [
-        4
-      ], 
+      "availability": [ ], 
       "gender": 2, 
       "badge": "", 
       "email": "", 
@@ -59,10 +55,7 @@
       "contact": "", 
       "distEmail": "No", 
       "privNotes": "", 
-      "availability": [
-        5, 
-        6
-      ], 
+      "availability": [ ], 
       "gender": 2, 
       "badge": "Ripper", 
       "email": "", 
@@ -83,9 +76,7 @@
       "contact": "", 
       "distEmail": "No", 
       "privNotes": "", 
-      "availability": [
-        3
-      ], 
+      "availability": [ ], 
       "gender": 2, 
       "badge": "Xander", 
       "email": "", 
@@ -127,9 +118,7 @@
       "contact": "", 
       "distEmail": "No", 
       "privNotes": "", 
-      "availability": [
-        3
-      ], 
+      "availability": [ ], 
       "gender": 3, 
       "badge": "", 
       "email": "", 
@@ -171,9 +160,7 @@
       "contact": "", 
       "distEmail": "No", 
       "privNotes": "", 
-      "availability": [
-        5
-      ], 
+      "availability": [ ], 
       "gender": 3, 
       "badge": "Dawnie", 
       "email": "", 
@@ -194,9 +181,7 @@
       "contact": "", 
       "distEmail": "No", 
       "privNotes": "", 
-      "availability": [
-        4
-      ], 
+      "availability": [ ], 
       "gender": 3, 
       "badge": "", 
       "email": "", 
@@ -217,9 +202,7 @@
       "contact": "", 
       "distEmail": "No", 
       "privNotes": "", 
-      "availability": [
-        4
-      ], 
+      "availability": [ ], 
       "gender": 2, 
       "badge": "", 
       "email": "", 

@@ -1,0 +1,8 @@
+{% load progdb_filters %}
+<tr><th>{{checkOutput.check.name}}</th></tr>
+<tr><th>(Person list)</th></tr>
+{% for thing in checkOutput.things %}
+<tr><td>{{ thing|linky|safe }}</td></tr>
+{% empty %}
+<tr><td>No problems found</td></tr>
+{% endfor %}

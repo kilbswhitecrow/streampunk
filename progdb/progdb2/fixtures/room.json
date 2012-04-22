@@ -12,9 +12,7 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": true, 
-      "availability": [
-        7
-      ], 
+      "availability": [], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -22,11 +20,7 @@
       "gridOrder": 10, 
       "description": "Where your main set pieces go", 
       "parent": null, 
-      "capacities": [
-        1, 
-        2, 
-        3
-      ], 
+      "capacities": [], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Main Hall", 
@@ -48,9 +42,7 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": false, 
-      "availability": [
-        7
-      ], 
+      "availability": [], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -58,9 +50,7 @@
       "gridOrder": 20, 
       "description": "Where your medium-sized items go.", 
       "parent": null, 
-      "capacities": [
-        4
-      ], 
+      "capacities": [], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Second Hall", 
@@ -82,9 +72,7 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": true, 
-      "availability": [
-        7
-      ], 
+      "availability": [], 
       "hasCableRuns": false, 
       "securable": true, 
       "isDefault": false, 
@@ -92,11 +80,7 @@
       "gridOrder": 30, 
       "description": "Small room for panels", 
       "parent": null, 
-      "capacities": [
-        5, 
-        6, 
-        7
-      ], 
+      "capacities": [], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Programme 1", 
@@ -118,9 +102,7 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": false, 
-      "availability": [
-        7
-      ], 
+      "availability": [], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -128,9 +110,7 @@
       "gridOrder": 40, 
       "description": "Another small room for panels", 
       "parent": null, 
-      "capacities": [
-        7
-      ], 
+      "capacities": [], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Programme 2", 
@@ -152,9 +132,7 @@
       "naturalLight": false, 
       "hasWifi": false, 
       "inRadioRange": false, 
-      "availability": [
-        7
-      ], 
+      "availability": [], 
       "hasCableRuns": false, 
       "securable": false, 
       "isDefault": false, 
@@ -162,9 +140,7 @@
       "gridOrder": 60, 
       "description": "Room set up for showing videos, movies, etc.", 
       "parent": null, 
-      "capacities": [
-        7
-      ], 
+      "capacities": [], 
       "openableWindows": false, 
       "controlAirConInRoom": false, 
       "name": "Video", 

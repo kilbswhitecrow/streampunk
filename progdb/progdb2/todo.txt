@@ -96,6 +96,7 @@ Model corrections:
 		TimeWalking
 		AllOnFlat
 		inRadioRange
+	- Add ConData(Int|String|date)
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have

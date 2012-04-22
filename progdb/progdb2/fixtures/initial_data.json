@@ -1041,33 +1041,166 @@
     }
   }, 
   {
-    "pk": 2, 
-    "model": "progdb2.kitavailability", 
-    "fields": {}
+    "pk": 3, 
+    "model": "progdb2.checkresult", 
+    "fields": {
+      "gridOrder": 30, 
+      "description": "Check will return a list of tuples, each of which contains mixed object kinds.", 
+      "name": "Mixed Tuple", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
   }, 
   {
-    "pk": 7, 
-    "model": "progdb2.roomavailability", 
-    "fields": {}
+    "pk": 1, 
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 2, 
+      "name": "People with no email address", 
+      "module": "no_email", 
+      "description": "List people who do not yet have an email address entered."
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 2, 
+      "name": "People who haven't joined yet", 
+      "module": "not_member", 
+      "description": "List people who don't have a valid membership number registered yet."
+    }
   }, 
   {
     "pk": 3, 
-    "model": "progdb2.personavailability", 
-    "fields": {}
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 2, 
+      "name": "People who aren't complete yet", 
+      "module": "not_complete_person", 
+      "description": "List people who aren't marked as \"Complete\" yet."
+    }
   }, 
   {
     "pk": 4, 
-    "model": "progdb2.personavailability", 
-    "fields": {}
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 3, 
+      "name": "People clashes", 
+      "module": "person_clashes", 
+      "description": "List items where the same person is programmed on two concurrent items."
+    }
   }, 
   {
     "pk": 5, 
-    "model": "progdb2.personavailability", 
-    "fields": {}
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 1, 
+      "name": "Items with no people", 
+      "module": "items_no_people", 
+      "description": "List items which have no people on them."
+    }
   }, 
   {
     "pk": 6, 
-    "model": "progdb2.personavailability", 
-    "fields": {}
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 1, 
+      "name": "Items with no room", 
+      "module": "items_no_room", 
+      "description": "List items that are not assigned to a real room yet."
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 1, 
+      "name": "Items not scheduled", 
+      "module": "items_not_scheduled", 
+      "description": "List items that do not yet have a defined day/start time."
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 1, 
+      "name": "Items with unknown gopher count", 
+      "module": "items_unknown_gophers", 
+      "description": "List items for which the gopher count is -1"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.coninfobool", 
+    "fields": {
+      "var": "show_shortname", 
+      "name": "Show shortnames", 
+      "val": true
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.coninfobool", 
+    "fields": {
+      "var": "rooms_across_top", 
+      "name": "Rooms across top on grids", 
+      "val": false
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.coninfobool", 
+    "fields": {
+      "var": "no_avail_means_always_avail", 
+      "name": "No availability means \"always available\"", 
+      "val": true
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.coninfoint", 
+    "fields": {
+      "var": "max_items_per_day", 
+      "name": "Max items per day for a person", 
+      "val": 4
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.coninfoint", 
+    "fields": {
+      "var": "max_items_whole_con", 
+      "name": "Max items for a person across the whole con", 
+      "val": 12
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.coninfoint", 
+    "fields": {
+      "var": "max_consecutive_items", 
+      "name": "Max consecutive items for a person", 
+      "val": 2
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.coninfostring", 
+    "fields": {
+      "var": "con_name", 
+      "name": "Convention name", 
+      "val": "MyCon 2012"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.coninfostring", 
+    "fields": {
+      "var": "email_from", 
+      "name": "Email 'From' address", 
+      "val": "steve@whitecrow.demon.co.uk"
+    }
   }
 ]

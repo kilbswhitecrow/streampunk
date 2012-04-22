@@ -19,9 +19,10 @@ python manage.py dumpdata --indent 2 \
   progdb2.KitStatus \
   progdb2.MediaStatus \
   progdb2.CheckResult \
-  progdb2.KitAvailability \
-  progdb2.RoomAvailability \
-  progdb2.PersonAvailability \
+  progdb2.Check \
+  progdb2.ConInfoBool \
+  progdb2.ConInfoInt \
+  progdb2.ConInfoString \
 > progdb2/fixtures/initial_data.json
 
 python manage.py dumpdata --indent 2 \

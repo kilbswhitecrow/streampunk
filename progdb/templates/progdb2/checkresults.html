@@ -1,0 +1,20 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}Check Results{% endblock %}
+{% block body_content %}
+<table border>
+{% for checkOutput in checkOutputs %}
+{% if checkOutput.person_list %}
+{% include "progdb2/checks/person_list.html" %}
+{% endif %}
+{% if checkOutput.item_list %}
+{% include "progdb2/checks/item_list.html" %}
+{% endif %}
+{% if checkOutput.mixed_tuple_list %}
+{% include "progdb2/checks/mixed_tuple_list.html" %}
+{% endif %}
+{% empty %}
+<p>No checks selected...</p>
+{% endfor %}
+</table>
+{% endblock %}

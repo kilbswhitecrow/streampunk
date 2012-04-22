@@ -5,7 +5,8 @@ Forms for editing the models in ProgDB 2.0
 from django.db import models
 from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
-from progdb2.models import ItemPerson, Item, Person, Tag, Room
+from django.forms.models import BaseModelFormSet
+from progdb2.models import ItemPerson, Item, Person, Tag, Room, Check
 
 class ItemPersonForm(ModelForm):
   fromPerson = forms.BooleanField(required=False, widget=forms.HiddenInput)
@@ -24,6 +25,7 @@ class ItemTagForm(ModelForm):
 class ItemForm(ModelForm):
   class Meta:
     model = Item
+    exclude = [ 'people', 'kit' ]
 
 class PersonForm(ModelForm):
   class Meta:
@@ -36,6 +38,7 @@ class TagForm(ModelForm):
 class RoomForm(ModelForm):
   class Meta:
     model = Room
+    exclude = [ 'kit', ]
 
 class PersonTagForm(ModelForm):
   """
@@ -61,3 +64,12 @@ class FillSlotUnschedForm(forms.Form):
 class FillSlotSchedForm(forms.Form):
   item = forms.ModelChoiceField(queryset=Item.scheduled.all(),
                                 widget=forms.Select(attrs={'size':'10'}))
+
+class CheckModelFormSet(BaseModelFormSet):
+  """
+  Used as formset=CheckModelFormSet parameter to modelformset_factory
+  Also want to use exclude=('x', 'y') parameter or fields=('a', 'b') option
+  """
+  def add_fields(self, form, index):
+    super(CheckModelFormSet, self). add_fields(form, index)
+    form.fields['enable'] = forms.BooleanField(required=False)

@@ -3,7 +3,7 @@ from django.contrib.auth.views import login, logout
 from progdb.progdb2.views import main_page, list_grids, list_items, list_people, list_rooms, list_tags, show_room, show_tag
 from progdb.progdb2.views import show_person, show_item, show_grid, show_slot, add_person_to_item, remove_person_from_item, show_referer
 from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person, edit_item, edit_person, edit_room, edit_tag
-from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched
+from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -46,6 +46,8 @@ urlpatterns = patterns('',
     url(r'^progdb/edit_tags_for_person/(\d+)/$', edit_tags_for_person),
 
     url(r'^progdb/add_tags/$', add_tags),
+
+    url(r'^progdb/checks/$', list_checks),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

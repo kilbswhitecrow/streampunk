@@ -2,6 +2,7 @@
 Experimental models for ProgDB 2.0.
 """
 
+from datetime import timedelta, datetime
 from django.db import models
 from django.db.models import Q
 from django import forms
@@ -34,6 +35,12 @@ class Availability(models.Model):
       return "%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
     else:
       return "%s - %s" % (self.fromWhen, self.toWhen)
+
+  def covers(self, item):
+    dt = item.day.date
+    itemstart = datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(minutes=item.start.start)
+    itemend = itemstart + timedelta(minutes=item.length.length)
+    return self.fromWhen <= itemstart and itemend <= self.toWhen
     
 
 class KitAvailability(Availability):
@@ -44,6 +51,63 @@ class RoomAvailability(Availability):
 
 class PersonAvailability(Availability):
   pass
+
+class ConInfoBoolManager(models.Manager):
+  def show_shortname(self):
+    return self.get(var='show_shortname').val
+  def rooms_across_top(self):
+    return self.get(var='rooms_across_top').val
+  def no_avail_means_always_avail(self):
+    return self.get(var='no_avail_means_always_avail').val
+
+class ConInfoBool(models.Model):
+  name = models.CharField(max_length=64)
+  var = models.SlugField(max_length=64)
+  val = models.BooleanField()
+  objects = ConInfoBoolManager()
+  def __unicode__(self):
+    return self.name
+
+class ConInfoIntManager(models.Manager):
+  def max_items_per_day(self):
+    return self.get(var='max_items_per_day').val
+  def max_items_whole_con(self):
+    return self.get(var='max_items_whole_con').val
+  def max_consecutive_items(self):
+    return self.get(var='max_consecutive_items').val
+
+class ConInfoInt(models.Model):
+  name = models.CharField(max_length=64)
+  var = models.SlugField(max_length=64)
+  val = models.IntegerField()
+  objects = ConInfoIntManager()
+  def __unicode__(self):
+    return self.name
+
+class ConInfoStringManager(models.Manager):
+  def con_name(self):
+    return self.get(var='con_name').val
+  def email_from(self):
+    return self.get(var='email_from').val
+
+class ConInfoString(models.Model):
+  name = models.CharField(max_length=64)
+  var = models.SlugField(max_length=64)
+  val = models.CharField(max_length=256)
+  objects = ConInfoStringManager()
+  def __unicode__(self):
+    return self.name
+
+
+class ConDayManager(DefUndefManager):
+  def earliest_day(self):
+    return (self).objects.all().order_by('date')[0]
+  def earliest_public_day(self):
+    return (self).objects.filter(visible=True).order_by('date')[0]
+  def latest_day(self):
+    return (self).objects.all().order_by('-date')[0]
+  def latest_public_day(self):
+    return (self).objects.filter(visible=True).order_by('-date')[0]
 
 class ConDay(models.Model):
   """
@@ -253,6 +317,14 @@ class KitThing(models.Model):
   def __unicode__(self):
     return self.name
 
+  def available_for(self, item):
+    for av in self.availability.all():
+      if av.covers(item):
+        return True
+    if len(self.availability.all()) == 0:
+      return ConInfoBool.objects.no_avail_means_always_avail()
+    return False
+
 class KitBundle(models.Model):
   name = models.CharField(max_length=64)
   status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
@@ -317,7 +389,7 @@ class Room(models.Model):
   openableWindows = models.BooleanField()
   closableCurtains = models.BooleanField()
   inRadioRange = models.BooleanField()
-  kit = models.ManyToManyField(KitThing, through='KitRoomAssignment')
+  kit = models.ManyToManyField(KitThing, through='KitRoomAssignment', null=True, blank=True)
   parent = models.ForeignKey('self', null=True, blank=True)
   capacities = models.ManyToManyField(RoomCapacity, null=True, blank=True)
   availability = models.ManyToManyField(RoomAvailability, null=True, blank=True)
@@ -328,6 +400,14 @@ class Room(models.Model):
 
   def __unicode__(self):
     return self.name
+
+  def available_for(self, item):
+    for av in self.availability.all():
+      if av.covers(item):
+        return True
+    if len(self.availability.all()) == 0:
+      return ConInfoBool.objects.no_avail_means_always_avail()
+    return False
 
 class Person(models.Model):
   """
@@ -423,6 +503,14 @@ class Person(models.Model):
     if not (self.firstName + self.middleName + self.lastName):
       raise ValidationError('At least one of first/middle/last name must be set')
 
+  def available_for(self, item):
+    for av in self.availability.all():
+      if av.covers(item):
+        return True
+    if len(self.availability.all()) == 0:
+      return ConInfoBool.objects.no_avail_means_always_avail()
+    return False
+
 class ScheduledManager(models.Manager):
   def get_query_set(self):
     undef_day = ConDay.objects.find_undefined()
@@ -472,16 +560,15 @@ class Item(models.Model):
   techNotes = models.TextField(blank=True)
   pubBring = models.TextField(blank=True)
   tags = models.ManyToManyField(Tag,null=True,blank=True)
-  people = models.ManyToManyField(Person, through='ItemPerson')
+  people = models.ManyToManyField(Person, through='ItemPerson', null=True, blank=True)
   kitRequests = models.ForeignKey(KitRequest, null=True, blank=True)
-  kit = models.ManyToManyField(KitThing, through='KitItemAssignment')
+  kit = models.ManyToManyField(KitThing, through='KitItemAssignment', null=True, blank=True)
   audienceMics = models.BooleanField(default=False)
   allTechCrew = models.BooleanField(default=False)
   needsReset = models.BooleanField(default=False)
   needsCleanUp = models.BooleanField(default=False)
   mediaStatus = models.ForeignKey(MediaStatus, default=MediaStatus.objects.find_default)
   follows = models.ForeignKey('self', null=True, blank=True)
-
   objects = models.Manager()
   scheduled = ScheduledManager()
   unscheduled = UnscheduledManager()
@@ -515,6 +602,14 @@ class Item(models.Model):
     if not (self.shortname + self.title):
       raise ValidationError('At least one of title/shortname must be set')
 
+  def overlaps(self, other):
+    if (self == other):
+      return False
+    return (    self.day == other.day
+            and self.start.start < (other.start.start + other.length.length)
+            and other.start.start < (self.start.start + self.length.length))
+
+
 
 class ItemPerson(models.Model):
   """
@@ -543,9 +638,9 @@ class CheckResult(EnumTable):
   pass
 
 class Check(models.Model):
-  name = models.TextField(max_length=120)
+  name = models.CharField(max_length=120)
   description = models.TextField(max_length=256)
-  module = models.TextField(max_length=48)
+  module = models.SlugField(max_length=48)
   result = models.ForeignKey(CheckResult, default=CheckResult.objects.find_default)
 
   def __unicode__(self):

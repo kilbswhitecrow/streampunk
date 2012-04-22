@@ -1,0 +1,8 @@
+<h2>Availability</h2>
+<table border="1">
+{% for av in avail %}
+<tr><td>{{ av }}</td></tr>
+{% empty %}
+<tr><td>No availability information entered yet</td></tr>
+{% endfor %}
+</table>
