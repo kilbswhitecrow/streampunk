@@ -1,7 +1,10 @@
 {% extends "progdb2/base.html" %}
 {% load progdb_filters %
-{% block title %}Add Kit Bundle to Room{% endblock %}
+{% block title %}{{ form_title }} {% endblock %}
 {% block body_content %}
+{% if form_intro %}
+<p>{{ form_intro }}</p>
+{% endif %}
 <form action="" method="post">
 {% csrf_token %}
 <table border>

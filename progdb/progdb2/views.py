@@ -224,7 +224,8 @@ def edit_item(request, i):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(i),)))
   else:
     form = ItemForm(instance = item)
-  return render_to_response('progdb2/edit_item.html',
+  form_title = u'Edit Item'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -238,7 +239,8 @@ def edit_tags_for_person(request, p):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_person', args=(int(p),)))
   else:
     form = PersonTagForm(instance = person, initial = { 'fromTag' : False  })
-  return render_to_response('progdb2/edit_tags_for_person.html',
+  form_title = u'Edit tags for person'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -253,7 +255,8 @@ def edit_person(request, p):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_person', args=(int(p),)))
   else:
     form = PersonForm(instance = person)
-  return render_to_response('progdb2/edit_person.html',
+  form_title = u'Edit Person'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -268,7 +271,8 @@ def edit_tag(request, p):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_tag', args=(int(p),)))
   else:
     form = TagForm(instance = tag)
-  return render_to_response('progdb2/edit_tag.html',
+  form_title = u'Edit Tag'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -283,7 +287,8 @@ def edit_room(request, p):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(p),)))
   else:
     form = RoomForm(instance = room)
-  return render_to_response('progdb2/edit_room.html',
+  form_title = u'Edit Room'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -298,7 +303,8 @@ def edit_kitthing(request, kt):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_kitthing', args=(int(kt),)))
   else:
     form = KitThingForm(instance = kitthing)
-  return render_to_response('progdb2/edit_kitthing.html',
+  form_title = u'Edit Kit Thing'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -313,7 +319,8 @@ def edit_kitbundle(request, kb):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_kitbundle', args=(int(kb),)))
   else:
     form = KitBundleForm(instance = kitbundle)
-  return render_to_response('progdb2/edit_kitbundle.html',
+  form_title = u'Edit Kit bundle'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -334,7 +341,9 @@ def add_tags(request):
                                 context_instance=RequestContext(request))
   else:
     form = AddMultipleTagsForm()
-  return render_to_response('progdb2/add_tags.html',
+  form_intro = u'Select the tags to be added, and the items and/or people to which to add them.'
+  form_title = u'Add Multiple Tags'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -355,7 +364,8 @@ def add_kitbundle_to_room(request):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(room.id),)))
   else:
     form = AddBundleToRoomForm()
-  return render_to_response('progdb2/add_kitbundle_to_room.html',
+  form_title = u'Add Kit Bundle to Room'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -372,7 +382,8 @@ def add_kitbundle_to_item(request):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
   else:
     form = AddBundleToItemForm()
-  return render_to_response('progdb2/add_kitbundle_to_item.html',
+  form_title = u'Add Kit Bundle to Item'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -391,7 +402,8 @@ def add_kitthing_to_room(request):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(room.id),)))
   else:
     form = AddThingToRoomForm()
-  return render_to_response('progdb2/add_kitthing_to_room.html',
+  form_title = u'Add Kit Thing to Room'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -406,7 +418,8 @@ def add_kitthing_to_item(request):
       return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
   else:
     form = AddThingToItemForm()
-  return render_to_response('progdb2/add_kitthing_to_item.html',
+  form_title = u'Add Kit Thing to Item'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 

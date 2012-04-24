@@ -1,5 +1,4 @@
 - Kit editing and checks
-- Combine all the Form templates, because they're all the same, apart from the title text
 - Item and person creation through new interface.
 - Name change
 - Django 1.4 update
