@@ -1,0 +1,13 @@
+{% load progdb_filters %}
+<h2>Kit Bundles</h2>
+<table border>
+{% for bundle in kitbundles %}
+  <tr><td>{{ bundle|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No bundles yet</td></tr>
+{% endfor %}
+</table>
+<p>
+<a href="/progdb/add_kitbundle_to_room/">Add Kit bundle to room</a></p>
+<p>
+<a href="/progdb/add_kitbundle_to_item/">Add Kit bundle to item</a></p>

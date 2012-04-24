@@ -6,9 +6,13 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.forms.models import modelformset_factory
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, Check
+from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest
+from progdb2.forms import KitThingForm, KitBundleForm
 from progdb2.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from progdb2.forms import TagForm, RoomForm, CheckModelFormSet
 from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
+from progdb2.forms import AddBundleToRoomForm, AddBundleToItemForm
+from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
 
 def main_page(request):
   return render_to_response('progdb2/main_page.html',
@@ -46,11 +50,19 @@ def list_tags(request):
                             locals(),
                             context_instance=RequestContext(request))
 
+def list_kit(request):
+  kitthings = KitThing.objects.all()
+  kitbundles = KitBundle.objects.all()
+  return render_to_response('progdb2/list_kit.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
 def show_room(request, rm):
   rid = int(rm)
   room = Room.objects.get(id = rid)
   room_items = room.item_set.all()
   avail = room.availability.all()
+  kitthings = KitRoomAssignment.objects.filter(room=room)
   return render_to_response('progdb2/show_room.html',
                             locals(),
                             context_instance=RequestContext(request))
@@ -83,6 +95,8 @@ def show_item(request, im):
   item = Item.objects.get(id = iid)
   item_people = ItemPerson.objects.filter(item=item)
   item_tags = item.tags.all()
+  kitrequests = item.kitRequests.all()
+  kitthings = KitItemAssignment.objects.filter(item=item)
   return render_to_response('progdb2/show_item.html',
                             locals(),
                             context_instance=RequestContext(request))
@@ -104,6 +118,27 @@ def show_tag(request, t):
   tag_items = tag.item_set.all()
   tag_people = tag.person_set.all()
   return render_to_response('progdb2/show_tag.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def show_kitthing(request, kt):
+  ktid = int(kt)
+  kitthing = KitThing.objects.get(id = ktid)
+  kitbundles = kitthing.kitbundle_set.all()
+  kititems = KitItemAssignment.objects.filter(thing = kitthing)
+  kitrooms = KitRoomAssignment.objects.filter(thing = kitthing)
+  avail = kitthing.availability.all()
+  return render_to_response('progdb2/show_kitthing.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def show_kitbundle(request, kb):
+  kbid = int(kb)
+  kitbundle = KitBundle.objects.get(id = kbid)
+  kitthings = kitbundle.things.all()
+  kititems = KitItemAssignment.objects.filter(bundle = kitbundle)
+  kitrooms = KitRoomAssignment.objects.filter(bundle = kitbundle)
+  return render_to_response('progdb2/show_kitbundle.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -252,6 +287,36 @@ def edit_room(request, p):
                             locals(),
                             context_instance=RequestContext(request))
 
+
+def edit_kitthing(request, kt):
+  ktid = int(kt)
+  kitthing = KitThing.objects.get(id = ktid)
+  if request.method == 'POST':
+    form = KitThingForm(request.POST, instance=kitthing)
+    if form.is_valid():
+      form.save()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_kitthing', args=(int(kt),)))
+  else:
+    form = KitThingForm(instance = kitthing)
+  return render_to_response('progdb2/edit_kitthing.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+
+def edit_kitbundle(request, kb):
+  kbid = int(kb)
+  kitbundle = KitBundle.objects.get(id = kbid)
+  if request.method == 'POST':
+    form = KitBundleForm(request.POST, instance=kitbundle)
+    if form.is_valid():
+      form.save()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_kitbundle', args=(int(kb),)))
+  else:
+    form = KitBundleForm(instance = kitbundle)
+  return render_to_response('progdb2/edit_kitbundle.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
 def add_tags(request):
   if request.method == 'POST':
     form = AddMultipleTagsForm(request.POST)
@@ -270,6 +335,78 @@ def add_tags(request):
   else:
     form = AddMultipleTagsForm()
   return render_to_response('progdb2/add_tags.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def add_kitbundle_to_room(request):
+  if request.method == 'POST':
+    form = AddBundleToRoomForm(request.POST)
+    if form.is_valid():
+      bundle = form.cleaned_data['bundle']
+      room = form.cleaned_data['room']
+      fromDay = form.cleaned_data['fromDay']
+      fromSlot = form.cleaned_data['fromSlot']
+      toDay = form.cleaned_data['toDay']
+      toSlot = form.cleaned_data['toSlot']
+      things = bundle.things.all()
+      for thing in things:
+        kras = KitRoomAssignment(thing=thing, bundle=bundle, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot)
+        kras.save()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(room.id),)))
+  else:
+    form = AddBundleToRoomForm()
+  return render_to_response('progdb2/add_kitbundle_to_room.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def add_kitbundle_to_item(request):
+  if request.method == 'POST':
+    form = AddBundleToItemForm(request.POST)
+    if form.is_valid():
+      bundle = form.cleaned_data['bundle']
+      item = form.cleaned_data['item']
+      things = bundle.things.all()
+      for thing in things:
+        kras = KitItemAssignment(thing=thing, bundle=bundle, item=item)
+        kras.save()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
+  else:
+    form = AddBundleToItemForm()
+  return render_to_response('progdb2/add_kitbundle_to_item.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def add_kitthing_to_room(request):
+  if request.method == 'POST':
+    form = AddThingToRoomForm(request.POST)
+    if form.is_valid():
+      thing = form.cleaned_data['thing']
+      room = form.cleaned_data['room']
+      fromDay = form.cleaned_data['fromDay']
+      fromSlot = form.cleaned_data['fromSlot']
+      toDay = form.cleaned_data['toDay']
+      toSlot = form.cleaned_data['toSlot']
+      kras = KitRoomAssignment(thing=thing, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot)
+      kras.save()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(room.id),)))
+  else:
+    form = AddThingToRoomForm()
+  return render_to_response('progdb2/add_kitthing_to_room.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def add_kitthing_to_item(request):
+  if request.method == 'POST':
+    form = AddThingToItemForm(request.POST)
+    if form.is_valid():
+      thing = form.cleaned_data['thing']
+      item = form.cleaned_data['item']
+      kras = KitItemAssignment(thing=thing, item=item)
+      kras.save()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
+  else:
+    form = AddThingToItemForm()
+  return render_to_response('progdb2/add_kitthing_to_item.html',
                             locals(),
                             context_instance=RequestContext(request))
 

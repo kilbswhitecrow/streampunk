@@ -4,7 +4,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": true, 
+      "canClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -34,7 +34,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": true, 
+      "canClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -64,7 +64,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": true, 
+      "canClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -94,7 +94,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": true, 
+      "canClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -124,7 +124,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": true, 
+      "canClash": true, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -154,7 +154,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "canClash": false, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": false, 
@@ -184,7 +184,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "canClash": false, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": true, 
@@ -214,7 +214,7 @@
     "model": "progdb2.room", 
     "fields": {
       "disabledAccess": true, 
-      "CanClash": false, 
+      "canClash": false, 
       "closableCurtains": false, 
       "accessibleOnFlat": false, 
       "visible": false, 

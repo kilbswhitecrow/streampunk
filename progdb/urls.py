@@ -4,6 +4,9 @@ from progdb.progdb2.views import main_page, list_grids, list_items, list_people,
 from progdb.progdb2.views import show_person, show_item, show_grid, show_slot, add_person_to_item, remove_person_from_item, show_referer
 from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person, edit_item, edit_person, edit_room, edit_tag
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
+from progdb.progdb2.views import list_kit, show_kitthing, show_kitbundle, edit_kitthing, edit_kitbundle
+from progdb.progdb2.views import add_kitbundle_to_room, add_kitbundle_to_item
+from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -22,12 +25,15 @@ urlpatterns = patterns('',
     url(r'^progdb/list_people/$', list_people),
     url(r'^progdb/list_rooms/$', list_rooms),
     url(r'^progdb/list_tags/$', list_tags),
+    url(r'^progdb/list_kit/$', list_kit),
     url(r'^progdb/conday/(\d+)/grid/(\d+)/$', show_grid),
     url(r'^progdb/slot/(\d+)/$', show_slot),
     url(r'^progdb/room/(\d+)/$', show_room),
     url(r'^progdb/item/(\d+)/$', show_item),
     url(r'^progdb/person/(\d+)/$', show_person),
     url(r'^progdb/tag/(\d+)/$', show_tag),
+    url(r'^progdb/kitthing/(\d+)/$', show_kitthing),
+    url(r'^progdb/kitbundle/(\d+)/$', show_kitbundle),
     url(r'^progdb/fill/d/(?P<d>\d+)/g/(?P<g>\d+)/r/(?P<r>\d+)/s/(?P<s>\d+)/u/$', fill_slot_unsched),
     url(r'^progdb/fill/d/(?P<d>\d+)/g/(?P<g>\d+)/r/(?P<r>\d+)/s/(?P<s>\d+)/s/$', fill_slot_sched),
 
@@ -36,12 +42,19 @@ urlpatterns = patterns('',
     url(r'^progdb/add_person/(?P<p>\d+)/to_item/(?P<i>\d+)/$', add_person_to_item),
     url(r'^progdb/add_person_to_item/(?P<i>\d+)/$', add_person_to_item),
 
+    url(r'^progdb/add_kitbundle_to_room/$', add_kitbundle_to_room),
+    url(r'^progdb/add_kitbundle_to_item/$', add_kitbundle_to_item),
+    url(r'^progdb/add_kitthing_to_room/$', add_kitthing_to_room),
+    url(r'^progdb/add_kitthing_to_item/$', add_kitthing_to_item),
+
     url(r'^progdb/remove_person/(?P<p>\d+)/from_item/(?P<i>\d+)/$', remove_person_from_item),
 
     url(r'^progdb/edit_item/(\d+)/$', edit_item),
     url(r'^progdb/edit_person/(\d+)/$', edit_person),
     url(r'^progdb/edit_tag/(\d+)/$', edit_tag),
     url(r'^progdb/edit_room/(\d+)/$', edit_room),
+    url(r'^progdb/edit_kitthing/(\d+)/$', edit_kitthing),
+    url(r'^progdb/edit_kitbundle/(\d+)/$', edit_kitbundle),
     url(r'^progdb/edit_tags_for_item/(\d+)/$', edit_tags_for_item),
     url(r'^progdb/edit_tags_for_person/(\d+)/$', edit_tags_for_person),
 

@@ -7,6 +7,7 @@ from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
 from django.forms.models import BaseModelFormSet
 from progdb2.models import ItemPerson, Item, Person, Tag, Room, Check
+from progdb2.models import KitThing, KitBundle, KitRoomAssignment, KitItemAssignment
 
 class ItemPersonForm(ModelForm):
   fromPerson = forms.BooleanField(required=False, widget=forms.HiddenInput)
@@ -39,6 +40,34 @@ class RoomForm(ModelForm):
   class Meta:
     model = Room
     exclude = [ 'kit', ]
+
+class KitThingForm(ModelForm):
+  class Meta:
+    model = KitThing
+
+class KitBundleForm(ModelForm):
+  class Meta:
+    model = KitBundle
+
+class AddBundleToRoomForm(ModelForm):
+  class Meta:
+    model = KitRoomAssignment
+    exclude = [ 'thing', ]
+
+class AddBundleToItemForm(ModelForm):
+  class Meta:
+    model = KitItemAssignment
+    exclude = [ 'thing', ]
+
+class AddThingToRoomForm(ModelForm):
+  class Meta:
+    model = KitRoomAssignment
+    exclude = [ 'bundle', ]
+
+class AddThingToItemForm(ModelForm):
+  class Meta:
+    model = KitItemAssignment
+    exclude = [ 'bundle', ]
 
 class PersonTagForm(ModelForm):
   """

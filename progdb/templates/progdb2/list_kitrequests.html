@@ -1,0 +1,9 @@
+{% load progdb_filters %}
+<h2>Kit Requests</h2>
+<table border>
+{% for req in kitrequests %}
+  <tr><td>{{ req|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No kit requests yet</td></tr>
+{% endfor %}
+</table>

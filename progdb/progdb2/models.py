@@ -310,7 +310,7 @@ class KitThing(models.Model):
   status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
   cost = models.IntegerField(default=0)
   insurance = models.IntegerField(default=0)
-  nodes = models.TextField(blank=True)
+  notes = models.TextField(blank=True)
   coordinator = models.CharField(max_length=64)
   availability = models.ManyToManyField(KitAvailability, null=True, blank=True)
 
@@ -373,7 +373,7 @@ class Room(models.Model):
   visible = models.BooleanField(default=True)
   isDefault = models.BooleanField()
   isUndefined = models.BooleanField()
-  CanClash = models.BooleanField()
+  canClash = models.BooleanField()
   disabledAccess = models.BooleanField(default=True)
   gridOrder = models.IntegerField(default=50)
   privNotes = models.TextField(blank=True)
@@ -561,7 +561,7 @@ class Item(models.Model):
   pubBring = models.TextField(blank=True)
   tags = models.ManyToManyField(Tag,null=True,blank=True)
   people = models.ManyToManyField(Person, through='ItemPerson', null=True, blank=True)
-  kitRequests = models.ForeignKey(KitRequest, null=True, blank=True)
+  kitRequests = models.ManyToManyField(KitRequest, null=True, blank=True)
   kit = models.ManyToManyField(KitThing, through='KitItemAssignment', null=True, blank=True)
   audienceMics = models.BooleanField(default=False)
   allTechCrew = models.BooleanField(default=False)
@@ -628,11 +628,6 @@ class ItemPerson(models.Model):
   class Meta:
     verbose_name = 'Items-People'
 
-
-class ItemPersonForm(ModelForm):
-  fromPerson = forms.BooleanField(required=False, widget=forms.HiddenInput)
-  class Meta:
-    model = ItemPerson
 
 class CheckResult(EnumTable):
   pass

@@ -1,0 +1,168 @@
+[
+  {
+    "pk": 1, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 1, 
+      "status": 1, 
+      "kind": 2, 
+      "name": "Main hall projector", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 100, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 100, 
+      "coordinator": "Lindsey", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 1, 
+      "status": 1, 
+      "kind": 3, 
+      "name": "Main hall screen", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 70, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 70, 
+      "coordinator": "Lindsey", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 6, 
+      "status": 1, 
+      "kind": 5, 
+      "name": "Main hall stage microphone set", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 0, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 0, 
+      "coordinator": "Lindsey", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 2, 
+      "status": 1, 
+      "kind": 5, 
+      "name": "Main hall roving mics", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 100, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 50, 
+      "coordinator": "Lindsey", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 5, 
+      "status": 1, 
+      "kind": 5, 
+      "name": "Programme 1 microphone set", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 30, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 30, 
+      "coordinator": "Keith", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 1, 
+      "status": 1, 
+      "kind": 2, 
+      "name": "Green room projector", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 80, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 80, 
+      "coordinator": "Claire", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "progdb2.kitthing", 
+    "fields": {
+      "count": 1, 
+      "status": 1, 
+      "kind": 3, 
+      "name": "Green room screen", 
+      "basis": 1, 
+      "notes": "", 
+      "availability": [], 
+      "source": 1, 
+      "cost": 50, 
+      "role": 1, 
+      "department": 2, 
+      "insurance": 20, 
+      "coordinator": "Claire", 
+      "description": ""
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitbundle", 
+    "fields": {
+      "status": 1, 
+      "things": [
+        1, 
+        2, 
+        3, 
+        4
+      ], 
+      "name": "Main hall kit"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "progdb2.kitbundle", 
+    "fields": {
+      "status": 1, 
+      "things": [
+        6, 
+        7
+      ], 
+      "name": "Green room kit"
+    }
+  }
+]
