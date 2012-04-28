@@ -1,0 +1,22 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}{{ form_title }} {% endblock %}
+<p>
+{% block body_content %}
+<table border="1">
+<tr>
+  <td>{{ object.person }}</td>
+  <td>{{ object.item }}</td>
+  <td>{{ object.role }}</td>
+  <td>{{ object.status }}</td>
+</tr>
+</table>
+</p>
+<form action="" method="post">
+{% csrf_token %}
+<table border>
+{{ form.as_table }}
+<tr><td colspan="2"><input type="submit" value="submit" /></td></tr>
+</table>
+</form>
+{% endblock %}

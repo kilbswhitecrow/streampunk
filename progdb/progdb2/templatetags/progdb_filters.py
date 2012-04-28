@@ -6,11 +6,9 @@ register = template.Library()
 
 @register.filter
 def linky(value, text=None):
-  id = value.id
-  name = value.__class__.__name__.lower()
   if not text:
     text = value
-  return '<a href="/progdb/%s/%d/">%s</a>' % (name, id, escape(text))
+  return '<a href="%s">%s</a>' % (value.get_absolute_url(), escape(text))
 
 @register.filter
 def linky2(value, prev):

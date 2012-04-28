@@ -4,7 +4,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
+from django.views.generic import DeleteView, DetailView, UpdateView, CreateView, ListView
 from django.forms.models import modelformset_factory
+
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest
 from progdb2.forms import KitThingForm, KitBundleForm
@@ -14,20 +16,24 @@ from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSche
 from progdb2.forms import AddBundleToRoomForm, AddBundleToItemForm
 from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
 
+class NewView(CreateView):
+  template_name = 'progdb2/editform.html'
+
+class EditView(UpdateView):
+  template_name = 'progdb2/editform.html'
+
+class AllView(ListView):
+  template_name = 'progdb2/object_list.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(AllView, self).get_context_data(**kwargs)
+    context['verbose_name'] = self.model._meta.verbose_name
+    context['verbose_name_plural'] = self.model._meta.verbose_name_plural
+    context['new_url'] = r'/progdb/new_%s/' % ( self.model.__name__.lower() )
+    return context
+
 def main_page(request):
   return render_to_response('progdb2/main_page.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-def list_items(request):
-  item_list = Item.objects.all()
-  return render_to_response('progdb2/list_items.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-def list_people(request):
-  person_list = Person.objects.all()
-  return render_to_response('progdb2/list_people.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -38,34 +44,17 @@ def list_grids(request):
                             locals(),
                             context_instance=RequestContext(request))
 
-def list_rooms(request):
-  room_list = Room.objects.all()
-  return render_to_response('progdb2/list_rooms.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+class show_room_detail(DetailView):
+  context_object_name='room'
+  model = Room
+  template_name = 'progdb2/show_room.html'
 
-def list_tags(request):
-  tag_list = Tag.objects.all()
-  return render_to_response('progdb2/list_tags.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-def list_kit(request):
-  kitthings = KitThing.objects.all()
-  kitbundles = KitBundle.objects.all()
-  return render_to_response('progdb2/list_kit.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-def show_room(request, rm):
-  rid = int(rm)
-  room = Room.objects.get(id = rid)
-  room_items = room.item_set.all()
-  avail = room.availability.all()
-  kitthings = KitRoomAssignment.objects.filter(room=room)
-  return render_to_response('progdb2/show_room.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  def get_context_data(self, **kwargs):
+    context = super(show_room_detail, self).get_context_data(**kwargs)
+    context['room_items'] = self.object.item_set.all()
+    context['avail'] = self.object.availability.all()
+    context['kitthings'] = KitRoomAssignment.objects.filter(room=self.object)
+    return context
 
 def show_grid(request, dy, gr):
   did = int(dy)
@@ -90,36 +79,44 @@ def show_slot(request, sl):
                             locals(),
                             context_instance=RequestContext(request))
 
-def show_item(request, im):
-  iid = int(im)
-  item = Item.objects.get(id = iid)
-  item_people = ItemPerson.objects.filter(item=item)
-  item_tags = item.tags.all()
-  kitrequests = item.kitRequests.all()
-  kitthings = KitItemAssignment.objects.filter(item=item)
-  return render_to_response('progdb2/show_item.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+class show_item_detail(DetailView):
+  context_object_name = 'item'
+  model = Item
+  template_name = 'progdb2/show_item.html'
 
-def show_person(request, p):
-  pid = int(p)
-  person = Person.objects.get(id = pid)
-  person_name = "%s" % person
-  person_tags = person.tags.all()
-  person_items = ItemPerson.objects.filter(person=person)
-  avail = person.availability.all()
-  return render_to_response('progdb2/show_person.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  def get_context_data(self, **kwargs):
+    context = super(show_item_detail, self).get_context_data(**kwargs)
+    context['item_people'] = ItemPerson.objects.filter(item=self.object)
+    context['item_tags'] = self.object.tags.all()
+    context['kitrequests'] = self.object.kitRequests.all()
+    context['kitthings'] = KitItemAssignment.objects.filter(item=self.object)
+    return context
 
-def show_tag(request, t):
-  tid = int(t)
-  tag = Tag.objects.get(id = tid)
-  tag_items = tag.item_set.all()
-  tag_people = tag.person_set.all()
-  return render_to_response('progdb2/show_tag.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+
+class show_person_detail(DetailView):
+  context_object_name = 'person'
+  model = Person
+  template_name = 'progdb2/show_person.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_person_detail, self).get_context_data(**kwargs)
+    context['person_name'] = "%s" % self.object
+    context['person_tags'] = self.object.tags.all()
+    context['person_items'] = ItemPerson.objects.filter(person=self.object)
+    context['avail'] = self.object.availability.all()
+    return context
+
+class show_tag_detail(DetailView):
+  context_object_name = 'tag'
+  model = Tag
+  template_name = 'progdb2/show_tag.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_tag_detail, self).get_context_data(**kwargs)
+    context['tag_items'] = self.object.item_set.all()
+    context['tag_people'] = self.object.person_set.all()
+    return context
+
 
 def show_kitthing(request, kt):
   ktid = int(kt)
@@ -132,6 +129,20 @@ def show_kitthing(request, kt):
                             locals(),
                             context_instance=RequestContext(request))
 
+class show_kitthing_detail(DetailView):
+  context_object_name = 'kitthing'
+  model = KitThing
+  template_name = 'progdb2/show_kitthing.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_kitthing_detail, self).get_context_data(**kwargs)
+    context['kitbundles'] = self.object.kitbundle_set.all()
+    context['kititems'] = KitItemAssignment.objects.filter(thing = self.object)
+    context['kitrooms'] = KitRoomAssignment.objects.filter(thing = self.object)
+    context['avail'] = self.object.availability.all()
+    return context
+
+
 def show_kitbundle(request, kb):
   kbid = int(kb)
   kitbundle = KitBundle.objects.get(id = kbid)
@@ -141,6 +152,24 @@ def show_kitbundle(request, kb):
   return render_to_response('progdb2/show_kitbundle.html',
                             locals(),
                             context_instance=RequestContext(request))
+
+class show_kitbundle_detail(DetailView):
+  context_object_name = 'kitbundle'
+  model = KitBundle
+  template_name = 'progdb2/show_kitbundle.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_kitbundle_detail, self).get_context_data(**kwargs)
+    context['kitthings'] = self.object.things.all()
+    context['kititems'] = KitItemAssignment.objects.filter(bundle = self.object)
+    context['kitrooms'] = KitRoomAssignment.objects.filter(bundle = self.object)
+    return context
+
+class show_kitrequest_detail(DetailView):
+  context_object_name = 'kitrequest'
+  model = KitRequest
+  template_name = 'progdb2/show_kitrequest.html'
+
 
 def is_from_item(request):
   referer = request.META['HTTP_REFERER']
@@ -169,11 +198,20 @@ def add_person_to_item(request, p=None, i=None):
         return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
   else:
     form = ItemPersonForm( initial = { 'item' : i, 'person' : p, 'fromPerson' : is_from_person(request) })
-  return render_to_response('progdb2/add_person_to_item.html',
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
-def remove_person_from_item(request, p, i):
+class remove_person_from_item(DeleteView):
+  template_name = "remove_person_from_item.html"
+  model=ItemPerson
+  queryset = ItemPerson.objects.all()
+  def get_object(self):
+    object=self.queryset.get(item=int(self.kwargs['i']), person=int(self.kwargs['p']))
+  def get_success_url(self):
+    return '/progdb/person/'+self.kwargs['p']
+
+def remove_person_from_itemXXX(request, p, i):
   # Really shouldn't do this kind of updating on a GET, but we're
   # being somewhat lazy here.
   pid = int(p)
@@ -214,21 +252,6 @@ def edit_tags_for_item(request, i):
                             locals(),
                             context_instance=RequestContext(request))
 
-def edit_item(request, i):
-  iid = int(i)
-  item = Item.objects.get(id = iid)
-  if request.method == 'POST':
-    form = ItemForm(request.POST, instance=item)
-    if form.is_valid():
-      form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(i),)))
-  else:
-    form = ItemForm(instance = item)
-  form_title = u'Edit Item'
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
 def edit_tags_for_person(request, p):
   pid = int(p)
   person = Person.objects.get(id = pid)
@@ -240,86 +263,6 @@ def edit_tags_for_person(request, p):
   else:
     form = PersonTagForm(instance = person, initial = { 'fromTag' : False  })
   form_title = u'Edit tags for person'
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-
-def edit_person(request, p):
-  pid = int(p)
-  person = Person.objects.get(id = pid)
-  if request.method == 'POST':
-    form = PersonForm(request.POST, instance=person)
-    if form.is_valid():
-      form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_person', args=(int(p),)))
-  else:
-    form = PersonForm(instance = person)
-  form_title = u'Edit Person'
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-
-def edit_tag(request, p):
-  pid = int(p)
-  tag = Tag.objects.get(id = pid)
-  if request.method == 'POST':
-    form = TagForm(request.POST, instance=tag)
-    if form.is_valid():
-      form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_tag', args=(int(p),)))
-  else:
-    form = TagForm(instance = tag)
-  form_title = u'Edit Tag'
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-
-def edit_room(request, p):
-  pid = int(p)
-  room = Room.objects.get(id = pid)
-  if request.method == 'POST':
-    form = RoomForm(request.POST, instance=room)
-    if form.is_valid():
-      form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(p),)))
-  else:
-    form = RoomForm(instance = room)
-  form_title = u'Edit Room'
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-
-def edit_kitthing(request, kt):
-  ktid = int(kt)
-  kitthing = KitThing.objects.get(id = ktid)
-  if request.method == 'POST':
-    form = KitThingForm(request.POST, instance=kitthing)
-    if form.is_valid():
-      form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_kitthing', args=(int(kt),)))
-  else:
-    form = KitThingForm(instance = kitthing)
-  form_title = u'Edit Kit Thing'
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-
-def edit_kitbundle(request, kb):
-  kbid = int(kb)
-  kitbundle = KitBundle.objects.get(id = kbid)
-  if request.method == 'POST':
-    form = KitBundleForm(request.POST, instance=kitbundle)
-    if form.is_valid():
-      form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_kitbundle', args=(int(kb),)))
-  else:
-    form = KitBundleForm(instance = kitbundle)
-  form_title = u'Edit Kit bundle'
   return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))

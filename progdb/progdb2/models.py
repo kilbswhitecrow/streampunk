@@ -14,6 +14,12 @@ YesNo = (
   ( 'No', 'No'),
 )
 
+def mk_url(self, alt=None):
+  text = alt
+  if text == None:
+    text = self.__class__.__name__.lower()
+  return r'/progdb/%s/%d/' % (text, self.id)
+
 class DefUndefManager(models.Manager):
   """
   A manager that has extra methods for finding the default/undefined
@@ -32,7 +38,7 @@ class Availability(models.Model):
 
   def __unicode__(self):
     if self.label:
-      return "%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
+      return u"%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
     else:
       return "%s - %s" % (self.fromWhen, self.toWhen)
 
@@ -264,8 +270,14 @@ class Tag(models.Model):
   icon = models.URLField(verify_exists=False, blank=True)
   visible = models.BooleanField(default=True)
 
+  class Meta:
+    verbose_name = 'tag'
+    verbose_name_plural = 'tags'
+
   def __unicode__(self):
     return self.name
+  def get_absolute_url(self):
+    return mk_url(self)
 
 class KitKind(EnumTable):
   pass
@@ -295,8 +307,14 @@ class KitRequest(models.Model):
   notes = models.TextField(blank=True)
   status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
 
+  class Meta:
+    verbose_name = 'kitrequest'
+    verbose_name_plural = 'kitrequests'
+
   def __unicode__(self):
-    return "%s: %d" % (self.kind, self.count)
+    return u"%s: %d" % (self.kind, self.count)
+  def get_absolute_url(self):
+    return mk_url(self)
 
 class KitThing(models.Model):
   name = models.CharField(max_length=64)
@@ -314,8 +332,14 @@ class KitThing(models.Model):
   coordinator = models.CharField(max_length=64)
   availability = models.ManyToManyField(KitAvailability, null=True, blank=True)
 
+  class Meta:
+    verbose_name = 'kitthing'
+    verbose_name_plural = 'kitthings'
+
   def __unicode__(self):
     return self.name
+  def get_absolute_url(self):
+    return mk_url(self)
 
   def available_for(self, item):
     for av in self.availability.all():
@@ -330,8 +354,14 @@ class KitBundle(models.Model):
   status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default)
   things = models.ManyToManyField(KitThing)
 
+  class Meta:
+    verbose_name = 'kitbundle'
+    verbose_name_plural = 'kitbundles'
+
   def __unicode__(self):
     return self.name
+  def get_absolute_url(self):
+    return mk_url(self)
 
 class KitRoomAssignment(models.Model):
   room = models.ForeignKey('Room')
@@ -343,7 +373,9 @@ class KitRoomAssignment(models.Model):
   toSlot = models.ForeignKey(Slot, related_name='kitroomto_set')
 
   def __unicode__(self):
-    return "%s in %s" % (self.thing, self.room)
+    return u"%s in %s" % (self.thing, self.room)
+  def get_absolute_url(self):
+    return mk_url(self)
   
 class KitItemAssignment(models.Model):
   item = models.ForeignKey('Item')
@@ -351,14 +383,20 @@ class KitItemAssignment(models.Model):
   bundle = models.ForeignKey(KitBundle, null=True, blank=True)
 
   def __unicode__(self):
-    return "%s to %s" % (self.thing, self.item)
+    return u"%s to %s" % (self.thing, self.item)
+  def get_absolute_url(self):
+    return mk_url(self)
 
 class RoomCapacity(models.Model):
   layout = models.ForeignKey(SeatingKind, default=SeatingKind.objects.find_default)
   count = models.IntegerField()
 
+  class Meta:
+    verbose_name = 'room-capacity'
+    verbose_name_plural = 'room-capacities'
+
   def __unicode__(self):
-    return "%s: %d" % (self.layout, self.count)
+    return u"%s: %d" % (self.layout, self.count)
 
 class Room(models.Model):
   """
@@ -397,9 +435,13 @@ class Room(models.Model):
 
   class Meta:
     ordering = [ 'isDefault', 'gridOrder' ]
+    verbose_name = 'room'
+    verbose_name_plural = 'rooms'
 
   def __unicode__(self):
     return self.name
+  def get_absolute_url(self):
+    return mk_url(self)
 
   def available_for(self, item):
     for av in self.availability.all():
@@ -432,7 +474,8 @@ class Person(models.Model):
   availability = models.ManyToManyField(PersonAvailability, null=True, blank=True)
 
   class Meta:
-    verbose_name_plural = 'People'
+    verbose_name = 'person'
+    verbose_name_plural = 'people'
     ordering = [ 'lastName', 'firstName', 'middleName' ]
 
   def combined_name(self):
@@ -470,6 +513,8 @@ class Person(models.Model):
     are viewed, based on permissions and on user choice.
     """
     return self.as_name_then_badge()
+  def get_absolute_url(self):
+    return mk_url(self)
 
   def clean_firstName(self):
     """
@@ -575,12 +620,16 @@ class Item(models.Model):
 
   class Meta:
     ordering = [ 'title', 'shortname' ]
+    verbose_name = 'item'
+    verbose_name_plural = 'items'
 
   def __unicode__(self):
     if self.title:
       return self.title
     else:
       return self.shortname
+  def get_absolute_url(self):
+    return mk_url(self)
 
   def clean_title(self):
     """
@@ -626,8 +675,13 @@ class ItemPerson(models.Model):
   recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
 
   class Meta:
-    verbose_name = 'Items-People'
+    verbose_name = 'item-person'
+    verbose_name_plural = 'items-people'
 
+  def __unicode__(self):
+    return u"%s: %s [%s]" % (item, person, role)
+  def get_absolute_url(self):
+    return mk_url(self)
 
 class CheckResult(EnumTable):
   pass
@@ -640,6 +694,8 @@ class Check(models.Model):
 
   def __unicode__(self):
     return self.name
+  def get_absolute_url(self):
+    return mk_url(self)
 
 # Outstanding things that need thinking about:
 # - Availability. Just make it a separate table, and add

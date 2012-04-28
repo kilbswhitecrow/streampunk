@@ -1,0 +1,13 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}{{ verbose_name_plural }} {% endblock %}
+{% block body_content %}
+<table border>
+{% for o in object_list %}
+  <tr><td> {{ o|linky|safe }} </td></tr>
+{% empty %}
+  <tr><td>None yet</td></tr>
+{% endfor %}
+</table>
+<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
+{% endblock %}
