@@ -19,19 +19,19 @@
 
 <h2>People on this item</h2>
 <table border="1">
-{% for person in item_people %}
+{% for itemperson in item_people %}
 <tr>
-  <td>{{ person.person|linky|safe }}</td>
-  <td>{{ person.role }}</td>
-  <td>{{ person.status }}</td>
-  <td><a href="/progdb/remove_person/{{ person.person.id }}/from_item/{{ item.id }}/">Remove</a></td>
+  <td>{{ itemperson.person|linky|safe }}</td>
+  <td>{{ itemperson.role }}</td>
+  <td>{{ itemperson.status }}</td>
+  <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
 </tr>
 {% empty %}
 <tr><td>No people on this item yet</td></tr>
 {% endfor %}
 </table>
 
-<p><a href="/progdb/add_person_to_item/{{ item.id }}/">Add someone to {{ item }}</a>.</p>
+<p><a href="/progdb/new_itemperson/?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
 
 {% include "progdb2/list_kitrequests.html" %}
 {% include "progdb2/list_kitthings.html" %}

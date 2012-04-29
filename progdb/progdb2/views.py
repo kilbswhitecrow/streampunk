@@ -19,6 +19,25 @@ from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
 class NewView(CreateView):
   template_name = 'progdb2/editform.html'
 
+  def get_initial(self):
+    models = { 'item': Item, 'person': Person }
+    initial = super(NewView, self).get_initial()
+    for k in self.request.GET:
+      if k in models:
+        id = int(self.request.GET[k])
+        m = models[k]
+        initial[k] = m.objects.get(id = id)
+    return initial
+
+  def get_success_url(self):
+    df = super(NewView, self).get_success_url()
+    subs = [ ('submit0', 'after0'), ('submit1', 'after1') ]
+    for (s, a) in subs:
+      if self.request.POST.has_key(s) and self.request.POST.has_key(a):
+        attr = self.request.POST.get(a, 'self')
+        return getattr(self.object, attr).get_absolute_url()
+    return df
+
 class EditView(UpdateView):
   template_name = 'progdb2/editform.html'
 
@@ -31,6 +50,13 @@ class AllView(ListView):
     context['verbose_name_plural'] = self.model._meta.verbose_name_plural
     context['new_url'] = r'/progdb/new_%s/' % ( self.model.__name__.lower() )
     return context
+
+class AfterDeleteView(DeleteView):
+  def get_success_url(self):
+    if self.request.POST.has_key('after'):
+      return self.request.POST.get('after')
+    else:
+      return '/progdb/main/'
 
 def main_page(request):
   return render_to_response('progdb2/main_page.html',
@@ -170,6 +196,11 @@ class show_kitrequest_detail(DetailView):
   model = KitRequest
   template_name = 'progdb2/show_kitrequest.html'
 
+class show_itemperson_detail(DetailView):
+  context_object_name = 'itemperson'
+  model = ItemPerson
+  template_name = 'progdb2/show_itemperson.html'
+
 
 def is_from_item(request):
   referer = request.META['HTTP_REFERER']
@@ -201,28 +232,6 @@ def add_person_to_item(request, p=None, i=None):
   return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
-
-class remove_person_from_item(DeleteView):
-  template_name = "remove_person_from_item.html"
-  model=ItemPerson
-  queryset = ItemPerson.objects.all()
-  def get_object(self):
-    object=self.queryset.get(item=int(self.kwargs['i']), person=int(self.kwargs['p']))
-  def get_success_url(self):
-    return '/progdb/person/'+self.kwargs['p']
-
-def remove_person_from_itemXXX(request, p, i):
-  # Really shouldn't do this kind of updating on a GET, but we're
-  # being somewhat lazy here.
-  pid = int(p)
-  iid = int(i)
-  item = Item.objects.get(id = iid)
-  person = Person.objects.get(id = pid)
-  ItemPerson.objects.filter(item = item, person = person).delete()
-  if is_from_person(request):
-    return HttpResponseRedirect(reverse('progdb.progdb2.views.show_person', args=(pid,)))
-  else:
-    return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(iid,)))
 
 def show_referer(request):
   if request.method == 'POST':

@@ -15,6 +15,11 @@ class ItemPersonForm(ModelForm):
   class Meta:
     model = ItemPerson
 
+class DeleteItemPersonForm(ModelForm):
+  confirm = forms.BooleanField(required=False, label='Okay to delete?')
+  class Meta:
+    model = ItemPerson
+
 class ItemTagForm(ModelForm):
   """
   Used when we're modifying the tags of an item.

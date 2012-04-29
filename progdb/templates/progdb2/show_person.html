@@ -23,19 +23,19 @@
 
 <h2>Items</h2>
 <table border="1">
-{% for item in person_items %}
+{% for itemperson in person_items %}
 <tr>
-  <td>{{ item.item|linky|safe }}</td>
-  <td>{{ item.role }}</td>
-  <td>{{ item.status }}</td>
-  <td><a href="/progdb/remove_person/{{ person.id }}/from_item/{{ item.item.id }}/">Remove</a></td>
+  <td>{{ itemperson.item|linky|safe }}</td>
+  <td>{{ itemperson.role }}</td>
+  <td>{{ itemperson.status }}</td>
+  <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
 </tr>
 {% empty %}
 <tr><td>Not on any items</td></tr>
 {% endfor %}
 </table>
 
-<p><a href="/progdb/add_person/{{ person.id }}/to_item/">Add {{ person }} to an item</a>.</p>
+<p><a href="/progdb/new_itemperson/?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
 
 <p><a href="/progdb/show_referer/">Show referer</a></p>
 

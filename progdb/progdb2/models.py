@@ -675,11 +675,11 @@ class ItemPerson(models.Model):
   recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
 
   class Meta:
-    verbose_name = 'item-person'
-    verbose_name_plural = 'items-people'
+    verbose_name = 'itemperson'
+    verbose_name_plural = 'itemspeople'
 
   def __unicode__(self):
-    return u"%s: %s [%s]" % (item, person, role)
+    return u"%s: %s [%s]" % (self.item, self.person, self.role)
   def get_absolute_url(self):
     return mk_url(self)
 

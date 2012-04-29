@@ -2,20 +2,21 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib.auth.views import login, logout
 from django.views.generic import DetailView
 
-from progdb.progdb2.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest
+from progdb.progdb2.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 
-from progdb.progdb2.forms import ItemForm, PersonForm, TagForm, RoomForm
+from progdb.progdb2.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPersonForm
 from progdb.progdb2.forms import KitThingForm, KitBundleForm, KitRequestForm
+from progdb.progdb2.forms import DeleteItemPersonForm
 
-from progdb.progdb2.views import main_page, list_grids, EditView, NewView, AllView
-from progdb.progdb2.views import show_grid, show_slot, add_person_to_item, remove_person_from_item
+from progdb.progdb2.views import main_page, list_grids, EditView, NewView, AllView, AfterDeleteView
+from progdb.progdb2.views import show_grid, show_slot
 from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from progdb.progdb2.views import show_kitthing, show_kitbundle
 from progdb.progdb2.views import add_kitbundle_to_room, add_kitbundle_to_item
 from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item
 from progdb.progdb2.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
-from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail
+from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -37,6 +38,7 @@ urlpatterns = patterns('',
     url(r'^progdb/kitbundles/$', AllView.as_view(model=KitBundle)),
     url(r'^progdb/kitthings/$', AllView.as_view(model=KitThing)),
     url(r'^progdb/kitrequests/$', AllView.as_view(model=KitRequest)),
+    url(r'^progdb/itemspeople/$', AllView.as_view(model=ItemPerson)),
 
     url(r'^progdb/room/(?P<pk>\d+)/$', show_room_detail.as_view()),
     url(r'^progdb/item/(?P<pk>\d+)/$', show_item_detail.as_view()),
@@ -45,23 +47,20 @@ urlpatterns = patterns('',
     url(r'^progdb/kitbundle/(?P<pk>\d+)/$', show_kitbundle_detail.as_view()),
     url(r'^progdb/kitthing/(?P<pk>\d+)/$', show_kitthing_detail.as_view()),
     url(r'^progdb/kitrequest/(?P<pk>\d+)/$', show_kitrequest_detail.as_view()),
+    url(r'^progdb/itemperson/(?P<pk>\d+)/$', show_itemperson_detail.as_view()),
 
     url(r'^progdb/conday/(\d+)/grid/(\d+)/$', show_grid),
     url(r'^progdb/slot/(\d+)/$', show_slot),
     url(r'^progdb/fill/d/(?P<d>\d+)/g/(?P<g>\d+)/r/(?P<r>\d+)/s/(?P<s>\d+)/u/$', fill_slot_unsched),
     url(r'^progdb/fill/d/(?P<d>\d+)/g/(?P<g>\d+)/r/(?P<r>\d+)/s/(?P<s>\d+)/s/$', fill_slot_sched),
 
-    url(r'^progdb/add_person_to_item/$', add_person_to_item),
-    url(r'^progdb/add_person/(?P<p>\d+)/to_item/$', add_person_to_item),
-    url(r'^progdb/add_person/(?P<p>\d+)/to_item/(?P<i>\d+)/$', add_person_to_item),
-    url(r'^progdb/add_person_to_item/(?P<i>\d+)/$', add_person_to_item),
-
     url(r'^progdb/add_kitbundle_to_room/$', add_kitbundle_to_room),
     url(r'^progdb/add_kitbundle_to_item/$', add_kitbundle_to_item),
     url(r'^progdb/add_kitthing_to_room/$', add_kitthing_to_room),
     url(r'^progdb/add_kitthing_to_item/$', add_kitthing_to_item),
 
-    url(r'^progdb/remove_person/(?P<p>\d+)/from_item/(?P<i>\d+)/$', remove_person_from_item.as_view()),
+    url(r'^progdb/delete_itemperson/(?P<pk>\d+)/$', AfterDeleteView.as_view(
+          model=ItemPerson)),
 
     url(r'^progdb/edit_item/(?P<pk>\d+)/$', EditView.as_view(
           model = Item,
@@ -84,6 +83,9 @@ urlpatterns = patterns('',
     url(r'^progdb/edit_kitrequest/(?P<pk>\d+)/$', EditView.as_view(
           model = KitRequest,
           form_class=KitRequestForm)),
+    url(r'^progdb/edit_itemperson/(?P<pk>\d+)/$', EditView.as_view(
+          model = ItemPerson,
+          form_class=ItemPersonForm)),
 
     url(r'^progdb/new_person/$', NewView.as_view(
           model = Person,
@@ -106,6 +108,10 @@ urlpatterns = patterns('',
     url(r'^progdb/new_kitrequest/$', NewView.as_view(
           model = KitRequest,
           form_class=KitRequestForm)),
+    url(r'^progdb/new_itemperson/$', NewView.as_view(
+          template_name = 'progdb2/edit_itemperson.html',
+          model = ItemPerson,
+          form_class=ItemPersonForm)),
 
     url(r'^progdb/edit_tags_for_item/(\d+)/$', edit_tags_for_item),
     url(r'^progdb/edit_tags_for_person/(\d+)/$', edit_tags_for_person),
