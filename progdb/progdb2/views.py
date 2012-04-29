@@ -98,12 +98,15 @@ def show_grid(request, dy, gr):
                             locals(),
                             context_instance=RequestContext(request))
 
-def show_slot(request, sl):
-  sid = int(sl)
-  slot = Grid.objects.get(id = sid)
-  return render_to_response('progdb2/show_slot.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+class show_slot_detail(DetailView):
+  context_object_name = 'slot'
+  model = Slot
+  template_name = 'progdb2/show_slot.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_slot_detail, self).get_context_data(**kwargs)
+    context['items'] = Item.objects.filter(start = self.object).order_by('day')
+    return context
 
 class show_item_detail(DetailView):
   context_object_name = 'item'
@@ -254,10 +257,11 @@ def edit_tags_for_item(request, i):
     form = ItemTagForm(request.POST, instance=item)
     if form.is_valid():
       form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(i),)))
+      return HttpResponseRedirect(reverse('show_item_detail', kwargs={ 'pk': int(i) }))
   else:
     form = ItemTagForm(instance = item, initial = { 'fromTag' : False  })
-  return render_to_response('progdb2/edit_tags_for_item.html',
+  form_title = u'Edit tags for item'
+  return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
@@ -268,7 +272,7 @@ def edit_tags_for_person(request, p):
     form = PersonTagForm(request.POST, instance=person)
     if form.is_valid():
       form.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_person', args=(int(p),)))
+      return HttpResponseRedirect(reverse('show_person_detail', kwargs={ 'pk' : int(p) }))
   else:
     form = PersonTagForm(instance = person, initial = { 'fromTag' : False  })
   form_title = u'Edit tags for person'

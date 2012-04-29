@@ -167,6 +167,8 @@ class Slot(models.Model):
 
   def __unicode__(self):
     return self.startText
+  def get_absolute_url(self):
+    return mk_url(self)
 
 class Grid(models.Model):
   """
