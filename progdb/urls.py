@@ -8,10 +8,10 @@ from progdb.progdb2.models import Slot
 
 from progdb.progdb2.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPersonForm
 from progdb.progdb2.forms import KitThingForm, KitBundleForm, KitRequestForm
-from progdb.progdb2.forms import DeleteItemPersonForm
+from progdb.progdb2.forms import DeleteItemPersonForm, ItemEmailForm, PersonEmailForm
 
 from progdb.progdb2.views import main_page, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
-from progdb.progdb2.views import show_grid, show_slot_detail
+from progdb.progdb2.views import show_grid, show_slot_detail, email_person, emailed_person, email_item, emailed_item
 from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from progdb.progdb2.views import show_kitthing, show_kitbundle
@@ -116,6 +116,11 @@ urlpatterns = patterns('',
           template_name = 'progdb2/edit_itemperson.html',
           model = ItemPerson,
           form_class=ItemPersonForm))),
+
+    url(r'^progdb/mail_person/(?P<pk>\d+)/$', email_person),
+    url(r'^progdb/mailed_person/(?P<pk>\d+)/$', emailed_person),
+    url(r'^progdb/mail_item/(?P<pk>\d+)/$', email_item),
+    url(r'^progdb/mailed_item/(?P<pk>\d+)/$', emailed_item),
 
     url(r'^progdb/edit_tags_for_item/(\d+)/$', edit_tags_for_item),
     url(r'^progdb/edit_tags_for_person/(\d+)/$', edit_tags_for_person),

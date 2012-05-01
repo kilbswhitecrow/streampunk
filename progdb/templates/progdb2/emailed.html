@@ -1,0 +1,24 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}Email result{{ form_title }} {% endblock %}
+{% block body_content %}
+{% if person %}
+  {% if person.email %}
+    <p>Email sent to {{ person|linky|safe }} via {{ person.email }}.</p>
+  {% else %}
+    <p>No email for {{ person|linky|safe }}.</p>
+  {% endif %}
+{% endif %}
+
+{% if item %}
+  <p>Emailed the following people for {{ item }}:
+    <ul>
+    {% for person in people %}
+       <li> {{ person|linky|safe }} via {{ person.email }}</li>
+    {% empty %}
+       <li> No-one on the item with an email address!</li>
+    {% endfor %}
+    </ul>
+  </p>
+{% endif %}
+{% endblock %}

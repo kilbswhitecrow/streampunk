@@ -64,6 +64,7 @@
 
 {% if user.is_authenticated %}
 <p><a href="/progdb/new_itemperson/?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
+<p><a href="/progdb/mail_item/{{ item.id }}/">Email everyone on item</a>.</p>
 {% endif %}
 
 {% include "progdb2/list_kitrequests.html" %}

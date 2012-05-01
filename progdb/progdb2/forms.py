@@ -112,3 +112,26 @@ class CheckModelFormSet(BaseModelFormSet):
   def add_fields(self, form, index):
     super(CheckModelFormSet, self). add_fields(form, index)
     form.fields['enable'] = forms.BooleanField(required=False)
+
+class EmailForm(forms.Form):
+  subject = forms.CharField()
+  message = forms.CharField(widget = forms.Textarea)
+  includeItems = forms.BooleanField(label = u'Include items?', required=False)
+
+class ItemEmailForm(ModelForm):
+  subject = forms.CharField()
+  message = forms.CharField(widget = forms.Textarea)
+  includeItems = forms.BooleanField(label = u'Include items?')
+
+  class Meta:
+    model = Item
+    fields = []
+
+class PersonEmailForm(ModelForm):
+  subject = forms.CharField()
+  message = forms.CharField(widget = forms.Textarea)
+  includeItems = forms.BooleanField(label = u'Include items?')
+
+  class Meta:
+    model = Person
+    fields = []

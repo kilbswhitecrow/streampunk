@@ -4,7 +4,7 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
-    # ('Steve Kilbane', 'steve@whitecrow.demon.co.uk'),
+    ('Steve Kilbane', 'steve@whitecrow.demon.co.uk'),
 )
 
 MANAGERS = ADMINS
@@ -150,3 +150,9 @@ LOGGING = {
         },
     }
 }
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'post.demon.co.uk'
+# EMAIL_PORT = 25
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

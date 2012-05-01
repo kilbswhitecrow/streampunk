@@ -53,6 +53,11 @@
 
 {% if user.is_authenticated %}
 <p><a href="/progdb/new_itemperson/?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
+{% if person.email %}
+<p><a href="/progdb/mail_person/{{ person.id }}/">Email {{ person }}</a>.</p>
+{% else %}
+<p>(No email address for {{person}}.)</p>
+{% endif %}
 {% endif %}
 
 <h2>Tags</h2>

@@ -2,11 +2,12 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core.mail import send_mail
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.views.generic import DeleteView, DetailView, UpdateView, CreateView, ListView
 from django.forms.models import modelformset_factory
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest
@@ -16,6 +17,7 @@ from progdb2.forms import TagForm, RoomForm, CheckModelFormSet
 from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
 from progdb2.forms import AddBundleToRoomForm, AddBundleToItemForm
 from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
+from progdb2.forms import EmailForm
 
 class NewView(CreateView):
   template_name = 'progdb2/editform.html'
@@ -158,7 +160,7 @@ class show_person_detail(DetailView):
     else:
       context['person_name'] = "%s" % self.object.as_badge()
       context['person_tags'] = self.object.tags.filter(visible=True)
-      context['person_items'] = ItemPerson.objects.filter(person=self.object, visible=True)
+      context['person_items'] = ItemPerson.objects.filter(person=self.object, visible='Yes')
     context['avail'] = self.object.availability.all()
     return context
 
@@ -266,17 +268,61 @@ def add_person_to_item(request, p=None, i=None):
                             locals(),
                             context_instance=RequestContext(request))
 
-def show_referer(request):
+@login_required
+def email_person(request, pk):
   if request.method == 'POST':
-    blurb = 'Post method'
+    form = EmailForm(request.POST)
+    if form.is_valid():
+      pid = int(pk)
+      person = Person.objects.get(id = pid)
+      if person.email:
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        inc = form.cleaned_data['includeItems']
+        send_mail(subject=subject, message=message, from_email=request.user.email, recipient_list = [ person.email ])
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_person', args=(int(person.id),)))
   else:
-    blurb = 'Get method'
-  referer = request.META['HTTP_REFERER']
-  if is_from_person(request):
-    result = 'from person'
+    form = EmailForm()
+  return render_to_response('progdb2/editform.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+@login_required
+def emailed_person(request, pk):
+  pid = int(pk)
+  person = Person.objects.get(id = pid)
+  return render_to_response('progdb2/emailed.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+
+@login_required
+def email_item(request, pk):
+  if request.method == 'POST':
+    form = EmailForm(request.POST)
+    if form.is_valid():
+      iid = int(pk)
+      item = Item.objects.get(id = iid)
+      people = item.people.exclude(email='')
+      addrs = [ person.email for person in people ]
+      if people:
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        inc = form.cleaned_data['includeItems']
+        send_mail(subject=subject, message=message, from_email=request.user.email, recipient_list = addrs)
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_item', args=(int(item.id),)))
   else:
-    result = 'not from person'
-  return render_to_response('progdb2/show_referer.html',
+    form = EmailForm()
+  return render_to_response('progdb2/editform.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+@login_required
+def emailed_item(request, pk):
+  iid = int(pk)
+  item = Item.objects.get(id = iid)
+  people = item.people.exclude(email='')
+  return render_to_response('progdb2/emailed.html',
                             locals(),
                             context_instance=RequestContext(request))
 
