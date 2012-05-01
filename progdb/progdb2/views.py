@@ -6,6 +6,7 @@ from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
 from django.views.generic import DeleteView, DetailView, UpdateView, CreateView, ListView
 from django.forms.models import modelformset_factory
+from django.contrib.auth.decorators import permission_required
 
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest
@@ -51,6 +52,13 @@ class AllView(ListView):
     context['new_url'] = r'/progdb/new_%s/' % ( self.model.__name__.lower() )
     return context
 
+class VisibleView(AllView):
+  def get_queryset(self):
+    if self.request.user.is_authenticated():
+      return self.model.objects.all()
+    else:
+      return self.model.objects.filter(visible = True)
+
 class AfterDeleteView(DeleteView):
   def get_success_url(self):
     if self.request.POST.has_key('after'):
@@ -88,11 +96,16 @@ def show_grid(request, dy, gr):
   gid = int(gr)
   grid = Grid.objects.get(id = gid)
   slots = grid.slots.all()
-  rooms = Room.objects.all();
   # Following is buggy: it won't include any items that start
   # earlier, but run into this grid.
-  items = Item.objects.filter(day = day, start__in = slots)
-  people = ItemPerson.objects.filter(item__in=items)
+  if request.user.is_authenticated():
+    items = Item.objects.filter(day = day, start__in = slots)
+    people = ItemPerson.objects.filter(item__in=items)
+    rooms = Room.objects.all();
+  else:
+    items = Item.objects.filter(day = day, start__in = slots, visible=True)
+    people = ItemPerson.objects.filter(visible='Yes').filter(item__in=items)
+    rooms = Room.objects.filter(visible=True);
       
   return render_to_response('progdb2/show_grid.html',
                             locals(),
@@ -115,8 +128,12 @@ class show_item_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_item_detail, self).get_context_data(**kwargs)
-    context['item_people'] = ItemPerson.objects.filter(item=self.object)
-    context['item_tags'] = self.object.tags.all()
+    if self.request.user.is_authenticated():
+      context['item_people'] = ItemPerson.objects.filter(item=self.object)
+      context['item_tags'] = self.object.tags.all()
+    else:
+      context['item_people'] = ItemPerson.objects.filter(item=self.object, visible='Yes')
+      context['item_tags'] = self.object.tags.filter(visible=True)
     context['kitrequests'] = self.object.kitRequests.all()
     context['kitthings'] = KitItemAssignment.objects.filter(item=self.object)
     return context
@@ -129,9 +146,14 @@ class show_person_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_person_detail, self).get_context_data(**kwargs)
-    context['person_name'] = "%s" % self.object
-    context['person_tags'] = self.object.tags.all()
-    context['person_items'] = ItemPerson.objects.filter(person=self.object)
+    if self.request.user.is_authenticated():
+      context['person_name'] = "%s" % self.object
+      context['person_tags'] = self.object.tags.all()
+      context['person_items'] = ItemPerson.objects.filter(person=self.object)
+    else:
+      context['person_name'] = "%s" % self.object.as_badge()
+      context['person_tags'] = self.object.tags.filter(visible=True)
+      context['person_items'] = ItemPerson.objects.filter(person=self.object, visible=True)
     context['avail'] = self.object.availability.all()
     return context
 
@@ -250,6 +272,7 @@ def show_referer(request):
                             locals(),
                             context_instance=RequestContext(request))
 
+@permission_required('progdb2.change_item')
 def edit_tags_for_item(request, i):
   iid = int(i)
   item = Item.objects.get(id = iid)
@@ -265,6 +288,7 @@ def edit_tags_for_item(request, i):
                             locals(),
                             context_instance=RequestContext(request))
 
+@permission_required('progdb2.change_person')
 def edit_tags_for_person(request, p):
   pid = int(p)
   person = Person.objects.get(id = pid)

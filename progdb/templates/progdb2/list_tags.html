@@ -4,7 +4,9 @@
 {% block body_content %}
 <table border>
 {% for tag in tag_list %}
+{% if user.is_authenticated or tag.visible %}
   <tr><td>{{ tag|linky|safe }}</td></tr>
+{% endif %}
 {% empty %}
   <tr><td>No tags yet</td></tr>
 {% endfor %}

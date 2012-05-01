@@ -1,3 +1,4 @@
+{% if user.is_authenticated %}
 {% load progdb_filters %}
 <h2>Kit Things</h2>
 <table border>
@@ -11,3 +12,4 @@
 <a href="/progdb/add_kitthing_to_room/">Add Kit thing to room</a></p>
 <p>
 <a href="/progdb/add_kitthing_to_item/">Add Kit thing to item</a></p>
+{% endif %}

@@ -4,34 +4,67 @@
 {% block body_content %}
 <table border="1">
 <tr><th>Name</th><td>{{ item.title }}</td></tr>
-<tr><th>Description</th><td>{{ item.description }}</td></tr>
+<tr><th>Description</th><td>{{ item.blurb }}</td></tr>
 <tr><th>Day</th><td>{{ item.day }}</td></tr>
 <tr><th>Start</th><td>{{ item.start }}</td></tr>
 <tr><th>Length</th><td>{{ item.length }}</td></tr>
 <tr><th>Room</th><td>{{ item.room|linky|safe }}</td></tr>
 <tr><th>Kind</th><td>{{ item.kind }}</td></tr>
+<tr><th>To bring</th><td>{{ item.toBring }}</td></tr>
+{% if user.is_authenticated %}
 <tr><th>Seating</th><td>{{ item.seating }}</td></tr>
 <tr><th>Visible?</th><td>{{ item.visible }}</td></tr>
-<tr><th>Projector needed?</th><td>{{ item.projNeeded }}</td></tr>
+<tr><th>Budget</th><td>{{ item.budget }}</td></tr>
+<tr><th>Gophers</th><td>{{ item.gophers }}</td></tr>
+<tr><th>Stewards</th><td>{{ item.Stewards }}</td></tr>
+<tr><th>Complete?</th><td>{{ item.complete }}</td></tr>
+<tr><th>privNotes</th><td>{{ item.privNotes }}</td></tr>
+<tr><th>Revision</th><td>{{ item.revision }}</td></tr>
+<tr><th>Follows</th><td>{{ item.follows }}</td></tr>
+{% endif %}
 </table>
 
+{% if user.is_authenticated %}
+<div class="techinfo">
+<table border="1">
+<tr><th>Front-of-room Layout</th><td>{{ item.frontLayout }}</td></tr>
+<tr><th>Tech Needed?</th><td>{{ item.techNeeded }}</td></tr>
+<tr><th>techNotes</th><td>{{ item.techNotes }}</td></tr>
+<tr><th>Needs Audience Mics?</th><td>{{ item.audienceMics }}</td></tr>
+<tr><th>All-hands item?</th><td>{{ item.allTechCrew }}</td></tr>
+<tr><th>Needs Reset before?</th><td>{{ item.needsReset }}</td></tr>
+<tr><th>Needs Cleanup afterwards?</th><td>{{ item.needsCleanup }}</td></tr>
+</table>
+</div>
+{% endif %}
+
+{% if user.is_authenticated %}
 <p> <a href="/progdb/edit_item/{{ item.id }}/">Edit item</a>.</p>
+{% endif %}
 
 <h2>People on this item</h2>
 <table border="1">
 {% for itemperson in item_people %}
 <tr>
+{% if user.is_authenticated %}
   <td>{{ itemperson.person|linky|safe }}</td>
+{% else %}
+  <td>{{ itemperson.person|linky:itemperson.person.as_badge|safe }}</td>
+{% endif %}
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
+{% if user.is_authenticated %}
   <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
+{% endif %}
 </tr>
 {% empty %}
 <tr><td>No people on this item yet</td></tr>
 {% endfor %}
 </table>
 
+{% if user.is_authenticated %}
 <p><a href="/progdb/new_itemperson/?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
+{% endif %}
 
 {% include "progdb2/list_kitrequests.html" %}
 {% include "progdb2/list_kitthings.html" %}
@@ -44,5 +77,7 @@
 <tr><td>No tags yet</td></tr>
 {% endfor %}
 </table>
+{% if user.is_authenticated %}
 <p><a href="/progdb/edit_tags_for_item/{{ item.id }}/">Edit tags for {{ item }}</a>.</p>
+{% endif %}
 {% endblock %}

@@ -10,7 +10,9 @@
 <tr><th>Grid order?</th><td>{{ room.gridOrder }}</td></tr>
 </table>
 
+{% if user.is_authenticated %}
 <p><a href="/progdb/edit_room/{{room.id}}/">Edit room</a>.</p>
+{% endif %}
 
 <h2>Items</h2>
 <table border="1">

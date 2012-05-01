@@ -1,22 +1,24 @@
 <div id="banner">
 <table border="1">
 <tr>
-  <td><a href="/admin/">Admin</a></td>
   <td><a href="/progdb/main/">Main</a></td>
-  <td><a href="/progdb/checks/">Checks</a></td>
   <td><a href="/progdb/grids/">Grids</a></td>
   <td><a href="/progdb/people/">People</a></td>
   <td><a href="/progdb/items/">Items</a></td>
   <td><a href="/progdb/rooms/">Rooms</a></td>
   <td><a href="/progdb/tags/">Tags</a></td>
+{% if user.is_authenticated %}
   <td><a href="/progdb/kitbundles/">Kit Bundles</a></td>
   <td><a href="/progdb/kitthings/">Kit Things</a></td>
   <td><a href="/progdb/kitrequests/">Kit Requests</a></td>
+  <td><a href="/progdb/checks/">Checks</a></td>
+  <td><a href="/admin/">Admin</a></td>
+{% endif %}
   <td>
 {% if user.is_authenticated %}
-    {{ user.username }}. <a href="/progdb/logout/">Log out</a>
+    {{ user.username }}. <a href="/accounts/logout/">Log out</a>
 {% else %}
-    <a href="/progdb/login/">Log in</a>
+    <a href="/accounts/login/">Log in</a>
 {% endif %}
   </td>
 </tr>

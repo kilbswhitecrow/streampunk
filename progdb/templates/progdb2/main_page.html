@@ -1,11 +1,15 @@
 {% extends "progdb2/base.html" %}
 {% block title %}Main Progdb Page{% endblock %}
 {% block body_content %}
+<p>
 The front page goes here.
+</p>
+{% if user.is_authenticated %}
 <p>
 <a href="/progdb/add_person_to_item/">Add a person to an item</a>.
 </p>
 <p>
 <a href="/progdb/add_tags/">Add multiple tags to items and/or people</a>.
 </p>
+{% endif %}
 {% endblock %}

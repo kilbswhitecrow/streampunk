@@ -4,9 +4,16 @@
 {% block body_content %}
 <table border>
 {% for person in person_list %}
+{% if user.is_authenticated %}
   <tr><td> {{ person|linky|safe }} </td></tr>
+{% else %}
+  <tr><td> {{ person|linky:person.as_badge|safe }} </td></tr>
+{% endif %}
 {% empty %}
   <tr><td>No people yet</td></tr>
 {% endfor %}
 </table>
+{% if user.is_authenticated %}
+<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
+{% endif %}
 {% endblock %}

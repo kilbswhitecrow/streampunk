@@ -1,17 +1,19 @@
-- Kit editing and checks
-- Item and person creation through new interface.
+- Add Kit Requests from Items
 - Name change
-- Django 1.4 update
-- Unicode strings
 - I18N
                - Of  application
                - Of DB content
 - User profiles
 - User permissions
 - Use of permissions in templates and views
+	Mostly done.
+	Need to do login/logout redirects to appropriate pages.
 - Email
 - Additional checks
                - people listings with email options.
+		- Kit clashes
+		- Unfulfilled kit requests
+
 - Revisions
 - AJAX
 - PDF generation
@@ -32,6 +34,7 @@ Model corrections:
 		TimeWalking
 		AllOnFlat
 		inRadioRange
+	- ItemPerson.visible should be Boolean, not YesNo.
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have

@@ -7,12 +7,18 @@
       <br/>
       {% for p in people %}
         {% ifequal p.item i %}
-          <span class="personname">{{ p.person|linky|safe }}<br/></span>
+          {% if user.is_authenticated %}
+            <span class="personname">{{ p.person|linky|safe }}<br/></span>
+          {% else %}
+            <span class="personname">{{ p.person|linky:p.person.as_badge|safe }}<br/></span>
+          {% endif %}
         {% endifequal %}
       {% endfor %}
     {% endifequal %}
   {% endifequal %}
 {% endfor %}
+{% if user.is_authenticated %}
 <br/>
 <span class="FillSlot"><a href="/progdb/fill/d/{{ day.id }}/g/{{ grid.id }}/r/{{ r.id }}/s/{{ s.id }}/u/">Fill slot</a></span>
+{% endif %}
 </td>
