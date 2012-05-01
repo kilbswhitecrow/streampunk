@@ -47,6 +47,7 @@ class AllView(ListView):
 
   def get_context_data(self, **kwargs):
     context = super(AllView, self).get_context_data(**kwargs)
+    context['request'] = self.request
     context['verbose_name'] = self.model._meta.verbose_name
     context['verbose_name_plural'] = self.model._meta.verbose_name_plural
     context['new_url'] = r'/progdb/new_%s/' % ( self.model.__name__.lower() )
@@ -85,6 +86,7 @@ class show_room_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_room_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     context['room_items'] = self.object.item_set.all()
     context['avail'] = self.object.availability.all()
     context['kitthings'] = KitRoomAssignment.objects.filter(room=self.object)
@@ -118,6 +120,7 @@ class show_slot_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_slot_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     context['items'] = Item.objects.filter(start = self.object).order_by('day')
     return context
 
@@ -128,6 +131,7 @@ class show_item_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_item_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     if self.request.user.is_authenticated():
       context['item_people'] = ItemPerson.objects.filter(item=self.object)
       context['item_tags'] = self.object.tags.all()
@@ -146,6 +150,7 @@ class show_person_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_person_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     if self.request.user.is_authenticated():
       context['person_name'] = "%s" % self.object
       context['person_tags'] = self.object.tags.all()
@@ -164,6 +169,7 @@ class show_tag_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_tag_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     context['tag_items'] = self.object.item_set.all()
     context['tag_people'] = self.object.person_set.all()
     return context
@@ -187,6 +193,7 @@ class show_kitthing_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_kitthing_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     context['kitbundles'] = self.object.kitbundle_set.all()
     context['kititems'] = KitItemAssignment.objects.filter(thing = self.object)
     context['kitrooms'] = KitRoomAssignment.objects.filter(thing = self.object)
@@ -211,6 +218,7 @@ class show_kitbundle_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_kitbundle_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     context['kitthings'] = self.object.things.all()
     context['kititems'] = KitItemAssignment.objects.filter(bundle = self.object)
     context['kitrooms'] = KitRoomAssignment.objects.filter(bundle = self.object)
