@@ -117,6 +117,8 @@ class EmailForm(forms.Form):
   subject = forms.CharField()
   message = forms.CharField(widget = forms.Textarea)
   includeItems = forms.BooleanField(label = u'Include items?', required=False)
+  includeContact = forms.BooleanField(label = u"Include person's contact details?", required=False)
+  includeAvail = forms.BooleanField(label = u'Include availability?', required=False)
 
 class ItemEmailForm(ModelForm):
   subject = forms.CharField()

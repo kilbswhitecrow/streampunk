@@ -2,14 +2,15 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template import RequestContext
 from django.shortcuts import render_to_response, redirect
+from django.template.loader import render_to_string
 from django.views.generic import DeleteView, DetailView, UpdateView, CreateView, ListView
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import permission_required, login_required
 
-from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, Check
+from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest
 from progdb2.forms import KitThingForm, KitBundleForm
 from progdb2.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
@@ -268,6 +269,14 @@ def add_person_to_item(request, p=None, i=None):
                             locals(),
                             context_instance=RequestContext(request))
 
+def mkemail(request, dirvars, subject, person):
+  context = RequestContext(request)
+  txt = render_to_string('progdb2/email.txt', dirvars, context_instance=context)
+  msg = EmailMultiAlternatives(subject, txt, request.user.email, [ person.email ] )
+  html = render_to_string('progdb2/email.html', dirvars, context_instance=context)
+  msg.attach_alternative(html, "text/html")
+  return msg
+
 @login_required
 def email_person(request, pk):
   if request.method == 'POST':
@@ -276,10 +285,19 @@ def email_person(request, pk):
       pid = int(pk)
       person = Person.objects.get(id = pid)
       if person.email:
+        con_name = ConInfoString.objects.con_name()
         subject = form.cleaned_data['subject']
         message = form.cleaned_data['message']
-        inc = form.cleaned_data['includeItems']
-        send_mail(subject=subject, message=message, from_email=request.user.email, recipient_list = [ person.email ])
+        incItems = form.cleaned_data['includeItems']
+        incContact = form.cleaned_data['includeContact']
+        incAvail = form.cleaned_data['includeAvail']
+        if incItems:
+          itemspeople = ItemPerson.objects.filter(person = person)
+        if incAvail:
+          avail = person.availability.all()
+          noAvailMsg = u"We have no information about your availablity over the convention."
+        msg = mkemail(request, locals(), subject, person)
+        msg.send()
       return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_person', args=(int(person.id),)))
   else:
     form = EmailForm()
@@ -304,12 +322,21 @@ def email_item(request, pk):
       iid = int(pk)
       item = Item.objects.get(id = iid)
       people = item.people.exclude(email='')
-      addrs = [ person.email for person in people ]
       if people:
+        con_name = ConInfoString.objects.con_name()
         subject = form.cleaned_data['subject']
         message = form.cleaned_data['message']
-        inc = form.cleaned_data['includeItems']
-        send_mail(subject=subject, message=message, from_email=request.user.email, recipient_list = addrs)
+        incItems = form.cleaned_data['includeItems']
+        incContact = form.cleaned_data['includeContact']
+        incAvail = form.cleaned_data['includeAvail']
+        for person in people:
+          if incItems:
+            itemspeople = ItemPerson.objects.filter(person = person)
+          if incAvail:
+            avail = person.availability.all()
+            noAvailMsg = u"We have no information about your availablity over the convention."
+        msg = mkemail(request, locals(), subject, person)
+        msg.send()
       return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_item', args=(int(item.id),)))
   else:
     form = EmailForm()

@@ -4,7 +4,7 @@
 {% for av in avail %}
 <tr><td>{{ av }}</td></tr>
 {% empty %}
-<tr><td>No availability information entered yet</td></tr>
+<tr><td>{{ noAvailMsg|default:"No availability information entered yet"}}</td></tr>
 {% endfor %}
 </table>
 {% endif %}

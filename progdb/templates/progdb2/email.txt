@@ -1,0 +1,20 @@
+Dear {{ person.as_name }},
+
+{{ message }}
+
+{% if itemspeople %}
+{% for ip in itemspeople %}
+{{ ip.item.day }} {{ ip.item.start }} in {{ ip.item.room }}: {{ ip.item.title }} ({{ ip.item.length }})
+Description: "{{ ip.item.blurb }}"
+Your responsibility for this item: {{ ip.role }} ({{ ip.status }})
+  {% endfor %}
+{% endif %}
+
+{% if incContact %}
+These are the contact details we have for you: {{ person.contact }}
+{% endif %}
+
+{% if incAvail %}
+{% include "progdb2/list_avail.txt" %}
+{% endif %}
+This message was sent by the Programme Database on behalf of {{ con_name }}.

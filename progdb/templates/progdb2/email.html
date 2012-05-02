@@ -1,0 +1,46 @@
+{% extends "progdb2/base_email.html" %}
+{% block title %}{{ subject }}{% endblock %}
+{% block body_content %}
+<p>Dear {{ person.as_name }},</p>
+
+<p>{{ message }}</p>
+
+{% if itemspeople %}
+<p>
+  <table border="1">
+  <tr>
+    <th>Item</th>
+    <th>Day</th>
+    <th>Time</th>
+    <th>Length</th>
+    <th>Room</th>
+    <th>Role</th>
+    <th>Status</th>
+  </tr>
+  {% for ip in itemspeople %}
+  <tr>
+    <td>{{ ip.item.title }}</td>
+    <td>{{ ip.item.day }}</td>
+    <td>{{ ip.item.start }}</td>
+    <td>{{ ip.item.length }}</td>
+    <td>{{ ip.item.room }}</td>
+    <td>{{ ip.role }}</td>
+    <td>{{ ip.status }}</td>
+  </tr>
+  <tr>
+    <td colspan="7">{{ ip.item.blurb }}</td>
+  </tr>
+  {% endfor %}
+  </table>
+</p>
+{% endif %}
+
+{% if incContact %}
+<p>These are the contact details we have for you:<br /> {{ person.contact }}</p>
+{% endif %}
+
+{% if incAvail %}
+{% include "progdb2/list_avail.html" %}
+{% endif %}
+<p>This message was sent by the Programme Database on behalf of {{ con_name }}.</p>
+{% endblock %}
