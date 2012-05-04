@@ -4,14 +4,14 @@ from django.views.generic import DetailView
 from django.contrib.auth.decorators import permission_required
 
 from progdb.progdb2.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
-from progdb.progdb2.models import Slot
+from progdb.progdb2.models import Slot, PersonList
 
 from progdb.progdb2.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPersonForm
-from progdb.progdb2.forms import KitThingForm, KitBundleForm, KitRequestForm
-from progdb.progdb2.forms import DeleteItemPersonForm, ItemEmailForm, PersonEmailForm
+from progdb.progdb2.forms import KitThingForm, KitBundleForm, KitRequestForm, PersonListForm
+from progdb.progdb2.forms import DeleteItemPersonForm
 
 from progdb.progdb2.views import main_page, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
-from progdb.progdb2.views import show_grid, show_slot_detail, email_person, emailed_person, email_item, emailed_item
+from progdb.progdb2.views import show_grid, show_slot_detail, email_person, emailed_person, email_item, emailed_item, email_item_with_personlist
 from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from progdb.progdb2.views import show_kitthing, show_kitbundle
@@ -19,6 +19,7 @@ from progdb.progdb2.views import add_kitbundle_to_room, add_kitbundle_to_item
 from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item
 from progdb.progdb2.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
+from progdb.progdb2.views import show_personlist_detail, show_request, make_personlist
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -28,6 +29,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'progdb.views.home', name='home'),
     # url(r'^progdb/', include('progdb.foo.urls')),
+    url(r'^progdb/show_request/$', show_request),
     url(r'^progdb/main/$', main_page),
     url(r'^accounts/login/$', login),
     url(r'^accounts/logout/$', logout),
@@ -42,6 +44,7 @@ urlpatterns = patterns('',
     url(r'^progdb/kitthings/$', AllView.as_view(model=KitThing)),
     url(r'^progdb/kitrequests/$', AllView.as_view(model=KitRequest)),
     url(r'^progdb/itemspeople/$', VisibleView.as_view(model=ItemPerson)),
+    url(r'^progdb/peoplelists/$', VisibleView.as_view(model=PersonList)),
     url(r'^progdb/slots/$', VisibleView.as_view(model=Slot)),
 
     url(r'^progdb/room/(?P<pk>\d+)/$', show_room_detail.as_view()),
@@ -52,6 +55,7 @@ urlpatterns = patterns('',
     url(r'^progdb/kitthing/(?P<pk>\d+)/$', show_kitthing_detail.as_view()),
     url(r'^progdb/kitrequest/(?P<pk>\d+)/$', show_kitrequest_detail.as_view()),
     url(r'^progdb/itemperson/(?P<pk>\d+)/$', show_itemperson_detail.as_view()),
+    url(r'^progdb/personlist/(?P<pk>\d+)/$', show_personlist_detail.as_view()),
 
     url(r'^progdb/conday/(\d+)/grid/(\d+)/$', show_grid),
     url(r'^progdb/slot/(?P<pk>\d+)/$', show_slot_detail.as_view()),
@@ -90,6 +94,9 @@ urlpatterns = patterns('',
     url(r'^progdb/edit_itemperson/(?P<pk>\d+)/$', permission_required('progdb2.change_itemperson')(EditView.as_view(
           model = ItemPerson,
           form_class=ItemPersonForm))),
+    url(r'^progdb/edit_personlist/(?P<pk>\d+)/$', permission_required('progdb2.change_personlist')(EditView.as_view(
+          model = PersonList,
+          form_class=PersonListForm))),
 
     url(r'^progdb/new_person/$', permission_required('progdb2.add_person')(NewView.as_view(
           model = Person,
@@ -116,14 +123,22 @@ urlpatterns = patterns('',
           template_name = 'progdb2/edit_itemperson.html',
           model = ItemPerson,
           form_class=ItemPersonForm))),
+    url(r'^progdb/new_personlist/$', permission_required('progdb2.add_personlist')(NewView.as_view(
+          template_name = 'progdb2/edit_personlist.html',
+          model = PersonList,
+          success_url = '/progdb/peoplelists/',
+          form_class=PersonListForm)), name='add_personlist'),
 
     url(r'^progdb/mail_person/(?P<pk>\d+)/$', email_person),
     url(r'^progdb/mailed_person/(?P<pk>\d+)/$', emailed_person),
     url(r'^progdb/mail_item/(?P<pk>\d+)/$', email_item),
+    url(r'^progdb/mail_item/(?P<ipk>\d+)/with_personlist/(?P<plpk>\d+)/$', email_item_with_personlist, name='mail_item_with_personlist'),
     url(r'^progdb/mailed_item/(?P<pk>\d+)/$', emailed_item),
 
     url(r'^progdb/edit_tags_for_item/(\d+)/$', edit_tags_for_item),
     url(r'^progdb/edit_tags_for_person/(\d+)/$', edit_tags_for_person),
+
+    url(r'^progdb/make_personlist/$', make_personlist),
 
     url(r'^progdb/add_tags/$', add_tags),
 

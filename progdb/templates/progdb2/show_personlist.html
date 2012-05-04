@@ -1,0 +1,22 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %}{{ personlist }} {% endblock %}
+<p>
+{% block body_content %}
+<table border="1">
+  <tr><th>Name</th><td>{{ personlist|linky|safe }}</td></tr>
+  <tr><th>Automatic?</th><td>{{ personlist.auto }}</td></tr>
+  <tr><th>Created</th><td>{{ personlist.created }}</td></tr>
+</table>
+</p>
+<p>
+<table border="1">
+{% for person in personlist.people.all %}
+<tr><td>{{ person|linky|safe }}</td></tr>
+{% empty %}
+<tr><td>No-one in this list</td></tr>
+{% endfor %}
+</table>
+</p>
+<p><a href="/progdb/edit_personlist/{{ personlist.id }}/">Edit PersonList</a>.</p>
+{% endblock %}

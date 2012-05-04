@@ -43,6 +43,8 @@
 {% endif %}
 
 <h2>People on this item</h2>
+<form action="/progdb/make_personlist/" method="post">
+{% csrf_token %}
 <table border="1">
 {% for itemperson in item_people %}
 <tr>
@@ -55,16 +57,34 @@
   <td>{{ itemperson.status }}</td>
 {% if user.is_authenticated %}
   <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
+  <td>
+       <input type="checkbox" name="somepeople" value="{{ itemperson.person.id }}" />
+       <input type="hidden" name="allpeople" value="{{ itemperson.person.id }}" />
+  {% if itemperson.person.email %}
+     Email/Select?
+  {% else %}
+     Select?
+  {% endif %}
+  </td>
 {% endif %}
 </tr>
 {% empty %}
 <tr><td>No people on this item yet</td></tr>
 {% endfor %}
 </table>
+<input type="hidden" name="itemid" value="{{ item.id }}" />
+<input type="hidden" name="listname" value="People from item {{ item.id }}" />
+{% if user.is_authenticated %}
+<input type="submit" name="email_all" value="Email all the people on this item" />
+<input type="submit" name="email_some" value="Email selected people" />
+<br/>
+<input type="submit" name="save_all" value="Save the people on this item as a list" />
+<input type="submit" name="save_some" value="Save selected people as a list" />
+{% endif %}
+</form>
 
 {% if user.is_authenticated %}
 <p><a href="/progdb/new_itemperson/?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
-<p><a href="/progdb/mail_item/{{ item.id }}/">Email everyone on item</a>.</p>
 {% endif %}
 
 {% include "progdb2/list_kitrequests.html" %}

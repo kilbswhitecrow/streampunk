@@ -685,6 +685,17 @@ class ItemPerson(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+class PersonList(models.Model):
+  name = models.CharField(max_length=120)
+  auto = models.BooleanField()
+  created = models.DateTimeField(auto_now_add=True)
+  people = models.ManyToManyField(Person, null=True, blank=True)
+
+  def __unicode__(self):
+    return self.name
+  def get_absolute_url(self):
+    return mk_url(self)
+
 class CheckResult(EnumTable):
   pass
 
@@ -700,9 +711,7 @@ class Check(models.Model):
     return mk_url(self)
 
 # Outstanding things that need thinking about:
-# - Availability. Just make it a separate table, and add
 # - Item Moves. Add when we need that.
-# - Con Data, in various forms.
 
 # Things that need something better than the admin interface:
 # The slot form: need to be able to enter a time, and have that converted to mins.

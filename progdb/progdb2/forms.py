@@ -7,7 +7,7 @@ from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
 from django.forms.models import BaseModelFormSet
 from progdb2.models import ItemPerson, Item, Person, Tag, Room, Check
-from progdb2.models import KitThing, KitBundle, KitRequest
+from progdb2.models import KitThing, KitBundle, KitRequest, PersonList
 from progdb2.models import KitRoomAssignment, KitItemAssignment
 
 class ItemPersonForm(ModelForm):
@@ -120,20 +120,8 @@ class EmailForm(forms.Form):
   includeContact = forms.BooleanField(label = u"Include person's contact details?", required=False)
   includeAvail = forms.BooleanField(label = u'Include availability?', required=False)
 
-class ItemEmailForm(ModelForm):
-  subject = forms.CharField()
-  message = forms.CharField(widget = forms.Textarea)
-  includeItems = forms.BooleanField(label = u'Include items?')
-
+class PersonListForm(ModelForm):
   class Meta:
-    model = Item
-    fields = []
+    model = PersonList
+    exclude = [ 'created', ]
 
-class PersonEmailForm(ModelForm):
-  subject = forms.CharField()
-  message = forms.CharField(widget = forms.Textarea)
-  includeItems = forms.BooleanField(label = u'Include items?')
-
-  class Meta:
-    model = Person
-    fields = []

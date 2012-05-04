@@ -11,14 +11,27 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import permission_required, login_required
 
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
-from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest
+from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
 from progdb2.forms import KitThingForm, KitBundleForm
 from progdb2.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from progdb2.forms import TagForm, RoomForm, CheckModelFormSet
 from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
 from progdb2.forms import AddBundleToRoomForm, AddBundleToItemForm
 from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
-from progdb2.forms import EmailForm
+from progdb2.forms import EmailForm, PersonListForm
+
+def show_request(request):
+  if request.method == 'GET':
+    d = request.GET.copy()
+  else:
+    d = request.POST.copy()
+  for t in d.lists():
+    k, l = t
+    for v in l:
+      print u"Got '%s' = '%s'\n" % (k, v)
+  return render_to_response('progdb2/show_request.html',
+                            locals(),
+                            context_instance=RequestContext(request))
 
 class NewView(CreateView):
   template_name = 'progdb2/editform.html'
@@ -237,6 +250,11 @@ class show_itemperson_detail(DetailView):
   model = ItemPerson
   template_name = 'progdb2/show_itemperson.html'
 
+class show_personlist_detail(DetailView):
+  context_object_name = 'personlist'
+  model = PersonList
+  template_name = 'progdb2/show_personlist.html'
+
 
 def is_from_item(request):
   referer = request.META['HTTP_REFERER']
@@ -343,6 +361,48 @@ def email_item(request, pk):
   return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
+
+@login_required
+def email_item_with_personlist(request, ipk, plpk):
+  iid = int(ipk)
+  item = Item.objects.get(id = iid)
+  subject = item.title
+  personlist = PersonList.objects.get(id = int(plpk))
+  people = personlist.people.exclude(email='')
+  nomail = personlist.people.filter(email='')
+  if request.method == 'POST':
+    if request.POST.has_key('cancel'):
+      if personlist.auto == True:
+        # discard this personlist
+        personlist.delete()
+      return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
+    form = EmailForm(request.POST)
+    if form.is_valid():
+      if people:
+        con_name = ConInfoString.objects.con_name()
+        subject = form.cleaned_data['subject']
+        message = form.cleaned_data['message']
+        incItems = form.cleaned_data['includeItems']
+        incContact = form.cleaned_data['includeContact']
+        incAvail = form.cleaned_data['includeAvail']
+        for person in people:
+          if incItems:
+            itemspeople = ItemPerson.objects.filter(person = person)
+          if incAvail:
+            avail = person.availability.all()
+            noAvailMsg = u"We have no information about your availablity over the convention."
+          msg = mkemail(request, locals(), subject, person)
+          msg.send()
+      if personlist.auto == True:
+        print "Personlist is auto - discarding now\n"
+        personlist.delete()
+      return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_item', args=(int(item.id),)))
+  else:
+    form = EmailForm(initial = { 'subject' : subject })
+  return render_to_response('progdb2/mail_personlist.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
 
 @login_required
 def emailed_item(request, pk):
@@ -530,11 +590,46 @@ def list_checks(request):
           exec(runcmd)
           checkOutputs.append(checkOutput)
       return render_to_response('progdb2/checkresults.html',
-                               locals(),
+                                locals(),
                                 context_instance=RequestContext(request))
 
   else:
     formset = CheckFormSet()
   return render_to_response('progdb2/checks.html',
-                           locals(),
+                            locals(),
                             context_instance=RequestContext(request))
+
+def make_personlist(request):
+  if request.method == 'POST':
+    if request.POST.has_key('email_all') or request.POST.has_key('save_all'):
+      peeps = request.POST.getlist('allpeople')
+    elif request.POST.has_key('email_some') or request.POST.has_key('save_some'):
+      peeps = request.POST.getlist('somepeople')
+    else:
+      # huh? what happened?
+      return HttpResponseRedirect(reverse('add_personlist'))
+    pids = [ int(p) for p in peeps ]
+    print u"Got ids: %s" % ( pids )
+    people = Person.objects.filter(id__in=pids)
+    print u"Got people: %s" % ( people )
+    name = request.POST.get('listname', '')
+    itemid = int(request.POST.get('itemid', None))
+    if request.POST.has_key('email_all') or request.POST.has_key('email_some'):
+      # we're going to use this personlist to mail people immediately, so save
+      # the list, and head over to creating the mail message.
+      personlist = PersonList(name = name, auto = True)
+      personlist.save()
+      for p in people:
+        personlist.people.add(p)
+      print "Saved personlist as %s\n" % (personlist.id)
+      return HttpResponseRedirect(reverse('mail_item_with_personlist', kwargs={'ipk': itemid, 'plpk': personlist.id}))
+    else:
+      # we're creating the list for later use, so let's populate a form that'll
+      # allow correction and renaming, before saving.
+      form = PersonListForm(initial = { 'name' : name, 'people' : people, 'auto' : False })
+      return render_to_response('progdb2/edit_personlist.html',
+                                locals(),
+                                context_instance=RequestContext(request))
+  else:
+    return HttpResponseRedirect(reverse('add_personlist'))
+  
