@@ -3,22 +3,9 @@
 - I18N
                - Of  application
                - Of DB content
-- User profiles
-- User permissions
-- Use of permissions in templates and views
-	- View profile
-	- Edit profile
+- Profile pages
 	- Change password
-- Email
-	Mostly done. Need to modify the mail_item_with_personlist view,
-	to have a Cancel button that deletes the personlist and returns
-	to the item.
-	Should also add a cancel button to mail_person that returns to
-	the person.
-	Should convert list_people.html so that it uses make_personlist.
-	Should update the checks so that they can use it too.
-	Should change show_item.html so that it has save_some/save_all
-	options.
+
 - Additional checks
                - people listings with email options.
 		- Kit clashes

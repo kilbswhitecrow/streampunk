@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import patterns, include, url
 from django.contrib.auth.views import login, logout
 from django.views.generic import DetailView
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 
 from progdb.progdb2.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 from progdb.progdb2.models import Slot, PersonList
@@ -20,6 +20,7 @@ from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item
 from progdb.progdb2.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
 from progdb.progdb2.views import show_personlist_detail, show_request, make_personlist, make_con_groups
+from progdb.progdb2.views import show_profile_detail, edit_user_profile
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -33,6 +34,8 @@ urlpatterns = patterns('',
     url(r'^progdb/main/$', main_page, name='main_page'),
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, name='logout'),
+    url(r'^accounts/change_profile/$', edit_user_profile, name='editprofile'),
+    url(r'^accounts/profile/$', show_profile_detail, name='userprofile'),
 
     url(r'^progdb/grids/$', list_grids, name='list_grids'),
     url(r'^progdb/people/$', AllView.as_view(model=Person,

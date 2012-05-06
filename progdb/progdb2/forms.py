@@ -8,7 +8,7 @@ from django.forms import ModelForm, BooleanField, HiddenInput
 from django.forms.models import BaseModelFormSet
 from progdb2.models import ItemPerson, Item, Person, Tag, Room, Check
 from progdb2.models import KitThing, KitBundle, KitRequest, PersonList
-from progdb2.models import KitRoomAssignment, KitItemAssignment
+from progdb2.models import KitRoomAssignment, KitItemAssignment, UserProfile
 
 class ItemPersonForm(ModelForm):
   fromPerson = forms.BooleanField(required=False, widget=forms.HiddenInput)
@@ -125,3 +125,14 @@ class PersonListForm(ModelForm):
     model = PersonList
     exclude = [ 'created', ]
 
+
+class UserProfileForm(ModelForm):
+  class Meta:
+    model = UserProfile
+    fields = [ 'show_shortname', 'show_tags', 'show_people', 'rooms_across_top', 'name_order', ]
+
+
+class UserProfileFullForm(ModelForm):
+  class Meta:
+    model = UserProfile
+    exclude = [ 'user', ]

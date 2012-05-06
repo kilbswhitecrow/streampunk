@@ -12,13 +12,14 @@ from django.contrib.auth.decorators import permission_required, login_required
 
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
+from progdb2.models import UserProfile
 from progdb2.forms import KitThingForm, KitBundleForm
 from progdb2.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from progdb2.forms import TagForm, RoomForm, CheckModelFormSet
 from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
 from progdb2.forms import AddBundleToRoomForm, AddBundleToItemForm
 from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
-from progdb2.forms import EmailForm, PersonListForm
+from progdb2.forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
 from progdb2.auth import add_con_groups
 
 def show_request(request):
@@ -83,6 +84,40 @@ class AfterDeleteView(DeleteView):
       return self.request.POST.get('after')
     else:
       return '/progdb/main/'
+
+@login_required
+def edit_user_profile(request):
+  userprofile = request.user.get_profile()
+  if request.method == 'POST':
+    if request.user.has_perm('progdb2.read_private'):
+      form = UserProfileFullForm(request.POST, instance=userprofile)
+    else:
+      form = UserProfileForm(request.POS, instance=userprofile)
+    if form.is_valid():
+      userprofile.save()
+      return HttpResponseRedirect(reverse('userprofile'))
+  else:
+    initial_data = { 'show_shortname': userprofile.show_shortname,
+                     'show_tags': userprofile.show_tags,
+                     'show_people': userprofile.show_people,
+                     'name_order': userprofile.name_order }
+    if request.user.has_perm('progdb2.read_private'):
+      initial_data['person'] = userprofile.person
+      form = UserProfileFullForm(instance=userprofile, initial=initial_data)
+    else:
+      form = UserProfileForm(instance=userprofile, initial=initial_data)
+  return render_to_response('progdb2/editform.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+
+@login_required
+def show_profile_detail(request):
+  userprofile = request.user.get_profile()
+  return render_to_response('progdb2/show_userprofile.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
 
 def main_page(request):
   return render_to_response('progdb2/main_page.html',

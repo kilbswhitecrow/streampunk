@@ -18,7 +18,8 @@
 {% endif %}
   <td>
 {% if user.is_authenticated %}
-    {{ user.username }}. <a href="/accounts/logout/?next={{ request.path }}">Log out</a>
+    <a href="/accounts/profile/">{{ user.username }}</a>.
+    <a href="/accounts/logout/?next={{ request.path }}">Log out</a>
 {% else %}
     <a href="/accounts/login/?next={{ request.path }}">Log in</a>
 {% endif %}
