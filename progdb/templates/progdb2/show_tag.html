@@ -7,8 +7,11 @@
 <tr><th>Description</th><td>{{ tag.description }}</td></tr>
 </table>
 
+{% if perms.progdb2.edit_tags %}
 <p><a href="/progdb/edit_tag/{{tag.id}}/">Edit tag</a>.</p>
+{% endif %}
 
+{% if tag.visible or perms.progdb2.read_private %}
 <h2>Items</h2>
 <table border="1">
 {% for item in tag_items %}
@@ -26,5 +29,6 @@
 <tr><td>No people with this tag yet</td></tr>
 {% endfor %}
 </table>
+{% endif %}
 
 {% endblock %}

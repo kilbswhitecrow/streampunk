@@ -19,7 +19,7 @@ from progdb.progdb2.views import add_kitbundle_to_room, add_kitbundle_to_item
 from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item
 from progdb.progdb2.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
-from progdb.progdb2.views import show_personlist_detail, show_request, make_personlist
+from progdb.progdb2.views import show_personlist_detail, show_request, make_personlist, make_con_groups
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -67,63 +67,63 @@ urlpatterns = patterns('',
     url(r'^progdb/add_kitthing_to_room/$', add_kitthing_to_room),
     url(r'^progdb/add_kitthing_to_item/$', add_kitthing_to_item),
 
-    url(r'^progdb/delete_itemperson/(?P<pk>\d+)/$', permission_required('progdb2.delete_itemperson')(AfterDeleteView.as_view(
+    url(r'^progdb/delete_itemperson/(?P<pk>\d+)/$', permission_required('progdb2.edit_programme')(AfterDeleteView.as_view(
           model=ItemPerson))),
 
-    url(r'^progdb/edit_item/(?P<pk>\d+)/$', permission_required('progdb2.change_item')(EditView.as_view(
+    url(r'^progdb/edit_item/(?P<pk>\d+)/$', permission_required('progdb2.edit_programme')(EditView.as_view(
           model = Item,
           form_class=ItemForm))),
-    url(r'^progdb/edit_person/(?P<pk>\d+)/$', permission_required('progdb2.change_person')(EditView.as_view(
+    url(r'^progdb/edit_person/(?P<pk>\d+)/$', permission_required('progdb2.edit_programme')(EditView.as_view(
           model = Person,
           form_class=PersonForm))),
-    url(r'^progdb/edit_tag/(?P<pk>\d+)/$', permission_required('progdb2.change_tag')(EditView.as_view(
+    url(r'^progdb/edit_tag/(?P<pk>\d+)/$', permission_required('progdb2.edit_tags')(EditView.as_view(
           model = Tag,
           form_class=TagForm))),
-    url(r'^progdb/edit_room/(?P<pk>\d+)/$', permission_required('progdb2.change_room')(EditView.as_view(
+    url(r'^progdb/edit_room/(?P<pk>\d+)/$', permission_required('progdb2.edit_room')(EditView.as_view(
           model = Room,
           form_class=RoomForm))),
-    url(r'^progdb/edit_kitthing/(?P<pk>\d+)/$', permission_required('progdb2.change_kitthing')(EditView.as_view(
+    url(r'^progdb/edit_kitthing/(?P<pk>\d+)/$', permission_required('progdb2.edit_kit')(EditView.as_view(
           model = KitThing,
           form_class=KitThingForm))),
-    url(r'^progdb/edit_kitbundle/(?P<pk>\d+)/$', permission_required('progdb2.change_kitbundle')(EditView.as_view(
+    url(r'^progdb/edit_kitbundle/(?P<pk>\d+)/$', permission_required('progdb2.edit_kit')(EditView.as_view(
           model = KitBundle,
           form_class=KitBundleForm))),
-    url(r'^progdb/edit_kitrequest/(?P<pk>\d+)/$', permission_required('progdb2.change_kitrequest')(EditView.as_view(
+    url(r'^progdb/edit_kitrequest/(?P<pk>\d+)/$', permission_required('progdb2.edit_kit')(EditView.as_view(
           model = KitRequest,
           form_class=KitRequestForm))),
-    url(r'^progdb/edit_itemperson/(?P<pk>\d+)/$', permission_required('progdb2.change_itemperson')(EditView.as_view(
+    url(r'^progdb/edit_itemperson/(?P<pk>\d+)/$', permission_required('progdb2.edit_programme')(EditView.as_view(
           model = ItemPerson,
           form_class=ItemPersonForm))),
-    url(r'^progdb/edit_personlist/(?P<pk>\d+)/$', permission_required('progdb2.change_personlist')(EditView.as_view(
+    url(r'^progdb/edit_personlist/(?P<pk>\d+)/$', permission_required('progdb2.send_item_email')(EditView.as_view(
           model = PersonList,
           form_class=PersonListForm))),
 
-    url(r'^progdb/new_person/$', permission_required('progdb2.add_person')(NewView.as_view(
+    url(r'^progdb/new_person/$', permission_required('progdb2.edit_programme')(NewView.as_view(
           model = Person,
           form_class=PersonForm))),
-    url(r'^progdb/new_item/$', permission_required('progdb2.add_item')(NewView.as_view(
+    url(r'^progdb/new_item/$', permission_required('progdb2.edit_programme')(NewView.as_view(
           model = Item,
           form_class=ItemForm))),
-    url(r'^progdb/new_room/$', permission_required('progdb2.add_room')(NewView.as_view(
+    url(r'^progdb/new_room/$', permission_required('progdb2.config_db')(NewView.as_view(
           model = Room,
           form_class=RoomForm))),
-    url(r'^progdb/new_tag/$', permission_required('progdb2.add_tag')(NewView.as_view(
+    url(r'^progdb/new_tag/$', permission_required('progdb2.edit_tags')(NewView.as_view(
           model = Tag,
           form_class=TagForm))),
-    url(r'^progdb/new_kitthing/$', permission_required('progdb2.add_kitthing')(NewView.as_view(
+    url(r'^progdb/new_kitthing/$', permission_required('progdb2.edit_kit')(NewView.as_view(
           model = KitThing,
           form_class=KitThingForm))),
-    url(r'^progdb/new_kitbundle/$', permission_required('progdb2.add_kitbundle')(NewView.as_view(
+    url(r'^progdb/new_kitbundle/$', permission_required('progdb2.edit_kit')(NewView.as_view(
           model = KitBundle,
           form_class=KitBundleForm))),
-    url(r'^progdb/new_kitrequest/$', permission_required('progdb2.add_kitrequest')(NewView.as_view(
+    url(r'^progdb/new_kitrequest/$', permission_required('progdb2.edit_kit')(NewView.as_view(
           model = KitRequest,
           form_class=KitRequestForm))),
-    url(r'^progdb/new_itemperson/$', permission_required('progdb2.add_itemperson')(NewView.as_view(
+    url(r'^progdb/new_itemperson/$', permission_required('progdb2.edit_programme')(NewView.as_view(
           template_name = 'progdb2/edit_itemperson.html',
           model = ItemPerson,
           form_class=ItemPersonForm))),
-    url(r'^progdb/new_personlist/$', permission_required('progdb2.add_personlist')(NewView.as_view(
+    url(r'^progdb/new_personlist/$', permission_required('progdb2.send_item_email')(NewView.as_view(
           template_name = 'progdb2/edit_personlist.html',
           model = PersonList,
           success_url = '/progdb/peoplelists/',
@@ -143,6 +143,7 @@ urlpatterns = patterns('',
     url(r'^progdb/add_tags/$', add_tags),
 
     url(r'^progdb/checks/$', list_checks),
+    url(r'^progdb/make_con_groups/$', make_con_groups),
 
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

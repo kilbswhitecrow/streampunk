@@ -19,6 +19,7 @@ from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSche
 from progdb2.forms import AddBundleToRoomForm, AddBundleToItemForm
 from progdb2.forms import AddThingToRoomForm, AddThingToItemForm
 from progdb2.forms import EmailForm, PersonListForm
+from progdb2.auth import add_con_groups
 
 def show_request(request):
   if request.method == 'GET':
@@ -71,7 +72,7 @@ class AllView(ListView):
 
 class VisibleView(AllView):
   def get_queryset(self):
-    if self.request.user.is_authenticated():
+    if self.request.user.has_perm('progb2.read_private'):
       return self.model.objects.all()
     else:
       return self.model.objects.filter(visible = True)
@@ -116,13 +117,13 @@ def show_grid(request, dy, gr):
   slots = grid.slots.all()
   # Following is buggy: it won't include any items that start
   # earlier, but run into this grid.
-  if request.user.is_authenticated():
+  if request.user.has_perm('progb2.read_private'):
     items = Item.objects.filter(day = day, start__in = slots)
     people = ItemPerson.objects.filter(item__in=items)
     rooms = Room.objects.all();
   else:
     items = Item.objects.filter(day = day, start__in = slots, visible=True)
-    people = ItemPerson.objects.filter(visible='Yes').filter(item__in=items)
+    people = ItemPerson.objects.filter(visible=True).filter(item__in=items)
     rooms = Room.objects.filter(visible=True);
       
   return render_to_response('progdb2/show_grid.html',
@@ -148,11 +149,11 @@ class show_item_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_item_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
-    if self.request.user.is_authenticated():
+    if self.request.user.has_perm('progb2.read_private'):
       context['item_people'] = ItemPerson.objects.filter(item=self.object)
       context['item_tags'] = self.object.tags.all()
     else:
-      context['item_people'] = ItemPerson.objects.filter(item=self.object, visible='Yes')
+      context['item_people'] = ItemPerson.objects.filter(item=self.object, visible=True)
       context['item_tags'] = self.object.tags.filter(visible=True)
     context['kitrequests'] = self.object.kitRequests.all()
     context['kitthings'] = KitItemAssignment.objects.filter(item=self.object)
@@ -167,14 +168,14 @@ class show_person_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_person_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
-    if self.request.user.is_authenticated():
+    if self.request.user.has_perm('progb2.read_private'):
       context['person_name'] = "%s" % self.object
       context['person_tags'] = self.object.tags.all()
       context['person_items'] = ItemPerson.objects.filter(person=self.object)
     else:
       context['person_name'] = "%s" % self.object.as_badge()
       context['person_tags'] = self.object.tags.filter(visible=True)
-      context['person_items'] = ItemPerson.objects.filter(person=self.object, visible='Yes')
+      context['person_items'] = ItemPerson.objects.filter(person=self.object, visible=True)
     context['avail'] = self.object.availability.all()
     return context
 
@@ -295,7 +296,7 @@ def mkemail(request, dirvars, subject, person):
   msg.attach_alternative(html, "text/html")
   return msg
 
-@login_required
+@permission_required('progdb2.send_direct_email')
 def email_person(request, pk):
   if request.method == 'POST':
     form = EmailForm(request.POST)
@@ -323,7 +324,7 @@ def email_person(request, pk):
                             locals(),
                             context_instance=RequestContext(request))
 
-@login_required
+@permission_required('progdb2.send_direct_email')
 def emailed_person(request, pk):
   pid = int(pk)
   person = Person.objects.get(id = pid)
@@ -332,7 +333,7 @@ def emailed_person(request, pk):
                             context_instance=RequestContext(request))
 
 
-@login_required
+@permission_required('progdb2.send_item_email')
 def email_item(request, pk):
   if request.method == 'POST':
     form = EmailForm(request.POST)
@@ -362,7 +363,7 @@ def email_item(request, pk):
                             locals(),
                             context_instance=RequestContext(request))
 
-@login_required
+@permission_required('progdb2.send_item_email')
 def email_item_with_personlist(request, ipk, plpk):
   iid = int(ipk)
   item = Item.objects.get(id = iid)
@@ -403,8 +404,7 @@ def email_item_with_personlist(request, ipk, plpk):
                             locals(),
                             context_instance=RequestContext(request))
 
-
-@login_required
+@permission_required('progdb2.send_item_email')
 def emailed_item(request, pk):
   iid = int(pk)
   item = Item.objects.get(id = iid)
@@ -413,7 +413,7 @@ def emailed_item(request, pk):
                             locals(),
                             context_instance=RequestContext(request))
 
-@permission_required('progdb2.change_item')
+@permission_required('progdb2.edit_tags')
 def edit_tags_for_item(request, i):
   iid = int(i)
   item = Item.objects.get(id = iid)
@@ -429,7 +429,7 @@ def edit_tags_for_item(request, i):
                             locals(),
                             context_instance=RequestContext(request))
 
-@permission_required('progdb2.change_person')
+@permission_required('progdb2.edit_tags')
 def edit_tags_for_person(request, p):
   pid = int(p)
   person = Person.objects.get(id = pid)
@@ -633,3 +633,12 @@ def make_personlist(request):
   else:
     return HttpResponseRedirect(reverse('add_personlist'))
   
+def make_con_groups(request):
+  if request.user.is_superuser:
+    added_perms = add_con_groups()
+    status_msg = u"Added permissions"
+  else:
+    status_msg = u"Permission denied!"
+  return render_to_response('progdb2/make_con_groups.html',
+                            locals(),
+                            context_instance=RequestContext(request))

@@ -1,4 +1,4 @@
-{%if user.is_authenticated %}
+{%if perms.progdb2.read_private %}
 <h2>Availability</h2>
 <table border="1">
 {% for av in avail %}

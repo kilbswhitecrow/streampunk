@@ -11,7 +11,7 @@
 <tr><th>Room</th><td>{{ item.room|linky|safe }}</td></tr>
 <tr><th>Kind</th><td>{{ item.kind }}</td></tr>
 <tr><th>To bring</th><td>{{ item.toBring }}</td></tr>
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
 <tr><th>Seating</th><td>{{ item.seating }}</td></tr>
 <tr><th>Visible?</th><td>{{ item.visible }}</td></tr>
 <tr><th>Budget</th><td>{{ item.budget }}</td></tr>
@@ -24,7 +24,7 @@
 {% endif %}
 </table>
 
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
 <div class="techinfo">
 <table border="1">
 <tr><th>Front-of-room Layout</th><td>{{ item.frontLayout }}</td></tr>
@@ -38,7 +38,7 @@
 </div>
 {% endif %}
 
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_programme or perms.progdb2.edit_private %}
 <p> <a href="/progdb/edit_item/{{ item.id }}/">Edit item</a>.</p>
 {% endif %}
 
@@ -48,14 +48,14 @@
 <table border="1">
 {% for itemperson in item_people %}
 <tr>
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
   <td>{{ itemperson.person|linky|safe }}</td>
 {% else %}
   <td>{{ itemperson.person|linky:itemperson.person.as_badge|safe }}</td>
 {% endif %}
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_programme %}
   <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
   <td>
        <input type="checkbox" name="somepeople" value="{{ itemperson.person.id }}" />
@@ -74,7 +74,7 @@
 </table>
 <input type="hidden" name="itemid" value="{{ item.id }}" />
 <input type="hidden" name="listname" value="People from item {{ item.id }}" />
-{% if user.is_authenticated %}
+{% if perms.progdb2.send_item_email %}
 <input type="submit" name="email_all" value="Email all the people on this item" />
 <input type="submit" name="email_some" value="Email selected people" />
 <br/>
@@ -83,7 +83,7 @@
 {% endif %}
 </form>
 
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_programme %}
 <p><a href="/progdb/new_itemperson/?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
 {% endif %}
 
@@ -98,7 +98,7 @@
 <tr><td>No tags yet</td></tr>
 {% endfor %}
 </table>
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_tags %}
 <p><a href="/progdb/edit_tags_for_item/{{ item.id }}/">Edit tags for {{ item }}</a>.</p>
 {% endif %}
 {% endblock %}

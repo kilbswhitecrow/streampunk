@@ -1,7 +1,7 @@
 {% extends "progdb2/base.html" %}
 {% load progdb_filters %}
 {% block title %}Person:
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
 {{ person }}
 {% else %}
 {{ person.as_badge }}
@@ -10,7 +10,7 @@
 {% block body_content %}
 <table border>
 <tr><th>Name</th><td>
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
   {{ person.firstName }}
   {{ person.middleName }}
   {{ person.lastName }}
@@ -21,7 +21,7 @@
 <tr><th>Badge</th><td>{{ person.badge }}</td></tr>
 <tr><th>Mem num</th><td>{{ person.memnum }}</td></tr>
 <tr><th>Public Notes</th><td>{{ person.pubNotes }}</td></tr>
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
 <tr><th>Email</th><td>{{ person.email }}</td></tr>
 <tr><th>Dist Email?</th><td>{{ person.distEmail }}</td></tr>
 <tr><th>Contact details</th><td>{{ person.contact }}</td></tr>
@@ -31,7 +31,7 @@
 {% endif %}
 </table>
 
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_programme or perms.progdb2.edit_private %}
 <p><a href="/progdb/edit_person/{{ person.id }}/">Edit person</a>.</p>
 {% endif %}
 
@@ -42,7 +42,7 @@
   <td>{{ itemperson.item|linky|safe }}</td>
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
-{% if user.is_authenticated %}
+{% if perms.progdg2.edit_programme %}
   <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
 {% endif %}
 </tr>
@@ -51,7 +51,7 @@
 {% endfor %}
 </table>
 
-{% if user.is_authenticated %}
+{% if perms.progdg2.edit_programme %}
 <p><a href="/progdb/new_itemperson/?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
 {% if person.email %}
 <p><a href="/progdb/mail_person/{{ person.id }}/">Email {{ person }}</a>.</p>
@@ -68,7 +68,7 @@
 <tr><td>No tags yet</td></tr>
 {% endfor %}
 </table>
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_tags %}
 <p><a href="/progdb/edit_tags_for_person/{{person.id}}/">Edit tags for {{ person }}</a>.</p>
 {% endif %}
 {% include "progdb2/list_avail.html" %}

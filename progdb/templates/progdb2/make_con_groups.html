@@ -1,0 +1,13 @@
+{% extends "progdb2/base.html" %}
+{% load progdb_filters %}
+{% block title %} Creating groups {% endblock %}
+{% block body_content %}
+<p>{{ status_msg }}</p>
+<table border>
+{% for p in added_perms %}
+  <tr><td> {{ p }} </td></tr>
+{% empty %}
+  <tr><td>No groups!</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

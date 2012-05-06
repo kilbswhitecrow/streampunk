@@ -7,6 +7,8 @@ from django.db import models
 from django.db.models import Q
 from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 YesNo = (
   ( 'TBA', 'TBA'),
@@ -672,7 +674,7 @@ class ItemPerson(models.Model):
   person = models.ForeignKey(Person)
   role = models.ForeignKey(PersonRole, default=PersonRole.objects.find_default)
   status = models.ForeignKey(PersonStatus, default=PersonStatus.objects.find_default)
-  visible = models.CharField(max_length=4, choices=YesNo, default='Yes')
+  visible = models.BooleanField(default=True)
   distEmail = models.CharField(max_length=4, choices=YesNo, default='No')
   recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No')
 
@@ -709,6 +711,57 @@ class Check(models.Model):
     return self.name
   def get_absolute_url(self):
     return mk_url(self)
+
+
+NameOrder = (
+  ( 'Last', 'Last, First, Middle, Badge'),
+  ( 'First', 'First, Middle, Last, Badge' ),
+  ( 'Badge', 'Badge, First, Middle, Last' ),
+)
+
+class UserProfile(models.Model):
+  # required field
+  user = models.OneToOneField(User)
+  # personal preferences about grid rendering
+  show_shortname = models.BooleanField(default=ConInfoBool.objects.show_shortname)
+  show_tags = models.BooleanField(default=True)
+  show_people = models.BooleanField(default=True)
+  rooms_across_top = models.BooleanField(default=ConInfoBool.objects.rooms_across_top)
+  name_order = models.CharField(max_length=4, choices=NameOrder, default='Last')
+  # If this user is actually a person in the programme too
+  person = models.ForeignKey(Person, null=True, blank=True)
+
+  class Meta:
+    permissions = (
+      ("edit_private",      "Can edit private data"),
+      ("edit_public",       "Can edit public data"),
+      ("read_public",       "Can read public data"),
+      ("read_private",      "Can read private data"),
+      ("config_db",         "Can configure the database"),
+      ("edit_programme",    "Can edit programme data"),
+      ("edit_kit",          "Can edit kit-related data"),
+      ("send_direct_email", "Can send email to individuals"),
+      ("send_item_email",   "Can send email to everyone on an item"),
+      ("send_mass_email",   "Can send email to everyone"),
+      ("import_data",       "Can import data"),
+      ("export_data",       "Can export data"),
+      ("edit_room",         "Can edit room info"),
+      ("edit_tags",         "Can tag items/people and edit tags"),
+    )
+
+  def __unicode__(self):
+    return u"profile:%s" % (self.user)
+
+  def get_absolute_url(self):
+    return mk_url(self)
+
+def create_user_profile(sender, instance, created, **kwargs):
+  if created:
+    UserProfile.objects.create(user=instance)
+
+# Register the signal handler against the User object
+post_save.connect(create_user_profile, sender=User, dispatch_uid="create_user_profile")
+
 
 # Outstanding things that need thinking about:
 # - Item Moves. Add when we need that.

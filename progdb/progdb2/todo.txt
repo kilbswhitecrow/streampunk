@@ -6,8 +6,9 @@
 - User profiles
 - User permissions
 - Use of permissions in templates and views
-	Mostly done.
-	Need to do login/logout redirects to appropriate pages.
+	- View profile
+	- Edit profile
+	- Change password
 - Email
 	Mostly done. Need to modify the mail_item_with_personlist view,
 	to have a Cancel button that deletes the personlist and returns

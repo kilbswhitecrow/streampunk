@@ -4,7 +4,7 @@ from progdb.progdb2.models import RoomCapacity, Room, Revision, Tag, ItemPerson,
 from progdb.progdb2.models import FrontLayoutKind, KitKind, KitRole, KitDepartment, KitSource, KitBasis, KitStatus
 from progdb.progdb2.models import MediaStatus, KitRequest, KitThing, KitBundle, KitRoomAssignment, KitItemAssignment
 from progdb.progdb2.models import Availability, KitAvailability, RoomAvailability, PersonAvailability, PersonList
-from progdb.progdb2.models import ConInfoInt, ConInfoString, ConInfoBool
+from progdb.progdb2.models import ConInfoInt, ConInfoString, ConInfoBool, UserProfile
 
 admin.site.register(SlotLength)
 admin.site.register(Slot)
@@ -45,3 +45,4 @@ admin.site.register(ConInfoInt)
 admin.site.register(ConInfoString)
 admin.site.register(ConInfoBool)
 admin.site.register(PersonList)
+admin.site.register(UserProfile)

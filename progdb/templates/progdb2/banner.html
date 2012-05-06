@@ -7,11 +7,13 @@
   <td><a href="/progdb/items/">Items</a></td>
   <td><a href="/progdb/rooms/">Rooms</a></td>
   <td><a href="/progdb/tags/">Tags</a></td>
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
   <td><a href="/progdb/kitbundles/">Kit Bundles</a></td>
   <td><a href="/progdb/kitthings/">Kit Things</a></td>
   <td><a href="/progdb/kitrequests/">Kit Requests</a></td>
   <td><a href="/progdb/checks/">Checks</a></td>
+{% endif %}
+{% if user.is_staff %}
   <td><a href="/admin/">Admin</a></td>
 {% endif %}
   <td>

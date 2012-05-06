@@ -4,12 +4,20 @@
 <p>
 The front page goes here.
 </p>
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_programme %}
 <p>
 <a href="/progdb/add_person_to_item/">Add a person to an item</a>.
 </p>
+{% endif %}
+{% if perms.progdb2.edit_tags %}
 <p>
 <a href="/progdb/add_tags/">Add multiple tags to items and/or people</a>.
+</p>
+{% endif %}
+
+{% if user.is_superuser %}
+<p>
+<a href="/progdb/make_con_groups/">Set up all the group permissions</a>.
 </p>
 {% endif %}
 {% endblock %}

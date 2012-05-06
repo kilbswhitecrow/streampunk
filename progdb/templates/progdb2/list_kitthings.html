@@ -1,4 +1,4 @@
-{% if user.is_authenticated %}
+{% if perms.progdb2.read_private %}
 {% load progdb_filters %}
 <h2>Kit Things</h2>
 <table border>
@@ -8,8 +8,10 @@
   <tr><td>No things yet</td></tr>
 {% endfor %}
 </table>
+{% if perms.progdb2.edit_kit %}
 <p>
 <a href="/progdb/add_kitthing_to_room/">Add Kit thing to room</a></p>
 <p>
 <a href="/progdb/add_kitthing_to_item/">Add Kit thing to item</a></p>
+{% endif %}
 {% endif %}

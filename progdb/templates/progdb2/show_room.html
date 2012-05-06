@@ -3,14 +3,23 @@
 {% block title %}Room: {{ room.name }}{% endblock %}
 {% block body_content %}
 <table border>
-<tr><th>Name</th><td>{{ room.name }}</td><th>Notes</th></tr>
-<tr><th>Description</th><td>{{ room.description }}</td><td rowspan="5">{{ room.privNotes }}</td></tr>
+<tr><th>Name</th><td>{{ room.name }}</td>
+{% if perms.progdb2.read_private %}
+<th>Notes</th>
+{% endif %}
+</tr>
+<tr><th>Description</th><td>{{ room.description }}</td>
+{% if perms.progdb2.read_private %}
+<td rowspan="5">{{ room.privNotes }}</td>
+{% endif %}
+</tr>
+{% if perms.progdb2.read_private %}
 <tr><th>Visible?</th><td>{{ room.visible }}</td></tr>
-<tr><th>hasProj?</th><td>{{ room.hasProj }}</td></tr>
 <tr><th>Grid order?</th><td>{{ room.gridOrder }}</td></tr>
+{% endif %}
 </table>
 
-{% if user.is_authenticated %}
+{% if perms.progdb2.edit_room %}
 <p><a href="/progdb/edit_room/{{room.id}}/">Edit room</a>.</p>
 {% endif %}
 

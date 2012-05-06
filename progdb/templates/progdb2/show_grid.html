@@ -69,8 +69,10 @@
     <li> <a id="ShowSlotByRoom" href="">Time by Room</a></li>
     <li> <a id="ShowPeeps" href="">Show people</a></li>
     <li> <a id="HidePeeps" href="">Hide people</a></li>
+{% if perms.progdb2.edit_programme %}
     <li> <a id="ShowFill" href="">Show 'fill slot'</a></li>
     <li> <a id="HideFill" href="">Hide 'fill slot'</a></li>
+{% endif %}
   </ul>
   </div>
 

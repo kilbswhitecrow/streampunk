@@ -4,7 +4,7 @@
 {% block body_content %}
 <table border>
 {% for tag in tag_list %}
-{% if user.is_authenticated or tag.visible %}
+{% if perms.progdb2.read_private or tag.visible %}
   <tr><td>{{ tag|linky|safe }}</td></tr>
 {% endif %}
 {% empty %}

@@ -156,3 +156,5 @@ LOGGING = {
 # EMAIL_PORT = 25
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+AUTH_PROFILE_MODULE = 'progdb2.UserProfile'
