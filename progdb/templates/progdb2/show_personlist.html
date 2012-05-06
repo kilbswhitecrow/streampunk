@@ -19,4 +19,8 @@
 </table>
 </p>
 <p><a href="/progdb/edit_personlist/{{ personlist.id }}/">Edit PersonList</a>.</p>
+
+{% if perms.progdb2.send_mass_email %}
+<p><a href="/progdb/mail_personlist/{{ personlist.id }}/">Send email to the people on this list</a>.</p>
+{% endif %}
 {% endblock %}

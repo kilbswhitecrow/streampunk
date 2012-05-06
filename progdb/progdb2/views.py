@@ -333,50 +333,22 @@ def emailed_person(request, pk):
                             context_instance=RequestContext(request))
 
 
-@permission_required('progdb2.send_item_email')
-def email_item(request, pk):
-  if request.method == 'POST':
-    form = EmailForm(request.POST)
-    if form.is_valid():
-      iid = int(pk)
-      item = Item.objects.get(id = iid)
-      people = item.people.exclude(email='')
-      if people:
-        con_name = ConInfoString.objects.con_name()
-        subject = form.cleaned_data['subject']
-        message = form.cleaned_data['message']
-        incItems = form.cleaned_data['includeItems']
-        incContact = form.cleaned_data['includeContact']
-        incAvail = form.cleaned_data['includeAvail']
-        for person in people:
-          if incItems:
-            itemspeople = ItemPerson.objects.filter(person = person)
-          if incAvail:
-            avail = person.availability.all()
-            noAvailMsg = u"We have no information about your availablity over the convention."
-        msg = mkemail(request, locals(), subject, person)
-        msg.send()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_item', args=(int(item.id),)))
-  else:
-    form = EmailForm()
-  return render_to_response('progdb2/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-@permission_required('progdb2.send_item_email')
-def email_item_with_personlist(request, ipk, plpk):
-  iid = int(ipk)
-  item = Item.objects.get(id = iid)
-  subject = item.title
-  personlist = PersonList.objects.get(id = int(plpk))
+def send_mail_to_personlist(request, personlist, subject=None, success_url=None, cancel_url=None, edittemplate='progdb2/mail_personlist.html'):
   people = personlist.people.exclude(email='')
   nomail = personlist.people.filter(email='')
+
+  if not subject:
+    subject = personlist.name
+  if not cancel_url:
+    cancel_url = reverse('main_page')
+  if not success_url:
+    success_url = reverse('main_page')
   if request.method == 'POST':
     if request.POST.has_key('cancel'):
       if personlist.auto == True:
         # discard this personlist
         personlist.delete()
-      return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
+      return HttpResponseRedirect(cancel_url)
     form = EmailForm(request.POST)
     if form.is_valid():
       if people:
@@ -395,14 +367,40 @@ def email_item_with_personlist(request, ipk, plpk):
           msg = mkemail(request, locals(), subject, person)
           msg.send()
       if personlist.auto == True:
-        print "Personlist is auto - discarding now\n"
         personlist.delete()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_item', args=(int(item.id),)))
+      return HttpResponseRedirect(success_url)
   else:
     form = EmailForm(initial = { 'subject' : subject })
-  return render_to_response('progdb2/mail_personlist.html',
+  return render_to_response(edittemplate,
                             locals(),
                             context_instance=RequestContext(request))
+
+
+@permission_required('progdb2.send_item_email')
+def email_personlist(request, pk):
+  personlist = PersonList.objects.get(id = int(pk))
+  if personlist.auto:
+    success_url = reverse('main_page')
+    cancel_url = success_url
+  else:
+    success_url = personlist.get_absolute_url()
+    cancel_url = success_url
+  return send_mail_to_personlist(request, personlist,
+                                 subject=personlist.name,
+                                 success_url=success_url,
+                                 cancel_url=cancel_url)
+
+@permission_required('progdb2.send_item_email')
+def email_item_with_personlist(request, ipk, plpk):
+  item = Item.objects.get(id = int(ipk))
+  subject = item.title
+  cancel_url = item.get_absolute_url()
+  success_url = reverse('emailed_item', args=(int(item.id),))
+  personlist = PersonList.objects.get(id = int(plpk))
+  return send_mail_to_personlist(request, personlist,
+                                 subject=item.title,
+                                 success_url=success_url,
+                                 cancel_url=cancel_url)
 
 @permission_required('progdb2.send_item_email')
 def emailed_item(request, pk):
@@ -609,11 +607,8 @@ def make_personlist(request):
       # huh? what happened?
       return HttpResponseRedirect(reverse('add_personlist'))
     pids = [ int(p) for p in peeps ]
-    print u"Got ids: %s" % ( pids )
     people = Person.objects.filter(id__in=pids)
-    print u"Got people: %s" % ( people )
     name = request.POST.get('listname', '')
-    itemid = int(request.POST.get('itemid', None))
     if request.POST.has_key('email_all') or request.POST.has_key('email_some'):
       # we're going to use this personlist to mail people immediately, so save
       # the list, and head over to creating the mail message.
@@ -621,8 +616,11 @@ def make_personlist(request):
       personlist.save()
       for p in people:
         personlist.people.add(p)
-      print "Saved personlist as %s\n" % (personlist.id)
-      return HttpResponseRedirect(reverse('mail_item_with_personlist', kwargs={'ipk': itemid, 'plpk': personlist.id}))
+      iid = request.POST.get('itemid', None)
+      if iid == None:
+        return HttpResponseRedirect(reverse('email_personlist', kwargs={'pk': personlist.id}))
+      else:
+        return HttpResponseRedirect(reverse('mail_item_with_personlist', kwargs={'ipk': itemid, 'plpk': personlist.id}))
     else:
       # we're creating the list for later use, so let's populate a form that'll
       # allow correction and renaming, before saving.

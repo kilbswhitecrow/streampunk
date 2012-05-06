@@ -1035,7 +1035,7 @@
     "fields": {
       "gridOrder": 2, 
       "description": "Check returns a list of people.", 
-      "name": "Person list", 
+      "name": "Person List", 
       "isDefault": false, 
       "isUndefined": false
     }

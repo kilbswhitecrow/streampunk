@@ -2,8 +2,14 @@
 {% load progdb_filters %}
 {% block title %}Check Results{% endblock %}
 {% block body_content %}
-<table border>
+<table border="1">
 {% for checkOutput in checkOutputs %}
+<tr><td><a href="#{{ checkOutput.check.module }}">{{checkOutput.check.name}}</a></td></tr>
+{% endfor %}
+</table>
+
+{% for checkOutput in checkOutputs %}
+<h2><a name="{{checkOutput.check.module}}">{{ checkOutput.check.name }}</a></h2>
 {% if checkOutput.person_list %}
 {% include "progdb2/checks/person_list.html" %}
 {% endif %}
@@ -16,5 +22,4 @@
 {% empty %}
 <p>No checks selected...</p>
 {% endfor %}
-</table>
 {% endblock %}

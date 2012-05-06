@@ -11,7 +11,7 @@ from progdb.progdb2.forms import KitThingForm, KitBundleForm, KitRequestForm, Pe
 from progdb.progdb2.forms import DeleteItemPersonForm
 
 from progdb.progdb2.views import main_page, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
-from progdb.progdb2.views import show_grid, show_slot_detail, email_person, emailed_person, email_item, emailed_item, email_item_with_personlist
+from progdb.progdb2.views import show_grid, show_slot_detail, email_person, emailed_person, emailed_item, email_item_with_personlist, email_personlist
 from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from progdb.progdb2.views import show_kitthing, show_kitbundle
@@ -30,11 +30,11 @@ urlpatterns = patterns('',
     # url(r'^$', 'progdb.views.home', name='home'),
     # url(r'^progdb/', include('progdb.foo.urls')),
     url(r'^progdb/show_request/$', show_request),
-    url(r'^progdb/main/$', main_page),
-    url(r'^accounts/login/$', login),
-    url(r'^accounts/logout/$', logout),
+    url(r'^progdb/main/$', main_page, name='main_page'),
+    url(r'^accounts/login/$', login, name='login'),
+    url(r'^accounts/logout/$', logout, name='logout'),
 
-    url(r'^progdb/grids/$', list_grids),
+    url(r'^progdb/grids/$', list_grids, name='list_grids'),
     url(r'^progdb/people/$', AllView.as_view(model=Person,
                                              template_name='progdb2/list_people.html')),
     url(r'^progdb/items/$', VisibleView.as_view(model=Item)),
@@ -131,9 +131,9 @@ urlpatterns = patterns('',
 
     url(r'^progdb/mail_person/(?P<pk>\d+)/$', email_person),
     url(r'^progdb/mailed_person/(?P<pk>\d+)/$', emailed_person),
-    url(r'^progdb/mail_item/(?P<pk>\d+)/$', email_item),
     url(r'^progdb/mail_item/(?P<ipk>\d+)/with_personlist/(?P<plpk>\d+)/$', email_item_with_personlist, name='mail_item_with_personlist'),
-    url(r'^progdb/mailed_item/(?P<pk>\d+)/$', emailed_item),
+    url(r'^progdb/mailed_item/(?P<pk>\d+)/$', emailed_item, name='emailed_item'),
+    url(r'^progdb/mail_personlist/(?P<pk>\d+)/$', email_personlist, name='email_personlist'),
 
     url(r'^progdb/edit_tags_for_item/(\d+)/$', edit_tags_for_item),
     url(r'^progdb/edit_tags_for_person/(\d+)/$', edit_tags_for_person),

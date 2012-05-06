@@ -1,6 +1,5 @@
 {% load progdb_filters %}
-<tr><th>{{checkOutput.check.name}}</th></tr>
-<tr><th>(Person list)</th></tr>
+<table border="1">
 {% for thing in checkOutput.things %}
 <tr><td>
 {% for t in thing %}
@@ -12,3 +11,4 @@ Bizarre response
 {% empty %}
 <tr><td>No problems found</td></tr>
 {% endfor %}
+</table>
