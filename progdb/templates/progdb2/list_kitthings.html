@@ -10,8 +10,8 @@
 </table>
 {% if perms.progdb2.edit_kit %}
 <p>
-<a href="/progdb/add_kitthing_to_room/">Add Kit thing to room</a></p>
+<a href="{% url add_kitthing_to_room %}">Add Kit thing to room</a></p>
 <p>
-<a href="/progdb/add_kitthing_to_item/">Add Kit thing to item</a></p>
+<a href="{% url add_kitthing_to_item %}">Add Kit thing to item</a></p>
 {% endif %}
 {% endif %}

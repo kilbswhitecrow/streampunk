@@ -8,7 +8,7 @@
 </table>
 
 {% if perms.progdb2.edit_tags %}
-<p><a href="/progdb/edit_tag/{{tag.id}}/">Edit tag</a>.</p>
+<p><a href="{% url edit_tag pk=tag.id %}">Edit tag</a>.</p>
 {% endif %}
 
 {% if tag.visible or perms.progdb2.read_private %}

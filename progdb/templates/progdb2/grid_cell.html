@@ -19,6 +19,6 @@
 {% endfor %}
 {% if perms.progdb2.edit_programme %}
 <br/>
-<span class="FillSlot"><a href="/progdb/fill/d/{{ day.id }}/g/{{ grid.id }}/r/{{ r.id }}/s/{{ s.id }}/u/">Fill slot</a></span>
+<span class="FillSlot"><a href="{% url fill_slot_unsched d=day.id g=grid.id r=r.id s=s.id %}">Fill slot</a></span>
 {% endif %}
 </td>

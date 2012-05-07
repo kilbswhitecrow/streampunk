@@ -7,7 +7,7 @@
 <tr><th>Status</th><td>{{ kitbundle.status }}</td></tr>
 </table>
 
-<p><a href="/progdb/edit_kitbundle/{{kitbundle.id}}/">Edit this bundle</a>.</p>
+<p><a href="{% url edit_kitbundle pk=kitbundle.id %}">Edit this bundle</a>.</p>
 
 {% include "progdb2/list_kitthings.html" %}
 {% include "progdb2/list_kititemassignments.html" %}

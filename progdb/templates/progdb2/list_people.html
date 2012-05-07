@@ -2,7 +2,7 @@
 {% load progdb_filters %}
 {% block title %}People{% endblock %}
 {% block body_content %}
-<form action="/progdb/make_personlist/" method="post">
+<form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
 <table border>
 {% for person in person_list %}

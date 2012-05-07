@@ -39,11 +39,11 @@
 {% endif %}
 
 {% if perms.progdb2.edit_programme or perms.progdb2.edit_private %}
-<p> <a href="/progdb/edit_item/{{ item.id }}/">Edit item</a>.</p>
+<p> <a href="{% url edit_item pk=item.id %}/">Edit item</a>.</p>
 {% endif %}
 
 <h2>People on this item</h2>
-<form action="/progdb/make_personlist/" method="post">
+<form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
 <table border="1">
 {% for itemperson in item_people %}
@@ -56,7 +56,7 @@
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
 {% if perms.progdb2.edit_programme %}
-  <td><a href="/progdb/delete_itemperson/{{ itemperson.id }}/">Remove</a></td>
+  <td><a href="{% url delete_itemperson pk=itemperson.id %}/">Remove</a></td>
   <td>
        <input type="checkbox" name="somepeople" value="{{ itemperson.person.id }}" />
        <input type="hidden" name="allpeople" value="{{ itemperson.person.id }}" />
@@ -84,7 +84,7 @@
 </form>
 
 {% if perms.progdb2.edit_programme %}
-<p><a href="/progdb/new_itemperson/?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
+<p><a href="{% url new_itemperson %}?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
 {% endif %}
 
 {% include "progdb2/list_kitrequests.html" %}
@@ -99,6 +99,6 @@
 {% endfor %}
 </table>
 {% if perms.progdb2.edit_tags %}
-<p><a href="/progdb/edit_tags_for_item/{{ item.id }}/">Edit tags for {{ item }}</a>.</p>
+<p><a href="{% url edit_tags_for_item item.id %}/">Edit tags for {{ item }}</a>.</p>
 {% endif %}
 {% endblock %}

@@ -10,6 +10,6 @@
 <tr><th>Notes</th><td>{{ kitrequest.notes }}</td></tr>
 </table>
 
-<p><a href="/progdb/edit_kitrequest/{{kitrequest.id}}/">Edit this request</a>.</p>
+<p><a href="{% url edit_kitrequest pk=kitrequest.id %}">Edit this request</a>.</p>
 
 {% endblock %}

@@ -20,7 +20,7 @@
 </table>
 
 {% if perms.progdb2.edit_room %}
-<p><a href="/progdb/edit_room/{{room.id}}/">Edit room</a>.</p>
+<p><a href="{% url edit_room pk=room.id %}">Edit room</a>.</p>
 {% endif %}
 
 <h2>Items</h2>

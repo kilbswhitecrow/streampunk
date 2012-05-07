@@ -18,9 +18,9 @@
 {% endfor %}
 </table>
 </p>
-<p><a href="/progdb/edit_personlist/{{ personlist.id }}/">Edit PersonList</a>.</p>
+<p><a href="{% url edit_personlist pk=personlist.id %}">Edit PersonList</a>.</p>
 
 {% if perms.progdb2.send_mass_email %}
-<p><a href="/progdb/mail_personlist/{{ personlist.id }}/">Send email to the people on this list</a>.</p>
+<p><a href="{% url mail_personlist pk=personlist.id %}">Send email to the people on this list</a>.</p>
 {% endif %}
 {% endblock %}

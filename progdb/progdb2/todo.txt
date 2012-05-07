@@ -1,9 +1,14 @@
+- Fix initial_data:
+	- Person Status and Person Role have multiple defaults
+	- no Kit Source defined.
+
 - Add Kit Requests from Items
 - Name change
 - I18N
                - Of  application
                - Of DB content
 - use url in templates
+	- Done, except for /admin/
 
 - Additional checks
                - people listings with email options.

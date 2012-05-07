@@ -314,9 +314,9 @@ def add_person_to_item(request, p=None, i=None):
       itemPerson = ItemPerson(item=item, person=person, role=role, status=status, visible=vis, distEmail=distEmail)
       itemPerson.save()
       if form.cleaned_data['fromPerson']:
-        return HttpResponseRedirect(reverse('progdb.progdb2.views.show_person', args=(int(person.id),)))
+        return HttpResponseRedirect(reverse('show_person_detail', args=(int(person.id),)))
       else:
-        return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
+        return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
     form = ItemPersonForm( initial = { 'item' : i, 'person' : p, 'fromPerson' : is_from_person(request) })
   return render_to_response('progdb2/editform.html',
@@ -352,7 +352,7 @@ def email_person(request, pk):
           noAvailMsg = u"We have no information about your availablity over the convention."
         msg = mkemail(request, locals(), subject, person)
         msg.send()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.emailed_person', args=(int(person.id),)))
+      return HttpResponseRedirect(reverse('emailed_person', args=(int(person.id),)))
   else:
     form = EmailForm()
   return render_to_response('progdb2/editform.html',
@@ -515,7 +515,7 @@ def add_kitbundle_to_room(request):
       for thing in things:
         kras = KitRoomAssignment(thing=thing, bundle=bundle, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot)
         kras.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(room.id),)))
+      return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:
     form = AddBundleToRoomForm()
   form_title = u'Add Kit Bundle to Room'
@@ -533,7 +533,7 @@ def add_kitbundle_to_item(request):
       for thing in things:
         kras = KitItemAssignment(thing=thing, bundle=bundle, item=item)
         kras.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
+      return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
     form = AddBundleToItemForm()
   form_title = u'Add Kit Bundle to Item'
@@ -553,7 +553,7 @@ def add_kitthing_to_room(request):
       toSlot = form.cleaned_data['toSlot']
       kras = KitRoomAssignment(thing=thing, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot)
       kras.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_room', args=(int(room.id),)))
+      return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:
     form = AddThingToRoomForm()
   form_title = u'Add Kit Thing to Room'
@@ -569,7 +569,7 @@ def add_kitthing_to_item(request):
       item = form.cleaned_data['item']
       kras = KitItemAssignment(thing=thing, item=item)
       kras.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_item', args=(int(item.id),)))
+      return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
     form = AddThingToItemForm()
   form_title = u'Add Kit Thing to Item'
@@ -594,7 +594,7 @@ def fill_slot_gen(request, d, g, r, s, cls, suf):
       item.start = slot
       item.day = day
       item.save()
-      return HttpResponseRedirect(reverse('progdb.progdb2.views.show_grid', args=(did, gid,)))
+      return HttpResponseRedirect(reverse('show_grid', args=(did, gid,)))
   else:
     form = cls()
   return render_to_response('progdb2/fill_slot.html',
@@ -640,7 +640,7 @@ def make_personlist(request):
       peeps = request.POST.getlist('somepeople')
     else:
       # huh? what happened?
-      return HttpResponseRedirect(reverse('add_personlist'))
+      return HttpResponseRedirect(reverse('new_personlist'))
     pids = [ int(p) for p in peeps ]
     people = Person.objects.filter(id__in=pids)
     name = request.POST.get('listname', '')
@@ -655,7 +655,7 @@ def make_personlist(request):
       if iid == None:
         return HttpResponseRedirect(reverse('email_personlist', kwargs={'pk': personlist.id}))
       else:
-        return HttpResponseRedirect(reverse('mail_item_with_personlist', kwargs={'ipk': itemid, 'plpk': personlist.id}))
+        return HttpResponseRedirect(reverse('mail_item_with_personlist', kwargs={'ipk': iid, 'plpk': personlist.id}))
     else:
       # we're creating the list for later use, so let's populate a form that'll
       # allow correction and renaming, before saving.
@@ -664,7 +664,7 @@ def make_personlist(request):
                                 locals(),
                                 context_instance=RequestContext(request))
   else:
-    return HttpResponseRedirect(reverse('add_personlist'))
+    return HttpResponseRedirect(reverse('new_personlist'))
   
 def make_con_groups(request):
   if request.user.is_superuser:

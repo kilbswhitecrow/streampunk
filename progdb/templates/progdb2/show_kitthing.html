@@ -18,7 +18,7 @@
 <tr><th>Coordinator</th><td>{{ kitthing.coordinator }}</td></tr>
 </table>
 
-<p><a href="/progdb/edit_kitthing/{{kitthing.id}}/">Edit this thing</a>.</p>
+<p><a href="{% url edit_kitthing pk=kitthing.id %}">Edit this thing</a>.</p>
 
 {% include "progdb2/list_kitbundles.html" %}
 {% include "progdb2/list_kititemassignments.html" %}
