@@ -753,7 +753,7 @@ class UserProfile(models.Model):
     return u"profile:%s" % (self.user)
 
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('userprofile')
 
 def create_user_profile(sender, instance, created, **kwargs):
   if created:

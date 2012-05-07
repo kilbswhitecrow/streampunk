@@ -8,7 +8,7 @@
 <tr><th>Show People</th><td>{{ userprofile.show_people }}</td></tr>
 <tr><th>Rooms across Top</th><td>{{ userprofile.rooms_across_top }}</td></tr>
 <tr><th>Name order</th><td>{{ userprofile.name_order }}</td></tr>
-{% if perms.progdb2.read_public %}
+{% if userprofile.person and perms.progdb2.read_public %}
 <tr><th>You, in the programme</th><td>{{ userprofile.person|linky|safe }}</td></tr>
 {% endif %}
 </table>

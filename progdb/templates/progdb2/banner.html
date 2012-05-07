@@ -19,9 +19,17 @@
   <td>
 {% if user.is_authenticated %}
     <a href="/accounts/profile/">{{ user.username }}</a>.
-    <a href="/accounts/logout/?next={{ request.path }}">Log out</a>
+  {% if request.path %}
+      <a href="/accounts/logout/?next={{ request.path }}">Log out</a>
+  {% else %}
+      <a href="/accounts/logout/">Log out</a>
+  {% endif %}
 {% else %}
+  {% if request.path %}
     <a href="/accounts/login/?next={{ request.path }}">Log in</a>
+  {% else %}
+    <a href="/accounts/login/">Log in</a>
+  {% endif %}
 {% endif %}
   </td>
 </tr>

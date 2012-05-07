@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, include, url
-from django.contrib.auth.views import login, logout
+from django.contrib.auth.views import login, logout, logout_then_login, password_change, password_change_done, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import permission_required, login_required
 
@@ -32,8 +32,17 @@ urlpatterns = patterns('',
     # url(r'^progdb/', include('progdb.foo.urls')),
     url(r'^progdb/show_request/$', show_request),
     url(r'^progdb/main/$', main_page, name='main_page'),
+
     url(r'^accounts/login/$', login, name='login'),
-    url(r'^accounts/logout/$', logout, name='logout'),
+    url(r'^accounts/logout/$', logout, kwargs={'next_page':'/progdb/main/', 'redirect_field_name':'next'}, name='logout'),
+    url(r'^accounts/logout_then_login/$', logout_then_login, name='logout_then_login'),
+    url(r'^accounts/change_password/$', password_change, name='password_change'),
+    url(r'^accounts/password_changed/$', password_change_done, name='password_change_done'),
+    url(r'^accounts/password_reset/$', password_reset, name='password_reset'),
+    url(r'^accounts/password_reset_done/$', password_reset_done, name='password_reset_done'),
+    url(r'^accounts/password_reset_confirm/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm, name='password_reset_confirm'),
+    url(r'^accounts/password_reset_complete/$', password_reset_complete, name='password_reset_complete'),
+
     url(r'^accounts/change_profile/$', edit_user_profile, name='editprofile'),
     url(r'^accounts/profile/$', show_profile_detail, name='userprofile'),
 

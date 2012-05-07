@@ -3,8 +3,7 @@
 - I18N
                - Of  application
                - Of DB content
-- Profile pages
-	- Change password
+- use url in templates
 
 - Additional checks
                - people listings with email options.
