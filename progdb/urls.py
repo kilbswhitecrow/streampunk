@@ -16,7 +16,7 @@ from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from progdb.progdb2.views import show_kitthing, show_kitbundle
 from progdb.progdb2.views import add_kitbundle_to_room, add_kitbundle_to_item
-from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item
+from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item
 from progdb.progdb2.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
 from progdb.progdb2.views import show_personlist_detail, show_request, make_personlist, make_con_groups
@@ -79,6 +79,7 @@ urlpatterns = patterns('',
     url(r'^progdb/add_kitbundle_to_item/$', add_kitbundle_to_item, name='add_kitbundle_to_item'),
     url(r'^progdb/add_kitthing_to_room/$', add_kitthing_to_room, name='add_kitthing_to_room'),
     url(r'^progdb/add_kitthing_to_item/$', add_kitthing_to_item, name='add_kitthing_to_item'),
+    url(r'^progdb/add_kitrequest_to_item/(?P<pk>\d+)/$', add_kitrequest_to_item, name='add_kitrequest_to_item'),
 
     url(r'^progdb/delete_itemperson/(?P<pk>\d+)/$', permission_required('progdb2.edit_programme')(AfterDeleteView.as_view(
           model=ItemPerson)), name='delete_itemperson'),

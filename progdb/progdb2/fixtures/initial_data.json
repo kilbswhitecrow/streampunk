@@ -587,7 +587,7 @@
       "gridOrder": 0, 
       "description": "", 
       "name": "TBA", 
-      "isDefault": true, 
+      "isDefault": false, 
       "isUndefined": true
     }
   }, 
@@ -686,7 +686,7 @@
       "gridOrder": 0, 
       "description": "", 
       "name": "TBA", 
-      "isDefault": true, 
+      "isDefault": false, 
       "isUndefined": true
     }
   }, 
@@ -873,6 +873,17 @@
       "name": "Programme Ops", 
       "isDefault": false, 
       "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "progdb2.kitsource", 
+    "fields": {
+      "gridOrder": 1, 
+      "description": "", 
+      "name": "TBA", 
+      "isDefault": true, 
+      "isUndefined": true
     }
   }, 
   {

@@ -1,8 +1,3 @@
-- Fix initial_data:
-	- Person Status and Person Role have multiple defaults
-	- no Kit Source defined.
-
-- Add Kit Requests from Items
 - Name change
 - I18N
                - Of  application
@@ -11,7 +6,6 @@
 	- Done, except for /admin/
 
 - Additional checks
-               - people listings with email options.
 		- Kit clashes
 		- Unfulfilled kit requests
 

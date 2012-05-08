@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import permission_required, login_required
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
 from progdb2.models import UserProfile
-from progdb2.forms import KitThingForm, KitBundleForm
+from progdb2.forms import KitThingForm, KitBundleForm, KitRequestForm
 from progdb2.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from progdb2.forms import TagForm, RoomForm, CheckModelFormSet
 from progdb2.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
@@ -573,6 +573,28 @@ def add_kitthing_to_item(request):
   else:
     form = AddThingToItemForm()
   form_title = u'Add Kit Thing to Item'
+  return render_to_response('progdb2/editform.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def add_kitrequest_to_item(request, pk):
+  if request.method == 'POST':
+    form = KitRequestForm(request.POST)
+    if form.is_valid():
+      item = Item.objects.get(id=int(pk))
+      kind = form.cleaned_data['kind']
+      count = form.cleaned_data['count']
+      setupAssistance = form.cleaned_data['setupAssistance']
+      notes = form.cleaned_data['notes']
+      status = form.cleaned_data['status']
+      req = KitRequest(kind=kind, count=count, setupAssistance=setupAssistance, notes=notes, status=status)
+      req.save()
+      item.kitRequests.add(req)
+      item.save()
+      return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
+  else:
+    form = KitRequestForm()
+  form_title = u'Add a new Kit Request to Item'
   return render_to_response('progdb2/editform.html',
                             locals(),
                             context_instance=RequestContext(request))

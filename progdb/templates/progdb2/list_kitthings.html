@@ -8,10 +8,4 @@
   <tr><td>No things yet</td></tr>
 {% endfor %}
 </table>
-{% if perms.progdb2.edit_kit %}
-<p>
-<a href="{% url add_kitthing_to_room %}">Add Kit thing to room</a></p>
-<p>
-<a href="{% url add_kitthing_to_item %}">Add Kit thing to item</a></p>
-{% endif %}
 {% endif %}

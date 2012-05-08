@@ -380,6 +380,24 @@ class KitRoomAssignment(models.Model):
     return u"%s in %s" % (self.thing, self.room)
   def get_absolute_url(self):
     return mk_url(self)
+
+  def starts_before(self, item):
+    return (   self.fromDay.date < item.day.date
+            or (    self.fromDay.date == item.day.date 
+                and self.fromSlot.start <= item.start.start))
+
+  def finishes_after(self, item):
+    # Bug: toSlot is inclusive, but what's the length of that slot?
+    return (   item.day.date < self.toDay.date
+            or (    item.day.date == self.toDay.date
+                and (item.start.start + item.length.length) <= self.toSlot.start))
+
+  def covers(self, item):
+    return self.starts_before(item) and self.finishes_after(item)
+
+  def satisfies(self, req, item):
+    "Return True if this assignment satisfies the request"
+    return self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(req.item)
   
 class KitItemAssignment(models.Model):
   item = models.ForeignKey('Item')
@@ -390,6 +408,10 @@ class KitItemAssignment(models.Model):
     return u"%s to %s" % (self.thing, self.item)
   def get_absolute_url(self):
     return mk_url(self)
+
+  def satisfies(self, req):
+    "Return True if this assignment satisfies the request"
+    return self.thing.kind == req.kind and self.thing.count >= req.count
 
 class RoomCapacity(models.Model):
   layout = models.ForeignKey(SeatingKind, default=SeatingKind.objects.find_default)
@@ -454,6 +476,18 @@ class Room(models.Model):
     if len(self.availability.all()) == 0:
       return ConInfoBool.objects.no_avail_means_always_avail()
     return False
+
+  def satisfies_kit_requests(self, requests, item):
+    if self.isUndefined:
+      return False
+    if self.kit.count() == 0:
+      return False
+    # XXX should be a list comprehension
+    for req in requests:
+      for k in kit.all():
+        if not k.satisfies(req, item):
+          return False
+    return True
 
 class Person(models.Model):
   """
@@ -662,6 +696,17 @@ class Item(models.Model):
             and self.start.start < (other.start.start + other.length.length)
             and other.start.start < (self.start.start + self.length.length))
 
+  def satisfies_kit_requests(self):
+    for req in self.kitRequests:
+      for kas in self.kit:
+        if not kas.satisfies(req):
+          return False
+    return True
+
+  def room_satisfies_kit_requests(self):
+    if self.room:
+      return self.room.satisfies_kit_requests(self.kitRequests, self)
+    return False
 
 
 class ItemPerson(models.Model):

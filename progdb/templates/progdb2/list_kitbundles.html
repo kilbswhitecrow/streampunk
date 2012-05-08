@@ -1,4 +1,5 @@
 {% load progdb_filters %}
+{% if perms.progdb2.read_private %}
 <h2>Kit Bundles</h2>
 <table border>
 {% for bundle in kitbundles %}
@@ -7,7 +8,4 @@
   <tr><td>No bundles yet</td></tr>
 {% endfor %}
 </table>
-<p>
-<a href="{% url add_kitbundle_to_room %}">Add Kit bundle to room</a></p>
-<p>
-<a href="{% url add_kitbundle_to_item %}">Add Kit bundle to item</a></p>
+{% endif %}

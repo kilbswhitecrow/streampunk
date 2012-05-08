@@ -39,7 +39,7 @@
 {% endif %}
 
 {% if perms.progdb2.edit_programme or perms.progdb2.edit_private %}
-<p> <a href="{% url edit_item pk=item.id %}/">Edit item</a>.</p>
+<p> <a href="{% url edit_item pk=item.id %}">Edit item</a>.</p>
 {% endif %}
 
 <h2>People on this item</h2>
@@ -89,6 +89,15 @@
 
 {% include "progdb2/list_kitrequests.html" %}
 {% include "progdb2/list_kitthings.html" %}
+{% if perms.progdb2.edit_kit %}
+<p>
+<a href="{% url add_kitrequest_to_item pk=item.id %}">Add Kit request to item</a></p>
+<p>
+<a href="{% url add_kitbundle_to_room %}">Add Kit bundle to room</a></p>
+<p>
+<a href="{% url add_kitthing_to_item %}">Add Kit thing to item</a></p>
+{% endif %}
+
 
 <h2>Tags</h2>
 <table border="1">
