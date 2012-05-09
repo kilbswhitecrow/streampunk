@@ -697,3 +697,11 @@ def make_con_groups(request):
   return render_to_response('progdb2/make_con_groups.html',
                             locals(),
                             context_instance=RequestContext(request))
+
+def kit_usage(request):
+  kitrooms = KitRoomAssignment.objects.all()
+  kititems = KitItemAssignment.objects.all()
+  kitrequests = KitRequest.objects.all()
+  return render_to_response('progdb2/kit_usage.html',
+                            locals(),
+                            context_instance=RequestContext(request))

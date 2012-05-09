@@ -16,7 +16,7 @@ from progdb.progdb2.views import edit_tags_for_item, edit_tags_for_person
 from progdb.progdb2.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from progdb.progdb2.views import show_kitthing, show_kitbundle
 from progdb.progdb2.views import add_kitbundle_to_room, add_kitbundle_to_item
-from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item
+from progdb.progdb2.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item, kit_usage
 from progdb.progdb2.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from progdb.progdb2.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
 from progdb.progdb2.views import show_personlist_detail, show_request, make_personlist, make_con_groups
@@ -59,6 +59,7 @@ urlpatterns = patterns('',
     url(r'^progdb/itemspeople/$', VisibleView.as_view(model=ItemPerson), name='list_itemspeople'),
     url(r'^progdb/peoplelists/$', VisibleView.as_view(model=PersonList), name='list_peoplelists'),
     url(r'^progdb/slots/$', VisibleView.as_view(model=Slot), name='list_slots'),
+    url(r'^progdb/kit_usage/$', kit_usage, name='kit_usage'),
 
     url(r'^progdb/room/(?P<pk>\d+)/$', show_room_detail.as_view(), name='show_room_detail'),
     url(r'^progdb/item/(?P<pk>\d+)/$', show_item_detail.as_view(), name='show_item_detail'),

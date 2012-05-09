@@ -1,12 +1,22 @@
 {% load progdb_filters %}
 <h2>Item Assignments</h2>
 <table border="1">
-<tr><th>Kit</th><th>Item</th><th>Bundle</th></tr>
+<tr>
+  <th>Kit</th>
+  <th>Bundle</th>
+  <th>Item</th>
+  <th>Room</th>
+  <th>Day</th>
+  <th>Start</th>
+</tr>
 {% for kt in kititems %}
 <tr>
   <td>{{ kt.thing.name }}</td>
-  <td>{{ kt.item }}</td>
   <td>{{ kt.bundle }}</td>
+  <td>{{ kt.item|linky|safe }}</td>
+  <td>{{ kt.item.room|linky|safe }}</td>
+  <td>{{ kt.item.day }}</td>
+  <td>{{ kt.item.start }}</td>
 </tr>
 {% empty %}
 <tr><td colspan="3">Not assigned to items</td></tr>

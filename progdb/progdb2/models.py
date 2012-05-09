@@ -397,7 +397,9 @@ class KitRoomAssignment(models.Model):
 
   def satisfies(self, req, item):
     "Return True if this assignment satisfies the request"
-    return self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(req.item)
+    r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
+    print "%s satisfies %s for %s? %s" % (self, req, item, r)
+    return self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
   
 class KitItemAssignment(models.Model):
   item = models.ForeignKey('Item')
@@ -411,6 +413,8 @@ class KitItemAssignment(models.Model):
 
   def satisfies(self, req):
     "Return True if this assignment satisfies the request"
+    r = self.thing.kind == req.kind and self.thing.count >= req.count
+    print "%s satisfies %s? %s" % (self, req, r)
     return self.thing.kind == req.kind and self.thing.count >= req.count
 
 class RoomCapacity(models.Model):
@@ -477,16 +481,35 @@ class Room(models.Model):
       return ConInfoBool.objects.no_avail_means_always_avail()
     return False
 
-  def satisfies_kit_requests(self, requests, item):
+  def satisfies_kit_request(self, request, item):
+    print "Does %s satisfy %s for %s?" % (self, request, item)
     if self.isUndefined:
+      print "%s is undef - cannot satisfy %s for %s" % (self, request, item)
       return False
     if self.kit.count() == 0:
+      print "%s has no kit - cannot satisfy %s for %s" % (self, request, item)
+      return False
+    # XXX should be a list comprehension
+    for k in KitRoomAssignment.objects.filter(room=self):
+      if k.satisfies(request, item):
+        print "Seems %s satisfies %s for %s" % ( self, request, item )
+        return True
+    print "Apparently %s does not satisfy %s" % ( self, request )
+    return False
+
+  def satisfies_kit_requests(self, requests, item):
+    print "Does %s satisfy %s for %s?" % (self, requests, item)
+    if self.isUndefined:
+      print "%s is undef - cannot satisfy %s for %s" % (self, requests, item)
+      return False
+    if self.kit.count() == 0:
+      print "%s has no kit - cannot satisfy %s for %s" % (self, requests, item)
       return False
     # XXX should be a list comprehension
     for req in requests:
-      for k in kit.all():
-        if not k.satisfies(req, item):
-          return False
+      if not self.satisfies_kit_request(req, item):
+        return False
+    print "Apparently %s satisfies all" % ( self )
     return True
 
 class Person(models.Model):
@@ -696,16 +719,27 @@ class Item(models.Model):
             and self.start.start < (other.start.start + other.length.length)
             and other.start.start < (self.start.start + self.length.length))
 
+  def satisfies_kit_request(self, req):
+    print "Does %s satisfy kit request %s?" % (self, req)
+    for kas in self.kit.all():
+      if kas.satisfies(req):
+        "%s satisfies %s via %s" % (self, req, kas)
+        return True
+    print "%s does not satisfy %s" % (self, req)
+    return False
+
   def satisfies_kit_requests(self):
-    for req in self.kitRequests:
-      for kas in self.kit:
-        if not kas.satisfies(req):
-          return False
+    print "Does %s satisfy any kit requests?" % (self)
+    for req in self.kitRequests.all():
+      if not self.satisfies_kit_request(req):
+        return False
+    print "Apparently %s does satisfy any kit requests?" % (self)
     return True
 
   def room_satisfies_kit_requests(self):
+    print "Does %s's room satisfy any kit requests?" % (self)
     if self.room:
-      return self.room.satisfies_kit_requests(self.kitRequests, self)
+      return self.room.satisfies_kit_requests(self.kitRequests.all(), self)
     return False
 
 

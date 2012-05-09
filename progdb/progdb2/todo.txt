@@ -1,3 +1,4 @@
+- How to remove a kit bundle from a room? Or, more likely to edit the assignment?
 - Name change
 - I18N
                - Of  application
@@ -10,7 +11,9 @@
 		- Unfulfilled kit requests
 
 - Additional reports
+	- Where each kit thing is used, when. The current lists don't show that.
 	- Add a generic report for each item type, showing the counts of each.
+	- Front page w/ con stats: items, people, drinks, etc.
 
 - Revisions
 - AJAX
