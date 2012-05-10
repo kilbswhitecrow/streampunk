@@ -334,6 +334,7 @@
     "pk": 8, 
     "model": "progdb2.grid", 
     "fields": {
+      "gridOrder": 4, 
       "slots": [
         80, 
         81, 
@@ -347,6 +348,7 @@
     "pk": 7, 
     "model": "progdb2.grid", 
     "fields": {
+      "gridOrder": 3, 
       "slots": [
         76, 
         77, 
@@ -360,6 +362,7 @@
     "pk": 6, 
     "model": "progdb2.grid", 
     "fields": {
+      "gridOrder": 2, 
       "slots": [
         72, 
         73, 
@@ -373,6 +376,7 @@
     "pk": 5, 
     "model": "progdb2.grid", 
     "fields": {
+      "gridOrder": 1, 
       "slots": [
         68, 
         69, 
@@ -1140,6 +1144,26 @@
       "name": "Items with unknown gopher count", 
       "module": "items_unknown_gophers", 
       "description": "List items for which the gopher count is -1"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 1, 
+      "name": "Items with unsatisfied kit requests", 
+      "module": "items_unsatisfied_kitreq", 
+      "description": "List items for which there are kit requests unsatisfied by either room or item assignments"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "progdb2.check", 
+    "fields": {
+      "result": 3, 
+      "name": "Kit clashes", 
+      "module": "kit_clashes", 
+      "description": "List kit assignments which clash with other kit assignments"
     }
   }, 
   {

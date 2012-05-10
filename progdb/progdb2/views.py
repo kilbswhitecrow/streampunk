@@ -523,9 +523,12 @@ def add_kitbundle_to_room(request):
       fromSlot = form.cleaned_data['fromSlot']
       toDay = form.cleaned_data['toDay']
       toSlot = form.cleaned_data['toSlot']
+      toLength = form.cleaned_data['toLength']
       things = bundle.things.all()
       for thing in things:
-        kras = KitRoomAssignment(thing=thing, bundle=bundle, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot)
+        kras = KitRoomAssignment(thing=thing, bundle=bundle, room=room,
+                                 fromDay=fromDay, fromSlot=fromSlot,
+                                 toDay=toDay, toSlot=toSlot, toLength=toLength)
         kras.save()
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:

@@ -182,6 +182,10 @@ class Grid(models.Model):
   """
   name = models.CharField(max_length=40)
   slots = models.ManyToManyField(Slot)
+  gridOrder = models.IntegerField(default=1)
+
+  class Meta:
+    ordering = ['gridOrder']
 
   def __unicode__(self):
     return self.name
@@ -375,6 +379,7 @@ class KitRoomAssignment(models.Model):
   fromSlot = models.ForeignKey(Slot, related_name='kitroomfrom_set')
   toDay = models.ForeignKey(ConDay, related_name='kitroomto_set')
   toSlot = models.ForeignKey(Slot, related_name='kitroomto_set')
+  toLength = models.ForeignKey(SlotLength)
 
   def __unicode__(self):
     return u"%s in %s" % (self.thing, self.room)
@@ -803,6 +808,9 @@ class UserProfile(models.Model):
   show_shortname = models.BooleanField(default=ConInfoBool.objects.show_shortname)
   show_tags = models.BooleanField(default=True)
   show_people = models.BooleanField(default=True)
+  show_kithings = models.BooleanField(default=False)
+  show_kitbundles = models.BooleanField(default=False)
+  show_kitrequests = models.BooleanField(default=False)
   rooms_across_top = models.BooleanField(default=ConInfoBool.objects.rooms_across_top)
   name_order = models.CharField(max_length=4, choices=NameOrder, default='Last')
   # If this user is actually a person in the programme too
