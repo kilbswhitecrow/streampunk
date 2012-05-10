@@ -9,6 +9,7 @@ from django.template.loader import render_to_string
 from django.views.generic import DeleteView, DetailView, UpdateView, CreateView, ListView
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import permission_required, login_required
+from django.db.models import Count, Sum
 
 from progdb2.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from progdb2.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
@@ -120,6 +121,17 @@ def show_profile_detail(request):
 
 
 def main_page(request):
+  num_items = Item.scheduled.count()
+  num_people = Person.objects.count()
+  # e.g. {'num_people__sum': 5, 'budget__sum': 0}
+  totals = Item.scheduled.annotate(num_people=Count('people')).aggregate(Sum('num_people'), Sum('budget'))
+  # {'length__length__sum': 870}
+  mins_scheduled = Item.scheduled.aggregate(Sum('length__length'))
+
+  con_name = ConInfoString.objects.con_name()
+  num_panellists = totals['num_people__sum']
+  budget = totals['budget__sum']
+  hours_scheduled = mins_scheduled['length__length__sum'] / 60
   return render_to_response('progdb2/main_page.html',
                             locals(),
                             context_instance=RequestContext(request))

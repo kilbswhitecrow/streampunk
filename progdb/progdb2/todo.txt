@@ -1,3 +1,5 @@
+Grid order is wrong for 10am/10pm grids. Missing in fact.
+Move to virtualenv over the weekend. then we can get South in, and start on name change.
 - How to remove a kit bundle from a room? Or, more likely to edit the assignment?
 - Name change
 - I18N
@@ -8,15 +10,18 @@
 
 - Additional checks
 		- Kit clashes
-		- Unfulfilled kit requests
+		- Item requests or room assingments where there are multiple things of the same kind
 
 - Additional reports
-	- Where each kit thing is used, when. The current lists don't show that.
 	- Add a generic report for each item type, showing the counts of each.
-	- Front page w/ con stats: items, people, drinks, etc.
 
+- Grid:
+	- Include kit in the grids.
+
+- Make use of User Profile/Overall con preferences in grid display.
 - Revisions
 - AJAX
+- Regression testing
 - PDF generation
                - Door listings
                - Name cards
@@ -25,9 +30,7 @@
 - Static pages
 - Copyrights, comments and licensing.
 - Distribution
-- Tech (see separate tech.txt file for that)
 - Item Moves. Add when we need that.
-- Con Data, in various forms.
 - Revisions
 	Need to model personel changes, too.
 Model corrections:
@@ -35,7 +38,9 @@ Model corrections:
 		TimeWalking
 		AllOnFlat
 		inRadioRange
-	- ItemPerson.visible should be Boolean, not YesNo.
+	- Should we record a length to go with ItemRoomAssignment.toSlot, or just say that that's the first unused slot?
+	- Profiles/ConInfo should have flags to include kit in grid.
+		- As thing or as bundle.
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have

@@ -9,4 +9,4 @@ class CheckOutput:
     self.template = "progdb2/checks/%s.html" % (check.module,)
     self.person_list = check.result.name == 'Person List'
     self.item_list = check.result.name == 'Item List'
-    self.mixed_tuple_list = check.result.name == 'Mixed Tuple List'
+    self.mixed_tuple_list = check.result.name == 'Mixed Tuple'

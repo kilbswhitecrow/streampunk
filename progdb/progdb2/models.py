@@ -381,19 +381,34 @@ class KitRoomAssignment(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def starts_before_day_and_slot(self, day, slot, mins):
+    return (   self.fromDay.date < day.date
+            or (    self.fromDay.date == day.date 
+                and self.fromSlot.start <= slot.start))
+
+  def finishes_after_day_and_slot(self, day, slot, mins):
+    # Bug: toSlot is inclusive, but what's the length of that slot?
+    return (   day.date < self.toDay.date
+            or (    day.date == self.toDay.date
+                and (slot.start + mins) <= self.toSlot.start))
+
+
   def starts_before(self, item):
-    return (   self.fromDay.date < item.day.date
-            or (    self.fromDay.date == item.day.date 
-                and self.fromSlot.start <= item.start.start))
+    return self.starts_before_day_and_slot(item.day, item.start, 0)
 
   def finishes_after(self, item):
-    # Bug: toSlot is inclusive, but what's the length of that slot?
-    return (   item.day.date < self.toDay.date
-            or (    item.day.date == self.toDay.date
-                and (item.start.start + item.length.length) <= self.toSlot.start))
+    return finishes_after_day_and_slot(self, item.day, item.start, item.length.length)
 
   def covers(self, item):
     return self.starts_before(item) and self.finishes_after(item)
+
+  def overlaps(self, item):
+    return (    self.starts_before_day_and_slot(item.day, item.start, item.length.length)
+            and self.finishes_after_day_and_slot(item.day, item.start, item.length.length))
+
+  def overlaps_room_assignment(self, other):
+    return (    self.starts_before_day_and_slot(other.toDay, other.toSlot, 0)
+            and self.finishes_after_day_and_slot(other.fromDay, other.fromSlot, 0))
 
   def satisfies(self, req, item):
     "Return True if this assignment satisfies the request"

@@ -1,10 +1,15 @@
 {% extends "progdb2/base.html" %}
 {% block title %}Main Progdb Page{% endblock %}
 {% block body_content %}
-<p>
-The front page goes here.
-</p>
 {% if perms.progdb2.edit_programme %}
+<table border="1">
+<tr><th>Convention</th><td>{{ con_name }}</td></tr>
+<tr><th>Scheduled Items</th><td>{{ num_items }}</td></tr>
+<tr><th>Scheduled Hours</th><td>{{ hours_scheduled }}</td></tr>
+<tr><th>Budget</th><td>{{ budget }}</td></tr>
+<tr><th>Scheduled Panellists</th><td>{{ num_panellists }}</td></tr>
+<tr><th>Programme Participants</th><td>{{ num_people }}</td></tr>
+</table>
 <p>
 <a href="{% url new_itemperson %}">Add a person to an item</a>.
 </p>
