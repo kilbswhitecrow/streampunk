@@ -33,16 +33,28 @@ Move to virtualenv over the weekend. then we can get South in, and start on name
 - Item Moves. Add when we need that.
 - Revisions
 	Need to model personel changes, too.
+- User creation
+	When we create a user, we should trigger the password-reset
+	functionality, so that they get an email telling them about
+	their password.
 
 Missing Defaults:
 - Availabilities should default to: first con day, last con day, etc.
 - Add bundle to room - room
 
+Missing Preferences:
+- Display title on grid
 Model corrections:
 	- Add RoomRoutes:
 		TimeWalking
 		AllOnFlat
 		inRadioRange
+
+Bugs:
+	- There's a problem with both Availability and Kit Requests, in that
+	the same one can be assigned to multiple items; editing the object then
+	changes it for every usage. We should have copy-and-save instead of edit,
+	for these things, from the usual GUI
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have
