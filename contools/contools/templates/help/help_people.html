@@ -1,0 +1,152 @@
+<html>
+<head><title>ProgDB - Help: People</title>
+</head>
+<body>
+<h2>People</h2>
+<p>
+People are everybody who appears on the programme in some form. They have
+the following attributes:
+<ul>
+<li>Name - their real name.</li>
+<li>Badge - their badge name. This is optional, but if specified, this is
+what'll be used in Programme Grid listings, instead of Real Name.</li>
+<li>Memnum - membership number. As assigned by the membership database, or
+-1 if not known. This isn't updated automatically, btw, so if you create
+a record for someone who has joined the con, look them up in the membership
+database first. If they haven't joined yet, put -1 in. Later, you'll have to
+go back and update it with their actual membership number, after they've joined.</li>
+<li>Email - their email address. This just should <em>just</em> the email
+address, so:
+<ul>
+<li> fred@site.com is okay</li>
+<li> Fred Smith &lt;fred@site.com&gt; is wrong</li>
+<li> fred@site.com (Fred Smith) is wrong</li>
+</ul>
+</li>
+<li>Contact details - whatever means the Programme staff will use for
+communicating with this person.</li>
+<li>Notes - anything else you feel like adding, about this person.</li>
+<li>Tags - Each person can have an arbitrary number of tags associated
+with them.</li>
+</ul>
+</p>
+<p>
+At time of writing, all of this information is entirely separate from the
+membership database; the ProgDB can't pull this information out of Richard's
+system. Plus, it'll often be the case that you know someone will be doing
+something on the programme, but they haven't joined yet, and we have to
+cater for that.
+</p>
+
+<h3>Listing People</h3>
+<p>
+You can list people by:
+<ol>
+<li>Going to the "People" page via the link on the banner, and following
+the "List" link</li>
+<li>Clicking on "People: List" on the Main page.</li>
+</ol>
+</p>
+<P>
+You get a list of people, sorted alphabetically by Real Name (which, note,
+isn't separated into first and last names, so you'll get a first-name sort).
+</p>
+The list includes:
+<ul>
+<li>The person's name, as a link. Clicking on the link takes you to the
+person's record.<li>
+<li>You might also see an info icon (<img src=/~steve/images/ProgDBicons/information.jpg>).
+This means that there are notes associated with the person. Mousing over the icon will show
+you the contents of that note.</li>
+<li>Any tags associated with the person. Clicking on a tag takes you to
+the tag's page.</li>
+<li>A link that <em>might</em> take you to their entry in the membership database,
+if they have one. Or it might take you to the membership entry of someone with a
+similar surname who joined earlier....</li>
+</p>
+<p>
+Clicking on a person's name shows you their details, plus:
+<ul>
+<li> All the programme items this person is associated with</li>
+<li> All the tags (if any) associated with this person</li>
+</ul>
+</p>
+
+<p>
+There are also a link that'll take you to the page where you can edit a
+person's details, and a link for adding more tags to the person.
+</p>
+
+<h3>Creating a new person</h3>
+<p>
+You can create new people by:
+<ol>
+<li>Going to the "People" page via the link on the banner, and following
+the "Create" link</li>
+<li>Clicking on "People: Create" on the Main page.</li>
+</ol>
+<P>
+You get a form that allows you to fill in the Real Name, Badge, Mem Num,
+Email, Contact Details and Notes. Everything apart from Real Name is optional.
+</p>
+<p>
+When you click on "Add", you get a page that just says "Inserted" - it's
+one of the old, clunky pages, and you have to follow a banner link or
+the "Return to main menu" link to do something else. Sorry.
+</p>
+<h2>Modifying a person's details</h2>
+</p>
+The "Items for <em>person x</em>" page is accessible from the People:List
+links, or most places where you see a person's name. This page, in addition
+to listing all their items, has the link to "Edit details' for <em>person x</em>."
+</p>
+<p>
+Just click on the link, modify the details how you'd like, and click on Change.
+The details get updated, and you're given a choice of going back to the
+person's item list ("View person") or returning to the main menu.
+</p>
+
+<h3>Deleting people</h3>
+<p>
+You can delete people by:
+<ol>
+<li>Going to the "People" page via the link on the banner, and following
+the "Delete" link</li>
+<li>Clicking on "People: Delete" on the Main page.</li>
+</ol>
+</p>
+<P>
+Both take you to the same form, where you have to select the Person you
+want to delete, and there's a confirmation tick-box to ensure you *really*
+want to delete them. Click "Delete" to zap them.
+</p>
+<p>
+Deleting a person removes them from any associated tags or programme items.
+</p>
+
+<h3>People and Availability</h3>
+<p>
+This works just like it does for Rooms, so <a href=help_rooms.html>see the
+Rooms help</a> for more info.
+</p>
+
+<h3>People and programme items</H3>
+<p>
+This will be covered in <a href=help_items.html>the Items Help page</a>.
+</p>
+
+<h3>People and tags</h3>
+<p>
+This will be covered in <a href=help_tags.html>the Tags Help page</a>.
+</p>
+
+<h3>Limitations</h3>
+<p>
+There's currently no concept of groups of people, like ZZ9, BSFA or
+Eclectic-21. That might be added at some point, but for now I suggest
+making a fake person with the group's name as the Real Name, and using
+tags to link each group's member to the fake name.
+</p>
+
+</body>
+</html>

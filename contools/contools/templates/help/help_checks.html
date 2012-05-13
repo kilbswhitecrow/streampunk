@@ -1,0 +1,34 @@
+<html>
+<head><title>ProgDB - Help: Checks</title>
+</head>
+<body>
+<h2>Checks</h2>
+There aren't many checks built into the database at present. More will
+be added over time.
+<p>
+As explained in <a href=help_basic_concepts.html>Basic Concepts</a>,
+the database doesn't continually check that the programme is consistent.
+Instead, it expects that you'll make a whole bunch of changes, and then
+ask whether all looks okay once you're complete
+<p>
+Even that's not telling the truth, because there isn't a single "is all
+okay" check. Instead, there are several different checks.
+<p>
+The currently supported checks are:
+<ul>
+<li>Programme items that have no people associated with them.</li>
+<li>Programme items that don't have an associated room.</li>
+<li>People clashes: where the same person is assigned to two items at once.</li>
+<li>Room clashes: where there's more than one item in the same room at the same time.</li>
+<li>Tech clashes: where the same tech item is assigend to two items at once.</li>
+</ul>
+<p>
+The tech classes check also verifies that uses of a tech item are not outside
+the tech item's periods of availability, so I'm guessing that the room and
+people clashes also check the same thing.
+<p>
+I don't recall which check verifies the sequencing constraints (where item
+X must be followed by item Y in the same room), but I think I've added that
+somewhere.
+</body>
+</html>

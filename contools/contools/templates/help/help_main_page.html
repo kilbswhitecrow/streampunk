@@ -1,0 +1,115 @@
+<html>
+<head><title>ProgDB Help - Main Page</title></head>
+<body>
+<h2>Main page</h2>
+<p>
+The main page can be found <a href=menu.php>here</a>.
+</p>
+
+<p>
+It has two main components: the grids, and "Other Tools".
+</p>
+
+<h3>Grids</h3>
+<p>
+The grids are explained in more detail <a href=grids.html>elsewhere</a>,
+but the basic idea is:
+<ul>
+<li> There's a row for each day of the con, <em>including non-public days</em>. </li>
+<li> Each row is split into individual chunks of time (four hours in length, by default).
+Clicking on one of those chunks will show you a programme grid for that period of time. </li>
+<li> At the far right of each row, there's a button for a grid for the whole day. </li>
+<li> Beneath the table of grids, there's a button for "Entire grid". That'll list your entire
+programme in one go. </li>
+</ul>
+You can use the grid pages to move existing items around. Once the database has a large
+number of items, you'll probably use this a lot.
+</p>
+
+<H3>Other Tools</h3>
+<p>
+This part of the page gives you links to the pages where you can access, create and generally
+fiddle around with the contents of the database.
+</p>
+
+<p>
+The first part is concerned with the main kinds of data in the database: people, items, rooms,
+tags and tech. For each of them, you've got three or four choices:
+<ul>
+<li> <em>List</em> - list the people/items/whatever that are already entered (which gives you
+links to the editing features).</li>
+<li> <em>Create</em> - Create a new person/item/whatever from scratch.</li>
+<li> <em>Delete</em> - Delete one of the existing people, items, rooms, etc. Rare that you'll
+need this.</li>
+<li> <em>Availability</em> - Set up or alter the availability of something. This is
+<a href=availability.html>explained in more detail elsewhere</a>, but the basic idea is that,
+usually people, rooms and tech are available for the entire con, but this might not always be
+the case, so where necessary, you can configure the periods when something is available - then,
+later, you can run a check to ensure that it/he/she is not required outside those periods.</li>
+</ul>
+</p>
+
+<p>
+
+The next part - items/people, items/rooms, items/tech - is where you can run basic checks, or
+change the relationships between items and people, rooms or tech.
+<ul>
+<li> Items/People
+<ul>
+<li> <em>(missing people)</em> - Will show you items that don't have anyone attached.</li>
+<li> <em>People clashes</em> - Will show you where the same person is attached to more than one
+item at the same time. Also shows when someone isn't available for a programme item. </li>
+<li> <em>(by person)</em> -Lists programme items, by person (all Bob's items, then all Carol's, and so on).</li>
+<li> <em>(by item)</em> -Lists people, by programme item (all the people on item X, then all the people on item Y, and so on.).</li>
+<li> <em>(people by item count)</em> -Lists people, giving the number of programme items to which they're attached. The list is sorted so that the most heavily-scheduled people are listed first.</li>
+<li> <em>(programmed people not joined)</em> -Lists people who are attached to programme items, but for which the database doesn't yet have a membership number (i.e. their membership number is -1). It's possible (even likely) that they've joined, but their membership number hasn't been added to their entry in the programme database.</li>
+<li> <em>Add person to item</em> - Allows you to add a person to an existing item. You can also do this
+directly from the item.</li>
+</ul>
+</li>
+<li> Items/rooms
+<ul>
+<li> <em>(missing a room)</em> - Will show you all the items that aren't currently allocated to a given room, and will tell you how many items are allocated to <em>Nowhere</em>, the pseudo-room.</li>
+<li> <em>Room clashes</em> - Will show you where more than one item occupies the same room during the same time slot.</li>
+<li> <em>Change an item's room</em> - Move an item from one room to another. Easiest done on the grids.</li>
+<li> <em>Change an item's start day/time</em> - Allows you to specify a new day and start time for an item. Easiest
+done on the grids.</li>
+</ul>
+</li>
+<li> Items/tech
+<ul>
+<li> <em>Tech clashes</em> - Will show you any cases where the same item of tech is assigned to two programme
+items at the same time.</li>
+</ul>
+</li>
+</ul>
+</p>
+
+<p>
+The final part - Manage - allows you to fiddle with the bits and pieces that tie everything together, but which
+don't normally need to change.
+<ul>
+<li> <em>Seating Layouts</em> - Are how rooms are laid out, e.g. theatre style, cabaret, boardroom.
+Used when configuring room capacities, and for specifying how a given programme item's room should be
+laid out. Here's where you'd go to add another one - for example, you might want to add a new layout,
+for "chairs in a circle".</li>
+<li> <em>Item kinds</em> - Things like Panel, Quiz, Talk, Workshop, and so on. You might want to add
+"Tour", "Training", "Setup", etc.</li>
+<li> <em>Tech classes</em> - For some kinds of tech, you'll have numerous instances of them, and they're
+assigned classes. Flip-charts, microphones, laptops, etc.</li>
+<li> <em>Tech sources</em> - Are where you get the tech items from. Stage Electrics might be one source,
+and Chris O'Shea or Eddie Cochrane might be a couple more.</li>
+<li> <em>Tech basis</em> - Currently includes Borrow, Hire and Own</li>
+<li> <em>Departments</em> - Who the item of tech is assigned to. Ops, Stewards, Green Room, etc.</li>
+<li> <em>People roles</em> - When a person is associated with a programme item, they do so in a particular role,
+such as Moderator, Participant, Quizmaster, Scorer, Gopher.</li>
+<li> <em>People statuses</em> - Currently includes Possible, Pending and Confirmed, and indicates how solid
+the person's association with the item is, at present.</li>
+</ul>
+</p>
+
+<p>
+When you modify any of these categories, you can also specify which one is the default. Generally, Judith has the default set to "TBA".
+</p>
+</body>
+</html>
