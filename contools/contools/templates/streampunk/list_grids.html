@@ -1,0 +1,17 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Grids{% endblock %}
+{% block body_content %}
+<table border>
+{% for day in day_list %}
+<tr><th>{{ day }}</th>
+{% for grid in grid_list %}
+  <td>{{ grid|linky2:day|safe }}</td>
+{% empty %}
+  <td><em>No grid items!</em></td>
+{% endfor %}
+{% empty %}
+<tr><td><em>No days!</em></td></tr>
+{% endfor %}</tr>
+</table>
+{% endblock %}

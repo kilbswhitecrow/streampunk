@@ -1,0 +1,17 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Slot: {{ slot.slotText }}{% endblock %}
+{% block body_content %}
+<table border>
+<tr><th>Name</th><td>{{ slot.slotText }}</td></tr>
+</table>
+
+<h2>Items</h2>
+<table border="1">
+{% for item in items %}
+<tr><td>{{ item|linky|safe }}</td><td>{{ item.day }}</td><td>{{ item.room }}</td></tr>
+{% empty %}
+<tr><td>No items in this slot</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

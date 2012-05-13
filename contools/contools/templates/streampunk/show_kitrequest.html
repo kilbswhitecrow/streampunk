@@ -1,0 +1,15 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %} Kit Request: {{ kitrequest }}{% endblock %}
+{% block body_content %}
+<table border>
+<tr><th>Kind</th><td>{{ kitrequest.kind }}</td></tr>
+<tr><th>Count</th><td>{{ kitrequest.count }}</td></tr>
+<tr><th>Status</th><td>{{ kitrequest.status }}</td></tr>
+<tr><th>Setup Assistance?</th><td>{{ kitrequest.setupAssistance }}</td></tr>
+<tr><th>Notes</th><td>{{ kitrequest.notes }}</td></tr>
+</table>
+
+<p><a href="{% url edit_kitrequest pk=kitrequest.id %}">Edit this request</a>.</p>
+
+{% endblock %}

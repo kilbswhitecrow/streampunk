@@ -1,0 +1,33 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}{{ form_title }} {% endblock %}
+<p>
+{% block body_content %}
+<table border="1">
+<tr>
+  <td>{{ object.person }}</td>
+  <td>{{ object.item }}</td>
+  <td>{{ object.role }}</td>
+  <td>{{ object.status }}</td>
+</tr>
+</table>
+</p>
+<form action="" method="post">
+{% csrf_token %}
+<input type="hidden"
+       name="after"
+       value="{{ object.item.get_absolute_url }}" />
+<input type="submit"
+       value="Remove and return to {{ object.item }}"
+       name="DeleteAndShowItem" />
+</form>
+<form action="" method="post">
+{% csrf_token %}
+<input type="hidden"
+       name="after"
+       value="{{ object.person.get_absolute_url }}" />
+<input type="submit"
+       value="Remove and return to {{ object.person }}"
+       name="DeleteAndShowPerson" />
+</form>
+{% endblock %}

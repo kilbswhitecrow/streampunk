@@ -1,0 +1,24 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %
+{% block title %}Fill Slot{% endblock %}
+{% block body_content %}
+<p>Choose an item to move to {{day}}, {{slot}} in {{room}}.</p>
+{% if suf == 'u'
+<form action="{% url fill_slot_unsched d=day.id g=grid.id r=room.id s=slot.id %}" method="post">
+{% else %}
+<form action="{% url fill_slot_sched d=day.id g=grid.id r=room.id s=slot.id %}" method="post">
+{% endif %}
+{% csrf_token %}
+<table border>
+{{ form.as_table }}
+<tr><td colspan="2"><input type="submit" value="submit" /></td></tr>
+</table>
+</form>
+<p>
+{% if suf == 'u' %}
+Or <a href="{% url fill_slot_sched d=day.id g=grid.id r=room.id s=slot.id %}">select from all items</a>.
+{% else %}
+Or <a href="{% url fill_slot_unsched d=day.id g=grid.id r=room.id s=slot.id %}">select from unscheduled items only</a>.
+{% endif %}
+</p>
+{% endblock %}

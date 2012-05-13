@@ -1,0 +1,47 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}People{% endblock %}
+{% block body_content %}
+<form action="{% url make_personlist %}" method="post">
+{% csrf_token %}
+<table border>
+{% for person in person_list %}
+<tr>
+{% if perms.streampunk.read_private %}
+  <td> {{ person|linky|safe }} </td>
+{% else %}
+  <td> {{ person|linky:person.as_badge|safe }} </td>
+{% endif %}
+{% if perms.streampunk.send_mass_email %}
+  <td>
+       <input type="checkbox" name="somepeople" value="{{ person.id }}" />
+       <input type="hidden" name="allpeople" value="{{ person.id }}" />
+  {% if person.email %}
+     Email/Select?
+  {% else %}
+     Select?
+  {% endif %}
+  </td>
+{% endif %}
+</tr>
+{% empty %}
+  <tr><td>No people yet</td></tr>
+{% endfor %}
+</table>
+<input type="hidden" name="listname" value="People List for {{ user.username }}" />
+{% if perms.streampunk.send_mass_email %}
+<input type="submit" name="email_all" value="Email all these people" />
+<input type="submit" name="email_some" value="Email selected people" />
+<br/>
+{% endif %}
+{% if perms.streampunk.edit_programme or perms.streampunk.edit_kit %}
+<input type="submit" name="save_all" value="Save the people on this item as a list" />
+<input type="submit" name="save_some" value="Save selected people as a list" />
+{% endif %}
+</form>
+
+</form>
+{% if perms.streampunk.edit_programme %}
+<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
+{% endif %}
+{% endblock %}

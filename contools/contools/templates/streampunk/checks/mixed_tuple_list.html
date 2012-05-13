@@ -1,0 +1,14 @@
+{% load progdb_filters %}
+<table border="1">
+{% for thing in checkOutput.things %}
+<tr><td>
+{% for t in thing %}
+{{ t|linky|safe }}
+{% empty %}
+Bizarre response
+{% endfor %}
+</td></tr>
+{% empty %}
+<tr><td>No problems found</td></tr>
+{% endfor %}
+</table>

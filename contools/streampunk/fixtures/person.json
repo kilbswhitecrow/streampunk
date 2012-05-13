@@ -1,0 +1,212 @@
+[
+  {
+    "pk": 6, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Deria", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Book", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "Yes", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 2, 
+      "badge": "Shepherd Book", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Jayne", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Cobb", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "Yes", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 2, 
+      "badge": "", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Rubert", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Giles", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 2, 
+      "badge": "Ripper", 
+      "email": "", 
+      "recordingOkay": "Yes"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Alexander", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Harris", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 2, 
+      "badge": "Xander", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Malcolm", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Reynolds", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [], 
+      "gender": 1, 
+      "badge": "Mal", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Willow", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Rosenburg", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 3, 
+      "badge": "", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Buffy", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Summers", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [], 
+      "gender": 1, 
+      "badge": "She who hangs out in graveyards", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Dawn", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Summers", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 3, 
+      "badge": "Dawnie", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "River", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Tam", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 3, 
+      "badge": "", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "streampunk.person", 
+    "fields": {
+      "memnum": -1, 
+      "complete": "No", 
+      "firstName": "Simon", 
+      "tags": [], 
+      "middleName": "", 
+      "lastName": "Tam", 
+      "pubNotes": "", 
+      "contact": "", 
+      "distEmail": "No", 
+      "privNotes": "", 
+      "availability": [ ], 
+      "gender": 2, 
+      "badge": "", 
+      "email": "", 
+      "recordingOkay": "No"
+    }
+  }
+]

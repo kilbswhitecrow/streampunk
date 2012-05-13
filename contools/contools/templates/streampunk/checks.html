@@ -1,0 +1,21 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Checks{% endblock %}
+{% block body_content %}
+<form method="post" action="">
+{{ formset.management_form }}
+{% csrf_token %}
+<table border>
+{% for form in formset %}
+  <tr>
+    <td>{{ form.id }}{{ form.enable }}</td>
+    <td>{{ form.instance.name }}</td>
+    <td>{{ form.instance.description }}</td>
+  </tr>
+{% empty %}
+  <tr><td>No checks yet</td></tr>
+{% endfor %}
+<tr><td colspan="3"><input type="submit" value="submit" /></td></tr>
+</table>
+</form>
+{% endblock %}

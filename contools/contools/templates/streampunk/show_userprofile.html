@@ -1,0 +1,19 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %} Your Profile {% endblock %}
+{% block body_content %}
+<table border>
+<tr><th>Show Shortnames</th><td>{{ userprofile.show_shortname }}</td></tr>
+<tr><th>Show Tags</th><td>{{ userprofile.show_tags }}</td></tr>
+<tr><th>Show People</th><td>{{ userprofile.show_people }}</td></tr>
+<tr><th>Rooms across Top</th><td>{{ userprofile.rooms_across_top }}</td></tr>
+<tr><th>Name order</th><td>{{ userprofile.name_order }}</td></tr>
+{% if userprofile.person and perms.streampunk.read_public %}
+<tr><th>You, in the programme</th><td>{{ userprofile.person|linky|safe }}</td></tr>
+{% endif %}
+</table>
+
+<p><a href="/accounts/change_profile/">Edit your profile</a>.</p>
+
+<p><a href="/accounts/change_password/">Change your password</a>.</p>
+{% endblock %}

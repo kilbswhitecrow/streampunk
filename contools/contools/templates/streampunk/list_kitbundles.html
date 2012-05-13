@@ -1,0 +1,11 @@
+{% load streampunk_filters %}
+{% if perms.streampunk.read_private %}
+<h2>Kit Bundles</h2>
+<table border>
+{% for bundle in kitbundles %}
+  <tr><td>{{ bundle|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No bundles yet</td></tr>
+{% endfor %}
+</table>
+{% endif %}

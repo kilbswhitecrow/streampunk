@@ -1,0 +1,80 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/show_grid.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/show_grid.css" />
+{% endblock %}
+{% block title %}Grid: {{ day }} {{ grid.name }}{% endblock %}
+{% block body_content %}
+
+<h2>{{ day }}</h2>
+
+<h2>Slots</h2>
+<table border="1">
+{% for slot in slots %}
+<tr>
+  <td>{{ slot|linky|safe }}</td>
+  <td>{{ slot.start }}</td>
+  <td>{{ slot.length }}</td>
+  <td>{{ slot.startText }}</td>
+  <td>{{ slot.slotText }}</td>
+  <td>{{ slot.visible }}</td>
+</tr>
+{% empty %}
+<tr><td>No slots in this grid</td></tr>
+{% endfor %}
+</table>
+
+<h2>Items</h2>
+<div id="RoomBySlot">
+<table border="1">
+<tr><td></td>
+{% for r in rooms %}
+  <th>{{ r|linky|safe }}</th>
+{% endfor %}
+</tr>
+{% for s in slots %}
+<tr><th>{{ s }}</th>
+  {% for r in rooms %}
+    {% include "streampunk/grid_cell.html" %}
+  {% endfor %}
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div id="SlotByRoom">
+<table border="1">
+<tr><td></td>
+{% for s in slots %}
+  <th>{{ s|linky|safe }}</th>
+{% endfor %}
+</tr>
+{% for r in rooms %}
+<tr><th>{{ r }}</th>
+  {% for s in slots %}
+    {% include "streampunk/grid_cell.html" %}
+  {% endfor %}
+</tr>
+{% endfor %}
+</table>
+</div>
+<div>
+  <div>
+  <ul>
+    <li> <a id="ShowRoomBySlot" href="">Room by Time</a></li>
+    <li> <a id="ShowSlotByRoom" href="">Time by Room</a></li>
+    <li> <a id="ShowPeeps" href="">Show people</a></li>
+    <li> <a id="HidePeeps" href="">Hide people</a></li>
+{% if perms.streampunk.edit_programme %}
+    <li> <a id="ShowFill" href="">Show 'fill slot'</a></li>
+    <li> <a id="HideFill" href="">Hide 'fill slot'</a></li>
+{% endif %}
+  </ul>
+  </div>
+
+</div>
+{% endblock %}

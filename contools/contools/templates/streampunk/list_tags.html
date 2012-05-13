@@ -1,0 +1,14 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Tags{% endblock %}
+{% block body_content %}
+<table border>
+{% for tag in tag_list %}
+{% if perms.streampunk.read_private or tag.visible %}
+  <tr><td>{{ tag|linky|safe }}</td></tr>
+{% endif %}
+{% empty %}
+  <tr><td>No tags yet</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

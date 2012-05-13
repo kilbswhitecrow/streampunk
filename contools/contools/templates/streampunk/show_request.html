@@ -1,0 +1,15 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %
+{% block title %}SHOW REQUEST {% endblock %}
+{% block body_content %}
+<form action="" method="post">
+{% csrf_token %}
+<input type="hidden" name="fruit" value="apple"/>
+<input type="hidden" name="fruit" value="pear"/>
+<input type="hidden" name="fruit" value="banana"/>
+<input type="hidden" name="animal" value="rabbit"/>
+<input type="hidden" name="animal" value="whale"/>
+<input type="hidden" name="animal" value="bear"/>
+<tr><td colspan="2"><input type="submit" value="submit" /></td></tr>
+</form>
+{% endblock %}

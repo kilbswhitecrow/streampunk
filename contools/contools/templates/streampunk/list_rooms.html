@@ -1,0 +1,12 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Rooms{% endblock %}
+{% block body_content %}
+<table border>
+{% for room in room_list %}
+  <tr><td>{{ room|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No rooms yet</td></tr>
+{% endfor %}
+</table>
+{% endblock %}

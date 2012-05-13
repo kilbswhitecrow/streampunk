@@ -1,0 +1,34 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Tag: {{ tag.name }}{% endblock %}
+{% block body_content %}
+<table border>
+<tr><th>Name</th><td>{{ tag.name }}</td></tr>
+<tr><th>Description</th><td>{{ tag.description }}</td></tr>
+</table>
+
+{% if perms.streampunk.edit_tags %}
+<p><a href="{% url edit_tag pk=tag.id %}">Edit tag</a>.</p>
+{% endif %}
+
+{% if tag.visible or perms.streampunk.read_private %}
+<h2>Items</h2>
+<table border="1">
+{% for item in tag_items %}
+<tr><td>{{ item|linky|safe }}</td><td>{{ item.day }}</td><td>{{ item.start }}</td></tr>
+{% empty %}
+<tr><td>No items with this tag yet</td></tr>
+{% endfor %}
+</table>
+
+<h2>People</h2>
+<table border="1">
+{% for person in tag_people %}
+<tr><td>{{ person|linky|safe }}</td></tr>
+{% empty %}
+<tr><td>No people with this tag yet</td></tr>
+{% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}

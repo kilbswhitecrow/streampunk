@@ -1,0 +1,11 @@
+{% if perms.streampunk.read_private %}
+{% load streampunk_filters %}
+<h2>Kit Things</h2>
+<table border>
+{% for thing in kitthings %}
+  <tr><td>{{ thing|linky|safe }}</td></tr>
+{% empty %}
+  <tr><td>No things yet</td></tr>
+{% endfor %}
+</table>
+{% endif %}

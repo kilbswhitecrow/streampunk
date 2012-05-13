@@ -1,0 +1,8 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}{{ verbose_name_plural }} {% endblock %}
+{% block body_content %}
+{% include "streampunk/list_kitroomassignments.html" %}
+{% include "streampunk/list_kititemassignments.html" %}
+{% include "streampunk/list_kitrequests.html" %}
+{% endblock %}

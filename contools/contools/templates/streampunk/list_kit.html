@@ -1,0 +1,7 @@
+{% extends "streampunk/base.html" %}
+{% load streampunk_filters %}
+{% block title %}Kit{% endblock %}
+{% block body_content %}
+{% include "streampunk/list_kitbundles.html" %}
+{% include "streampunk/list_kitthings.html" %}
+{% endblock %}
