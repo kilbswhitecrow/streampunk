@@ -26,7 +26,7 @@ from streampunk.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPerson
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm, PersonListForm
 from streampunk.forms import DeleteItemPersonForm
 
-from streampunk.views import main_page, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
+from streampunk.views import main_page, about, legal, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
 from streampunk.views import show_grid, show_slot_detail, email_person, emailed_person, emailed_item, email_item_with_personlist, email_personlist
 from streampunk.views import edit_tags_for_item, edit_tags_for_person
 from streampunk.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
@@ -55,6 +55,8 @@ urlpatterns = patterns('',
 
     url(r'^streampunk/show_request/$', show_request),
     url(r'^streampunk/main/$', main_page, name='main_page'),
+    url(r'^streampunk/about/$', about, name='about'),
+    url(r'^streampunk/legal/$', legal, name='legal'),
 
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, kwargs={'next_page':'/streampunk/main/', 'redirect_field_name':'next'}, name='logout'),

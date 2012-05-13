@@ -150,6 +150,16 @@ def main_page(request):
                             locals(),
                             context_instance=RequestContext(request))
 
+def about(request):
+  return render_to_response('streampunk/about.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
+def legal(request):
+  return render_to_response('streampunk/legal.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
 def list_grids(request):
   grid_list = Grid.objects.all()
   day_list = ConDay.objects.all()
