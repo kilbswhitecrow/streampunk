@@ -1,6 +1,0 @@
-Availability:
-{% for av in avail %}
-{{ av }}
-{% empty %}
-{{ noAvailMsg|default:"No availability information entered yet"}}
-{% endfor %}
