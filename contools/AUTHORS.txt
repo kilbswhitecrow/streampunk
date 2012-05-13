@@ -1,0 +1,4 @@
+Streampunk is primarily written by and copyright of Stephen Kilbane. Other contributors
+will be noted here over time.
+
+Stephen Kilbane <steve@whitecrow.demon.co.uk>
