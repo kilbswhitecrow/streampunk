@@ -1,0 +1,161 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}People{% endblock %}
+{% block body_content %}
+<h2>People</h2>
+
+<p>
+People are everybody who appears on the programme in some form. They have
+the following attributes:
+<ul>
+<li>Name - their real name. This is broken into three separate fields,
+labelled as <em>First name</em>, <em>Middle name</em> and <em>Last name</em>,
+but really you can use them however seems best - as long as at least <em>one</em>
+of these three fields is filled in, Streampunk will be happy. The division
+is mainly to allow different sort orders.</li>
+<li>Badge - their badge name. This is optional, but if specified, this is
+what'll be used everywhere in public listings, instead of Name.</li>
+<li>Memnum - membership number. As assigned by your membership database, or
+-1 if not known. This isn't updated automatically, btw, so if you create
+a record for someone who has joined the con, look them up in the membership
+database first. If they haven't joined yet, put -1 in. Later, you'll have to
+go back and update it with their actual membership number, after they've joined.</li>
+<li>Email - their email address. This just should <em>just</em> the email
+address, so:
+<ul>
+<li> fred@site.com is okay</li>
+<li> Fred Smith &lt;fred@site.com&gt; is wrong</li>
+<li> fred@site.com (Fred Smith) is wrong</li>
+</ul>
+</li>
+<li>Contact details - whatever means the Programme staff will use for
+communicating with this person.</li>
+<li>Public  Notes - most likely bio information about guests. This data will be visible
+in the public programme.</li>
+<li>Gender - You can have any number of different values here, not just Male/Female. Or you
+can ignore it entirely. It's here so that you can use it to get a feel of how gender-balanced
+your programme is.</li>
+<li> Dist email - you should set this to Yes if the person has said they're happy for
+the con to distribute their email address to other programme participants, for purposes
+of pre-con discussions.</li>
+<li>Recording Okay - Set this to Yes if the person has confirmed they're happy to be
+recorded, for any and all programme items they might be on.</li>
+<li>Complete - use this to indicate that you've got all the information you need from
+this person, and that you're not expecting to make any more changes to them.</li>
+<li>Tags - Each person can have an arbitrary number of tags associated
+with them.</li>
+<li>Availability - indicates when they're available for scheduling on programme items.</li>
+</ul>
+</p>
+<p>
+At time of writing, all of this information is entirely separate from the
+membership database; Streampunk can't pull this information out of Richard's
+system. Plus, it'll often be the case that you know someone will be doing
+something on the programme, but they haven't joined yet, and we have to
+cater for that.
+</p>
+
+<h3>Listing People</h3>
+<p>
+You can list people by:
+<ol>
+<li>Going to the "People" page via the link on the banner, and following
+the "List" link</li>
+</ol>
+</p>
+<P>
+You get a list of people, sorted alphabetically by Last Name. Options for
+sorting differently will be available later.
+</p>
+The list includes:
+<ul>
+<li>The person's name, as a link. Clicking on the link takes you to the
+person's record.<li>
+<li>A checkbox, with a label that says either "Select?" or "Email/Select?".</li>
+</ul>
+</p>
+<p>
+Beneath the list there are four buttons, for emailing all or some people, and for
+saving all or some people. The "Some" buttons only apply to those peope you've
+checked. The "Email" buttons only apply to those people who actually have an
+email address.
+</p>
+<p>
+If you click on the "Email" buttons, you get a form where you can fill in a
+subject and message, which will be sent to each of the people on the list.
+There are choices to include, for each person:
+<ul>
+<li> A list of any programme items they're scheduled for</li>
+<li> Their contact details</li>
+<li> When Streampunk believes they are available</li>
+</ul>
+</p>
+<p>
+The "Save" buttons allow you to save this list of people, with a label,
+and later come back to it. Most likely, you'll do this for lists of
+people that come from checks and reports, but not always.
+</p>
+<p>
+Clicking on a person's name in the list shows you their details, plus:
+<ul>
+<li> All the programme items this person is associated with</li>
+<li> All the tags (if any) associated with this person</li>
+</ul>
+</p>
+
+<p>
+There are also a link that'll take you to the page where you can edit a
+person's details, and a link for adding more tags to the person.
+</p>
+
+<h3>Creating a new person</h3>
+<p>
+You can create new people by:
+<ol>
+<li>Going to the "People" page via the link on the banner, and following
+the "Create" link</li>
+</ol>
+</p>
+<h2>Modifying a person's details</h2>
+</p>
+The "Items for <em>person x</em>" page is accessible from the People:List
+links, or most places where you see a person's name. This page, in addition
+to listing all their items, has the link to "Edit person."
+</p>
+<p>
+Just click on the link, modify the details how you'd like, and click on Submit.
+The details get updated, and you back to the Person page again.
+</p>
+
+<h3>People and Availability</h3>
+<p>
+This works just like it does for Rooms, so <a href="{% url help_rooms %}">see the
+Rooms help</a> for more info.
+</p>
+
+<h3>People and programme items</H3>
+<p>
+This will be covered in <a href="{% url help_items %}">the Items Help page</a>.
+</p>
+
+<h3>People and tags</h3>
+<p>
+This will be covered in <a href="{% url help_tags %}">the Tags Help page</a>.
+</p>
+
+{% endblock %}

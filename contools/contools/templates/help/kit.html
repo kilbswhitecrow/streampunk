@@ -1,0 +1,133 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Kit{% endblock %}
+{% block body_content %}
+<h2>Kit</h2>
+<p>
+Kit is things you can kick: sound desks, DVD players, microphones, flip-charts.
+It frequently means Tech equipment, but it doesn't have to.
+</p>
+
+<p>
+There are three aspects that are relevant here:
+<ul>
+<li> Kit Things: Actual instances of equipment, considered as indivisible.</li>
+<li> Kit Bundles: Collections made up of kit things.</li>
+<li> Kit Requests: A statement of requirement that needs satisfying.</li>
+</ul>
+</p>
+<h3>Kit Things</h3>
+<p>
+Kit things are the basic units of equipment management. A single Thing represents
+some equipment entity that you're going to manage as a single unit. It might actually
+<em>be</em> one thing, such as a projector screen, or it might be a collection of
+units that you always keep together through-out the con, such as a pair of speakers
+and the corresponding cabling.
+</p>
+
+<p>
+Kit things have the following attributes, among others:
+<ul>
+<li>Name - identifying a particular, unique item. If you have multiple
+instances of a piece of kit, and you're going to manage them separately,
+give them different, useful names. "Main hall screen", "video room screen", etc.</li>
+<li>Description - to be used however you feel is appropriate.</li>
+<li>Notes - again, to be used however.</li>
+<li>Kind - This is a categorisation of the kit thing. For example, you might have
+"Microphone" and "Projector". Note, however, that all things of a given kind should
+be essentially interchangeable. If you need a microphone, and don't care whether it's
+a cable mic or a radio mic, then "Microphone" would work. If, however, you actually
+want a radio mic at some point, then you should distinguish them.</li>
+<li>Count - Kit things can actually be multiple instances of that thing, as long as:
+<ul>
+<li> they're the same <em>kind</em> of thing;
+<li> and you always manage them together </li>
+</ul>
+This is most likely to be useful for microphone sets, but you can use it for any thing.</li>
+<li>Department - who's managing this item. Defaults include Ops, Tech, Green Room,
+and so on, but you can change this list.</li>
+<li>Source - where the item is coming from. This might be a person who's bringing
+their own projector along, or it might be the name of a hire company.</li>
+<li>Basis - on what basis does the con have access to this item? Borrow, Own and
+Hire are the defaults.</li>
+<li>Cost - If this is costing the con some money, record it here, to help with your
+<li>Insurance - if this thing should be covered in the con's insurance, value it here.</li>
+budgeting.</li>
+<li>Availability - as with <a href="{% url help_rooms %}">Rooms</a> and <a href="{% url help_people %}">People</a>, you can record when the thing is available to the con, so that you don't
+schedule its use outside of that period (or periods).</li>
+</ul>
+<p>
+You can assign kit things to specific items, in which case the thing will be considered in
+use for the duration of that item. Alternatively, you can assign a kit thing to a room
+for a duration covering multiple items, in which case the thing will be considered
+available for use by any item taking place in that room.
+</p>
+<h3>Kit Bundles</h3>
+<p>
+As mentioned above, each Kit Thing is considered indivisible, but sometimes you have
+multiple items and you want to manage them together. Or you have multiple items of
+different kinds.
+</p>
+<p>
+Kit Bundles are collections of Kit things. They have:
+<ul>
+<li>A name (again, make this descriptive). </li>
+<li>A status, for management.</li>
+<li>A list of kit things that make up the bundle.</li>
+</ul>
+</p>
+<p>
+So you can take a set of microphones, an amp system, a sound desk, a laptop, a
+projector and a screen, each of which are separate kit things, and wrap them
+all up as a single bundle. You can then assign that bundle to an item or to
+a room, and the effect is to assign all the items in the bundle together, for
+the same duration.
+</p>
+<h3>Kit Requests</h3>
+<p>
+A Kit request is an indication that an item needs some kit. The attributes of
+a kit request are:
+<ul>
+<li>Kind - e.g. Microphone, screen, laptop. </li>
+<li>Count - if more than one thing is needed, of this kind. </li>
+<li>Setup Assistance - whether the people on the item will need a member of Tech Crew 
+on hand to get everything working. </li>
+<li>Miscellaneous notes </li>
+<li>A status </li>
+</ul>
+<p>
+So the idea here is that Tech Crew can read the descriptions of the items that
+have been entered by programme staff, and translate their indecipherable ramblings
+into actual kit requests: A set of 4 microphones, and a laptop, say.
+</p>
+<p>
+When kit things are assigned to an item (either directly or as part of a bundle),
+then they can satisfy a kit request of that item, if they match the kind, and 
+have a sufficiently large count.
+</p>
+<p>
+Alternatively, if an item is scheduled in a particular room, then the item's
+kit requests can be satisfied by any things that are assigned to the room
+at that time.
+</p>
+<p>
+Streampunk can run <a href="{% url help_checks %}">checks</a> to tell you
+when an item has kit requests that are currently not satisfied either directly
+or by kit assigned to the item's room.
+</p>
+{% endblock %}

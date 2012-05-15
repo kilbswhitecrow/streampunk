@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}Fill Slot{% endblock %}
 {% block body_content %}
 <p>Choose an item to move to {{day}}, {{slot}} in {{room}}.</p>
-{% if suf == 'u'
+{% if suf == 'u' %}
 <form action="{% url fill_slot_unsched d=day.id g=grid.id r=room.id s=slot.id %}" method="post">
 {% else %}
 <form action="{% url fill_slot_sched d=day.id g=grid.id r=room.id s=slot.id %}" method="post">

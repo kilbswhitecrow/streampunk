@@ -1,0 +1,196 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Items{% endblock %}
+{% block body_content %}
+<h2>Items</h2>
+
+Programme items - or just <em>items</em> - are the scheduled parts of the programme.
+They have the following attributes, among a bunch of others:
+<ul>
+<li>Shortname - a simple mnemonic to make it easy to identify the items.</li>
+<li>Title - the longer name that appears on the final programme grid.</li>
+<li>Blurb - An optional paragraph of text that explains what the item's about</li>
+<li>Day - which day the item occurs on.</li>
+<li>Start time - the slot, during the day, in which the item starts.</li>
+<li>Length - how long the item runs for.</li>
+<li>Kind - is it a panel, quiz, talk, workshop, etc.</li>
+<li>Visible - should it appear in the programme grids</li>
+<li>Expected audience - how many people do you think will turn up?</li>
+<li>Gophers - how any gophers does the item need?</li>
+<li>Seating - the layout style: theatre, cabaret, etc.</li>
+<li>Room - where the item will take place.</li>
+</ul>
+
+<p>
+In addition to those attributes, there are also several optional attributes:
+<ul>
+<li>People - who's associated with this time, and in what capacity?</li>
+<li>Tech - what tech items does the item need? There are <em>many</em> attributes
+related to Tech and other Kit - see <a href="{% url help_kit %}">Kit</a> for
+more details.</li>
+<li>Tags - arbitrary categorisation.</li>
+<li>Sequencing - indications that two items must be consecutive.</li>
+</ul>
+
+<p>
+A basic principle is that an item can only occur once, in one place. So, if you
+had a programme item that contained several scheduled items on different days,
+(first timers' meeting, for example), they'd each be different items.
+<p>
+Similarly, if you have an item that crosses two separate rooms (and the rooms are
+not sub-components of a larger, divided suite of rooms), then you'd identify them
+as separate items, again.
+
+<h3>Short names vs Titles</h3>
+Items have short names as well as titles. If you look at some of the items in
+Redemption '07, you can see why this makes sense:
+<table border>
+<tr>
+<th>Short name</th><th>Title</th>
+</tr>
+<tr><td>teen shows</td><td>Buffy, Roswell, Smalville - why are the best shows teen shows?</td></tr>
+<tr><td>b5 fandom</td><td>The rise and fall of Babylon 5 fandom</td></tr>
+<tr><td>tolkien politics</td><td>Legitimacy of political power in Tolkien's universe</td></tr>
+</table>
+<p>
+You can see that the titles can be quite unwieldy, and painful to find in a long list. For example,
+are you really going to remember that, in a sorted list, the "teen shows" item begins with "B"?
+Plus, the long titles make the grids hard to read. I recommend having the titles for the final
+programme booklet, but working exclusively with the short names. However, the use of shortnames
+is optional - it's a con-wide preference whether to display them.
+</p>
+
+<h3>Creating items</h3>
+It's assumed that you'll create programme items in isolation. You'll get vague ideas about them,
+over time you'll associate people with them, in varying degrees of certainty, and eventually you'll
+drop them into the grid, somewhere. But initially, you won't know when they'll actually be taking
+place.
+<p>
+So, to create a new item:
+<ol>
+<li>Follow the "Items" link on the top banner, then click on "Add new item"</li>
+</ol>
+<p>
+This gets you to "Adding a new item" page. Here you can fill in the basic information about
+the item. Many fields have default values, but exactly what those defaults are is dependent
+on the local con configuration - see <a href={% url help_basic_concepts %}">Basic Concepts</a>.
+</p>
+<p>
+Note that, at this point, you don't get to assign anybody to the item.
+</p>
+
+<h3>Listing items</h3>
+You'll see lists of items appearing in quite a few places:
+<ul>
+The programme grids display items that are within their rooms/time lists, of course.
+Going to a page for a person or a tag or a tech item will show all the programme items
+associated with that particular thing.
+The various checks generally list items.
+</ul>
+</p>
+<p>
+And, of course, you can ask for item lists directly:
+<ol>
+<li>Follow the "Items" link on the top banner</li>
+</ol>
+</p>
+<p>
+Right now, this list isn't sorted, which is silly - it really should be.
+</p>
+<p>
+The entries in the list are all links; clicking on one will take you to the "Edit item"
+page, which we'll come to in a bit.
+</p>
+
+<h3>Moving items</h3>
+<p>
+The easiest way to place an item
+into a room at a given day and time is to use the <a href="{% url help_grids %}">programme grid</a>;
+you can click on the "Fill slot" link for a given programme grid slot, and then select the
+item to put there.
+</p>
+<p>
+Alternatively, use the "Edit item" page.
+</p>
+
+<h3>Editing items</h3>
+<p>
+When you click on an item's link, you're taken to a page which displays all the information
+about that item. There's a link for editing the item's details, too.
+</p>
+<p>
+This page also allows you to change the people, tech, tags and sequencing associated with the
+item.
+</p>
+<h3>Adding people to an item</h3>
+First thing to note is that you can't add a <em>new</em> person - one not already in the
+database - to an item. You have to create the person first - see the <a href="{% url help_people %}">People</a>
+page for that.
+</p>
+<p>
+The association between an item and people has several attributes:
+<ul>
+<li>Role - is the person the moderator, a panellist, an interviewer, a gopher, etc. These roles
+are configured from the "Manage" part of the Main page.</li>
+<li>Status - is how sure you are that the person will be on the item. The database starts out
+with "Proposed" (you've thought of that person), "Invited" (you've asked them), and
+"Confirmed" (they've agreed).</li>
+<li>Visible - Not everyone gets listed in the programme grid. The Masquerade might list the
+MC, for example, but not the stage manager and gophers.</li>
+</ul>
+<p>
+When you click on "Add", then you can look at the item again, or add another person.
+</p>
+
+<h3>Removing people from an item</h3>
+The page for a given item lists all the people associated with in, along with their
+role, status and visibility for that item. Beside each person, there are a couple of
+links:
+<ul>
+<li>Remove - allows you to remove that person from the item (they're not removed from the
+database, or from any other items - only the link between the item and the person is
+broken).</li>
+<li>Edit - allows you to change change all the aspects of the item/person link. This is
+basically like adding a new person, overwriting the old one, except that all the settings
+default to what they are now. You can change the status, the role, the visibility - even
+the person or the item. <em>BUG: THIS IS MISSING NOW. </em></li>
+</ul>
+<p>
+<h3>Adding kit to an item</h3>
+<p>
+Items may need equipment, such as projectors, amplication, scoreboards, etc. This is
+handled through <a href="{% url help_kit %}">Kit</a>.
+</p>
+
+<h3>Adding tags to an item</h3>
+Adding <a href="{% url help_tags %}">tags</a> to an item (or, for that matter, to people) is
+simple: from the item's page, click on the "Edit tags for [ITEM]" link, and you'll be
+taken to a page that allows you to modify the list of tags that are associated with
+this item. Removing ags is done in the same way.
+</p>
+
+<h3>Sequencing</h3>
+<p>
+Sequencing constraints indicate that programme item X must be immediately followed
+by programme item Y, in the same room. This is used for things like setup and
+tear-down. If you make these constraints, and then move one of the items, the other
+item won't <em>automatically</em> be moved as well, but you will be able to identify
+the constraint no longer applies, by running one of the <a href="{% url help_checks %}">checks</a>.
+</p>
+
+{% endblock %}

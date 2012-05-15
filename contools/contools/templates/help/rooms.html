@@ -1,0 +1,92 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Rooms{% endblock %}
+{% block body_content %}
+<h2>Rooms</h2>
+
+<p>
+The Rooms link at the top of the page lists all the rooms, in grid order.
+Following one of those links in the list will display some information
+about the room. At the bottom of the list, there's a link for creating
+a new room.
+</p>
+
+<h3>Room Attributes</h3>
+
+<p>
+Rooms have many, many attributes, just some of which are:
+<ul>
+<li> Name - How the room is known. This is the name that appears
+in Programme Grid pages.</li>
+<li> Description - Optional text to identify the room's purpose:
+Ops, Green Room, Art Show, etc.</li>
+<li> Visible - Whether this room should appear on the Programme
+Grids. It defaults to "Yes". Rooms like "Secure Store" should have
+this set to "No."</li>
+<li> Disabled access - Defaults to "Yes".</li>
+<li> Grid order - where this room should appear in the grid, relative to
+other rooms (lower numbers appear sooner than higher numbers).</li>
+<li> Capacity - By default, a room doesn't have any capacity
+associated with it. You can assign one or more capacities, with a
+seating layout associated with each.</li>
+<li> Availability - Time periods during which the room is available
+to the convention. It's a per-con preference whether "no availability
+information for this room" should be interpreted as "always available"
+or "never available".
+</li>
+<li> Sub-divisions - A room can be identified as being a sub-part
+of another room. For example, The Elizabeth is part of the Royal
+suite.</li>
+</ul>
+</p>
+
+<p>
+As it happens, the page that shows the room details doesn't show
+anything like all the room info; I really should fix that.
+</p>
+<h3>Nowhere and Everywhere</h3>
+<p>
+There are two special pseudo-rooms defined: Nowhere and Everywhere.
+</p>
+<p>
+Nowhere is where programme items are created, by default. It indicates items that don't 
+actually have a room yet. It's also a handy place to put items you're not thinking of
+actually running. Any item in Nowhere will be considered unscheduled.
+</p>
+<p>
+Everywhere is for items that don't actually need a room - they happen across the con.
+A treasure hunt would be an example of this. Items that are scheduled to happen
+Everywhere don't collide with other items that happen Everywhere.
+</p>
+<h3>Items</h3>
+<p>
+After the room's basic information, there's a list of any items that
+are scheduled to take place in that room.
+</p>
+<h3>Availability</h3>
+<p>
+The room's availability information is listed, if any has been assigned.
+</p>
+<h3>Kit Things</h3>
+<p>
+If any kit has been assigned to the room, either individually or as
+part of a kit bundle (see <a href="{% url help_kit %}">Kit</a> for more details),
+they'll be listed here too. There are a couple of links, for adding kit
+things or bundles to the room.
+</p>
+{% endblock %}

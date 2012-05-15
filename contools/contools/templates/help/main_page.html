@@ -1,0 +1,55 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Main Page{% endblock %}
+{% block body_content %}
+<h2>Main Page</h2>
+
+<p>
+The main page can be found <a href="{% url main_page %}">here</a>.
+</p>
+
+<p>
+There's not a lot on the main page yet. In the original ProgDB, I piled
+lots of links onto the main page, because there wasn't really anywhere
+else to put them. Chances are, Streampunk will have a better arrangement,
+but we'll wait and see.
+</p>
+
+<p>
+At the moment, it displays some basic information about the programme
+as it currently stands:
+<ul>
+<li> The name of the convention (as retrieved from ConInfoString).</li>
+<li> the number of scheduled items (this count excludes <em>unscheduled</em> items).</li>
+<li> The number of scheduled hours (i.e. the sum of the durations of the scheduled items).</li>
+<li> The total of the budget fields for all scheduled items.</li>
+<li> The number of people who are scheduled on at least one item.</li>
+<li> The total number of times anyone is scheduled on an item (three people scheduled on two
+     items each would count as six).</li>
+</ul>
+</p>
+
+<p>There are also a small number of links to tools; this is likely to change over time:
+<ul>
+<li> Add a person to an item.</li>
+<li> Add multiple tags to multiple items and/or people, at the same time.</li>
+<li> Set up group permissions. This is a special tool for configuring user permissions
+after re-installing the basic data; this'll probably go somewhere else in time.</li>
+</ul>
+</p>
+{% endblock %}

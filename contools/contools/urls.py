@@ -26,7 +26,7 @@ from streampunk.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPerson
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm, PersonListForm
 from streampunk.forms import DeleteItemPersonForm
 
-from streampunk.views import main_page, about, legal, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
+from streampunk.views import main_page, static_page, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
 from streampunk.views import show_grid, show_slot_detail, email_person, emailed_person, emailed_item, email_item_with_personlist, email_personlist
 from streampunk.views import edit_tags_for_item, edit_tags_for_person
 from streampunk.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
@@ -55,8 +55,28 @@ urlpatterns = patterns('',
 
     url(r'^streampunk/show_request/$', show_request),
     url(r'^streampunk/main/$', main_page, name='main_page'),
-    url(r'^streampunk/about/$', about, name='about'),
-    url(r'^streampunk/legal/$', legal, name='legal'),
+    url(r'^streampunk/about/$', static_page, { 'template': 'streampunk/about.html' }, name='about'),
+    url(r'^streampunk/legal/$', static_page, { 'template': 'streampunk/legal.html' }, name='legal'),
+
+    url(r'^help/$', static_page, { 'template': 'help/help.html' }, name='help_intro'),
+    url(r'^help/basic_concepts/$', static_page,
+        { 'template': 'help/basic_concepts.html' }, name='help_basic_concepts'),
+    url(r'^help/main_page/$', static_page,
+        { 'template': 'help/main_page.html' }, name='help_main_page'),
+    url(r'^help/grids/$', static_page,
+        { 'template': 'help/grids.html' }, name='help_grids'),
+    url(r'^help/rooms/$', static_page,
+        { 'template': 'help/rooms.html' }, name='help_rooms'),
+    url(r'^help/people/$', static_page,
+        { 'template': 'help/people.html' }, name='help_people'),
+    url(r'^help/items/$', static_page,
+        { 'template': 'help/items.html' }, name='help_items'),
+    url(r'^help/kit/$', static_page,
+        { 'template': 'help/kit.html' }, name='help_kit'),
+    url(r'^help/tags/$', static_page,
+        { 'template': 'help/tags.html' }, name='help_tags'),
+    url(r'^help/checks/$', static_page,
+        { 'template': 'help/checks.html' }, name='help_checks'),
 
     url(r'^accounts/login/$', login, name='login'),
     url(r'^accounts/logout/$', logout, kwargs={'next_page':'/streampunk/main/', 'redirect_field_name':'next'}, name='logout'),

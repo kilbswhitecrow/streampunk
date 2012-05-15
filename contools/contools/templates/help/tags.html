@@ -1,0 +1,86 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Tags{% endblock %}
+{% block body_content %}
+<h2>Tags</h2>
+
+Tags are arbitrary grouping mechanisms.  Each tag has:
+<ul>
+<li>A name</li>
+<li>A description</li>
+<li>A flag, indicating whether it is visible in the public programme</li>
+<li>An optional icon URL</li>
+</ul>
+<p>
+and tags can be associated with programme items and people.
+<p>
+For example, you might want tags for:
+<ul>
+<li>Movies</li>
+<li>Books</li>
+<li>Comics</li>
+<li>Blake's 7</li>
+<li>Life on Mars</li>
+<li>Fandom</li>
+<li>Chaos</li>
+<li>Children's programme</li>
+<li>Science stream</li>
+</ul>
+and you might have tags for:
+<ul>
+<li>Committee</li>
+<li>Tech crew</li>
+<li>guests</li>
+<li>Stewards</li>
+<li>Green Room</li>
+<li>Eclectic-21</li>
+<li>ZZ9</li>
+</ul>
+<p>
+It doesn't really matter - it's up to you. The point is, the database, by design,
+allows you to, say, "list all items that Buffy Summers is associated with", or
+"All items that Xander Harris is on", but not "All the items that have any guests
+on them"...
+<p>
+....well, okay, actually, it could, but there isn't a page for that, yet, so...
+<p>
+...so you can create tags for whatever you like, assign them to programme items
+and/or people, and then find all the items or people that are associated with
+that tag. That's <em>it</em>, but used properly, it could be very powerful
+(and very handy to members).
+<p>
+Enough pontificating.
+<h3>Creating tags</h3>
+You can create tags by:
+<ol>
+<li>By going to the "Tags" page from the banner, then following "Add new tag"</li>
+</ol>
+<p>
+When you do, you're prompted to enter the tag's name and description (the latter's
+optional). Then you click on "Add", and your tag is created.
+<p>
+If you want the tag to have an ion as well, enter the URL of the icon. Note:
+icons should be <em>small</em>, so the don't consume a lot of real estate
+on the screen.
+<p>
+<h3>Editing tags</h3>
+Whenever a tag appears, you can click on the tag (it's a link), and you'll
+go to the tag's page. There, you'll find a link to "Edit tag". Following
+<em>that</em> link gives you a page where you can update the tag's name or
+description. Click on "Submit" to save your changes.
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Checks{% endblock %}
+{% block body_content %}
+<h2>Checks</h2>
+<p>
+There aren't many checks built into the database at present. More will
+be added over time.
+</p>
+<p>
+As explained in <a href="{% url help_basic_concepts %}">Basic Concepts</a>,
+the database doesn't continually check that the programme is consistent.
+Instead, it expects that you'll make a whole bunch of changes, and then
+ask whether all looks okay once you're complete.
+</p>
+<p>
+Even that's not telling the truth, because there isn't a single "is all
+okay" check. Instead, there are several different checks.
+</p>
+<p>
+The currently supported checks are accessible from the "Checks" link at
+the top of each page. There's a short description of each.
+</p>
+<p>
+To run a check, tick the checkbox next to the check, then click on
+submit. You'll get a page listing any problems found, for each of
+the checks you chose to run.
+</p>
+<p>
+Where checks return lists of people, such lists can be saved for
+later, or you can choose to email the people.
+</p>
+{% endblock %}

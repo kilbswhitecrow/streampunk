@@ -100,6 +100,9 @@ class AfterDeleteView(DeleteView):
     else:
       return '/streampunk/main/'
 
+def static_page(request, template):
+  return render_to_response(template, context_instance=RequestContext(request))
+
 @login_required
 def edit_user_profile(request):
   userprofile = request.user.get_profile()
@@ -147,16 +150,6 @@ def main_page(request):
   budget = totals['budget__sum']
   hours_scheduled = mins_scheduled['length__length__sum'] / 60
   return render_to_response('streampunk/main_page.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-def about(request):
-  return render_to_response('streampunk/about.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
-def legal(request):
-  return render_to_response('streampunk/legal.html',
                             locals(),
                             context_instance=RequestContext(request))
 

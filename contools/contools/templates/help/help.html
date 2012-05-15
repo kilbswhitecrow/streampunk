@@ -1,20 +1,69 @@
-<html>
-<head><title>ProgDB Help - Main</title></head>
-<body>
-<H2> Welcome </H2>
-The Programme Database (ProgDB) has a very basic GUI. It's supposed to be functional,
-a proof of concept. I'm hoping the GUI can be improved, but in the meantime, these
-pages should explain how to use it.
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Introduction{% endblock %}
+{% block body_content %}
+<h2>Introduction</h2>
+<p>Welcome!</p>
+
+<p>Streampunk is a server-based application for developing convention
+programmes - what occurs in what room, when, and who's involved in
+each item. Streampunk used to be known as <em>ProgDB</em>, or "the
+programme database".</p>
+
+<p>Streampunk can offer a number of advantages to convention organisers:
 <ul>
-<li> <a href=help_basic_concepts.html>Basic concepts</a> </li>
-<li> <a href=help_main_page.html>The main page</a> </li>
-<li> <a href=help_grids.html>Grids</a> </li>
-<li> <a href=help_rooms.html>Rooms</a> </li>
-<li> <a href=help_people.html>People</a> </li>
-<li> <a href=help_items.html>Programme items</a> </li>
-<li> <a href=help_tech.html>Tech</a> </li>
-<li> <a href=help_tags.html>Tags</a> </li>
-<li> <a href=help_checks.html>Consistency checks</a> </li>
+<li> Because it's web-based, all staff can get at the live information, directly.
+It's not stuck on one person's computer, only distributed at intervals.</li>
+<li> Streampunk can check many different aspects of your programme, such as
+accidentally putting the same person on two concurrent items, over-scheduling
+your guests, or not having a projector in the room for an item that needs one.</li>
+<li> Streampunk can sent email to all the people involved in your programme, so
+that they can be kept informed of what you have planned for them, without you
+having to send each email manually.</li>
+<li> Streampunk can provide corresponding printed matter, either directly or in
+association with ConText. This includes the programme booklet (or README), drinks
+forms for Green Room, labels to stick on the back of badges, door sheets, name
+cards to put on the table in front of panellists, etc.
 </ul>
-</body>
+</p>
+
+<p>In its previous incarnation as ProgDB, Streampunk was used to plan the
+programmes for three Eastercons: Odyssey, Illustrious and Olympus. In
+addition to changing name, Streampunk is an entirely new implementation of
+the same basic concepts from ProgDB, but with a number of new features:
+<ul>
+<li> User Authentication: Each user of Streampunk has different access rights,
+so some convention staff can have read-only rights, and emails come from the
+person sending the email, not a single common user.</li>
+<li> Password control: Each user can set their own password, and can get it
+reset, too.</li>
+<li> A completely new approach to handling Kit (formerly Tech), which should
+make managing kit much more straightforward.</li>
+<li> A public interface, which hides all the private data. </li>
+<li> A much cleaner, open-source implementation, with proper separation of
+data model, user-interface interaction, and management.</li>
+</ul>
+
+<p>
+<em>Please note:</em> This version of Streampunk is very much an alpha release,
+for other developers to play with, and to test out the Kit model, etc. It is
+<em>not</em> recommended that you try developing your con programme with this
+version yet.
+</p>
+{% endblock %}
+

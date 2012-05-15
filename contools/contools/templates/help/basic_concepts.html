@@ -1,0 +1,190 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Basic Concepts{% endblock %}
+{% block body_content %}
+<h2>Basic Concepts</h2>
+<H3>Rooms, People and Items</h3>
+<p>
+The three core concepts of Streampunk are rooms, people and items:
+<ul>
+<li> <em>Rooms</em> are the physical rooms within the venue, where con stuff takes place.
+They can be subdivided, be listed on programme booklet grids or be private, have certain layouts and capacities,
+and so on.</li>
+<li> <em>People</em> are the named participants of programme items. Panel members, moderators,
+quiz master, and so on.</li>
+<li> <em>Items</em> are the scheduled events in the programme: the Opening Ceremony would be
+one, as would Torchwood Wobblevision. Items occur in a particular <em>Room</em> at a
+particular time, for a given duration, and can have <em>people</em> associated with them, in
+various roles.
+</ul>
+</p>
+<p>
+Generally, speaking, you start off with a database that contains a load of pre-configured
+Rooms, and no Items or People. You enter items and people separately,
+then you assign people to items, and assign items to rooms and to timeslots in the programme.
+</p>
+
+<h3>Grids and slots</h3>
+<p>
+Slots are the times when an item can start. You can have as many different slots as you
+want, down to the resolution of a minute. Typically, slots would be on the hour, or the
+half-hour, or every 90 minutes, as fits your programme.</p>
+
+<p>
+There's a day for each day of the con, and each of those days has 
+the same layout of slots.</p>
+
+<p>
+There are also pre-configured item durations, e.g. half an hour, one hour,
+two hours or three hours. Note that these are the <em>pre-configured</em> choices - if you
+need a greater variety, or longer or shorter items, that can be done.
+</p>
+
+<p>
+The database also knows about non-public days of the con - those days before the con starts
+and those days after the con ends. For example, you might be scheduling set-up and tear-down
+items, but you wouldn't normally include them in the public version of the programme.
+</p>
+
+<p>
+A concept taken from Redemption is the <em>Grid</em>. The Redemption programme booklet
+lists the programme in four-hour chunks, e.g. Friday 2pm-6pm, Friday 6pm-10pm. Streampunk
+has a similar concept, in that it has groupings of consecutive slots for displaying
+items in a grid format. <em>This is just for presentation purposes</em>, because if you
+keep asking the database to display six days worth of grid, there's a lot of scrolling in your
+browser.
+</p>
+
+<h3>Tags</h3>
+<p>
+Tags are an arbitrary linking system. The assumption is that you're occasionally going to want
+to, say, find all items relating to Star Trek, or all items that are about movies, or all
+the committee members, or all the guests, and so on.
+</p>
+
+<p>
+Tags are very simple: they have a name, a description, and a flag to say whether the
+tag public, and you can add as many as you want.
+Then they can be assigned to people, and to programme items. When you look at a programme item,
+you see the tags associated with it. You can follow a given tag to see all the other programme
+items with that tag, or all the people that have it.
+</p>
+
+<H3>Kit</h3>
+<p>
+Kit is the physical
+stuff that get moved from room to room as required. Microphones, laptops, screens, flip-charts,
+and so on. If an item needs some kit, such as a screen and a projector, you associate a
+<em>kit request</em> with the item. This says, "this item should not be considered sorted
+until these requests have been satisfied". Kit <em>things</em> are the actual physical pieces of
+equipment; you can assign them directly to items, in which case they can satisfy the item's
+requests, or you can assign them to rooms, in which case they can satisfy the requests of
+any items that take place in that room.
+</p>
+
+
+<h3>Data entry and checking</h3>
+<p>
+The philosophy here is that programmes develop over time, and that you don't create a programme
+in its final state immediately. You'll hear about ideas for programme items, and have vague
+thoughts as to who'd be involved, but you don't know all the people when you first enter the
+programme item into the database. Nor do you usually know which room it'll be in, or in which
+time-slot.
+</p>
+
+<p>
+It's also assumed that, periodically, you'll have to go through hefty periods of rearrangement:
+Bob can't make Saturday, so his items all have to move, and now the fireworks display can't be
+in the main hall, and that means the cold fusion demonstration has to get bumped to another slot,
+and so on. Chances are, while you're moving things around, you'll be continually creating
+programmes that are "inconsistent" - two items in the same room, or the same person being assigned
+to two different programme items in different rooms at the same time. These are okay; it's assumed
+that you'll move A to B, then X to Y, where the first action creates a conflict, and the second
+fixes it.
+</p>
+
+<p>
+Because of this expectation, Streampunk doesn't continually check whether each action creates
+a problem. Instead, the assumption is that, once you've finished, you can tell Streampunk,
+"please let me know about any problems," and <em>then</em> it'll furtle through all
+your info and see what's what.
+</p>
+
+<p>
+(Also, the kind of checks we're talking about are computationally expensive, since everything
+has to be checked against everything else, and that's not something you want to have happen every
+time you make a little change.)
+</p>
+
+<h3>Enum tables and values</h3>
+<p>
+Streampunk has a lot of list of values for different things:
+room layout, person roles, media status, etc. Each of these things
+is just a list of values, with names associated with them, and you
+can have as many different values for each thing as you'd like. So,
+you might just have item types of Panel and Talk, or you might have
+Exercise and Workshop and Dance and Competition and Quiz and... well,
+whatever.
+</p>
+<p>
+Generally, there are no semantics attached to any of these items - they're
+just ways for you to distinguish your programme. But each list has a couple
+of fields that are important:
+<ul>
+<li> Is Default -  indicate that when you're creating a new object in the
+database, this is the default value that this field should get.</il>
+<li> Is Undefined - indicates that this value should be interpreted as
+"No value defined for this field".</il>
+</ul>
+</p>
+<p>
+Both of these values should be set for <em>exactly one</em> value in a
+given field's list of values. They need not be set on the same one,
+though. So you might say that the undefined value for item type
+is "To be decided", but the default value is "Panel".
+</p>
+<p>
+The idea here is that you can choose whether, for your con, a particular
+field should default to the most likely useful value, or whether it
+should default to an undefined value, thereby requiring you to explcitly
+choose it rather than just blithely accepting the default.
+</p>
+<p>
+This concept also applies in other areas beyond these simple enumerations.
+One room can be marked as the default room, and another (or the same one)
+as the undefined room; when items are assigned to the latter, the
+item is considered unscheduled. Similarly, there are other checks that
+can report when a field is (still) set to the undefined value.
+</p>
+<h3>Visible</h3>
+<p>
+A number of constructs have a <em>visible</em> attribute. This is used
+to indicate whether the object in question is public. The idea is that
+you'll have various admininstration parts of your event that are necessary
+for smooth running, and which need scheduling, but which you don't want to
+tell everyone about. Rooms, items, people's attendance on them, etc. default
+to being visible, but if you mark them as not-visible, then they won't
+appear on printed versions of the programme.
+</p>
+<h3>Other bits</h3>
+<p>
+This page has just touched on the main concepts of Streampunk. There are other things that'll be
+introduced at the appropriate time. So don't be thinking, "harmuph, I need feature X, and there's
+been no mention of it yet!" Because there's a lot that hasn't been mentioned yet. Be patient.
+</p>
+{% endblock %}
