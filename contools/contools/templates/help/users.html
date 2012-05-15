@@ -1,0 +1,69 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Users{% endblock %}
+{% block body_content %}
+<h2>Users</h2>
+<p>
+Streampunk has support for Users and Groups. The intent is that there will
+be several levels of user:
+<ul>
+<li> Superusers - full access to everything </li>
+<li> Admins - full readn and write access. Can user the <a href="{% url help_admin %}">Admin GUI</a>.</li>
+<li> Con committee, dept heads - can read and write everything through the normal pages.</li>
+<li> Con staff - can read everything, but not change it.</li>
+<li> Members - can read public things, but not private. Can't change anything. Can send email to programme participants.</li>
+<li> Everyone else - Can read public data</li>
+</ul>
+</p>
+<p>
+So, long-term, there's potential for running your Streampunk server as a pubicly-accessible
+site, where each member of the con has been allocated their own User account which allows
+them to send emails to each other, and people who have not yet signed up for the con can
+still read the programme info that's visible. But all that's in the future.
+</p>
+<h3>Default configuration</h3>
+<p>
+When you create a Streampunk installation, default data gets loaded, and you're prompted to
+create a superuser account. The setup does create some access permissions, but not the
+role-based ones described above. So when you look at the data through the normal pages,
+you won't have any permissions to see any private data (i.e. anything with <em>visible</em>
+set to False). None of the editing links will appear.
+</p>
+<p>
+If you log in as your superuser account, then all the private data and edit links appear, because superusers
+get all permissions, automatically.
+</p>
+<p>
+At this point, you should click on <a href="{% url make_con_groups %}">Set up all the group permissions</a> on the <a href="{% url main_page %}">Main page</a>. This will install a bunch of additional permissions that Streampunk uses:
+<ul>
+<li> Read_public </li>
+<li> Read_private</li>
+<li> Edit_programme</li>
+<li> Edit_kit</li>
+<li> ...</li>
+</ul>
+and so on. These are the permissions that Streampunk uses to determine whether it's okay to
+display information, or whether to allow the current user to edit the data.
+</p>
+<p>
+Once these permissions are set up, when you create new users through the
+<a href="{% url help_admin %}">Admin GUI</a>, you can allocate appropriate permissions to them.
+You can also set up groups (con staff, programme staff, tech crew, etc.) and allocate the
+permissions to them, instead, which will make it easier when you create new users.</p>
+{% endblock %}
+

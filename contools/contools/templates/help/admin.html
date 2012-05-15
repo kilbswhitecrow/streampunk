@@ -1,0 +1,66 @@
+{% extends "help/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Admin{% endblock %}
+{% block body_content %}
+<h2>Admin</h2>
+<p>
+The Admin page is part of the facilities provided by Django, the system
+upon which Streampuk is based. It's a management GUI that allows you to
+do many things which aren't currently possible directly from Streampunk's
+own pages:
+<ul>
+<li> List all object tables (items, people, kit bundles, etc.) </li>
+<li> Create new objects in the tables</li>
+<li> View and edit existing objects in the tables</li>
+<li> Delete objects from the tables</li>
+<li> Create new Users, administer access rights, etc. </li>
+</ul>
+</p>
+<p>
+Access to the Admin interface is restricted to users that are "Staff",
+or to "superusers". The plan is that, for some of the Streampunk objects,
+I'm just going to let the Admin GUI handle all the heavy lifting. This
+applies to the per-con configuration data:
+<ul>
+<li> ConDays, Slots, SlotLengths and Grids </li>
+<li> Rooms and Capacities</li>
+<li> Enumerations, such as ItemKind, PersonRole, SeatingKind, etc. </li>
+<li> Users and Groups</li>
+<li> Con preferences: ConInfoString, ConInfoBool, ConInfoInt.</li>
+</ul>
+</p>
+<p>
+Most of these won't change very often - you set them up at the start of
+the con, and then keep them basically as-is. Chances are, a lot of the
+default data that comes with Streampunk might do you perfectly well.
+</p>
+<p>
+This is the kind of thing the Admin GUI is designed to address: the
+normal pages offer the day-to-day user experience, while the Admin GUI
+provides you will the tools to go in and make the changes and corrections
+that are necessary. There's a corresponding assumption that you know
+what you are doing.
+</p>
+<p>
+In the meantime, I'm also relying on the Admin GUI do deal with a lot
+of things I just haven't gotten around to implementing yet in the
+normal pages - deletion options, for one thing. This is only a short-term
+measure, while the revised data model gets nailed down.
+</p>
+{% endblock %}
+
