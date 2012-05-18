@@ -14,9 +14,24 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+dbtype=`python get_db_type.py`
+case "$dbtype" in
+  django.db.backends.mysql)
+          echo Enter suitable MySQL password...
+          mysql -u root -p < setup_streampunk.sql
+          ;;
+  django.db.backends.sqlite3) 
+          dbname=`python get_db_name.py`
+          if [ -f $dbname ]
+          then rm $dbname
+          fi
+          ;;
+  *)
+          echo "I don't recognise this database type. Please reset manually."
+          exit 1
+          ;;
+esac
 
-echo Enter MySQL root password...
-mysql -u root -p < setup_streampunk.sql
 python manage.py syncdb --noinput
 python manage.py loaddata room person items tags avail kit
 user=congod

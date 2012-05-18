@@ -1,4 +1,4 @@
-Move to virtualenv over the weekend. then we can get South in, and start on name change.
+add github link to templates.
 - How to remove a kit bundle from a room? Or, more likely to edit the assignment?
 - Name change
 - I18N

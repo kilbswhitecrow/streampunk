@@ -19,7 +19,7 @@ Django 1.4
 A database
 	You can use any of the databases supported by Django. I've been
 	developing Streampunk using MySQL, using MySQL-python. Since
-	Python includes sqllite, you should be able to get away with
+	Python includes sqlite3, you should be able to get away with
 	that, for a local development.
 
 A Webserver
@@ -31,6 +31,26 @@ A Webserver
 
 INSTALLATION
 ============
+I'm somewhat baffled about how to create Django apps for distribution
+at the moment, so you have to do some of the work yourself. Sorry about
+that.
+
+Creating the Framework
+----------------------
+Choose whichever directory you want to have your application in,
+and then do:
+
+$ django-admin.py startproject contools
+
+This will create the following hierarchy of files:
+
+contools/
+	manage.py
+	contools/
+		settings.py
+		urls.py
+
+
 Do a git pull from github, or unpack your tarball, or whatever source
 distribution you got. You should see this kind of hierarchy:
 
@@ -39,35 +59,51 @@ contools/
 	reload_streampunk.sh
 	setup_streampunk.sql
 	contools/
-		settings.py
 		urls.py
 	streampunk/
 		models.py
 		views.py
 		forms.py
 
+Notice how the two both have contools/manage.py, and contools/contools/urls.py,
+but the Streampunk package has a streampunk subdirectory, and no settings.py.
+That's because settings.py contains some local sensitive data that shouldn't
+be distributed, and you don't want to base YOUR system on a version you've
+pulled from the net...
+
+So, copy the streampunk hierachy onto the one you've just created with
+djang-admin.py, overwritings files like contools/urls.py.
+
 Look at contools/contools/settings.py - this is where you configure the
 database that Django will use. You should follow the Django documentation
-for setting up your database. You'll notice that, by default, it's set to
-use a MySQL database called "streampunk", because I'm imaginative that way.
-it's also set up to have a user called "prog", which has a password of
-"streams". I suggest you pick something different. :-)
+for setting up your database. I use MySQL, but if you're just playing
+around with this development release, you should be able to get away
+with sqlite3. For example:
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': '/Users/steve/progdb/sp.db',    # Or path to database file if using sqlite3.
+        'USER': '',                             # Not used with sqlite3.
+        'PASSWORD': '',                         # Not used with sqlite3.
+        'HOST': '',                             # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                             # Set to empty string for default. Not used with sqlite3.
+    }
+}
+
+(Use whatever path you want, to the file which will be your Streampunk database.)
 
 Once you've saved settings.py, create your database, with the username and
-password, if needed by your database back-end.
+password, if needed by your database back-end. If you're using sqlite3, then
+you don't need to do this, because it'll be done in the next step for you.
 
 Now you need to build the data models in the database. In the contools
 directory (the one with manage.py), do this:
 
-$ python manage.py syncdb
+$ python manage.py syncdb --noinput
 
 This will:
 - Create all the necessary tables in your database.
-- Prompt you for a superuser (this is a superuse for the Streampunk application,
-  not root for your whole computer). Pick a username and a password, and
-  specify your email address. Streampunk has its own users list, and Django
-  will create just one user, with the name and password you give, which will
-  have access to all the data in the Streampunk application.
 - Populate the Streampunk database with an initial configuration for an
   event.
 
@@ -80,7 +116,16 @@ items, people, etc. None of this is real - it's just so that you can
 get a system up and running quickly. You can zap all the data later on,
 and replace it with your own.
 
-Speaking of which: look at the files:
+Finally, do:
+
+$ python manage.py createsuperuser --user yourusername --email youraddr@example.com
+
+This will create a superuser in the Streampunk database (and ONLY in the database;
+this has nothing to do with permissions for the rest of your system), with the
+username and email address you provide. You'll be prompted for a password, so
+pick a new one.
+
+All of this might seem a bit of a faff to you. So look at the files:
 	contools/reload_streampunk.sh
 	contools/setup_streampunk.sql
 
@@ -88,6 +133,12 @@ This is a small script and a fragment of SQL that does all of the above. I use
 this for trashing the entire Streampunk database. rebuilding it from scratch,
 and re-populating it with some basic working data. If you use something like
 this, remember to change the usernames, passwords and (especially) email address.
+
+(There's a little bit of flexibility at the start of the script - it reads your
+contools/settings.py file to see what database backend you've used and where you've
+put your database file. Remember, this trashes THE ENTIRE DATABASE, discarding all
+the data, so obviously only use this while you're experimenting, and want to reset
+everything. Which I do a lot.)
 
 You should now have a Streampunk application ready in your database. To see what
 you've built, do this:
@@ -99,7 +150,10 @@ browser to:
 
 http://localhost:8000/streampunk/main/
 
-and you should see the front page of the Streampunk application.
+and you should see the front page of the Streampunk application. Which is
+remarkably bland and dull. Try following the login link, and logging in
+as the superuser you created above; you'll see more information once
+you've done so, along with all the links.
 
 Django's runserver is ONLY for development; it's not something you could deploy
 a working Streampunk system on. To do that, you'll need to set up a proper
