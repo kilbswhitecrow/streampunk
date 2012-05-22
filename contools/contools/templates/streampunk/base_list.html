@@ -1,3 +1,4 @@
+{% extends "streampunk/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
 Copyright (C) 2012 Stephen Kilbane
@@ -14,12 +15,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
-<div id="footer">
-<hr />
-<a href="{% url main_page %}">Return to main page</a>.
-<a href="{% url help_intro %}">Get Help</a>.
-This is <a href="{% url about %}"><em>Streampunk</em></a>,
-<a href="{% url legal %}">Copyright (C) 2012 Stephen Kibane</a>.
-<a href="https://github.com/kilbswhitecrow/streampunk">Source</a>.
-<a href="http://www.djangoproject.com/"><img src="https://www.djangoproject.com/m/img/badges/djangomade124x25_grey.gif" border="0" alt="Made with Django." title="Made with Django." /></a>
-</div>
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}/list_columns.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/list_columns.css" />
+{% endblock %}
+{% block body_content %}
+{% block list_intro %}{% endblock %}
+{% block list_content %}{% endblock %}
+{% block list_tail %}{% endblock %}
+{% endblock %}

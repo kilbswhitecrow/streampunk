@@ -891,6 +891,17 @@ class Item(models.Model):
     verbose_name = 'item'
     verbose_name_plural = 'items'
 
+  @classmethod
+  def list_sort_fields(cls):
+    return [
+      'day',
+      'start',
+      'room',
+      'shortname',
+      'title'
+    ]
+ 
+
   def __unicode__(self):
     if self.title:
       return self.title

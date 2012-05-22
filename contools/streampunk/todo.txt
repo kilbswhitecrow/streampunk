@@ -28,8 +28,7 @@ add github link to templates.
                - Drinks forms
 - XML dump
 - Static pages
-- Copyrights, comments and licensing.
-- Distribution
+- Distribution mechanism (not just pushed up to github).
 - Item Moves. Add when we need that.
 - Revisions
 	Need to model personel changes, too.

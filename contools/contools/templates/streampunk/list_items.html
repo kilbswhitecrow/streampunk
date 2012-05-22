@@ -1,4 +1,4 @@
-{% extends "streampunk/base.html" %}
+{% extends "streampunk/base_list.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
 Copyright (C) 2012 Stephen Kilbane
@@ -17,12 +17,60 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
 {% block title %}Items{% endblock %}
-{% block body_content %}
-<table border>
-{% for item in item_list %}
-  <tr><td>{{ item|linky:item.title|safe }}</td></tr>
+{% block list_content %}
+{% for list in sorted_data %}
+{% cycle 'Col1' 'Col2' 'Col3' 'Col4' 'Col5' as colname silent %}
+<div id="{{ colname }}">
+<table border="1">
+<tr><td colspan="7">This is {{ colname }}</td></tr>
+<tr class="list_header">
+  {% if colname == 'Col1' %}
+    <th>Day</th>
+  {% else %}
+    <th><a class="ShowCol1" href="">Day</a></th>
+  {% endif %}
+  {% if colname == 'Col2' %}
+    <th>Time</th>
+  {% else %}
+    <th><a class="ShowCol2" href="">Time</a></th>
+  {% endif %}
+  {% if colname == 'Col3' %}
+    <th>Room</th>
+  {% else %}
+    <th><a class="ShowCol3" href="">Room</a></th>
+  {% endif %}
+  {% if colname == 'Col4' %}
+    <th>Shortname</th>
+  {% else %}
+    <th><a class="ShowCol4" href="">Shortname</a></th>
+  {% endif %}
+  {% if colname == 'Col5' %}
+    <th>Title</th>
+  {% else %}
+    <th><a class="ShowCol5" href="">Title</a></th>
+  {% endif %}
+  <th>Edit</th>
+  <th>Remove?</th>
+</tr>
+{% for item in list %}
+  <tr>
+    <td>{{ item.day }}</td>
+    <td>{{ item.start }}</td>
+    <td>{{ item.room|linky|safe }}</td>
+    <td>{{ item.shortname }}</td>
+    <td>{{ item|linky:item.title|safe }}</td>
+    <td><a href="{% url edit_item pk=item.id %}">Edit</a></td>
+    <td>Remove?</td>
+  </tr>
 {% empty %}
-  <tr><td>No items yet</td></tr>
+  <tr><td colspan="5">No items yet</td></tr>
 {% endfor %}
 </table>
+</div>
+{% endfor %}
+{% endblock %}
+{% block list_tail %}
+{% if perms.streampunk.edit_kit or perms.streampunk.edit_programme or  perms.streampunk.edit_private %}
+<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
+{% endif %}
 {% endblock %}
