@@ -32,3 +32,11 @@ def linky2(value, prev):
   id = value.id
   name = value.__class__.__name__.lower()
   return '<a href="/streampunk/%s/%d/%s/%d/">%s</a>' % (pname, pid, name, id, escape(value))
+
+@register.simple_tag
+def colheader(title, var, val):
+  if var == val:
+    return title
+  else:
+    return '<a href="" class="Show%s">%s</a>' % (val, title)
+

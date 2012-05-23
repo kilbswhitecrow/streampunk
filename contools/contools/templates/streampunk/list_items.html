@@ -22,33 +22,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% cycle 'Col1' 'Col2' 'Col3' 'Col4' 'Col5' as colname silent %}
 <div id="{{ colname }}">
 <table border="1">
-<tr><td colspan="7">This is {{ colname }}</td></tr>
 <tr class="list_header">
-  {% if colname == 'Col1' %}
-    <th>Day</th>
-  {% else %}
-    <th><a class="ShowCol1" href="">Day</a></th>
-  {% endif %}
-  {% if colname == 'Col2' %}
-    <th>Time</th>
-  {% else %}
-    <th><a class="ShowCol2" href="">Time</a></th>
-  {% endif %}
-  {% if colname == 'Col3' %}
-    <th>Room</th>
-  {% else %}
-    <th><a class="ShowCol3" href="">Room</a></th>
-  {% endif %}
-  {% if colname == 'Col4' %}
-    <th>Shortname</th>
-  {% else %}
-    <th><a class="ShowCol4" href="">Shortname</a></th>
-  {% endif %}
-  {% if colname == 'Col5' %}
-    <th>Title</th>
-  {% else %}
-    <th><a class="ShowCol5" href="">Title</a></th>
-  {% endif %}
+  <th>{% colheader "Day" colname "Col1" %}</th>
+  <th>{% colheader "Time" colname "Col2" %}</th>
+  <th>{% colheader "Room" colname "Col3" %}</th>
+  <th>{% colheader "Shortname" colname "Col4" %}</th>
+  <th>{% colheader "Title" colname "Col5" %}</th>
   <th>Edit</th>
   <th>Remove?</th>
 </tr>
