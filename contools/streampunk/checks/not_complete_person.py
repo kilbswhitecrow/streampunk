@@ -13,8 +13,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from progdb2.checks.base import CheckOutput
-from progdb2.models import Person
+from streampunk.checks.base import CheckOutput
+from streampunk.models import Person
 
 def run_check(check):
   return CheckOutput(check, Person.objects.exclude(complete='Yes'))

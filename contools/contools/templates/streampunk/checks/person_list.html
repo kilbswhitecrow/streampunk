@@ -1,10 +1,10 @@
-{% load progdb_filters %}
-<form action="/progdb/make_personlist/" method="post">
+{% load streampunk_filters %}
+<form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
 <table border="1">
 {% for person in checkOutput.things %}
 <tr><td>{{ person|linky|safe }}</td>
-{% if perms.progdb2.send_mass_email %}
+{% if perms.streampunk.send_mass_email %}
   <td>
        <input type="checkbox" name="somepeople" value="{{ person.id }}" />
        <input type="hidden" name="allpeople" value="{{ person.id }}" />
@@ -21,12 +21,12 @@
 {% endfor %}
 </table>
 <input type="hidden" name="listname" value="{{ user.username }}: {{ checkOutput.check.name }}" />
-{% if perms.progdb2.send_mass_email %}
+{% if perms.streampunk.send_mass_email %}
 <input type="submit" name="email_all" value="Email all these people" />
 <input type="submit" name="email_some" value="Email selected people" />
 <br/>
 {% endif %}
-{% if perms.progdb2.edit_programme or perms.progdb2.edit_kit %}
+{% if perms.streampunk.edit_programme or perms.streampunk.edit_kit %}
 <input type="submit" name="save_all" value="Save the people on this item as a list" />
 <input type="submit" name="save_some" value="Save selected people as a list" />
 {% endif %}

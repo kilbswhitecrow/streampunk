@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db.models import Count
-from progdb2.checks.base import CheckOutput
-from progdb2.models import Item, KitItemAssignment, KitRoomAssignment, Room
+from streampunk.checks.base import CheckOutput
+from streampunk.models import Item, KitItemAssignment, KitRoomAssignment, Room
 
 def run_check(check):
   # We want the items that overlap (a.start <= b.end and b.start <= a.end)
