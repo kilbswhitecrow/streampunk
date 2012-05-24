@@ -1,4 +1,4 @@
-{% extends "streampunk/base.html" %}
+{% extends "streampunk/base_list.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
 Copyright (C) 2012 Stephen Kilbane
@@ -17,14 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
 {% block title %}People{% endblock %}
-{% block body_content %}
+{% block list_content %}
+{% for person_list in sorted_data %}
+{% cycle 'Col1' 'Col2' 'Col3' 'Col4' 'Col5' as colname silent %}
+<div id="{{ colname }}">
 <form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
 <table border>
+<tr class="list_header">
+  <th>{% colheader "First" colname "Col3" %}</th>
+  <th>{% colheader "Middle" colname "Col2" %}</th>
+  <th>{% colheader "Last" colname "Col1" %}</th>
+  <th>{% colheader "Badge" colname "Col4" %}</th>
+</tr>
 {% for person in person_list %}
 <tr>
 {% if perms.streampunk.read_private %}
-  <td> {{ person|linky|safe }} </td>
+  <td colspan="4"> {{ person|linky|safe }} </td>
 {% else %}
   <td> {{ person|linky:person.as_badge|safe }} </td>
 {% endif %}
@@ -56,7 +65,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 </form>
 
-</form>
+</div>
+{% endfor %}
 {% if perms.streampunk.edit_programme %}
 <p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
 {% endif %}

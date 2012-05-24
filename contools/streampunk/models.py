@@ -800,6 +800,16 @@ class Person(models.Model):
       return ConInfoBool.objects.no_avail_means_always_avail()
     return False
 
+  @classmethod
+  def list_sort_fields(cls):
+    return [
+      'lastName',
+      'middleName',
+      'firstName',
+      'badge'
+    ]
+ 
+
 class ScheduledManager(models.Manager):
   "A manager for returning only items that have been scheduled. Useful for checking for problems."
   def get_query_set(self):

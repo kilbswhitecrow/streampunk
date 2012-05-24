@@ -80,11 +80,13 @@ class AllView(ListView):
 
   def get_sorted_data(self):
     sorted_data = []
-    if self.model.list_sort_fields:
+    try:
       fields = self.model.list_sort_fields()
       qs = self.get_queryset()
       for col in fields:
         sorted_data.append(qs.order_by(col))
+    except AttributeError:
+      pass
     return sorted_data
 
   def get_context_data(self, **kwargs):
