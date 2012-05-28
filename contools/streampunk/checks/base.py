@@ -25,17 +25,4 @@ class CheckOutput:
     self.person_list = check.result.name == 'Person List'
     self.item_list = check.result.name == 'Item List'
     self.mixed_tuple_list = check.result.name == 'Mixed Tuple'
-    if self.person_list:
-      self.sorted_data = self.get_sorted_data(Person)
-
-  def get_sorted_data(self, model):
-    sorted_data = []
-    try:
-      fields = model.list_sort_fields()
-      qs = self.things
-      for col in fields:
-        sorted_data.append(qs.order_by(col))
-    except AttributeError:
-      pass
-    return sorted_data
 
