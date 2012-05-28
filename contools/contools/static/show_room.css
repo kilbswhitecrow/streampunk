@@ -1,0 +1,9 @@
+#TechVisible {
+  display: none
+}
+#HideTech:hover { text-decoration: none; }
+#HideTech:active { text-decoration: none; }
+#HideTech:visited { text-decoration: none; }
+#ShowTech:hover { text-decoration: none; }
+#ShowTech:active { text-decoration: none; }
+#ShowTech:visited { text-decoration: none; }

@@ -16,24 +16,82 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}show_room.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}show_room.css" />
+{% endblock %}
 {% block title %}Room: {{ room.name }}{% endblock %}
 {% block body_content %}
 <table border>
-<tr><th>Name</th><td>{{ room.name }}</td>
-{% if perms.streampunk.read_private %}
-<th>Notes</th>
-{% endif %}
-</tr>
-<tr><th>Description</th><td>{{ room.description }}</td>
-{% if perms.streampunk.read_private %}
-<td rowspan="5">{{ room.privNotes }}</td>
-{% endif %}
-</tr>
-{% if perms.streampunk.read_private %}
-<tr><th>Visible?</th><td>{{ room.visible }}</td></tr>
-<tr><th>Grid order?</th><td>{{ room.gridOrder }}</td></tr>
-{% endif %}
+  <tr><th>Name</th><td>{{ room.name }}
+       {% if room.parent %}
+       (part of {{ room.parent|linky|safe }})
+       {% endif %}</td> </tr>
+  <tr><th>Description</th><td>{{ room.description }}</td></tr>
+  <tr><th>Disabled Access?</th><td>{{ room.disabledAccess }}</td></tr>
+  {% if perms.streampunk.read_private %}
+    <tr><th>Visible?</th><td>{{ room.visible }}</td></tr>
+    <tr><th>Grid order?</th><td>{{ room.gridOrder }}</td></tr>
+    {% if room.privNotes %}
+      <tr><td colspan="2">Private Notes</td></tr>
+      <tr><td colspan="2">{{ room.privNotes }}</td></tr>
+    {% endif %}
+  {% endif %}
+  {% if perms.streampunk.edit_room %}
+    <tr><th>Default?</th><td>{{ room.isDefault }}</td></tr>
+    <tr><th>Undefined?</th><td>{{ room.isUndefined }}</td></tr>
+    <tr><th>Can clash?</th><td>{{ room.canClash }}</td></tr>
+  {% endif %}
 </table>
+
+{% if perms.streampunk.read_private or perms.streampunk.edit_tech %}
+  <div id="TechVisible">
+  <div class="TechInfo">
+  <p><a href="" id="HideTech">{% include "char/black-tri-down-small.html" %} Hide Tech</a></p>
+  <table border="1">
+  <tr>
+    <th colspan="2">Tech Notes</th>
+  </tr>
+  <tr>
+    <td colspan="2">{{ room.techNotes }}</td>
+  </tr>
+  <tr><th>Needs Sounds?</th><td>{{ room.needsSound }}</td></tr>
+  <tr><th>Natural Light?</th><td>{{ room.naturalLight }}</td></tr>
+  <tr><th>Openable windows?</th><td>{{ room.openableWindows }}</td></tr>
+  <tr><th>Closable curtains?</th><td>{{ room.closableCurtains }}</td></tr>
+  <tr><th>Securable?</th><td>{{ room.securable }}</td></tr>
+  <tr><th>Can control lights in room?</th><td>{{ room.controlLightsInRoom }}</td></tr>
+  <tr><th>Can control aircon in room?</th><td>{{ room.controlAirConInRoom }}</td></tr>
+  <tr><th>Accessible on flat?</th><td>{{ room.accessibleOnFlat }}</td></tr>
+  <tr><th>Has cable runs?</th><td>{{ room.hasCableRuns }}</td></tr>
+  <tr><th>In radio range?</th><td>{{ room.inRadioRange }}</td></tr>
+  </table>
+  {% include "streampunk/list_kitthings.html" %}
+  {% if perms.streampunk.edit_kit %}
+    <p>
+    <a href="{% url add_kitbundle_to_room %}">Add Kit bundle to room</a></p>
+    <p>
+    <a href="{% url add_kitthing_to_room %}">Add Kit thing to room</a></p>
+  {% endif %}
+  </div>
+  </div>
+  <div id="TechHidden">
+  <div class="TechInfo">
+  <p><a href="" id="ShowTech">{% include "char/black-tri-right-small.html" %} Show Tech</a></p>
+  <table border="1">
+  <tr>
+    <th colspan="2">Tech Notes</th>
+  </tr>
+  <tr>
+    <td colspan="2">{{ room.techNotes }}</td>
+  </tr>
+  </table>
+  </div>
+  </div>
+{% endif %}
 
 {% if perms.streampunk.edit_room %}
 <p><a href="{% url edit_room pk=room.id %}">Edit room</a>.</p>
@@ -48,12 +106,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endfor %}
 </table>
 {% include "streampunk/list_avail.html" %}
-{% include "streampunk/list_kitthings.html" %}
-{% if perms.streampunk.edit_kit %}
-<p>
-<a href="{% url add_kitbundle_to_room %}">Add Kit bundle to room</a></p>
-<p>
-<a href="{% url add_kitthing_to_room %}">Add Kit thing to room</a></p>
-{% endif %}
 
 {% endblock %}
