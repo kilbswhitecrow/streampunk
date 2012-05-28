@@ -20,7 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block body_content %}
 <table border>
 {% for room in room_list %}
-  <tr><td>{{ room|linky|safe }}</td></tr>
+  <tr><td>{{ room|linky|safe }}</td>
+  {% if perms.streampunk.read_private %}
+    {% for cap in room.capacities.all %}
+      <td>{{ cap.layout }}: {{ cap.count }}</td>
+    {% endfor %}
+  {% endif %}
+  </tr>
 {% empty %}
   <tr><td>No rooms yet</td></tr>
 {% endfor %}
