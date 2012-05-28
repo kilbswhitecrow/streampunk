@@ -1,6 +1,4 @@
-add github link to templates.
 - How to remove a kit bundle from a room? Or, more likely to edit the assignment?
-- Name change
 - I18N
                - Of  application
                - Of DB content

@@ -122,7 +122,7 @@ def edit_user_profile(request):
     if request.user.has_perm('streampunk.read_private'):
       form = UserProfileFullForm(request.POST, instance=userprofile)
     else:
-      form = UserProfileForm(request.POS, instance=userprofile)
+      form = UserProfileForm(request.POST, instance=userprofile)
     if form.is_valid():
       userprofile.save()
       return HttpResponseRedirect(reverse('userprofile'))
