@@ -156,6 +156,8 @@ def main_page(request):
   totals = Item.scheduled.annotate(num_people=Count('people')).aggregate(Sum('num_people'), Sum('budget'))
   # {'length__length__sum': 870}
   mins_scheduled = Item.scheduled.aggregate(Sum('length__length'))
+  # [ { 'kind__name': 'Panel', 'kind__count': N }, { 'kind__name': 'Talk', 'kind__count': Y } ]
+  item_kinds = Item.objects.values('kind__name').annotate(Count('kind')).order_by()
 
   con_name = ConInfoString.objects.con_name()
   num_panellists = totals['num_people__sum']

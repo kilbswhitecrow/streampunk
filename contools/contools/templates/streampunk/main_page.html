@@ -27,6 +27,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><th>Programme Participants</th><td>{{ num_people }}</td></tr>
 </table>
 <p>
+<table border="1">
+<tr>
+  <th>Item Kind</th>
+  <th>Number of items</th>
+</tr>
+{% for ik in item_kinds %}
+<tr>
+  <th>{{ ik.kind__name }}</th>
+  <td>{{ ik.kind__count }}</td>
+</tr>
+{% endfor %}
+</table>
+</p>
+<p>
 <a href="{% url new_itemperson %}">Add a person to an item</a>.
 </p>
 {% endif %}
