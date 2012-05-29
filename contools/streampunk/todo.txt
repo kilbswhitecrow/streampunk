@@ -18,7 +18,6 @@
 - Make use of User Profile/Overall con preferences in grid display.
 - Revisions
 - AJAX
-- Hide tech stuff, etc. behind javascript on item display
 - Regression testing
 - PDF generation
                - Door listings
@@ -52,6 +51,10 @@ Bugs:
 	the same one can be assigned to multiple items; editing the object then
 	changes it for every usage. We should have copy-and-save instead of edit,
 	for these things, from the usual GUI
+		- fix by marking them as "global"? Okay for a global instance to
+		be shared. Editing a global instance bad.
+	- Also applies to Room Capacities. Basically, anything that has a
+	ManyToMany.
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have

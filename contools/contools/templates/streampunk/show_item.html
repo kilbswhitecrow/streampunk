@@ -16,6 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}show_item.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}show_item.css" />
+{% endblock %}
 {% block title %}Item: {{ item.title }}{% endblock %}
 {% block body_content %}
 <table border="1">
@@ -40,18 +47,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 </table>
 
-{% if perms.streampunk.read_private %}
-<div class="techinfo">
-<table border="1">
-<tr><th>Front-of-room Layout</th><td>{{ item.frontLayout }}</td></tr>
-<tr><th>Tech Needed?</th><td>{{ item.techNeeded }}</td></tr>
-<tr><th>techNotes</th><td>{{ item.techNotes }}</td></tr>
-<tr><th>Needs Audience Mics?</th><td>{{ item.audienceMics }}</td></tr>
-<tr><th>All-hands item?</th><td>{{ item.allTechCrew }}</td></tr>
-<tr><th>Needs Reset before?</th><td>{{ item.needsReset }}</td></tr>
-<tr><th>Needs Cleanup afterwards?</th><td>{{ item.needsCleanup }}</td></tr>
-</table>
-</div>
+{% if perms.streampunk.read_private or perms.streampunk.edit_kit %}
+  <div id="TechVisible">
+    <div class="TechInfo">
+    <p><a href="" id="HideTech">{% include "char/black-tri-down-small.html" %} Hide Tech</a></p>
+    <table border="1">
+      <tr><th>Front-of-room Layout</th><td>{{ item.frontLayout }}</td></tr>
+      <tr><th>Tech Needed?</th><td>{{ item.techNeeded }}</td></tr>
+      <tr><th>techNotes</th><td>{{ item.techNotes }}</td></tr>
+      <tr><th>Needs Audience Mics?</th><td>{{ item.audienceMics }}</td></tr>
+      <tr><th>All-hands item?</th><td>{{ item.allTechCrew }}</td></tr>
+      <tr><th>Needs Reset before?</th><td>{{ item.needsReset }}</td></tr>
+      <tr><th>Needs Cleanup afterwards?</th><td>{{ item.needsCleanup }}</td></tr>
+      </table>
+    </div>
+  </div>
+  <div id="TechHidden">
+    <div class="TechInfo">
+      <p><a href="" id="ShowTech">{% include "char/black-tri-right-small.html" %} Show Tech</a></p>
+    </div>
+  </div>
 {% endif %}
 
 {% if perms.streampunk.edit_programme or perms.streampunk.edit_private %}
