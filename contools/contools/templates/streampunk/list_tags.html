@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <table border>
 {% for tag in tag_list %}
 {% if perms.streampunk.read_private or tag.visible %}
-  <tr><td>{{ tag|linky|safe }}</td></tr>
+  <tr><td>{{ tag|linky|safe }}</td><td>{{ tag.description }}</td></tr>
 {% endif %}
 {% empty %}
   <tr><td>No tags yet</td></tr>
