@@ -338,6 +338,7 @@ class Tag(models.Model):
   class Meta:
     verbose_name = 'tag'
     verbose_name_plural = 'tags'
+    ordering = [ 'name' ]
 
   def __unicode__(self):
     return self.name

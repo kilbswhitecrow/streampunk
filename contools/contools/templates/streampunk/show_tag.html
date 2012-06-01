@@ -18,10 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load streampunk_filters %}
 {% block title %}Tag: {{ tag.name }}{% endblock %}
 {% block body_content %}
-<table border>
-<tr><th>Name</th><td>{{ tag.name }}</td></tr>
-<tr><th>Description</th><td>{{ tag.description }}</td></tr>
-</table>
+{% if tag.visible or perms.streampunk.read_private %}
+  <table border>
+    <tr><th>Name</th><td>{{ tag.name }}</td></tr>
+    <tr><th>Description</th><td>{{ tag.description }}</td></tr>
+    {% if perms.streampunk.edit_tags %}
+      <tr><th>Visible?</th><td>{{ tag.visible }}</td></tr>
+    {% endif %}
+  </table>
+{% else %}
+  <p>Not available - sorry</p>
+{% endif %}
 
 {% if perms.streampunk.edit_tags %}
 <p><a href="{% url edit_tag pk=tag.id %}">Edit tag</a>.</p>
