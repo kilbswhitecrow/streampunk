@@ -1,0 +1,57 @@
+/* Drop-down menus, based on code from:
+** http://www.cssdrive.com/index.php/examples/exampleitem/css_drop_down_menu/
+** Copyright CSS Drive 2004-2010.
+*/
+
+#streampunk_cssdropdown, #streampunk_cssdropdown ul {
+padding: 0;
+margin: 0;
+list-style: none;
+}
+
+#streampunk_cssdropdown li {
+float: left;
+position: relative;
+}
+
+.streampunk_menu_mainitems{
+border: 1px solid black;
+background-color: #FFEEC6;
+}
+
+.streampunk_menu_mainitems a{
+margin-left: 6px;
+margin-right: 8px;
+text-decoration: none;
+}
+
+.streampunk_menu_subuls{
+display: none;
+width: 10em;
+position: absolute;
+top: 1.2em;
+left: 0;
+background-color: lightyellow;
+border: 1px solid black;
+}
+
+.streampunk_menu_subuls li{
+width: 100%;
+}
+
+.streampunk_menu_subuls li a{
+text-decoration: underline;
+}
+
+#streampunk_cssdropdown li>ul { /* to override top and left in browsers other than IE, which will position to the top right of the containing li, rather than bottom left */
+top: auto;
+left: auto;
+}
+
+#streampunk_cssdropdown li:hover ul, li.over ul { /* lists nested under hovered list items */
+display: block;
+}
+
+#streampunk_menu_restofcontent { /*wrap rest of content of the page inside this div*/
+clear: left;
+}

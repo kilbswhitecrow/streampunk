@@ -18,12 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <html lang="en">
 <head>
   <title>{% block title %}{% endblock %}</title>
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}cssmenus.js"></script>
   {% block scripts %}{% endblock %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}cssmenus.css" />
   {% block styles %}{% endblock %}
 </head>
 <body>
   {% include "streampunk/banner.html" %}
+  <div id="streampunk_menu_restofcontent">
   {% block body_content %}{% endblock %}
   {% include "streampunk/footer.html" %}
+  </div>
 </body>
 </html>

@@ -15,25 +15,86 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 <div id="banner">
-<table border="1">
-<tr>
-  <td><a href="{% url main_page %}">Main</a></td>
-  <td><a href="{% url list_grids %}">Grids</a></td>
-  <td><a href="{% url list_people %}">People</a></td>
-  <td><a href="{% url list_items %}">Items</a></td>
-  <td><a href="{% url list_rooms %}">Rooms</a></td>
-  <td><a href="{% url list_tags %}">Tags</a></td>
+<ul id="streampunk_cssdropdown">
+  <li class="streampunk_menu_mainitems"><a href="{% url main_page %}">Main</a></li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_grids %}">Grids</a>
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_grids %}">List Grids</a></li>
+      </ul>
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_people %}">People</a>
+    {% if perms.streampunk.edit_programme %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_people %}">List People</a></li>
+       <li><a href="{% url new_person %}">New Person</a></li>
+      </ul>
+    {% endif %}
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_items %}">Items</a>
+    {% if perms.streampunk.edit_programme %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_items %}">List Items</a></li>
+       <li><a href="{% url new_item %}">New Item</a></li>
+      </ul>
+    {% endif %}
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_rooms %}">Rooms</a>
+    {% if perms.streampunk.edit_rooms %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_rooms %}">List Rooms</a></li>
+       <li><a href="{% url new_room %}">New Room</a></li>
+      </ul>
+    {% endif %}
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_tags %}">Tags</a>
+    {% if perms.streampunk.edit_tags %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_tags %}">List Tags</a></li>
+       <li><a href="{% url new_tag %}">New Tag</a></li>
+       <li><a href="{% url add_tags %}">Add Tags to stuff</a></li>
+      </ul>
+    {% endif %}
+    </li>
 {% if perms.streampunk.read_private %}
-  <td><a href="{% url list_kitbundles %}">Kit Bundles</a></td>
-  <td><a href="{% url list_kitthings %}">Kit Things</a></td>
-  <td><a href="{% url list_kitrequests %}">Kit Requests</a></td>
-  <td><a href="{% url kit_usage %}">Kit Usage</a></td>
-  <td><a href="{% url list_checks %}">Checks</a></td>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_kitbundles %}">Kit Bundles</a>
+    {% if perms.streampunk.edit_kit %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_kitbundles %}">List Bundles</a></li>
+       <li><a href="{% url new_kitbundle %}">New Bundle</a></li>
+       <li><a href="{% url add_kitbundle_to_room %}">Add to Room</a></li>
+       <li><a href="{% url add_kitbundle_to_item %}">Add to Item</a></li>
+      </ul>
+    {% endif %}
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_kitthings %}">Kit Things</a>
+    {% if perms.streampunk.edit_kit %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_kitthings %}">List Things</a></li>
+       <li><a href="{% url new_kitthing %}">New Thing</a></li>
+       <li><a href="{% url add_kitthing_to_room %}">Add to Room</a></li>
+       <li><a href="{% url add_kitthing_to_item %}">Add to Item</a></li>
+      </ul>
+    {% endif %}
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_kitrequests %}">Kit Requests</a>
+    {% if perms.streampunk.edit_kit %}
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url list_kitrequests %}">List Requests</a></li>
+       <li><a href="{% url new_kitrequest %}">New Request</a></li>
+      </ul>
+    {% endif %}
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url kit_usage %}">Kit Usage</a>
+      <ul class="streampunk_menu_subuls">
+       <li><a href="{% url kit_usage %}">List Uses</a></li>
+      </ul>
+    </li>
+  <li class="streampunk_menu_mainitems"><a href="{% url list_checks %}">Checks</a></li>
 {% endif %}
 {% if user.is_staff %}
-  <td><a href="/admin/">Admin</a></td> <!-- XXX what's the urlname for this? -->
+  <li class="streampunk_menu_mainitems"><a href="/admin/">Admin</a></li> <!-- XXX what's the urlname for this? -->
 {% endif %}
-  <td>
+  <li class="streampunk_menu_mainitems">
 {% if user.is_authenticated %}
     <a href="{% url userprofile %}">{{ user.username }}</a>.
   {% if request.path %}
@@ -48,7 +109,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <a href="{% url login %}">Log in</a>
   {% endif %}
 {% endif %}
-  </td>
-</tr>
-</table>
+  </li>
+</ul>
 </div>

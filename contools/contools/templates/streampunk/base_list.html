@@ -16,14 +16,15 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% block scripts %}
-<script type="text/javascript" src="{{ STATIC_URL }}/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}/list_columns.js"></script>
 {% endblock %}
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/list_columns.css" />
 {% endblock %}
+  <div id="streampunk_menu_restofcontent">
 {% block body_content %}
 {% block list_intro %}{% endblock %}
 {% block list_content %}{% endblock %}
 {% block list_tail %}{% endblock %}
 {% endblock %}
+  </div>
