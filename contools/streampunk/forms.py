@@ -74,6 +74,10 @@ class KitRequestForm(ModelForm):
   class Meta:
     model = KitRequest
 
+class KitRoomAssignmentForm(ModelForm):
+  class Meta:
+    model = KitRoomAssignment
+
 class AddBundleToRoomForm(ModelForm):
   class Meta:
     model = KitRoomAssignment

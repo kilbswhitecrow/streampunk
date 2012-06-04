@@ -324,6 +324,11 @@ class show_kitrequest_detail(DetailView):
   model = KitRequest
   template_name = 'streampunk/show_kitrequest.html'
 
+class show_kitroomassignment_detail(DetailView):
+  context_object_name = 'kitroomassignment'
+  model = KitRoomAssignment
+  template_name = 'streampunk/show_kitroomassignment.html'
+
 class show_itemperson_detail(DetailView):
   context_object_name = 'itemperson'
   model = ItemPerson
@@ -597,7 +602,8 @@ def add_kitthing_to_room(request):
       fromSlot = form.cleaned_data['fromSlot']
       toDay = form.cleaned_data['toDay']
       toSlot = form.cleaned_data['toSlot']
-      kras = KitRoomAssignment(thing=thing, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot)
+      toLength = form.cleaned_data['toLength']
+      kras = KitRoomAssignment(thing=thing, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot, toLength=toLength)
       kras.save()
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:

@@ -1,4 +1,22 @@
 - How to remove a kit bundle from a room? Or, more likely to edit the assignment?
+	- Item:
+		Add Kit request to item
+		Add Kit bundle to room
+		add kit thing to item
+	- Room:
+		Add kit bundle to room
+		Add kit thing to room
+	- Bundle
+		Doesn't have add-to for anything
+	- Thing
+		Doesn't have add-to for anything
+	- Request
+		Doesn't have add-to for anything
+
+	* Have added KitRoomAssignment listing to room, with detail/edit views for KitRoomAssignments.
+	(but should we allow editing of a kitRoomAssignment if it's part of a bundle? When assigning,
+	we use AssignBundleToRoomForm or AssignThingToRoomForm, so we should stick with that, and then
+	change the attributes of the whole bundle's assignment.
 - I18N
                - Of  application
                - Of DB content

@@ -1,0 +1,31 @@
+{% extends "streampunk/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% load streampunk_filters %}
+{% block title %} Kit Room Assignment: {{ kitroomassignment }}{% endblock %}
+{% block body_content %}
+<table border>
+<tr><th>Thing</th><td>{{ kitroomassignment.thing }}</td></tr>
+<tr><th>Bundle</th><td>{{ kitroomassignment.bundle }}</td></tr>
+<tr><th>Room</th><td>{{ kitroomassignment.room }}</td></tr>
+<tr><th>From</th><td>{{ kitroomassignment.fromDay }} {{ kitroomassignment.fromSlot }}</td></tr>
+<tr><th>To</th><td>{{ kitroomassignment.toDay }} {{ kitroomassignment.toSlot }} ({{ kitroomassignment.toLength }})</td></tr>
+</table>
+
+<p><a href="{% url edit_kitroomassignment pk=kitroomassignment.id %}">Edit this assignment</a>.</p>
+
+{% endblock %}
