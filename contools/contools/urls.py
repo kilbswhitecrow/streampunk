@@ -18,6 +18,10 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout, logout_then_login, password_change, password_change_done, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import permission_required, login_required
+from django.conf import settings # for dajaxice
+
+from dajaxice.core import dajaxice_autodiscover
+dajaxice_autodiscover()
 
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 from streampunk.models import Slot, PersonList, KitRoomAssignment
@@ -54,10 +58,14 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
+    # The next line is for dajaxice
+    url(r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
+
     url(r'^streampunk/show_request/$', show_request),
     url(r'^streampunk/main/$', main_page, name='main_page'),
     url(r'^streampunk/about/$', static_page, { 'template': 'streampunk/about.html' }, name='about'),
     url(r'^streampunk/legal/$', static_page, { 'template': 'streampunk/legal.html' }, name='legal'),
+    url(r'^streampunk/wibble/$', static_page, { 'template': 'streampunk/wibble.html' }, name='wibble'),
 
     url(r'^help/$', static_page, { 'template': 'help/help.html' }, name='help_intro'),
     url(r'^help/basic_concepts/$', static_page,

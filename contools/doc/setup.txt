@@ -16,6 +16,12 @@ Python 2.7
 Django 1.4
 	Streampunk is a Django application.
 
+Dajax 0.8.4
+Dajaxice 0.2
+	Dajaxice provides AJAX support. At time of writing, this isn't
+	actually *used*, but the framework is referenced in settings.py,
+	and in urls.py.
+
 A database
 	You can use any of the databases supported by Django. I've been
 	developing Streampunk using MySQL, using MySQL-python. Since

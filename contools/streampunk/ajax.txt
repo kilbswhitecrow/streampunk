@@ -1,0 +1,65 @@
+Notes on the Dajaxice usage:
+
+This is written some time after I played with it, so some of the details might be
+out of date.
+
+base.html:
+- Added two lines:
+{% load dajaxice_templatetags %}
+{% dajaxice_js_import %}
+
+urls.py:
+- Generic setup:
+from django.conf import settings
+from dajaxice.core import dajaxice_autodiscover
+dajaxice_autodiscover()
+url(r'^%s/' % settings.DAJAXICE_MEDIA_PREFIX, include('dajaxice.urls')),
+
+- Experimental URLs:
+url(r'^streampunk/wibble/$', static_page, { 'template': 'streampunk/wibble.html' }, name='wibble'),
+
+streampunk/ajax.py:
+- define view function con_name()
+- register it with dajaxice_functions.register(con_name)
+
+wibble.html:
+- Includes wibble.js:
+<script type="text/javascript" src="{{ STATIC_URL }}wibble.js"></script>
+
+- We have a tag named con_tool:
+<tr><th>Convention name</th><td><span id="con_name"></span></td></tr>
+
+wibble.js:
+- document-ready calls wibble.js:update_page()
+- update_page() calls Dajaxice.streampunk.con_name(show_con_name)
+- That triggers a fetch to /dajaxice/dajaxice.core.js
+- and then to /dajaxice/streampunk.con_name/
+- which is /dajaxice/application.name_of_function_in_ajax.py
+- which is streampunk/ajax.py:con_name
+
+So that calls streampunk/ajax.py:con_name(request), which returns a simplejson.dumps() object.
+The returned object is passed to the JS call-back named as the param to Dajaxice.streampunk.con_name(),
+i.e. show_con_name().
+
+show_con_name() updates #con_name using the contents of the object passed to it.
+
+So:
+Our components are:
+- app/ajax.py:viewfn, which returns js_obj (most likely a dictionary: { 'name': 'value' } )
+- dajaxice_functions.register(viewfn)
+- js declares view_callback_fn
+- call Dajaxice.app.viewfn(view_callback_fn)
+- that calls app/ajax.py:viewfn(request)
+- when that returns, result object is passed to view_callback_fn
+
+To pass parameters to the viewfn, do:
+	Dajaxice.app.viewfn(view_callback_fn, { 'name1': 'value1', 'name2': 'value2' })
+which translates to:
+	def viewfn(request, name1, name2)
+
+If putting the calls into onclick links, make sure that the JS in the link ends in "return false",
+otherwise things won't work. For example:
+
+<p><a href="" onclick="Dajaxice.streampunk.con_name(show_con_name); return false;">Fetch con name</a>.</p>
+<p>This is where we play with <a href="" onclick="Dajaxice.streampunk.myexample(my_js_callback, {'tom': 'apple', 'bear':'grizzly'}); return false;">wibble</a>.</p>
+

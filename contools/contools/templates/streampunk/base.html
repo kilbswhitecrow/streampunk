@@ -14,10 +14,12 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
+{% load dajaxice_templatetags %}
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
   <title>{% block title %}{% endblock %}</title>
+  {% dajaxice_js_import %}
 <script type="text/javascript" src="{{ STATIC_URL }}jquery-1.7.1.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}cssmenus.js"></script>
   {% block scripts %}{% endblock %}

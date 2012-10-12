@@ -1,0 +1,38 @@
+{% extends "streampunk/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}wibble.js"></script>
+{% endblock %}
+{% block title %}Messing about with Ajax{% endblock %}
+{% block body_content %}
+<!-- 
+<p>This is where we play with <a href="" onclick="Dajaxice.streampunk.myexample(my_js_callback, {'tom': 'apple', 'bear':'grizzly'}); return false;">wibble</a>.</p>
+
+<p id="booga">Nothing here.</p>
+<p><a href="" onclick="Dajaxice.streampunk.con_name(show_con_name); return false;">Fetch con name</a>.</p>
+ -->
+
+<table border>
+<tr><th>Convention name</th><td><span id="con_name"></span></td></tr>
+</table>
+
+<p>Streampunk is written and maintained by Stephen Kilbane. Assistance is welcomed.</p>
+
+<p>Past history: Streampunk was originally known as ProgDB; the name-change is part of
+the rewrite in Django, and of the migration to an Open-Source system.</p>
+{% endblock %}

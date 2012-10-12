@@ -1,11 +1,14 @@
 - How to remove a kit bundle from a room? Or, more likely to edit the assignment?
 	- Item:
-		Add Kit request to item
-		Add Kit bundle to room
-		add kit thing to item
+		list_kitrequests.html
+		list_kitthings.html
+		Add Kit request to item	add_kitrequest_to_item
+		Add Kit bundle to room	add_kitbundle_to_room
+		add kit thing to item	add_kitthing_to_item
 	- Room:
-		Add kit bundle to room
-		Add kit thing to room
+		list_kitthings.html
+		Add kit bundle to room	add_kitbundle_to_room
+		Add kit thing to room	add_kitthing_to_room
 	- Bundle
 		Doesn't have add-to for anything
 	- Thing
