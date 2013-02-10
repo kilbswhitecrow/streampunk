@@ -15,6 +15,6 @@ These are the contact details we have for you: {{ person.contact }}
 {% endif %}
 
 {% if incAvail %}
-{% include "progdb2/list_avail.txt" %}
+{% include "streampunk/list_avail.txt" %}
 {% endif %}
 This message was sent by the Programme Database on behalf of {{ con_name }}.
