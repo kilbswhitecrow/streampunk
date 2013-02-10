@@ -3,4 +3,4 @@ for conventions and conferences. Please see LICENSE.txt for licensing conditions
 
 Beside the basic Django framework, this makes use of the following Django applications:
 - dajaxice, for Ajax implementation.
-
+- tables2, for rendering tables in a sortable fashion.
