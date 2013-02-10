@@ -70,7 +70,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% if perms.progdg2.edit_programme %}
 <p><a href="{% url new_itemperson %}?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
 {% if person.email %}
-<p><a href="{% url mail_person pk=person.id %}">Email {{ person }}</a>.</p>
+<p><a href="{% url email_person pk=person.id %}">Email {{ person }}</a>.</p>
 {% else %}
 <p>(No email address for {{person}}.)</p>
 {% endif %}
