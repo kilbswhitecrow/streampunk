@@ -1,0 +1,49 @@
+{% extends "streampunk/base_list.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}sel_all.js"></script>
+{% endblock %}
+{% block title %}People{% endblock %}
+{% block list_content %}
+<form action="{% url make_personlist %}" method="post">
+{% csrf_token %}
+{% render_table table %}
+<br />
+<a href="{% url peopleintable %}?sort=firstName">Sort by first name</a><br />
+<a href="{% url peopleintable %}?sort=lastName">Sort by last name</a><br />
+<br />
+<input type="hidden" name="listname" value="People List for {{ user.username }}" />
+{% if perms.streampunk.send_mass_email %}
+<input type="submit" name="email_select" value="Email selected people" />
+<br/>
+{% endif %}
+{% if perms.streampunk.edit_programme or perms.streampunk.edit_kit %}
+<input type="submit" name="save_select" value="Save selected people as a list" />
+{% endif %}
+</form>
+
+</div>
+{% if perms.streampunk.edit_programme %}
+<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
+{% endif %}
+{% endblock %}

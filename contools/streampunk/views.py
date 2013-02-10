@@ -25,6 +25,10 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import permission_required, login_required
 from django.db.models import Count, Sum
 
+from django.shortcuts import render
+from django_tables2 import RequestConfig
+from streampunk.tables import ItemTable
+
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
 from streampunk.models import UserProfile
@@ -712,13 +716,16 @@ def make_personlist(request):
       peeps = request.POST.getlist('allpeople')
     elif request.POST.has_key('email_some') or request.POST.has_key('save_some'):
       peeps = request.POST.getlist('somepeople')
+    elif request.POST.has_key('email_select') or request.POST.has_key('save_select'):
+      # We have the "select" combo for the tables2 variant with which I'm experimenting.
+      peeps = request.POST.getlist('select')
     else:
       # huh? what happened?
       return HttpResponseRedirect(reverse('new_personlist'))
     pids = [ int(p) for p in peeps ]
     people = Person.objects.filter(id__in=pids)
     name = request.POST.get('listname', '')
-    if request.POST.has_key('email_all') or request.POST.has_key('email_some'):
+    if request.POST.has_key('email_all') or request.POST.has_key('email_some') or request.POST.has_key('email_select'):
       # we're going to use this personlist to mail people immediately, so save
       # the list, and head over to creating the mail message.
       personlist = PersonList(name = name, auto = True)

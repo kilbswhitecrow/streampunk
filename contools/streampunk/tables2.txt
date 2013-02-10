@@ -1,0 +1,78 @@
+Notes on usage of tables2
+=========================
+
+We've defined tables in streampunk/tables.py, for
+	- ItemTable
+	- PersonTable
+urls.py provide
+	peopleintable
+	itemsintable
+and make use of SingleTableView.as_view(), passing in a model, table class and
+template name, so we don't have anything in views.py.
+
+(views.py does import the table classes and tables2 generally, but that's
+left over from previous stages before we added the class-based view).
+
+The templates need to:
+	- load render_table from django_tables2
+	- provide a stylesheet
+	- render_table table
+
+The table classes aren't just declarative:
+
+- The ItemsTable class declares shortname and title to be columns that use
+  show_item_detail to set up the link directly.
+- I'm doing the same thing for the room column, but the accessor
+  is different, since I need to follow the link to the room model.
+- The Edit column is a generated one, using the TemplateColumn
+  class, providing a mini-template to render it differently.
+
+- for the PersonTable class, I've made ALL the fields I'm displaying be
+  LinkColumns, as I did for shortname.
+- I've also added a couple of extra columns, select and delete.
+
+
+
+What's good
+-----------
+There's very little code.
+
+What's not working well
+-----------------------
+- In my old person table, I can have a table column that spans four
+  headings, and still have the headings provide the sorting. With tables,
+  I can have a single column that's computed from the others, but the
+  problem is that this column can't be orderable, because the ordering
+  is done by the database in the queryset. I *can* provide additional
+  links that say "order by this field", which is an approach. I suppose
+  that, where the access is restricted, we should be using a version
+  of the table that doesn't show the real-name columns, and so the
+  ordering won't matter so much.
+
+- In the old person table, I had a single Select column at the end of each
+  row, and that fed into different submit buttons at the end of the form.
+  There was also a hidden field that fed into "all people".
+  In the new table version, I tried having two different new columns, select
+  and delete, and they create separate columns in the table containing
+  checkboxes, but the HEADER of each column gets rendered as a checkbox,
+  too. Overriding the render method for these columns appears to have
+  no effect.
+  I've added some attributes to the table which means that the checkbox
+  in the table header fires some JavaScript when clicked; that updates
+  all the other checkboxes in the table to have the same value as the
+  header one. Thus, we have a "select all" bit of JavaScript, so we
+  no longer need the "do all" buttons for email/save people.
+
+- I haven't, yet, looked into experimenting with multiple tables
+  on the same page, but (for example), the show_item_detail page
+  will need to have a PersonTable for the people on the page,
+  and we'll have to deal with the sorting options coming through
+  the URL's querystring.
+
+- Need to understand:
+	- how to use the accessors (A('pk'), etc)
+	- how to render headers.
+
+- Should also look at creating table contents from other querysets,
+  perhaps ones that have been annotated/aggregated. It may be that
+  we don't want to directly tie to models.

@@ -22,6 +22,11 @@ Dajaxice 0.2
 	actually *used*, but the framework is referenced in settings.py,
 	and in urls.py.
 
+tables2
+	Tables2 provides the support for easy-to-produce, sortable tables.
+	I'm currently experimenting with this, but it's not fully in place
+	yet.
+
 A database
 	You can use any of the databases supported by Django. I've been
 	developing Streampunk using MySQL, using MySQL-python. Since
