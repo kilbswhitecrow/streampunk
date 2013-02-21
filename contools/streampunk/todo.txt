@@ -1,9 +1,15 @@
-- How to remove a kit bundle from a room? Or, more likely to edit the assignment?
+Kit, Generally
+--------------
+
+- No editing of assignment
+- Show we just use the kit_usage lists for the item and room, filtered accordingly?
+
+- Current links:
 	- Item:
 		list_kitrequests.html
 		list_kitthings.html
 		Add Kit request to item	add_kitrequest_to_item
-		Add Kit bundle to room	add_kitbundle_to_room
+		Add Kit bundle to item	add_kitbundle_to_item
 		add kit thing to item	add_kitthing_to_item
 	- Room:
 		list_kitthings.html
@@ -15,11 +21,40 @@
 		Doesn't have add-to for anything
 	- Request
 		Doesn't have add-to for anything
+	- Usage
+		kit_usage.html
+		list_kitroomassignments.html
+		list_kititemassignments.html
+		list_kitrequests.html
+		Now includes removal links.
 
-	* Have added KitRoomAssignment listing to room, with detail/edit views for KitRoomAssignments.
-	(but should we allow editing of a kitRoomAssignment if it's part of a bundle? When assigning,
-	we use AssignBundleToRoomForm or AssignThingToRoomForm, so we should stick with that, and then
-	change the attributes of the whole bundle's assignment.
+- Show Item issues:
+	- Kit Requests and Kit Things should appear within the collapsible Tech section of the item.
+	- It would make more sense if Show Item displayed which kit requests are fulfilled, and by
+	  what - room or item assignment.
+- Show Room issues
+	- Kit Things are listed under the collapsible Tech section (good)
+	- But don't show things in terms of bundles, just lists the Thing assignments.
+- List Kit Requests
+	- shows a kit request, but doesn't show *what* item requests it!
+	- Doesn't show whether it's currently fulfilled.
+	- Doesn't show how it's currently fulfilled, if it is.
+- Show Kit Request
+	- Shows the details of a request, but not the item that is requesting it.
+	- Doesn't show whether it's currently fulfilled.
+	- Doesn't how show it's currently fulfilled, if it is.
+- Show Bundle Issues
+	- We can edit a bundle, while the bundle's assigned to something. If we then
+	  remove the bundle from a room/item, it'll either miss something out (leaving
+	  a Thing attached), or will fail to find a Thing to remove.
+
+(We remove people from an item, using delete_itemperson, which is AfterDeleteView(model=ItemPerson);
+that's a normal DeleteView, but goes to the URL in 'after', if successful. Most of the work is done
+by the implicit template of itemperson_confirm_delete.html. We can use that for deleting a single
+Thing assignment, but that won't help for deleting all the things in a bundle.)
+
+Other Things
+------------
 - I18N
                - Of  application
                - Of DB content
@@ -74,6 +109,8 @@ Bugs:
 	for these things, from the usual GUI
 		- fix by marking them as "global"? Okay for a global instance to
 		be shared. Editing a global instance bad.
+	- For now, I've added a check to the Show_KitBundle page that removes the
+	edit link if the bundle is in use.
 	- Also applies to Room Capacities. Basically, anything that has a
 	ManyToMany.
 
