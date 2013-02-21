@@ -86,7 +86,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
 {% if perms.streampunk.edit_programme %}
-  <td><a href="{% url delete_itemperson pk=itemperson.id %}/">Remove</a></td>
+  <td><a href="{% url delete_itemperson pk=itemperson.id %}">Remove</a></td>
   <td>
        <input type="checkbox" name="somepeople" value="{{ itemperson.person.id }}" />
        <input type="hidden" name="allpeople" value="{{ itemperson.person.id }}" />
