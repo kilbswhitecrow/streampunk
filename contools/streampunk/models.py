@@ -481,6 +481,13 @@ class KitBundle(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def in_use(self):
+    if KitRoomAssignment.objects.filter(bundle=self).count() > 0:
+      return True
+    if KitItemAssignment.objects.filter(bundle=self).count() > 0:
+      return True
+    return False
+
 class KitRoomAssignment(models.Model):
   """
   You can assign kit to rooms, either thing-by-thing, or as part of a bundle.
