@@ -24,7 +24,7 @@ from dajaxice.core import dajaxice_autodiscover
 dajaxice_autodiscover()
 
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
-from streampunk.models import Slot, PersonList, KitRoomAssignment
+from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment
 
 from streampunk.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPersonForm
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm, PersonListForm
@@ -36,6 +36,7 @@ from streampunk.views import edit_tags_for_item, edit_tags_for_person
 from streampunk.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from streampunk.views import show_kitthing, show_kitbundle
 from streampunk.views import add_kitbundle_to_room, add_kitbundle_to_item
+from streampunk.views import delete_kitbundle_from_room, delete_kitbundle_from_item
 from streampunk.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item, kit_usage
 from streampunk.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from streampunk.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
@@ -152,8 +153,15 @@ urlpatterns = patterns('',
     url(r'^streampunk/add_kitthing_to_item/$', add_kitthing_to_item, name='add_kitthing_to_item'),
     url(r'^streampunk/add_kitrequest_to_item/(?P<pk>\d+)/$', add_kitrequest_to_item, name='add_kitrequest_to_item'),
 
+    url(r'^streampunk/delete_kitbundle/(?P<kb>\d+)/from_room/(?P<room>\d+)/$', delete_kitbundle_from_room, name='delete_kitbundle_from_room'),
+    url(r'^streampunk/delete_kitbundle/(?P<kb>\d+)/from_item/(?P<item>\d+)/$', delete_kitbundle_from_item, name='delete_kitbundle_from_item'),
+
     url(r'^streampunk/delete_itemperson/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=ItemPerson)), name='delete_itemperson'),
+    url(r'^streampunk/delete_kitroomassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=KitRoomAssignment)), name='delete_kitroomassignment'),
+    url(r'^streampunk/delete_kititemassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=KitItemAssignment)), name='delete_kititemassignment'),
 
     url(r'^streampunk/edit_item/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(EditView.as_view(
           model = Item,

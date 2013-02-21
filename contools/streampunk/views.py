@@ -578,6 +578,14 @@ def add_kitbundle_to_room(request):
                             locals(),
                             context_instance=RequestContext(request))
 
+def delete_kitbundle_from_room(request, kb, room):
+  kbid = int(kb)
+  rid = int(room)
+  kitb = KitBundle.objects.get(id = kbid)
+  rm = Room.objects.get(id = rid)
+  KitRoomAssignment.objects.filter(bundle=kitb, room=rm).delete()
+  return HttpResponseRedirect(reverse('show_room_detail', args=(rid,)))
+
 def add_kitbundle_to_item(request):
   if request.method == 'POST':
     form = AddBundleToItemForm(request.POST)
@@ -595,6 +603,14 @@ def add_kitbundle_to_item(request):
   return render_to_response('streampunk/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
+
+def delete_kitbundle_from_item(request, kb, item):
+  kbid = int(kb)
+  iid = int(item)
+  kitb = KitBundle.objects.get(id = kbid)
+  i = Item.objects.get(id = iid)
+  KitItemAssignment.objects.filter(bundle=kitb, item=i).delete()
+  return HttpResponseRedirect(reverse('show_item_detail', args=(iid,)))
 
 def add_kitthing_to_room(request):
   if request.method == 'POST':
