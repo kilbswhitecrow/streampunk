@@ -188,7 +188,7 @@ class show_room_detail(DetailView):
     context['request'] = self.request
     context['room_items'] = self.object.item_set.all()
     context['avail'] = self.object.availability.all()
-    context['kitthings'] = KitRoomAssignment.objects.filter(room=self.object)
+    context['kitrooms'] = KitRoomAssignment.objects.filter(room=self.object)
     return context
 
 def show_grid(request, dy, gr):
@@ -238,7 +238,7 @@ class show_item_detail(DetailView):
       context['item_people'] = ItemPerson.objects.filter(item=self.object, visible=True)
       context['item_tags'] = self.object.tags.filter(visible=True)
     context['kitrequests'] = self.object.kitRequests.all()
-    context['kitthings'] = KitItemAssignment.objects.filter(item=self.object)
+    context['kititems'] = KitItemAssignment.objects.filter(item=self.object)
     return context
 
 

@@ -7,12 +7,12 @@ Kit, Generally
 - Current links:
 	- Item:
 		list_kitrequests.html
-		list_kitthings.html
+		list_kititemassignments.html
 		Add Kit request to item	add_kitrequest_to_item
 		Add Kit bundle to item	add_kitbundle_to_item
 		add kit thing to item	add_kitthing_to_item
 	- Room:
-		list_kitthings.html
+		list_kitroomassignments.html
 		Add kit bundle to room	add_kitbundle_to_room
 		Add kit thing to room	add_kitthing_to_room
 	- Bundle
@@ -29,18 +29,19 @@ Kit, Generally
 		Now includes removal links.
 
 - Show Item issues:
-	- Kit Requests and Kit Things should appear within the collapsible Tech section of the item.
 	- It would make more sense if Show Item displayed which kit requests are fulfilled, and by
 	  what - room or item assignment.
+	- Adding something to the item doesn't default to the item.
 - Show Room issues
-	- Kit Things are listed under the collapsible Tech section (good)
-	- But don't show things in terms of bundles, just lists the Thing assignments.
+	- Kit Things don't show things in terms of bundles, just lists the Thing assignments.
+	- Adding something to the room doesn't default to the room.
 - List Kit Requests
 	- shows a kit request, but doesn't show *what* item requests it!
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't show how it's currently fulfilled, if it is.
 - Show Kit Request
 	- Shows the details of a request, but not the item that is requesting it.
+	  That's because it's via an AllView listing.
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't how show it's currently fulfilled, if it is.
 - Show Bundle Issues
@@ -52,6 +53,15 @@ Kit, Generally
 that's a normal DeleteView, but goes to the URL in 'after', if successful. Most of the work is done
 by the implicit template of itemperson_confirm_delete.html. We can use that for deleting a single
 Thing assignment, but that won't help for deleting all the things in a bundle.)
+
+Table2 Issues
+-------------
+- FIRST find out how the email-testing backend works, again.
+- I need to finish off the Tables/Form selection, for creating lists, and checking the
+  email works.
+- Then I need to switch over to using the Tables properly.
+- I need to change the listing of people on an item, to make use of the PersonTable stuff.
+
 
 Other Things
 ------------

@@ -59,6 +59,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <tr><th>Needs Reset before?</th><td>{{ item.needsReset }}</td></tr>
       <tr><th>Needs Cleanup afterwards?</th><td>{{ item.needsCleanup }}</td></tr>
       </table>
+{% include "streampunk/list_kitrequests.html" %}
+{% include "streampunk/list_kititemassignments.html" %}
+{% if perms.streampunk.edit_kit %}
+<p>
+<a href="{% url add_kitrequest_to_item pk=item.id %}">Add Kit request to item</a></p>
+<p>
+<a href="{% url add_kitbundle_to_item %}">Add Kit bundle to item</a></p>
+<p>
+<a href="{% url add_kitthing_to_item %}">Add Kit thing to item</a></p>
+{% endif %}
+
     </div>
   </div>
   <div id="TechHidden">
@@ -115,17 +126,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% if perms.streampunk.edit_programme %}
 <p><a href="{% url new_itemperson %}?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
-{% endif %}
-
-{% include "streampunk/list_kitrequests.html" %}
-{% include "streampunk/list_kitthings.html" %}
-{% if perms.streampunk.edit_kit %}
-<p>
-<a href="{% url add_kitrequest_to_item pk=item.id %}">Add Kit request to item</a></p>
-<p>
-<a href="{% url add_kitbundle_to_item %}">Add Kit bundle to item</a></p>
-<p>
-<a href="{% url add_kitthing_to_item %}">Add Kit thing to item</a></p>
 {% endif %}
 
 

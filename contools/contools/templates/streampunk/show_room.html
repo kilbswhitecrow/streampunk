@@ -68,7 +68,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <tr><th>Has cable runs?</th><td>{{ room.hasCableRuns }}</td></tr>
   <tr><th>In radio range?</th><td>{{ room.inRadioRange }}</td></tr>
   </table>
-  {% include "streampunk/list_kitthings.html" %}
+  {% include "streampunk/list_kitroomassignments.html" %}
   {% if perms.streampunk.edit_kit %}
     <p>
     <a href="{% url add_kitbundle_to_room %}">Add Kit bundle to room</a></p>
@@ -80,14 +80,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <div id="TechHidden">
   <div class="TechInfo">
   <p><a href="" id="ShowTech">{% include "char/black-tri-right-small.html" %} Show Tech</a></p>
-  <table border="1">
-  <tr>
-    <th colspan="2">Tech Notes</th>
-  </tr>
-  <tr>
-    <td colspan="2">{{ room.techNotes }}</td>
-  </tr>
-  </table>
   </div>
   </div>
 {% endif %}
