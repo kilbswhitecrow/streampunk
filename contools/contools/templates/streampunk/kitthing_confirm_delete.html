@@ -30,6 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 </table>
 </p>
+{% if perms.streampunk.edit_kit and not object.in_use %}
 <form action="" method="post">
 {% csrf_token %}
 <input type="hidden"
@@ -39,4 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
        value="Remove and display kit usage"
        name="DeleteAndShowUsage" />
 </form>
+{% else %}
+<p>{{ object|linky|safe }} is in use, and may not be deleted.</p>
+{% endif %}
 {% endblock %}

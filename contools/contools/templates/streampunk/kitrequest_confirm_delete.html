@@ -32,6 +32,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 </table>
 </p>
+{% if perms.streampunk.edit_kit %}
 {% for item in object.item_set.all %}
     <form action="" method="post">
     {% csrf_token %}
@@ -52,4 +53,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
        value="Remove and display kit usage"
        name="DeleteAndShowUsage" />
 </form>
+{% endif %}
 {% endblock %}
