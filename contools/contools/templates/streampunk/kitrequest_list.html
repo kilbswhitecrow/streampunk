@@ -19,6 +19,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}{{ verbose_name_plural }} {% endblock %}
 {% block body_content %}
 {% include "streampunk/list_kitrequests.html" %}
-{% if perms.streampunk.edit_kit %}
-{% endif %}
 {% endblock %}
