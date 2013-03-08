@@ -486,10 +486,20 @@ class KitBundle(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def rooms(self):
+    return KitRoomAssignment.objects.order_by('room').filter(bundle=self)
+  def items(self):
+    return KitItemAssignment.objects.order_by('item').filter(bundle=self)
+
+  def room_count(self):
+    return self.rooms().count()
+  def item_count(self):
+    return self.items().count()
+
   def in_use(self):
-    if KitRoomAssignment.objects.filter(bundle=self).count() > 0:
+    if self.room_count() > 0:
       return True
-    if KitItemAssignment.objects.filter(bundle=self).count() > 0:
+    if self.item_count() > 0:
       return True
     return False
 

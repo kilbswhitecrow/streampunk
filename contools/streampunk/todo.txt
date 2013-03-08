@@ -3,7 +3,7 @@ Kit, Generally
 - Check for Items with Unsatisfied Kit Requests barfs: KitThing has no attribute 'satisfies'.
 - No editing of assignment
 - Show we just use the kit_usage lists for the item and room, filtered accordingly?
-- Things, Bundles and Requests are the only things we use object_list.html for, on AllView.
+- Things are the only things we use object_list.html for, on AllView.
   Time to get rid of that?
 
 - Current links:
@@ -38,20 +38,11 @@ Kit, Generally
 	- Kit Things don't show things in terms of bundles, just lists the Thing assignments.
 	- Adding something to the room doesn't default to the room.
 - List Kit Requests
-	- shows a kit request, but doesn't show *what* item requests it!
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't show how it's currently fulfilled, if it is.
-	- All because it's done using an AllView on the KitRequest, with object_list.html
-	  being hardcoded as the template.
-	- Has an "Add new", but that shouldn't be there, because we only want to add new requests
-	  to specific items.
 - Show Kit Request
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't how show it's currently fulfilled, if it is.
-- Show Bundle Issues
-	- We can edit a bundle, while the bundle's assigned to something. If we then
-	  remove the bundle from a room/item, it'll either miss something out (leaving
-	  a Thing attached), or will fail to find a Thing to remove.
 
 (We remove people from an item, using delete_itemperson, which is AfterDeleteView(model=ItemPerson);
 that's a normal DeleteView, but goes to the URL in 'after', if successful. Most of the work is done
