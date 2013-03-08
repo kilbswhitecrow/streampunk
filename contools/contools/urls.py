@@ -126,7 +126,9 @@ urlpatterns = patterns('',
     url(r'^streampunk/kitbundles/$', AllView.as_view(model=KitBundle,
                                              template_name='streampunk/kitbundle_list.html',
                                              context_object_name='kitbundles'), name='list_kitbundles'),
-    url(r'^streampunk/kitthings/$', AllView.as_view(model=KitThing), name='list_kitthings'),
+    url(r'^streampunk/kitthings/$', AllView.as_view(model=KitThing,
+                                             template_name='streampunk/kitthing_list.html',
+                                             context_object_name='kitthings'), name='list_kitthings'),
     url(r'^streampunk/kitrequests/$', AllView.as_view(model=KitRequest,
                                              template_name='streampunk/kitrequest_list.html',
                                              context_object_name='kitrequests'), name='list_kitrequests'),
@@ -170,6 +172,8 @@ urlpatterns = patterns('',
           model=KitRequest)), name='delete_kitrequest'),
     url(r'^streampunk/delete_kitbundle/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=KitBundle)), name='delete_kitbundle'),
+    url(r'^streampunk/delete_kitthing/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=KitThing)), name='delete_kitthing'),
 
     url(r'^streampunk/edit_item/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(EditView.as_view(
           model = Item,

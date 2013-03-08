@@ -465,6 +465,9 @@ class KitThing(models.Model):
       return ConInfoBool.objects.no_avail_means_always_avail()
     return False
 
+  def in_use(self):
+    return self.kitbundle_set.exists() or self.kititemassignment_set.exists() or self.kitroomassignment_set.exists()
+
 class KitBundle(models.Model):
   """
   A kit bundle is a collection of kit things that you can assign to a room or an

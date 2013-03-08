@@ -1,12 +1,9 @@
 Kit, Generally
 --------------
 - Check for Items with Unsatisfied Kit Requests barfs: KitThing has no attribute 'satisfies'.
-- No editing of assignment
-- Show we just use the kit_usage lists for the item and room, filtered accordingly?
-- Things are the only things we use object_list.html for, on AllView.
-  Time to get rid of that?
+- object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
 
-- Current links:
+- Current links (all needs updating again):
 	- Item:
 		list_kitrequests.html
 		list_kititemassignments.html
