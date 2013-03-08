@@ -403,6 +403,11 @@ class KitRequest(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def okay_to_edit(self):
+    "This should never return false, because the same Request shouldn't be used by multiple items."
+    return self.item_set.count() < 2
+
+
 class KitThing(models.Model):
   """
   A kit thing is an instance of the physical kit. Or, possible, several instances which

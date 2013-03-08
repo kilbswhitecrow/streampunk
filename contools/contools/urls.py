@@ -162,6 +162,8 @@ urlpatterns = patterns('',
           model=KitRoomAssignment)), name='delete_kitroomassignment'),
     url(r'^streampunk/delete_kititemassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=KitItemAssignment)), name='delete_kititemassignment'),
+    url(r'^streampunk/delete_kitrequest/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=KitRequest)), name='delete_kitrequest'),
 
     url(r'^streampunk/edit_item/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(EditView.as_view(
           model = Item,

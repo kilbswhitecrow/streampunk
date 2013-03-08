@@ -26,6 +26,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><th>Notes</th><td>{{ kitrequest.notes }}</td></tr>
 </table>
 
+{% if kitrequest.okay_to_edit %}
 <p><a href="{% url edit_kitrequest pk=kitrequest.id %}">Edit this request</a>.</p>
+{% else %}
+<p>This request is in use by {{ kitrequest.item_set.count }} items -
+cannot edit it.</p>
+{% endif %}
+<h2>Items making this request</h2>
+<p>
+<table border>
+    {% for item in kitrequest.item_set.all %}
+      <tr>
+          <td>{{ item|linky|safe }}</td>
+          <td>{{ item.room|linky|safe}}</td>
+          <td>{{ item.day }}</td>
+          <td>{{ item.start }}</td>
+     </tr>
+    {% empty %}
+      <tr><td colspan="3">Not assigned to any items</td></tr>
+    {% endfor %}
+</table>
+</p>
 
 {% endblock %}

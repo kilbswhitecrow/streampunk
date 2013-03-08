@@ -20,7 +20,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <table border>
 {% if item %}
   {% for req in kitrequests %}
-    <tr><td>{{ req|linky|safe }}</td></tr>
+    <tr>
+    <td>{{ req|linky|safe }}</td>
+    <td><a href="{% url delete_kitrequest pk=req.id %}">Delete</a></td>
+    </tr>
   {% empty %}
     <tr><td>No kit requests yet</td></tr>
   {% endfor %}

@@ -1,8 +1,10 @@
 Kit, Generally
 --------------
-
+- Check for Items with Unsatisfied Kit Requests barfs: KitThing has no attribute 'satisfies'.
 - No editing of assignment
 - Show we just use the kit_usage lists for the item and room, filtered accordingly?
+- Things, Bundles and Requests are the only things we use object_list.html for, on AllView.
+  Time to get rid of that?
 
 - Current links:
 	- Item:
@@ -20,7 +22,7 @@ Kit, Generally
 	- Thing
 		Doesn't have add-to for anything
 	- Request
-		Doesn't have add-to for anything
+		Now lists items making the request.
 	- Usage
 		kit_usage.html
 		list_kitroomassignments.html
@@ -39,9 +41,11 @@ Kit, Generally
 	- shows a kit request, but doesn't show *what* item requests it!
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't show how it's currently fulfilled, if it is.
+	- All because it's done using an AllView on the KitRequest, with object_list.html
+	  being hardcoded as the template.
+	- Has an "Add new", but that shouldn't be there, because we only want to add new requests
+	  to specific items.
 - Show Kit Request
-	- Shows the details of a request, but not the item that is requesting it.
-	  That's because it's via an AllView listing.
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't how show it's currently fulfilled, if it is.
 - Show Bundle Issues
@@ -53,6 +57,21 @@ Kit, Generally
 that's a normal DeleteView, but goes to the URL in 'after', if successful. Most of the work is done
 by the implicit template of itemperson_confirm_delete.html. We can use that for deleting a single
 Thing assignment, but that won't help for deleting all the things in a bundle.)
+
+Grid Issues
+-----------
+There have been several cons that have wanted different grid layouts
+on different days, so we should recognise that. We'll need to make
+some changes:
+- Grids would need a ManyToManyField for ConDay, to indicate which
+  day uses them.
+- Grids currently assume that the ManyToManyField for Slot are consecutive
+  slots, though I haven't checked what happens if they're not. Perhaps we
+  should be saying that the slots must be contiguous, so that each slot's
+  length fills the gap until the next slot's starting time.
+- Or we could make the Slot have the ManyToManyField to the ConDay, and then
+  we'd be able to assert that each possible start-time was unique. We'd be
+  complicating the start-time selection, though.
 
 Table2 Issues
 -------------
