@@ -560,7 +560,7 @@ class KitRoomAssignment(models.Model):
 
   def finishes_after(self, item):
     "True if the assignment finishes after the item does"
-    return finishes_after_day_and_slot(self, item.day, item.start, item.length.length)
+    return self.finishes_after_day_and_slot(item.day, item.start, item.length.length)
 
   def covers(self, item):
     "True if the assignment entirely encompasses the period for the item."
@@ -579,7 +579,8 @@ class KitRoomAssignment(models.Model):
   def satisfies(self, req, item):
     "Return True if this assignment satisfies the request"
     r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
-    return self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
+    print "%d %s sat %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
+    return r
   
 class KitItemAssignment(models.Model):
   """
@@ -601,7 +602,8 @@ class KitItemAssignment(models.Model):
   def satisfies(self, req):
     "Return True if this assignment satisfies the request"
     r = self.thing.kind == req.kind and self.thing.count >= req.count
-    return self.thing.kind == req.kind and self.thing.count >= req.count
+    print "%d %s sat %d %s? %s\n" % ( self.id, self, req.id, req, r)
+    return r
 
 class RoomCapacity(models.Model):
   """
@@ -970,7 +972,8 @@ class Item(models.Model):
 
   def satisfies_kit_request(self, req):
     "Returns true if the kit assigned to this item satisfies the given request"
-    for kas in self.kit.all():
+    print "CHECKING whether item %s satisfies request %s\n" % (self, req)
+    for kas in KitItemAssignment.objects.filter(item = self):
       if kas.satisfies(req):
         return True
     return False
@@ -979,13 +982,17 @@ class Item(models.Model):
     "Returns true if the kit assigned to this item satisfies all the item's requests"
     for req in self.kitRequests.all():
       if not self.satisfies_kit_request(req):
+        print "%s does not satisfy its own requests\n" % (self)
         return False
+    print "%s satisfies its own requests\n" % (self)
     return True
 
   def room_satisfies_kit_requests(self):
     "Returns true if the item's kit requests are satisfied by the kit assigned to the item's room."
     if self.room:
-      return self.room.satisfies_kit_requests(self.kitRequests.all(), self)
+      r = self.room.satisfies_kit_requests(self.kitRequests.all(), self)
+      print "%s's room satisfies all request? %s\n" % (self, r)
+      return r
     return False
 
 

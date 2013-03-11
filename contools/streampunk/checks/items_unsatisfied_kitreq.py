@@ -27,6 +27,7 @@ def run_check(check):
   problem_items = []
   items = Item.scheduled.annotate(num_reqs=Count('kitRequests')).exclude(num_reqs=0)
   for item in items:
+    print "CHECKING ITEM %s\n" % ( item )
     if not (item.satisfies_kit_requests() or item.room_satisfies_kit_requests()):
       problem_items.append(item)
   return CheckOutput(check, problem_items)
