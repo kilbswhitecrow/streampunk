@@ -54,6 +54,21 @@ def show_request(request):
                             locals(),
                             context_instance=RequestContext(request))
 
+def get_initial_data_from_request(request, models):
+  """
+  models is a dictionary. We expect the URL to possibly contain a ?foo=N parameter.
+  The dictionary should contain  key foo, with the corresponding value being the model class.
+  We fetch object N of that model, and return it as the value of a new dictionary, using the
+  same key. This becomes the initial data for the form.
+  """
+  data = { }
+  for k in request.GET:
+    if k in models:
+      id = int(request.GET[k])
+      m = models[k]
+      data = { k: m.objects.get(id = id) }
+  return data
+
 class NewView(CreateView):
   template_name = 'streampunk/editform.html'
 
@@ -572,7 +587,8 @@ def add_kitbundle_to_room(request):
         kras.save()
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:
-    form = AddBundleToRoomForm()
+    data = get_initial_data_from_request(request, { 'room': Room, 'bundle': KitBundle })
+    form = AddBundleToRoomForm(initial = data)
   form_title = u'Add Kit Bundle to Room'
   return render_to_response('streampunk/editform.html',
                             locals(),
@@ -598,7 +614,8 @@ def add_kitbundle_to_item(request):
         kras.save()
       return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
-    form = AddBundleToItemForm()
+    data = get_initial_data_from_request(request, { 'item': Item, 'bundle': KitBundle })
+    form = AddBundleToItemForm(initial = data)
   form_title = u'Add Kit Bundle to Item'
   return render_to_response('streampunk/editform.html',
                             locals(),
@@ -627,7 +644,8 @@ def add_kitthing_to_room(request):
       kras.save()
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:
-    form = AddThingToRoomForm()
+    data = get_initial_data_from_request(request, { 'room': Room, 'thing': KitThing })
+    form = AddThingToRoomForm(initial = data)
   form_title = u'Add Kit Thing to Room'
   return render_to_response('streampunk/editform.html',
                             locals(),
@@ -643,7 +661,8 @@ def add_kitthing_to_item(request):
       kras.save()
       return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
-    form = AddThingToItemForm()
+    data = get_initial_data_from_request(request, { 'item': Item, 'thing': KitThing })
+    form = AddThingToItemForm(initial = data)
   form_title = u'Add Kit Thing to Item'
   return render_to_response('streampunk/editform.html',
                             locals(),

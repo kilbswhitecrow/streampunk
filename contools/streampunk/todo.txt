@@ -20,7 +20,6 @@ Kit, Generally
 		list_kitroomassignments.html
 		Remove Bundle		delete_kitbundle_from_item
 		Remove Bundle		delete_kitbundle_from_room
-		Doesn't have add-to for anything
 	- Thing
 		list_kitthings.html
 		list_kititemassignments.html
@@ -29,7 +28,6 @@ Kit, Generally
 		Remove Thing		delete_kitroomassignment (via DeleteView)
 		Remove Bundle		delete_kitbundle_from_item
 		Remove Bundle		delete_kitbundle_from_room
-		Doesn't have add-to for anything
 	- Request
 		Now lists items making the request.
 	- Usage
@@ -42,10 +40,8 @@ Kit, Generally
 - Show Item issues:
 	- It would make more sense if Show Item displayed which kit requests are fulfilled, and by
 	  what - room or item assignment.
-	- Adding something to the item doesn't default to the item.
 - Show Room issues
 	- Kit Things don't show things in terms of bundles, just lists the Thing assignments.
-	- Adding something to the room doesn't default to the room.
 - List Kit Requests
 	- Doesn't show whether it's currently fulfilled.
 	- Doesn't show how it's currently fulfilled, if it is.
@@ -121,7 +117,6 @@ Other Things
 
 Missing Defaults:
 - Availabilities should default to: first con day, last con day, etc.
-- Add bundle to room - room
 
 Missing Preferences:
 - Display title on grid
@@ -140,6 +135,10 @@ Bugs:
 		be shared. Editing a global instance bad.
 	- For now, I've added a check to the Show_KitBundle page that removes the
 	edit link if the bundle is in use.
+	- For Kit Requests, I've removed the ability to create them *without* them
+	being assigned to an item, and there isn't a way to assign them to an item
+	if the kitrequest already exists, so no kit request should be used more
+	than once.
 	- Also applies to Room Capacities. Basically, anything that has a
 	ManyToMany.
 

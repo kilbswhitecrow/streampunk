@@ -71,9 +71,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   {% include "streampunk/list_kitroomassignments.html" %}
   {% if perms.streampunk.edit_kit %}
     <p>
-    <a href="{% url add_kitbundle_to_room %}">Add Kit bundle to room</a></p>
+    <a href="{% url add_kitbundle_to_room %}?room={{ room.id }}">Add Kit bundle to {{ room }}</a></p>
     <p>
-    <a href="{% url add_kitthing_to_room %}">Add Kit thing to room</a></p>
+    <a href="{% url add_kitthing_to_room %}?room={{ room.id }}">Add Kit thing to {{ room }}</a></p>
   {% endif %}
   </div>
   </div>

@@ -32,4 +32,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% include "streampunk/list_kitthings.html" %}
 {% include "streampunk/list_kititemassignments.html" %}
 {% include "streampunk/list_kitroomassignments.html" %}
+<p>
+<a href="{% url add_kitbundle_to_room %}?bundle={{ kitbundle.id }}">Allocate {{ kitbundle }} to a room</a>.
+</p>
+<p>
+<a href="{% url add_kitbundle_to_item %}?bundle={{ kitbundle.id }}">Allocate {{ kitbundle }} to an item</a>.
+</p>
 {% endblock %}

@@ -40,4 +40,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% include "streampunk/list_kititemassignments.html" %}
 {% include "streampunk/list_kitroomassignments.html" %}
 {% include "streampunk/list_avail.html" %}
+<p>
+<a href="{% url add_kitthing_to_room %}?thing={{ kitthing.id }}">Allocate {{ kitthing }} to a room</a>.
+</p>
+<p>
+<a href="{% url add_kitthing_to_item %}?thing={{ kitthing.id }}">Allocate {{ kitthing }} to an item</a>.
+</p>
 {% endblock %}
