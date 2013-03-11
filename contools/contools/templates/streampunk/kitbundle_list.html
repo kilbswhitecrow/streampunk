@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 {% for kb in kitbundles %}
 <tr>
-  <th>{{ kb.name }}</th>
+  <th><a href="{% url show_kitbundle_detail pk=kb.id %}">{{ kb.name }}</a></th>
   <td>{{ kb.status }}</td>
   <td>
   {% for thing in kb.things.all %}
