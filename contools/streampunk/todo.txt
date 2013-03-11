@@ -15,8 +15,20 @@ Kit, Generally
 		Add kit bundle to room	add_kitbundle_to_room
 		Add kit thing to room	add_kitthing_to_room
 	- Bundle
+		list_kitthings.html
+		list_kititemassignments.html
+		list_kitroomassignments.html
+		Remove Bundle		delete_kitbundle_from_item
+		Remove Bundle		delete_kitbundle_from_room
 		Doesn't have add-to for anything
 	- Thing
+		list_kitthings.html
+		list_kititemassignments.html
+		list_kitroomassignments.html
+		Remove Thing		delete_kititemassignment (via DeleteView)
+		Remove Thing		delete_kitroomassignment (via DeleteView)
+		Remove Bundle		delete_kitbundle_from_item
+		Remove Bundle		delete_kitbundle_from_room
 		Doesn't have add-to for anything
 	- Request
 		Now lists items making the request.
