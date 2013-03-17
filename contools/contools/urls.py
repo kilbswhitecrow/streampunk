@@ -41,6 +41,7 @@ from streampunk.views import add_kitthing_to_room, add_kitthing_to_item, add_kit
 from streampunk.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from streampunk.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
 from streampunk.views import show_kitroomassignment_detail
+from streampunk.views import show_kititemassignment_detail
 from streampunk.views import show_personlist_detail, show_request, make_personlist, make_con_groups
 from streampunk.views import show_profile_detail, edit_user_profile
 
@@ -145,6 +146,7 @@ urlpatterns = patterns('',
     url(r'^streampunk/kitthing/(?P<pk>\d+)/$', show_kitthing_detail.as_view(), name='show_kitthing_detail'),
     url(r'^streampunk/kitrequest/(?P<pk>\d+)/$', show_kitrequest_detail.as_view(), name='show_kitrequest_detail'),
     url(r'^streampunk/kitroomassignment/(?P<pk>\d+)/$', show_kitroomassignment_detail.as_view(), name='show_kitroomassignment_detail'),
+    url(r'^streampunk/kititemassignment/(?P<pk>\d+)/$', show_kititemassignment_detail.as_view(), name='show_kititemassignment_detail'),
     url(r'^streampunk/itemperson/(?P<pk>\d+)/$', show_itemperson_detail.as_view(), name='show_itemperson_detail'),
     url(r'^streampunk/personlist/(?P<pk>\d+)/$', show_personlist_detail.as_view(), name='show_personlist_detail'),
 

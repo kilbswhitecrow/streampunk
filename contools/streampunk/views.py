@@ -348,6 +348,11 @@ class show_kitroomassignment_detail(DetailView):
   model = KitRoomAssignment
   template_name = 'streampunk/show_kitroomassignment.html'
 
+class show_kititemassignment_detail(DetailView):
+  context_object_name = 'kititemassignment'
+  model = KitItemAssignment
+  template_name = 'streampunk/show_kititemassignment.html'
+
 class show_itemperson_detail(DetailView):
   context_object_name = 'itemperson'
   model = ItemPerson

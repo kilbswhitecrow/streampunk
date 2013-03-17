@@ -1,10 +1,5 @@
 Kit, Generally
 --------------
-- Check for Items with Unsatisfied Kit Requests does not work because (I think) it says
-  "Does the item satisfy ALL its own requests" or "does the item's room satisfy ALL the
-  item's requests" - meaning that if some are satisfied by item and some by the room, then
-  both tests fail.
-- Should change to "What satisfies this request?" and "which requests are unsatisfied?"
 - object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
 
 - Current links (all needs updating again):
@@ -41,17 +36,8 @@ Kit, Generally
 		list_kitrequests.html
 		Now includes removal links.
 
-- Show Item issues:
-	- It would make more sense if Show Item displayed which kit requests are fulfilled, and by
-	  what - room or item assignment.
 - Show Room issues
 	- Kit Things don't show things in terms of bundles, just lists the Thing assignments.
-- List Kit Requests
-	- Doesn't show whether it's currently fulfilled.
-	- Doesn't show how it's currently fulfilled, if it is.
-- Show Kit Request
-	- Doesn't show whether it's currently fulfilled.
-	- Doesn't how show it's currently fulfilled, if it is.
 
 (We remove people from an item, using delete_itemperson, which is AfterDeleteView(model=ItemPerson);
 that's a normal DeleteView, but goes to the URL in 'after', if successful. Most of the work is done

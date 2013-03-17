@@ -35,15 +35,23 @@ cannot edit it.</p>
 <h2>Items making this request</h2>
 <p>
 <table border>
+    <tr>
+      <th>Item</th>
+      <th>Room</th>
+      <th>Day</th>
+      <th>Start</th>
+      <th>Satisfied by?</th>
+    </tr>
     {% for item in kitrequest.item_set.all %}
       <tr>
           <td>{{ item|linky|safe }}</td>
           <td>{{ item.room|linky|safe}}</td>
           <td>{{ item.day }}</td>
           <td>{{ item.start }}</td>
+          <td>{{ kitrequest.is_satisfied_by_first }}</td>
      </tr>
     {% empty %}
-      <tr><td colspan="3">Not assigned to any items</td></tr>
+      <tr><td colspan="5">Not assigned to any items</td></tr>
     {% endfor %}
 </table>
 </p>

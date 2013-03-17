@@ -19,15 +19,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <h2>Kit Requests</h2>
 <table border>
 {% if item %}
+    <tr>
+      <th>Request</th>
+      <th>Satisfied by?</th>
+      <th>Delete?</th>
+    </tr>
   {% for req in kitrequests %}
     <tr>
     <td>{{ req|linky|safe }}</td>
+    <td>{{ req.is_satisfied_by_first }}</td>
     <td><a href="{% url delete_kitrequest pk=req.id %}">Delete</a></td>
     </tr>
   {% empty %}
-    <tr><td>No kit requests yet</td></tr>
+    <tr><td colspan="3">No kit requests yet</td></tr>
   {% endfor %}
 {% else %}
+  <tr>
+    <th>Request</th>
+    <th>Item</th>
+    <th>Room</th>
+    <th>Day</th>
+    <th>Start</th>
+    <th>Satisfied by?</th>
+  </tr>
   {% for req in kitrequests %}
     {% for item in req.item_set.all %}
       <tr><td>{{ req|linky|safe }}</td>
@@ -35,9 +49,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
           <td>{{ item.room|linky|safe}}</td>
           <td>{{ item.day }}</td>
           <td>{{ item.start }}</td>
+          <td>{{ req.is_satisfied_by_first }}</td>
      </tr>
     {% empty %}
-      <tr><td>{{ req|linky|safe }}</td><td colspan="4">Not assigned to any items</td></tr>
+      <tr><td colspan="6">{{ req|linky|safe }}</td><td colspan="4">Not assigned to any items</td></tr>
     {% endfor %}
   {% empty %}
     <tr><td>No kit requests yet</td></tr>

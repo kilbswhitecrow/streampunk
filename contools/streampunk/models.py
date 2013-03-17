@@ -407,6 +407,24 @@ class KitRequest(models.Model):
     "This should never return false, because the same Request shouldn't be used by multiple items."
     return self.item_set.count() < 2
 
+  def is_satisfied_by(self):
+    """
+    Returns a list of all the KitItemAssignments and KitRoomAssignments that satisfy this request.
+    There may be multiple assignments, if there's a choice.
+    """
+    # Note: we expect that self.item_set.all() will only return a single item
+    kias = [ kia for i in self.item_set.all() for kia in i.kit_item_assignments() if kia.satisfies(self) ]
+    kras = [ kra for i in self.item_set.all() for kra in i.kit_room_assignments() if kra.satisfies(self, i) ]
+    return kias + kras
+
+  def is_satisfied_by_first(self):
+    "Same as is_satisfied_by(), but return just the first in the list"
+    by = self.is_satisfied_by()
+    if len(by) > 0:
+      return by[0]
+    else:
+      return None
+
 
 class KitThing(models.Model):
   """
@@ -687,6 +705,10 @@ class Room(models.Model):
     if len(self.availability.all()) == 0:
       return ConInfoBool.objects.no_avail_means_always_avail()
     return False
+
+  def kit_room_assignments(self):
+    "Returns all the KitRoomAssignments assigned to this room"
+    return KitRoomAssignment.objects.filter(room = self)
 
   def satisfies_kit_request(self, request, item):
     "Returns true if the kit assigned to this room can satisfy this item's particular request"
@@ -970,6 +992,14 @@ class Item(models.Model):
             and self.start.start < (other.start.start + other.length.length)
             and other.start.start < (self.start.start + self.length.length))
 
+  def kit_item_assignments(self):
+    "Return all the KitItemAssignments for this item"
+    return KitItemAssignment.objects.filter(item = self)
+
+  def kit_room_assignments(self):
+    "Return all the KitRoomAssignments for this item's room"
+    return self.room.kit_room_assignments()
+
   def satisfies_kit_request(self, req):
     "Returns true if the kit assigned to this item satisfies the given request"
     print "CHECKING whether item %s satisfies request %s\n" % (self, req)
@@ -994,6 +1024,17 @@ class Item(models.Model):
       print "%s's room satisfies all request? %s\n" % (self, r)
       return r
     return False
+
+  def unsatisfied_kit_requests(self):
+    "Returns a list of all the KitRequests that are not currently satisfied."
+    return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) == 0 ]
+
+  def satisfied_kit_requests(self):
+    "Returns a list of all the KitRequests that are currently satisfied"
+    return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) > 0 ]
+
+  def has_unsatisfied_kit_requests(self):
+    return len(self.unsatisfied_kit_requests()) > 0
 
 
 class ItemPerson(models.Model):
