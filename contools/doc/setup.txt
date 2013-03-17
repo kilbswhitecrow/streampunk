@@ -169,3 +169,27 @@ you've done so, along with all the links.
 Django's runserver is ONLY for development; it's not something you could deploy
 a working Streampunk system on. To do that, you'll need to set up a proper
 webserver which can run Django. To do that, please see the Django documentation.
+
+Email
+-----
+If you want to be able to send email, then you need a backend defined, in your
+settings.py file:
+
+# Full backend. The default is the SMTP backend.
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# It uses the follwowing settings:
+#
+# EMAIL_HOST = 'smtp.isp.co.uk'
+# EMAIL_POST = 25
+# EMAIL_HOST_USER = 'someone'
+# EMAIL_HOST_PASSWORD = 'secret'
+# EMAIL_USE_TLS = False
+#
+# For testing, we have the console backend, instead.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+The default backend is the smtp backend, but you'll need to set EMAIL_HOST, at least,
+in order to tell Django where to send the email (The default is 'localhost').
+
+If you want to test email, use the console backend; that'll cause all emails to be
+written to stdout instead of being sent, so you can see what's being sent.
