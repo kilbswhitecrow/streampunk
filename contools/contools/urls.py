@@ -46,9 +46,6 @@ from streampunk.views import show_personlist_detail, show_request, make_personli
 from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_tags, list_kitthings, list_kitrequests
 
-from streampunk.views import peepsandrooms
-
-from streampunk.tables import OldItemTable, OldPersonTable
 from django_tables2 import SingleTableView
 
 # Uncomment the next two lines to enable the admin:
@@ -74,13 +71,6 @@ urlpatterns = patterns('',
     url(r'^streampunk/about/$', static_page, { 'template': 'streampunk/about.html' }, name='about'),
     url(r'^streampunk/legal/$', static_page, { 'template': 'streampunk/legal.html' }, name='legal'),
     url(r'^streampunk/wibble/$', static_page, { 'template': 'streampunk/wibble.html' }, name='wibble'),
-    url(r'^streampunk/peepsandrooms/$', peepsandrooms, name='peepsandrooms'),
-    url(r'^streampunk/itemsintable/$', SingleTableView.as_view(model=Item,
-                                                               table_class=OldItemTable,
-                                                               template_name='streampunk/itemsintable.html') ),
-    url(r'^streampunk/peopleintable/$', SingleTableView.as_view(model=Person,
-                                                               table_class=OldPersonTable,
-                                                               template_name='streampunk/peopleintable.html'), name='peopleintable' ),
 
     url(r'^help/$', static_page, { 'template': 'help/help.html' }, name='help_intro'),
     url(r'^help/basic_concepts/$', static_page,
