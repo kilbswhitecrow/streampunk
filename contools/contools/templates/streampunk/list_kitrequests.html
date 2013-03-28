@@ -16,7 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% if perms.streampunk.read_private %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 <h2>Kit Requests</h2>
+{% render_table krtable %}
+{% comment %}
 <table border>
 {% if item %}
     <tr>
@@ -59,4 +65,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   {% endfor %}
 {% endif %}
 </table>
+{% endcomment %}
 {% endif %}

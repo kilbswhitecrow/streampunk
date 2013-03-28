@@ -1,3 +1,8 @@
+Deleting
+--------
+The Remove? link for items isn't active. People doesn't have one. Have we
+forgotten about deleting things on the main tables? Probably.
+
 Kit, Generally
 --------------
 - object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
@@ -61,12 +66,50 @@ some changes:
 
 Table2 Issues
 -------------
-- FIRST find out how the email-testing backend works, again.
-- I need to finish off the Tables/Form selection, for creating lists, and checking the
-  email works.
-- Then I need to switch over to using the Tables properly.
-- I need to change the listing of people on an item, to make use of the PersonTable stuff.
+- Although I'm hiding the pagination outputs, the Tables are still being
+created with a paginator, and so not all the tags are appearing in the
+list. Need to turn this off somehow.
+- The KitRequest listing is traversing through the request, to the room, to the name, etc.
+This needs hacky methods in the KitRequest to work with my Rower class.
+- I need to figure out how to handle the Delete links - or at least check whether deletion
+is safe at the end of the link.
 
+Show person:
+	- Items
+	- tags
+	- Availability
+Show room:
+	- kit room assignments
+	- Items
+	- Availability
+Show tag:
+	- Items
+	- People
+Show Bundle:
+	- Kit Things
+	- Kit Item Assignments
+	- Kit Room Assignments
+Show Kit Thing:
+	- Kit Bundles
+	- Kit Item Assignments
+	- Kit Room Assignments
+	- Availability
+Show Kit Requetst:
+	- Items making request
+Kit Usage:
+	- Kit Room Assignments
+	- Kit Item Assignments
+	- Kit Requests
+Checks
+
+So, generally:
+	- How to have one of:
+		multiple items per cell
+		rowspan
+		some kind of tree structure
+	Don't think these are possible, with Tables2 - will need something else
+	(unless we can do something clever with attributes).
+	- Could create something different that also renders...
 
 Other Things
 ------------
@@ -87,6 +130,9 @@ Other Things
 	- Include kit in the grids.
 
 - Make use of User Profile/Overall con preferences in grid display.
+	And include the ability to edit the profile - seems we're
+	missing that at present, so clicking on the username in
+	the banner causes an exception.
 - Revisions
 - AJAX
 - Regression testing

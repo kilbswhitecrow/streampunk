@@ -425,6 +425,17 @@ class KitRequest(models.Model):
     else:
       return None
 
+  def requested_by_first(self):
+    return self.item_set.all()[0]
+
+  def requested_by_first_room(self):
+    return self.requested_by_first().room
+
+  def requested_by_first_day(self):
+    return self.requested_by_first().day
+
+  def requested_by_first_start(self):
+    return self.requested_by_first().start
 
 class KitThing(models.Model):
   """
@@ -622,6 +633,13 @@ class KitItemAssignment(models.Model):
     r = self.thing.kind == req.kind and self.thing.count >= req.count
     print "%d %s sat %d %s? %s\n" % ( self.id, self, req.id, req, r)
     return r
+
+  def item_day(self):
+    return self.item.day
+  def item_start(self):
+    return self.item.start.startText
+  def item_room(self):
+    return self.item.room
 
 class RoomCapacity(models.Model):
   """

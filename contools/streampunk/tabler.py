@@ -25,9 +25,7 @@ class Rower:
 
   def row(self, thing):
     r = {}
-    # XXX should be done with map
 
-    # return map((lamba k: r[k] = self.hash[k](thing) if callable(self.hash[k]) else getattr(thing, self.hash[k])), self.hash.keys())
     for k in self.hash.keys():
       v = self.hash[k]
       if callable(v):
@@ -38,8 +36,12 @@ class Rower:
           # fetch named attribute
           r[k] = getattr(thing, v)
         except AttributeError:
-          # use the string as a literal
-          r[k] = v
+          # Treat this as a dict, and do a key lookup
+          try:
+            r[k] = thing[v]
+          except (AttributeError, TypeError):
+            # use the string as a literal
+            r[k] = v
     return r
 
 

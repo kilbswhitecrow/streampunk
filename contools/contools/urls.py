@@ -44,6 +44,7 @@ from streampunk.views import show_kitroomassignment_detail
 from streampunk.views import show_kititemassignment_detail
 from streampunk.views import show_personlist_detail, show_request, make_personlist, make_con_groups
 from streampunk.views import show_profile_detail, edit_user_profile
+from streampunk.views import list_people, list_items, list_tags, list_kitthings, list_kitrequests
 
 from streampunk.views import peepsandrooms
 
@@ -119,23 +120,16 @@ urlpatterns = patterns('',
     url(r'^accounts/profile/$', show_profile_detail, name='userprofile'),
 
     url(r'^streampunk/grids/$', list_grids, name='list_grids'),
-    url(r'^streampunk/people/$', AllView.as_view(model=Person,
-                                             template_name='streampunk/list_people.html'), name='list_people'),
-    url(r'^streampunk/items/$', VisibleView.as_view(model=Item,
-                                             template_name='streampunk/list_items.html'), name='list_items'),
+    url(r'^streampunk/people/$', list_people, name='list_people'),
+    url(r'^streampunk/items/$', list_items, name='list_items'),
     url(r'^streampunk/rooms/$', VisibleView.as_view(model=Room,
                                              template_name='streampunk/list_rooms.html'), name='list_rooms'),
-    url(r'^streampunk/tags/$', VisibleView.as_view(model=Tag,
-                                             template_name='streampunk/list_tags.html'), name='list_tags'),
+    url(r'^streampunk/tags/$', list_tags, name='list_tags'),
     url(r'^streampunk/kitbundles/$', AllView.as_view(model=KitBundle,
                                              template_name='streampunk/kitbundle_list.html',
                                              context_object_name='kitbundles'), name='list_kitbundles'),
-    url(r'^streampunk/kitthings/$', AllView.as_view(model=KitThing,
-                                             template_name='streampunk/kitthing_list.html',
-                                             context_object_name='kitthings'), name='list_kitthings'),
-    url(r'^streampunk/kitrequests/$', AllView.as_view(model=KitRequest,
-                                             template_name='streampunk/kitrequest_list.html',
-                                             context_object_name='kitrequests'), name='list_kitrequests'),
+    url(r'^streampunk/kitthings/$', list_kitthings, name='list_kitthings'),
+    url(r'^streampunk/kitrequests/$', list_kitrequests, name='list_kitrequests'),
     url(r'^streampunk/itemspeople/$', VisibleView.as_view(model=ItemPerson), name='list_itemspeople'),
     url(r'^streampunk/peoplelists/$', VisibleView.as_view(model=PersonList), name='list_peoplelists'),
     url(r'^streampunk/slots/$', VisibleView.as_view(model=Slot), name='list_slots'),

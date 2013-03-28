@@ -16,37 +16,16 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}sel_all.js"></script>
+{% endblock %}
 {% block title %}Items{% endblock %}
 {% block list_content %}
-{% for list in sorted_data %}
-{% cycle 'Col1' 'Col2' 'Col3' 'Col4' 'Col5' as colname silent %}
-<div id="{{ colname }}">
-<table border="1">
-<tr class="list_header">
-  <th>{% colheader "Day" colname "Col1" %}</th>
-  <th>{% colheader "Time" colname "Col2" %}</th>
-  <th>{% colheader "Room" colname "Col3" %}</th>
-  <th>{% colheader "Shortname" colname "Col4" %}</th>
-  <th>{% colheader "Title" colname "Col5" %}</th>
-  <th>Edit</th>
-  <th>Remove?</th>
-</tr>
-{% for item in list %}
-  <tr>
-    <td>{{ item.day }}</td>
-    <td>{{ item.start }}</td>
-    <td>{{ item.room|linky|safe }}</td>
-    <td>{{ item.shortname }}</td>
-    <td>{{ item|linky:item.title|safe }}</td>
-    <td><a href="{% url edit_item pk=item.id %}">Edit</a></td>
-    <td>Remove?</td>
-  </tr>
-{% empty %}
-  <tr><td colspan="5">No items yet</td></tr>
-{% endfor %}
-</table>
-</div>
-{% endfor %}
+  {% render_table itable %}
 {% endblock %}
 {% block list_tail %}
 {% if perms.streampunk.edit_kit or perms.streampunk.edit_programme or  perms.streampunk.edit_private %}

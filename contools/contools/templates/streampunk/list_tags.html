@@ -16,24 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}Tags{% endblock %}
 {% block body_content %}
-<table border>
-{% for tag in tag_list %}
-{% if perms.streampunk.read_private or tag.visible %}
-  <tr>
-    <td>{{ tag|linky|safe }}</td>
-    {% if perms.streampunk.read_private %}
-      {% if tag.visible %}
-        <td>Visible</td>
-      {% else %}
-        <td>Hidden</td>
-      {% endif %}
-    {% endif %}
-    <td>{{ tag.description }}</td></tr>
-{% endif %}
-{% empty %}
-  <tr><td>No tags yet</td></tr>
-{% endfor %}
-</table>
+{% render_table ttable %}
 {% endblock %}

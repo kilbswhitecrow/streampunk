@@ -68,9 +68,17 @@ class OldPersonTable(tables.Table):
     fields = ( 'select', 'firstName', 'middleName', 'lastName', 'name', 'badge', 'edit')
     attrs = { "class": "paleblue", "id": "sel_tbl" }
 
-class PersonTable(tables.Table):
-  select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('persontable') )
+class PublicPersonTable(tables.Table):
   name = tables.LinkColumn('show_person_detail', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class PrivatePersonTable(tables.Table):
+  select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('persontable') )
+  firstName = tables.LinkColumn('show_person_detail', args=[A('pk')])
+  middleName = tables.LinkColumn('show_person_detail', args=[A('pk')])
+  lastName = tables.LinkColumn('show_person_detail', args=[A('pk')])
+  badge = tables.LinkColumn('show_person_detail', args=[A('pk')])
   email = tables.EmailColumn()
   edit = tables.LinkColumn('edit_person', args=[A('pk')])
   class Meta:
@@ -82,7 +90,15 @@ class RoomTable(tables.Table):
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
 
-class ItemTable(tables.Table):
+class PublicItemTable(tables.Table):
+  day = tables.Column(order_by=[A('day.date')])
+  time = tables.Column(order_by=[A('time.start')])
+  room = tables.LinkColumn('show_room_detail', args=[A('pk')], order_by=[A('room.name')])
+  title = tables.LinkColumn('show_item_detail', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class PrivateItemTable(tables.Table):
   day = tables.Column(order_by=[A('day.date')])
   time = tables.Column(order_by=[A('time.start')])
   room = tables.LinkColumn('show_room_detail', args=[A('pk')], order_by=[A('room.name')])
@@ -92,3 +108,85 @@ class ItemTable(tables.Table):
   remove = tables.Column()
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class ItemKindTable(tables.Table):
+  kind = tables.Column(verbose_name='Item Kind')
+  count = tables.Column(verbose_name='Number of Items')
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class PublicTagTable(tables.Table):
+  name = tables.LinkColumn('show_tag_detail', args=[A('pk')])
+  description = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class PrivateTagTable(tables.Table):
+  name = tables.LinkColumn('show_tag_detail', args=[A('pk')])
+  visible = tables.BooleanColumn()
+  description = tables.Column()
+  edit = tables.LinkColumn('edit_tag', args=[A('pk')])
+  remove = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class EditableKitThingTable(tables.Table):
+  name = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
+  kind = tables.Column(order_by=[A('kind.name')])
+  count = tables.Column()
+  notes = tables.Column()
+  remove = tables.LinkColumn('delete_kitthing', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+  
+class KitThingTable(tables.Table):
+  name = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
+  kind = tables.Column(order_by=[A('kind.name')])
+  count = tables.Column()
+  notes = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+  
+class KitRequestTable(tables.Table):
+  name = tables.LinkColumn('show_kitrequest_detail', args=[A('pk')])
+  kind = tables.Column(order_by=[A('kind.name')])
+  count = tables.Column()
+  item = tables.LinkColumn('show_item_detail', args=[A('item.pk')], verbose_name='Requested by')
+  room = tables.LinkColumn('show_room_detail', args=[A('room.pk')])
+  day = tables.Column()
+  start = tables.Column()
+  sat = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class KitRoomAssignmentTable(tables.Table):
+  thing = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
+  room = tables.LinkColumn('show_room_detail', args=[A('pk')])
+  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('pk')])
+  fromday = tables.Column()
+  fromtime = tables.Column()
+  today = tables.Column()
+  totime = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class EditableKitRoomAssignmentTable(KitRoomAssignmentTable):
+  remove = tables.LinkColumn('delete_kitroomassignment', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class KitItemAssignmentTable(tables.Table):
+  thing = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
+  item = tables.LinkColumn('show_item_detail', args=[A('pk')])
+  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('pk')])
+  room = tables.LinkColumn('show_room_detail', args=[A('pk')])
+  day = tables.Column()
+  time = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class EditableKitItemAssignmentTable(KitItemAssignmentTable):
+  remove = tables.LinkColumn('delete_kititemassignment', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+  

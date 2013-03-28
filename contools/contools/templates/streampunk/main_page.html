@@ -15,6 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}Main Progdb Page{% endblock %}
 {% block body_content %}
 {% if perms.streampunk.edit_programme %}
@@ -27,18 +31,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><th>Programme Participants</th><td>{{ num_people }}</td></tr>
 </table>
 <p>
-<table border="1">
-<tr>
-  <th>Item Kind</th>
-  <th>Number of items</th>
-</tr>
-{% for ik in item_kinds %}
-<tr>
-  <th>{{ ik.kind__name }}</th>
-  <td>{{ ik.kind__count }}</td>
-</tr>
-{% endfor %}
-</table>
+{% render_table kind_table %}
 </p>
 <p>
 <a href="{% url new_itemperson %}">Add a person to an item</a>.

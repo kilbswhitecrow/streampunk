@@ -27,7 +27,11 @@ from django.db.models import Count, Sum
 
 from django.shortcuts import render
 from django_tables2 import RequestConfig
-from streampunk.tables import ItemTable, PersonTable, RoomTable
+from streampunk.tables import PrivateItemTable, PublicItemTable, PrivatePersonTable, PublicPersonTable, RoomTable, ItemKindTable
+from streampunk.tables import PrivateTagTable, PublicTagTable, KitThingTable, EditableKitThingTable
+from streampunk.tables import KitRequestTable
+from streampunk.tables import KitRoomAssignmentTable, EditableKitRoomAssignmentTable
+from streampunk.tables import KitItemAssignmentTable, EditableKitItemAssignmentTable
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
@@ -169,6 +173,8 @@ def show_profile_detail(request):
                             context_instance=RequestContext(request))
 
 
+
+
 def main_page(request):
   num_items = Item.scheduled.count()
   num_people = Person.objects.count()
@@ -178,6 +184,10 @@ def main_page(request):
   mins_scheduled = Item.scheduled.aggregate(Sum('length__length'))
   # [ { 'kind__name': 'Panel', 'kind__count': N }, { 'kind__name': 'Talk', 'kind__count': Y } ]
   item_kinds = Item.objects.values('kind__name').annotate(Count('kind')).order_by()
+
+  kind_rower = Rower({ "kind": "kind__name", "count": "kind__count" })
+  kind_tbl = Tabler(ItemKindTable, kind_rower, 'No items yet')
+  kind_table = kind_tbl.table(item_kinds, request=request, prefix='ikc-')
 
   con_name = ConInfoString.objects.con_name()
   num_panellists = totals['num_people__sum']
@@ -799,12 +809,155 @@ def make_con_groups(request):
                             context_instance=RequestContext(request))
 
 def kit_usage(request):
-  kitrooms = KitRoomAssignment.objects.all()
-  kititems = KitItemAssignment.objects.all()
-  kitrequests = KitRequest.objects.all()
+  rower = Rower({ "pk":       "id",
+                  "thing":    "thing",
+                  "bundle":   "bundle",
+                  "room":     "room",
+                  "fromday":  "fromDay",
+                  "fromtime": "fromSlot",
+                  "today":    "toDay",
+                  "totime":   "toSlot",
+                  "remove":   "Remove" })
+  if request.user.has_perm('progb2.edit_tech'):
+    tbl = Tabler(EditableKitRoomAssignmentTable, rower, 'No kit room assignments')
+  else:
+    tbl = Tabler(KitRoomAssignmentTable, rower, 'No kit room assignments')
+  kratable = tbl.table(KitRoomAssignment.objects.all(), request=request, prefix='kra-')
+
+  rower = Rower({ "pk":     "id",
+                  "thing":  "thing",
+                  "bundle": "bundle",
+                  "item":   "item",
+                  "room":   "item_room",
+                  "day":    "item_day",
+                  "time":   "item_start",
+                  "remove": "Remove" })
+  if request.user.has_perm('progb2.edit_tech'):
+    tbl = Tabler(EditableKitItemAssignmentTable, rower, 'No kit room assignments')
+  else:
+    tbl = Tabler(KitItemAssignmentTable, rower, 'No kit room assignments')
+  kiatable = tbl.table(KitItemAssignment.objects.all(), request=request, prefix='kia-')
+
+  rower = Rower({ "pk":     "id",
+                  "name":   "__str__",
+                  "kind":   "kind",
+                  "count":  "count",
+                  "item":   "requested_by_first",
+                  "room":   "requested_by_first_room",
+                  "day":    "requested_by_first_day",
+                  "start":  "requested_by_first_start",
+                  "sat":    "is_satisfied_by_first" })
+  tbl = Tabler(KitRequestTable, rower, 'No kit things')
+  krtable = tbl.table(KitRequest.objects.all(), request=request, prefix='kr-')
+
   return render_to_response('streampunk/kit_usage.html',
                             locals(),
                             context_instance=RequestContext(request))
+
+def list_people(request):
+  if request.user.has_perm('progb2.read_private'):
+    rower = Rower({ "pk":         "id",
+                    "firstName":  "firstName",
+                    "middleName": "middleName",
+                    "lastName":   "lastName",
+                    "badge":      "badge",
+                    "email":      "email",
+                    "edit":       "Edit" })
+    tbl = Tabler(PrivatePersonTable, rower, 'No people')
+  else:
+    rower = Rower({ "pk": "id", "name": Person.as_badge })
+    tbl = Tabler(PublicPersonTable, rower, 'No people')
+  table = tbl.table(Person.objects.all(), request=request, prefix='p-')
+  return render(request, "streampunk/list_people.html", { "ptable": table,
+                                                          "verbose_name": 'person' })
+
+
+def list_items(request):
+  if request.user.has_perm('progb2.read_private'):
+    qs = Item.objects.all()
+  else:
+    qs = Item.objects.filter(visible = True)
+  if request.user.has_perm('progb2.edit_programme'):
+    rower = Rower({ "pk":        "id",
+                    "day":       "day",
+                    "time":      "start",
+                    "room":      "room",
+                    "shortname": "shortname",
+                    "title":     "title",
+                    "edit":      "Edit",
+                    "remove":    "Remove" })
+    tbl = Tabler(PrivateItemTable, rower, 'No items')
+  else:
+    rower = Rower({ "pk":        "id",
+                    "day":       "day",
+                    "time":      "start",
+                    "room":      "room",
+                    "title":     "title" })
+    tbl = Tabler(PublicItemTable, rower, 'No items')
+  table = tbl.table(qs, request=request, prefix='i-')
+  return render(request, "streampunk/list_items.html", { "itable": table,
+                                                         "verbose_name": 'item' })
+
+
+def list_kitthings(request):
+  qs = KitThing.objects.all()
+  if request.user.has_perm('progb2.edit_tech'):
+    rower = Rower({ "pk":     "id",
+                    "name":   "name",
+                    "kind":   "kind",
+                    "count":  "count",
+                    "notes":  "notes",
+                    "remove": "Remove" })
+    tbl = Tabler(EditableKitThingTable, rower, 'No kit things')
+  else:
+    rower = Rower({ "pk":     "id",
+                    "name":   "name",
+                    "kind":   "kind",
+                    "count":  "count",
+                    "notes":  "notes" })
+    tbl = Tabler(KitThingTable, rower, 'No kit things')
+  table = tbl.table(qs, request=request, prefix='kt-')
+  return render(request, "streampunk/kitthing_list.html", { "kttable": table,
+                                                            "verbose_name": 'kit thing' })
+
+def list_kitrequests(request):
+  qs = KitRequest.objects.all()
+  rower = Rower({ "pk":     "id",
+                  "name":   "__str__",
+                  "kind":   "kind",
+                  "count":  "count",
+                  "item":   "requested_by_first",
+                  "room":   "requested_by_first_room",
+                  "day":    "requested_by_first_day",
+                  "start":  "requested_by_first_start",
+                  "sat":    "is_satisfied_by_first" })
+  tbl = Tabler(KitRequestTable, rower, 'No kit things')
+  table = tbl.table(qs, request=request, prefix='kr-')
+  return render(request, "streampunk/kitrequest_list.html", { "krtable": table,
+                                                            "verbose_name": 'kit thing' })
+
+
+def list_tags(request):
+  if request.user.has_perm('progb2.read_private'):
+    qs = Tag.objects.all()
+  else:
+    qs = Tag.objects.filter(visible = True)
+  if request.user.has_perm('progb2.edit_programme'):
+    rower = Rower({ "pk":          "id",
+                    "name":        "name",
+                    "visible":     "visible",
+                    "description": "description",
+                    "edit":        "Edit",
+                    "remove":      "Remove" })
+    tbl = Tabler(PrivateTagTable, rower, 'No tags')
+  else:
+    rower = Rower({ "pk":          "id",
+                    "name":        "name",
+                    "description": "description" })
+    tbl = Tabler(PublicTagTable, rower, 'No tags')
+  table = tbl.table(qs, request=request, prefix='t-')
+  return render(request, "streampunk/list_tags.html", { "ttable": table,
+                                                        "verbose_name": 'tag' })
 
 def peepsandrooms(request):
   prower = Rower({ "pk": "id", "name": Person.as_name_then_badge, "email": "email", "edit": "Edit" })

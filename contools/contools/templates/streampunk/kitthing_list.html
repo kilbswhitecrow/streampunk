@@ -16,32 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}{{ verbose_name_plural }} {% endblock %}
 {% block body_content %}
-<table border="1">
-<tr>
-  <th>Name</th>
-  <th>Kind</th>
-  <th>Count</th>
-  <th>Notes</th>
-  <th>Delete?</th>
-</tr>
-{% for kt in kitthings %}
-<tr>
-  <td><a href="{% url show_kitthing_detail pk=kt.id %}">{{ kt.name }}</a></td>
-  <td>{{ kt.kind }}</td>
-  <td align="right">{{ kt.count }}</td>
-  <td>{{ kt.notes }}</td>
-  {% if perms.streampunk.edit_kit and not kt.in_use %}
-    <td><a href="{% url delete_kitthing pk=kt.id %}">Delete</a></td>
-  {% else %}
-    <td>In use</td>
-  {% endif %}
-</tr>
-{% empty %}
-  <tr><td colspan="1">No KitThings yet!</td></tr>
-{% endfor %}
-</table>
+{% render_table kttable %}
 {% if perms.streampunk.edit_kit %}
 <p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
 {% endif %}
