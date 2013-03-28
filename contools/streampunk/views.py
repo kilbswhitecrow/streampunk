@@ -30,8 +30,9 @@ from django_tables2 import RequestConfig
 from streampunk.tables import PrivateItemTable, PublicItemTable, PrivatePersonTable, PublicPersonTable, RoomTable, ItemKindTable
 from streampunk.tables import PrivateTagTable, PublicTagTable, KitThingTable, EditableKitThingTable
 from streampunk.tables import KitRequestTable
-from streampunk.tables import KitRoomAssignmentTable, EditableKitRoomAssignmentTable
-from streampunk.tables import KitItemAssignmentTable, EditableKitItemAssignmentTable
+from streampunk.tables import KitRoomAssignmentTable
+from streampunk.tables import KitItemAssignmentTable
+from streampunk.tables import PublicItemPerson, PrivateItemPerson
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
@@ -809,46 +810,20 @@ def make_con_groups(request):
                             context_instance=RequestContext(request))
 
 def kit_usage(request):
-  rower = Rower({ "pk":       "id",
-                  "thing":    "thing",
-                  "bundle":   "bundle",
-                  "room":     "room",
-                  "fromday":  "fromDay",
-                  "fromtime": "fromSlot",
-                  "today":    "toDay",
-                  "totime":   "toSlot",
-                  "remove":   "Remove" })
-  if request.user.has_perm('progb2.edit_tech'):
-    tbl = Tabler(EditableKitRoomAssignmentTable, rower, 'No kit room assignments')
-  else:
-    tbl = Tabler(KitRoomAssignmentTable, rower, 'No kit room assignments')
-  kratable = tbl.table(KitRoomAssignment.objects.all(), request=request, prefix='kra-')
+  rower = KitRoomAssignment.rower(request)
+  exclude = KitRoomAssignment.tabler_exclude(request)
+  tbl = Tabler(KitRoomAssignmentTable, rower, 'No kit room assignments')
+  kratable = tbl.table(KitRoomAssignment.objects.all(), request=request, prefix='kra-', exclude=exclude)
 
-  rower = Rower({ "pk":     "id",
-                  "thing":  "thing",
-                  "bundle": "bundle",
-                  "item":   "item",
-                  "room":   "item_room",
-                  "day":    "item_day",
-                  "time":   "item_start",
-                  "remove": "Remove" })
-  if request.user.has_perm('progb2.edit_tech'):
-    tbl = Tabler(EditableKitItemAssignmentTable, rower, 'No kit room assignments')
-  else:
-    tbl = Tabler(KitItemAssignmentTable, rower, 'No kit room assignments')
-  kiatable = tbl.table(KitItemAssignment.objects.all(), request=request, prefix='kia-')
+  rower = KitItemAssignment.rower(request)
+  exclude = KitItemAssignment.tabler_exclude(request)
+  tbl = Tabler(KitItemAssignmentTable, rower, 'No kit room assignments')
+  kiatable = tbl.table(KitItemAssignment.objects.all(), request=request, prefix='kia-', exclude=exclude)
 
-  rower = Rower({ "pk":     "id",
-                  "name":   "__str__",
-                  "kind":   "kind",
-                  "count":  "count",
-                  "item":   "requested_by_first",
-                  "room":   "requested_by_first_room",
-                  "day":    "requested_by_first_day",
-                  "start":  "requested_by_first_start",
-                  "sat":    "is_satisfied_by_first" })
+  rower = KitRequest.rower(request)
+  exclude = KitRequest.tabler_exclude(request)
   tbl = Tabler(KitRequestTable, rower, 'No kit things')
-  krtable = tbl.table(KitRequest.objects.all(), request=request, prefix='kr-')
+  krtable = tbl.table(KitRequest.objects.all(), request=request, prefix='kr-', exclude=exclude)
 
   return render_to_response('streampunk/kit_usage.html',
                             locals(),
@@ -901,22 +876,10 @@ def list_items(request):
 
 def list_kitthings(request):
   qs = KitThing.objects.all()
-  if request.user.has_perm('progb2.edit_tech'):
-    rower = Rower({ "pk":     "id",
-                    "name":   "name",
-                    "kind":   "kind",
-                    "count":  "count",
-                    "notes":  "notes",
-                    "remove": "Remove" })
-    tbl = Tabler(EditableKitThingTable, rower, 'No kit things')
-  else:
-    rower = Rower({ "pk":     "id",
-                    "name":   "name",
-                    "kind":   "kind",
-                    "count":  "count",
-                    "notes":  "notes" })
-    tbl = Tabler(KitThingTable, rower, 'No kit things')
-  table = tbl.table(qs, request=request, prefix='kt-')
+  exclude = KitThing.tabler_exclude(request)
+  rower = KitThing.rower(request)
+  tbl = Tabler(EditableKitThingTable, rower, 'No kit things')
+  table = tbl.table(qs, request=request, prefix='kt-', exclude=exclude)
   return render(request, "streampunk/kitthing_list.html", { "kttable": table,
                                                             "verbose_name": 'kit thing' })
 

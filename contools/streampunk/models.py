@@ -25,6 +25,8 @@ from django.forms import ModelForm, BooleanField, HiddenInput
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
+from streampunk.tabler import Rower
+
 YesNo = (
   ( 'TBA', 'TBA'),
   ( 'Yes', 'Yes' ), 
@@ -437,6 +439,22 @@ class KitRequest(models.Model):
   def requested_by_first_start(self):
     return self.requested_by_first().start
 
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":     "id",
+                  "name":   "__str__",
+                  "kind":   "kind",
+                  "count":  "count",
+                  "item":   "requested_by_first",
+                  "room":   "requested_by_first_room",
+                  "day":    "requested_by_first_day",
+                  "start":  "requested_by_first_start",
+                  "sat":    "is_satisfied_by_first" })
+
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
+
 class KitThing(models.Model):
   """
   A kit thing is an instance of the physical kit. Or, possible, several instances which
@@ -496,6 +514,18 @@ class KitThing(models.Model):
 
   def in_use(self):
     return self.kitbundle_set.exists() or self.kititemassignment_set.exists() or self.kitroomassignment_set.exists()
+
+  @classmethod
+  def rower(cls, request=None):
+    return Rower({ "pk":     "id",
+                   "name":   "name",
+                   "kind":   "kind",
+                   "count":  "count",
+                   "notes":  "notes",
+                   "remove": "Remove" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
 
 class KitBundle(models.Model):
   """
@@ -610,6 +640,22 @@ class KitRoomAssignment(models.Model):
     r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
     print "%d %s sat %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
     return r
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":       "id",
+                   "thing":    "thing",
+                   "bundle":   "bundle",
+                   "room":     "room",
+                   "fromday":  "fromDay",
+                   "fromtime": "fromSlot",
+                   "today":    "toDay",
+                   "totime":   "toSlot",
+                   "remove":   "Remove" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
+
   
 class KitItemAssignment(models.Model):
   """
@@ -640,6 +686,21 @@ class KitItemAssignment(models.Model):
     return self.item.start.startText
   def item_room(self):
     return self.item.room
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":     "id",
+                   "thing":  "thing",
+                   "bundle": "bundle",
+                   "item":   "item",
+                   "room":   "item_room",
+                   "day":    "item_day",
+                   "time":   "item_start",
+                   "remove": "Remove" })
+
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
 
 class RoomCapacity(models.Model):
   """

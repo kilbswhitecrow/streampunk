@@ -51,10 +51,10 @@ class Tabler:
     self.tclass = tclass
     self.paginate = paginate
 
-  def table(self, qs, request=None, prefix=None):
+  def table(self, qs, request=None, prefix=None, exclude=None):
     template = 'streampunk/table.html'
     data = [ self.rower.row(thing) for thing in qs ]
-    t = self.tclass(data, prefix=prefix, template=template)
+    t = self.tclass(data, prefix=prefix, template=template, exclude=exclude)
     if request:
       config = RequestConfig(request)
       config.configure(t)

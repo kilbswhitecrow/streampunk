@@ -127,10 +127,6 @@ class KitRoomAssignmentTable(tables.Table):
   fromtime = tables.Column()
   today = tables.Column()
   totime = tables.Column()
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-
-class EditableKitRoomAssignmentTable(KitRoomAssignmentTable):
   remove = tables.LinkColumn('delete_kitroomassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
@@ -142,11 +138,21 @@ class KitItemAssignmentTable(tables.Table):
   room = tables.LinkColumn('show_room_detail', args=[A('pk')])
   day = tables.Column()
   time = tables.Column()
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-
-class EditableKitItemAssignmentTable(KitItemAssignmentTable):
   remove = tables.LinkColumn('delete_kititemassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
-  
+
+class PublicItemPerson(tables.Table):
+  item = tables.LinkColumn('show_item_detail', args=[A('pk')])
+  person = tables.LinkColumn('show_person_detail', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
+
+class PrivateItemPerson(PublicItemPerson):
+  role = tables.Column(order_by=[A('role.name')])
+  status = tables.Column(order_by=[A('status.name')])
+  visible = tables.BooleanColumn()
+  distEmail = tables.BooleanColumn(verbose_name='share email addr?')
+  recordingOkay = tables.BooleanColumn(verbose_name='Record item?')
+  class Meta:
+    attrs = { "class": "paleblue", "id": "sel_tbl" }
