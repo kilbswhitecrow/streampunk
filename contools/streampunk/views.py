@@ -27,7 +27,7 @@ from django.db.models import Count, Sum
 
 from django.shortcuts import render
 from django_tables2 import RequestConfig
-from streampunk.tables import ItemTable
+from streampunk.tables import ItemTable, PersonTable, RoomTable
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
@@ -40,6 +40,7 @@ from streampunk.forms import AddBundleToRoomForm, AddBundleToItemForm
 from streampunk.forms import AddThingToRoomForm, AddThingToItemForm
 from streampunk.forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
 from streampunk.auth import add_con_groups
+from streampunk.tabler import Rower, Tabler
 
 def show_request(request):
   if request.method == 'GET':
@@ -804,3 +805,18 @@ def kit_usage(request):
   return render_to_response('streampunk/kit_usage.html',
                             locals(),
                             context_instance=RequestContext(request))
+
+def peepsandrooms(request):
+  prower = Rower({ "pk": "id", "name": Person.as_name_then_badge, "email": "email", "edit": "Edit" })
+  rrower = Rower({ "pk": "id", "name": "name", "grid": "gridOrder" })
+  irower = Rower({ "pk": "id", "day": "day", "time": "start", "room": "room", "shortname": "shortname", "title": "title", "edit": "Edit", "remove": "Remove" })
+
+  ptbl = Tabler(PersonTable, prower, 'No people')
+  rtbl = Tabler(RoomTable, rrower, 'No rooms')
+  itbl = Tabler(ItemTable, irower, 'No items')
+
+  ptable = ptbl.table(Person.objects.all(), request=request, prefix='p-')
+  rtable = rtbl.table(Room.objects.all(), request=request, prefix='r-')
+  itable = itbl.table(Item.objects.all(), request=request, prefix='i-')
+
+  return render(request, "streampunk/peepsandrooms.html", { "ptable": ptable, "rtable": rtable, "itable": itable })
