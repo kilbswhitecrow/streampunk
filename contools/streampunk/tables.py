@@ -38,13 +38,9 @@ def select_attrs(tbl):
   }
   return attrs
 
-class PublicPersonTable(tables.Table):
-  name = tables.LinkColumn('show_person_detail', args=[A('pk')])
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-
-class PrivatePersonTable(tables.Table):
+class PersonTable(tables.Table):
   select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('persontable') )
+  name = tables.LinkColumn('show_person_detail', args=[A('pk')])
   firstName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   middleName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   lastName = tables.LinkColumn('show_person_detail', args=[A('pk')])
@@ -60,15 +56,11 @@ class RoomTable(tables.Table):
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
 
-class PublicItemTable(tables.Table):
+class ItemTable(tables.Table):
   day = tables.Column(order_by=[A('day.date')])
   time = tables.Column(order_by=[A('time.start')])
   room = tables.LinkColumn('show_room_detail', args=[A('pk')], order_by=[A('room.name')])
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-
-class PrivateItemTable(PublicItemTable):
   shortname = tables.Column()
   edit = tables.LinkColumn('edit_item', args=[A('pk')])
   remove = tables.Column()
@@ -81,13 +73,9 @@ class ItemKindTable(tables.Table):
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
 
-class PublicTagTable(tables.Table):
+class TagTable(tables.Table):
   name = tables.LinkColumn('show_tag_detail', args=[A('pk')])
   description = tables.Column()
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-
-class PrivateTagTable(PublicTagTable):
   visible = tables.BooleanColumn()
   edit = tables.LinkColumn('edit_tag', args=[A('pk')])
   remove = tables.Column()
@@ -99,10 +87,6 @@ class KitThingTable(tables.Table):
   kind = tables.Column(order_by=[A('kind.name')])
   count = tables.Column()
   notes = tables.Column()
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-  
-class EditableKitThingTable(KitThingTable):
   remove = tables.LinkColumn('delete_kitthing', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }

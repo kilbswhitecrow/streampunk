@@ -347,6 +347,25 @@ class Tag(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":          "id",
+                   "name":        "name",
+                   "visible":     "visible",
+                   "description": "description",
+                   "edit":        "Edit",
+                   "remove":      "Remove" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    if request.user.has_perm('progb2.read_private'):
+      if request.user.has_perm('progb2.edit_programme'):
+        return None
+      else:
+        return ['edit', 'remove']
+    else:
+        return ['edit', 'remove', 'visible']
+
+
 # Kit is physical stuff. It can be technical equipment, like a DVD player, or
 # something non-tech like a flip-chart or laminator. It's something that you
 # want to keep track of, to make sure it's available in the right place at the
@@ -937,6 +956,27 @@ class Person(models.Model):
       'firstName',
       'badge'
     ]
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":         "id",
+                   "name":       "as_badge",
+                   "firstName":  "firstName",
+                   "middleName": "middleName",
+                   "lastName":   "lastName",
+                   "badge":      "badge",
+                   "email":      "email",
+                   "edit":       "Edit" })
+
+  @classmethod
+  def tabler_exclude(cls, request):
+    if request.user.has_perm('progb2.read_private'):
+      if request.user.has_perm('progb2.edit_private'):
+        return ['name']
+      else:
+        return ['edit', 'name']
+    else:
+      return ['edit', 'firstName', 'middleName', 'lastName', 'email']
  
 
 class ScheduledManager(models.Manager):
@@ -1039,7 +1079,27 @@ class Item(models.Model):
       'shortname',
       'title'
     ]
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":        "id",
+                   "day":       "day",
+                   "time":      "start",
+                   "room":      "room",
+                   "shortname": "shortname",
+                   "title":     "title",
+                   "edit":      "Edit",
+                   "remove":    "Remove" })
  
+  @classmethod
+  def tabler_exclude(cls, request):
+    if request.user.has_perm('progb2.read_private'):
+      if request.user.has_perm('progb2.edit_programme'):
+        return None
+      else:
+        return ['edit', 'remove']
+    else:
+      return ['edit', 'remove', 'shortname']
 
   def __unicode__(self):
     if self.title:
