@@ -260,13 +260,15 @@ class show_item_detail(DetailView):
     if self.request.user.has_perm('progb2.read_private'):
       qs = ItemPerson.objects.filter(item=self.object)
       context['item_people'] = qs
-      context['item_tags'] = self.object.tags.all()
+      tagqs = self.object.tags.all()
     else:
       qs = ItemPerson.objects.filter(item=self.object, visible=True)
       context['item_people'] = qs
-      context['item_tags'] = self.object.tags.filter(visible=True)
+      tagqs = self.object.tags.filter(visible=True)
     context['item_people_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
                                                prefix='ipt-', empty=empty, extra_exclude=['item'])
+    context['tagtable'] = make_tabler(Tag, TagTable, request=self.request, qs=tagqs, prefix='tag-', empty='No tags',
+                                      extra_exclude=['description', 'visible', 'edit', 'remove'])
     context['kitrequests'] = self.object.kitRequests.all()
     context['krtable'] = make_tabler(KitRequest, KitRequestTable, request=self.request, qs=context['kitrequests'],
                                      prefix='kr-', empty='No kit requests yet',
@@ -288,16 +290,18 @@ class show_person_detail(DetailView):
     context['request'] = self.request
     if self.request.user.has_perm('progb2.read_private'):
       context['person_name'] = "%s" % self.object
-      context['person_tags'] = self.object.tags.all()
+      tagqs = self.object.tags.all()
       qs = ItemPerson.objects.filter(person=self.object)
       context['person_items'] = qs
     else:
       context['person_name'] = "%s" % self.object.as_badge()
-      context['person_tags'] = self.object.tags.filter(visible=True)
+      tagqs = self.object.tags.filter(visible=True)
       qs = ItemPerson.objects.filter(person=self.object, visible=True)
       context['person_items'] = qs
     context['person_items_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
                                                 prefix='pit-', empty=empty, extra_exclude=['person', 'select'])
+    context['tagtable'] = make_tabler(Tag, TagTable, request=self.request, qs=tagqs, prefix='tag-', empty='No tags',
+                                      extra_exclude=['description', 'visible', 'edit', 'remove'])
     context['avail'] = self.object.availability.all()
     return context
 

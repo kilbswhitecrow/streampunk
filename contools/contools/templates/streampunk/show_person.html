@@ -87,6 +87,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 <h2>Tags</h2>
+{% render_table tagtable %}
+{% comment %}
 <table border="1">
 {% for tag in person_tags %}
 <tr><td>{{ tag|linky|safe }}</td></tr>
@@ -94,6 +96,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><td>No tags yet</td></tr>
 {% endfor %}
 </table>
+{% endcomment %}
 {% if perms.streampunk.edit_tags %}
 <p><a href="{% url edit_tags_for_person person.id %}">Edit tags for {{ person }}</a>.</p>
 {% endif %}

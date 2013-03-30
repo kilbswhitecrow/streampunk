@@ -140,13 +140,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 <h2>Tags</h2>
-<table border="1">
-{% for tag in item_tags %}
-<tr><td>{{ tag|linky|safe }}</td></tr>
-{% empty %}
-<tr><td>No tags yet</td></tr>
-{% endfor %}
-</table>
+{% render_table tagtable %}
 {% if perms.streampunk.edit_tags %}
 <p><a href="{% url edit_tags_for_item item.id %}">Edit tags for {{ item }}</a>.</p>
 {% endif %}
