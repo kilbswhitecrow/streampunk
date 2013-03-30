@@ -96,35 +96,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
 {% render_table item_people_table %}
-{% comment %}
-<table border="1">
-{% for itemperson in item_people %}
-<tr>
-{% if perms.streampunk.read_private %}
-  <td>{{ itemperson.person|linky|safe }}</td>
-{% else %}
-  <td>{{ itemperson.person|linky:itemperson.person.as_badge|safe }}</td>
-{% endif %}
-  <td>{{ itemperson.role }}</td>
-  <td>{{ itemperson.status }}</td>
-{% if perms.streampunk.edit_programme %}
-  <td><a href="{% url delete_itemperson pk=itemperson.id %}">Remove</a></td>
-  <td>
-       <input type="checkbox" name="somepeople" value="{{ itemperson.person.id }}" />
-       <input type="hidden" name="allpeople" value="{{ itemperson.person.id }}" />
-  {% if itemperson.person.email %}
-     Email/Select?
-  {% else %}
-     Select?
-  {% endif %}
-  </td>
-{% endif %}
-</tr>
-{% empty %}
-<tr><td>No people on this item yet</td></tr>
-{% endfor %}
-</table>
-{% endcomment %}
 <input type="hidden" name="itemid" value="{{ item.id }}" />
 <input type="hidden" name="listname" value="People from item {{ item.id }}" />
 {% if perms.streampunk.send_item_email %}
