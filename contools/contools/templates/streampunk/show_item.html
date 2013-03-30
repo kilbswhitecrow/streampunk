@@ -93,11 +93,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 <h2>People on this item</h2>
-<p>
-{% render_table item_people_table %}
-</p>
 <form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
+{% render_table item_people_table %}
+{% comment %}
 <table border="1">
 {% for itemperson in item_people %}
 <tr>
@@ -125,14 +124,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><td>No people on this item yet</td></tr>
 {% endfor %}
 </table>
+{% endcomment %}
 <input type="hidden" name="itemid" value="{{ item.id }}" />
 <input type="hidden" name="listname" value="People from item {{ item.id }}" />
 {% if perms.streampunk.send_item_email %}
-<input type="submit" name="email_all" value="Email all the people on this item" />
-<input type="submit" name="email_some" value="Email selected people" />
 <br/>
-<input type="submit" name="save_all" value="Save the people on this item as a list" />
-<input type="submit" name="save_some" value="Save selected people as a list" />
+<input type="submit" name="email_select" value="Email selected people" />
+<input type="submit" name="save_select" value="Save selected people as a list" />
 {% endif %}
 </form>
 

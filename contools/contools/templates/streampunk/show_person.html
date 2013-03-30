@@ -17,9 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
 {% load render_table from django_tables2 %}
-{% block scripts %}
-<script type="text/javascript" src="{{ STATIC_URL }}sel_all.js"></script>
-{% endblock %}
 {% block styles %}
 <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
 {% endblock %}
@@ -59,6 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 <h2>Items</h2>
+{% comment %}
 <table border="1">
 {% for itemperson in person_items %}
 <tr>
@@ -73,6 +71,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><td>Not on any items</td></tr>
 {% endfor %}
 </table>
+{% endcomment %}
 
 <p>
 {% render_table person_items_table %}
