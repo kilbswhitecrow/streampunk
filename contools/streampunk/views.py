@@ -297,7 +297,7 @@ class show_person_detail(DetailView):
       qs = ItemPerson.objects.filter(person=self.object, visible=True)
       context['person_items'] = qs
     context['person_items_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
-                                                prefix='pit-', empty=empty, extra_exclude=['person'])
+                                                prefix='pit-', empty=empty, extra_exclude=['person', 'select'])
     context['avail'] = self.object.availability.all()
     return context
 
