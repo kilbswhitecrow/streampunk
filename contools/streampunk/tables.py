@@ -127,7 +127,7 @@ class KitItemAssignmentTable(tables.Table):
     attrs = { "class": "paleblue" }
 
 class ItemPersonTable(tables.Table):
-  select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('itempersontable') )
+  select = tables.CheckBoxColumn(verbose_name='Select', accessor='person.id', attrs= select_attrs('itempersontable') )
   item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
   person = tables.LinkColumn('show_person_detail', args=[A('person.id')])
   role = tables.Column(order_by=[A('role.name')])
