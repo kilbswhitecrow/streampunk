@@ -285,7 +285,12 @@ class ItemKind(EnumTable):
   An Item's ItemKind tells you what kind of activity
   the item is.
   """
-  pass
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "kind": "kind__name", "count": "kind__count" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
 
 class SeatingKind(EnumTable):
   """
@@ -1203,6 +1208,29 @@ class ItemPerson(models.Model):
     return u"%s: %s [%s]" % (self.item, self.person, self.role)
   def get_absolute_url(self):
     return mk_url(self)
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":            "id",
+                   "item":          "item",
+                   "person":        "person",
+                   "role":          "role",
+                   "status":        "status",
+                   "visible":       "visible",
+                   "distEmail":     "distEmail",
+                   "recordingOkay": "recordingOkay",
+                   "edit":          "Edit",
+                   "remove":        "Remove" })
+
+  @classmethod
+  def tabler_exclude(cls, request):
+    if request.user.has_perm('progb2.read_private'):
+      if request.user.has_perm('progb2.edit_programme'):
+        return []
+      else:
+        return ['select', 'edit', 'remove']
+    else:
+      return ['select', 'edit', 'remove', 'status', 'visible', 'distEmail', 'recordingOkay']
 
 class PersonList(models.Model):
   """

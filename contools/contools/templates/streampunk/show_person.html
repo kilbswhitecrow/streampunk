@@ -16,6 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}sel_all.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}Person:
 {% if perms.streampunk.read_private %}
 {{ person }}
@@ -66,6 +73,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><td>Not on any items</td></tr>
 {% endfor %}
 </table>
+
+<p>
+{% render_table person_items_table %}
+</p>
 
 {% if perms.progdg2.edit_programme %}
 <p><a href="{% url new_itemperson %}?person={{ person.id }}">Add {{ person }} to an item</a>.</p>

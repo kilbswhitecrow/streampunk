@@ -16,10 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
 {% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}sel_all.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL }}show_item.js"></script>
 {% endblock %}
 {% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}show_item.css" />
 {% endblock %}
 {% block title %}Item: {{ item.title }}{% endblock %}
@@ -59,8 +62,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <tr><th>Needs Reset before?</th><td>{{ item.needsReset }}</td></tr>
       <tr><th>Needs Cleanup afterwards?</th><td>{{ item.needsCleanup }}</td></tr>
       </table>
-{% include "streampunk/list_kitrequests.html" %}
-{% include "streampunk/list_kititemassignments.html" %}
+<h3>Kit Requests</h3>
+<p>
+{% render_table krtable %}
+</p>
+<h3>Kit Assigned to This Item</h3>
+<p>
+{% render_table kiatable %}
+</p>
 {% if perms.streampunk.edit_kit %}
 <p>
 <a href="{% url add_kitrequest_to_item pk=item.id %}">Add Kit request to '{{ item }}'</a></p>
@@ -84,6 +93,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 <h2>People on this item</h2>
+<p>
+{% render_table item_people_table %}
+</p>
 <form action="{% url make_personlist %}" method="post">
 {% csrf_token %}
 <table border="1">

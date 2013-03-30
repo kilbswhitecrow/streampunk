@@ -17,9 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% if perms.streampunk.read_private %}
 {% load streampunk_filters %}
 {% load render_table from django_tables2 %}
-{% block styles %}
-<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
-{% endblock %}
+{% if not item %}
+  {% block styles %}
+    <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+  {% endblock %}
+{% endif %}
 <h2>Kit Requests</h2>
 {% render_table krtable %}
 {% comment %}

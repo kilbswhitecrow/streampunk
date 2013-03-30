@@ -32,11 +32,11 @@ from streampunk.tables import TagTable, KitThingTable
 from streampunk.tables import KitRequestTable
 from streampunk.tables import KitRoomAssignmentTable
 from streampunk.tables import KitItemAssignmentTable
-from streampunk.tables import PublicItemPerson, PrivateItemPerson
+from streampunk.tables import ItemPersonTable
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
-from streampunk.models import UserProfile
+from streampunk.models import UserProfile, ItemKind
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm
 from streampunk.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from streampunk.forms import TagForm, RoomForm, CheckModelFormSet
@@ -45,7 +45,7 @@ from streampunk.forms import AddBundleToRoomForm, AddBundleToItemForm
 from streampunk.forms import AddThingToRoomForm, AddThingToItemForm
 from streampunk.forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
 from streampunk.auth import add_con_groups
-from streampunk.tabler import Rower, Tabler
+from streampunk.tabler import Rower, Tabler, make_tabler
 
 def show_request(request):
   if request.method == 'GET':
@@ -186,9 +186,7 @@ def main_page(request):
   # [ { 'kind__name': 'Panel', 'kind__count': N }, { 'kind__name': 'Talk', 'kind__count': Y } ]
   item_kinds = Item.objects.values('kind__name').annotate(Count('kind')).order_by()
 
-  kind_rower = Rower({ "kind": "kind__name", "count": "kind__count" })
-  kind_tbl = Tabler(ItemKindTable, kind_rower, 'No items yet')
-  kind_table = kind_tbl.table(item_kinds, request=request, prefix='ikc-')
+  kind_table = make_tabler(ItemKind, ItemKindTable, request=request, qs=item_kinds, prefix='ikc-', empty='No items yet')
 
   con_name = ConInfoString.objects.con_name()
   num_panellists = totals['num_people__sum']
@@ -256,18 +254,28 @@ class show_item_detail(DetailView):
   template_name = 'streampunk/show_item.html'
 
   def get_context_data(self, **kwargs):
+    empty= 'Nobody on this item yet'
     context = super(show_item_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
     if self.request.user.has_perm('progb2.read_private'):
-      context['item_people'] = ItemPerson.objects.filter(item=self.object)
+      qs = ItemPerson.objects.filter(item=self.object)
+      context['item_people'] = qs
       context['item_tags'] = self.object.tags.all()
     else:
-      context['item_people'] = ItemPerson.objects.filter(item=self.object, visible=True)
+      qs = ItemPerson.objects.filter(item=self.object, visible=True)
+      context['item_people'] = qs
       context['item_tags'] = self.object.tags.filter(visible=True)
+    context['item_people_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
+                                               prefix='ipt-', empty=empty, extra_exclude=['item'])
     context['kitrequests'] = self.object.kitRequests.all()
+    context['krtable'] = make_tabler(KitRequest, KitRequestTable, request=self.request, qs=context['kitrequests'],
+                                     prefix='kr-', empty='No kit requests yet',
+                                     extra_exclude=['item', 'room', 'day', 'start'])
     context['kititems'] = KitItemAssignment.objects.filter(item=self.object)
+    context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
+                                      qs=context['kititems'], prefix='kia-', empty='No kit assigned',
+                                      extra_exclude=['item', 'room', 'day', 'time'])
     return context
-
 
 class show_person_detail(DetailView):
   context_object_name = 'person'
@@ -275,16 +283,21 @@ class show_person_detail(DetailView):
   template_name = 'streampunk/show_person.html'
 
   def get_context_data(self, **kwargs):
+    empty= 'Not on any items yet'
     context = super(show_person_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
     if self.request.user.has_perm('progb2.read_private'):
       context['person_name'] = "%s" % self.object
       context['person_tags'] = self.object.tags.all()
-      context['person_items'] = ItemPerson.objects.filter(person=self.object)
+      qs = ItemPerson.objects.filter(person=self.object)
+      context['person_items'] = qs
     else:
       context['person_name'] = "%s" % self.object.as_badge()
       context['person_tags'] = self.object.tags.filter(visible=True)
-      context['person_items'] = ItemPerson.objects.filter(person=self.object, visible=True)
+      qs = ItemPerson.objects.filter(person=self.object, visible=True)
+      context['person_items'] = qs
+    context['person_items_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
+                                                prefix='pit-', empty=empty, extra_exclude=['person'])
     context['avail'] = self.object.availability.all()
     return context
 
@@ -810,30 +823,18 @@ def make_con_groups(request):
                             context_instance=RequestContext(request))
 
 def kit_usage(request):
-  rower = KitRoomAssignment.rower(request)
-  exclude = KitRoomAssignment.tabler_exclude(request)
-  tbl = Tabler(KitRoomAssignmentTable, rower, 'No kit room assignments')
-  kratable = tbl.table(KitRoomAssignment.objects.all(), request=request, prefix='kra-', exclude=exclude)
-
-  rower = KitItemAssignment.rower(request)
-  exclude = KitItemAssignment.tabler_exclude(request)
-  tbl = Tabler(KitItemAssignmentTable, rower, 'No kit room assignments')
-  kiatable = tbl.table(KitItemAssignment.objects.all(), request=request, prefix='kia-', exclude=exclude)
-
-  rower = KitRequest.rower(request)
-  exclude = KitRequest.tabler_exclude(request)
-  tbl = Tabler(KitRequestTable, rower, 'No kit things')
-  krtable = tbl.table(KitRequest.objects.all(), request=request, prefix='kr-', exclude=exclude)
-
+  kratable = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=request,
+                      qs=KitRoomAssignment.objects.all(), prefix='kra-', empty='No kit room assignments')
+  kiatable = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=request,
+                      qs=KitItemAssignment.objects.all(), prefix='kia-', empty='No kit item assignments')
+  krtable = make_tabler(KitRequest, KitRequestTable, request=request,
+                     qs=KitRequest.objects.all(), prefix='kr-', empty='No kit requests')
   return render_to_response('streampunk/kit_usage.html',
                             locals(),
                             context_instance=RequestContext(request))
 
 def list_people(request):
-  rower = Person.rower(request)
-  exclude = Person.tabler_exclude(request)
-  tbl = Tabler(PersonTable, rower, 'No people')
-  table = tbl.table(Person.objects.all(), request=request, prefix='p-', exclude=exclude)
+  table = make_tabler(Person, PersonTable, request=request, qs=Person.objects.all(), prefix='p-', empty='No people')
   return render(request, "streampunk/list_people.html", { "ptable": table,
                                                           "verbose_name": 'person' })
 
@@ -843,36 +844,18 @@ def list_items(request):
     qs = Item.objects.all()
   else:
     qs = Item.objects.filter(visible = True)
-  rower = Item.rower(request)
-  exclude = Item.tabler_exclude(request)
-  tbl = Tabler(ItemTable, rower, 'No items')
-  table = tbl.table(qs, request=request, prefix='i-', exclude=exclude)
+  table = make_tabler(Item, ItemTable, request=request, qs=qs, prefix='i-', empty='No items')
   return render(request, "streampunk/list_items.html", { "itable": table,
                                                          "verbose_name": 'item' })
 
 
 def list_kitthings(request):
-  qs = KitThing.objects.all()
-  exclude = KitThing.tabler_exclude(request)
-  rower = KitThing.rower(request)
-  tbl = Tabler(KitThingTable, rower, 'No kit things')
-  table = tbl.table(qs, request=request, prefix='kt-', exclude=exclude)
+  table = make_tabler(KitThing, KitThingTable, request=request, qs=KitThing.objects.all(), prefix='kt-', empty='No kit things')
   return render(request, "streampunk/kitthing_list.html", { "kttable": table,
                                                             "verbose_name": 'kit thing' })
 
 def list_kitrequests(request):
-  qs = KitRequest.objects.all()
-  rower = Rower({ "pk":     "id",
-                  "name":   "__str__",
-                  "kind":   "kind",
-                  "count":  "count",
-                  "item":   "requested_by_first",
-                  "room":   "requested_by_first_room",
-                  "day":    "requested_by_first_day",
-                  "start":  "requested_by_first_start",
-                  "sat":    "is_satisfied_by_first" })
-  tbl = Tabler(KitRequestTable, rower, 'No kit things')
-  table = tbl.table(qs, request=request, prefix='kr-')
+  table = make_tabler(KitRequest, KitRequestTable, request=request, qs=KitRequest.objects.all(), prefix='kr-', empty='No kit things')
   return render(request, "streampunk/kitrequest_list.html", { "krtable": table,
                                                             "verbose_name": 'kit thing' })
 
@@ -882,24 +865,6 @@ def list_tags(request):
     qs = Tag.objects.all()
   else:
     qs = Tag.objects.filter(visible = True)
-  rower = Tag.rower(request)
-  exclude = Tag.tabler_exclude(request)
-  tbl = Tabler(TagTable, rower, 'No tags')
-  table = tbl.table(qs, request=request, prefix='t-', exclude=exclude)
+  table = make_tabler(Tag, TagTable, request=request, qs=qs, prefix='t-', empty='No tags')
   return render(request, "streampunk/list_tags.html", { "ttable": table,
                                                         "verbose_name": 'tag' })
-
-def peepsandrooms(request):
-  prower = Rower({ "pk": "id", "name": Person.as_name_then_badge, "email": "email", "edit": "Edit" })
-  rrower = Rower({ "pk": "id", "name": "name", "grid": "gridOrder" })
-  irower = Rower({ "pk": "id", "day": "day", "time": "start", "room": "room", "shortname": "shortname", "title": "title", "edit": "Edit", "remove": "Remove" })
-
-  ptbl = Tabler(PersonTable, prower, 'No people')
-  rtbl = Tabler(RoomTable, rrower, 'No rooms')
-  itbl = Tabler(ItemTable, irower, 'No items')
-
-  ptable = ptbl.table(Person.objects.all(), request=request, prefix='p-')
-  rtable = rtbl.table(Room.objects.all(), request=request, prefix='r-')
-  itable = itbl.table(Item.objects.all(), request=request, prefix='i-')
-
-  return render(request, "streampunk/peepsandrooms.html", { "ptable": ptable, "rtable": rtable, "itable": itable })

@@ -54,7 +54,7 @@ class RoomTable(tables.Table):
   name = tables.LinkColumn('show_room_detail', args=[A('pk')])
   grid = tables.Column()
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
 class ItemTable(tables.Table):
   day = tables.Column(order_by=[A('day.date')])
@@ -65,13 +65,13 @@ class ItemTable(tables.Table):
   edit = tables.LinkColumn('edit_item', args=[A('pk')])
   remove = tables.Column()
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
 class ItemKindTable(tables.Table):
   kind = tables.Column(verbose_name='Item Kind')
   count = tables.Column(verbose_name='Number of Items')
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
 class TagTable(tables.Table):
   name = tables.LinkColumn('show_tag_detail', args=[A('pk')])
@@ -80,7 +80,7 @@ class TagTable(tables.Table):
   edit = tables.LinkColumn('edit_tag', args=[A('pk')])
   remove = tables.Column()
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
 class KitThingTable(tables.Table):
   name = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
@@ -89,7 +89,7 @@ class KitThingTable(tables.Table):
   notes = tables.Column()
   remove = tables.LinkColumn('delete_kitthing', args=[A('pk')])
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
   
 class KitRequestTable(tables.Table):
   name = tables.LinkColumn('show_kitrequest_detail', args=[A('pk')])
@@ -99,9 +99,9 @@ class KitRequestTable(tables.Table):
   room = tables.LinkColumn('show_room_detail', args=[A('room.pk')])
   day = tables.Column()
   start = tables.Column()
-  sat = tables.Column()
+  sat = tables.Column(verbose_name='Satisfied by?')
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
 class KitRoomAssignmentTable(tables.Table):
   thing = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
@@ -113,7 +113,7 @@ class KitRoomAssignmentTable(tables.Table):
   totime = tables.Column()
   remove = tables.LinkColumn('delete_kitroomassignment', args=[A('pk')])
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
 class KitItemAssignmentTable(tables.Table):
   thing = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
@@ -124,19 +124,18 @@ class KitItemAssignmentTable(tables.Table):
   time = tables.Column()
   remove = tables.LinkColumn('delete_kititemassignment', args=[A('pk')])
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue" }
 
-class PublicItemPerson(tables.Table):
-  item = tables.LinkColumn('show_item_detail', args=[A('pk')])
-  person = tables.LinkColumn('show_person_detail', args=[A('pk')])
-  class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
-
-class PrivateItemPerson(PublicItemPerson):
+class ItemPersonTable(tables.Table):
+  select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('itempersontable') )
+  item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
+  person = tables.LinkColumn('show_person_detail', args=[A('person.id')])
   role = tables.Column(order_by=[A('role.name')])
   status = tables.Column(order_by=[A('status.name')])
   visible = tables.BooleanColumn()
   distEmail = tables.BooleanColumn(verbose_name='share email addr?')
   recordingOkay = tables.BooleanColumn(verbose_name='Record item?')
+  edit = tables.LinkColumn('edit_itemperson', args=[A('pk')])
+  remove = tables.LinkColumn('delete_itemperson', args=[A('pk')])
   class Meta:
-    attrs = { "class": "paleblue", "id": "sel_tbl" }
+    attrs = { "class": "paleblue", "id": "ipt_tbl" }

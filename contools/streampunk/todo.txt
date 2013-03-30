@@ -73,6 +73,7 @@ list. Need to turn this off somehow.
 This needs hacky methods in the KitRequest to work with my Rower class.
 - I need to figure out how to handle the Delete links - or at least check whether deletion
 is safe at the end of the link.
+- I need to arrange to have the email-items-to-person, etc. in show_item and show_person.
 
 Show person:
 	- Items

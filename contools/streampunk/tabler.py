@@ -60,3 +60,9 @@ class Tabler:
       config.configure(t)
     return t
 
+def make_tabler(mcls, tcls, request, qs, prefix=None, empty=None, extra_exclude=[]):
+  rower = mcls.rower(request)
+  exclude = mcls.tabler_exclude(request)
+  exclude = extra_exclude if exclude == None else exclude + extra_exclude
+  tbl = Tabler(tcls, rower, empty)
+  return tbl.table(qs, request=request, prefix=prefix, exclude=exclude)
