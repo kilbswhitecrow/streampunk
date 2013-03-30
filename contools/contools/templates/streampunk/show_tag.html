@@ -16,6 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}sel_all.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}Tag: {{ tag.name }}{% endblock %}
 {% block body_content %}
 {% if tag.visible or perms.streampunk.read_private %}
@@ -36,6 +43,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {% if tag.visible or perms.streampunk.read_private %}
 <h2>Items</h2>
+{% render_table ittable %}
+{% comment %}
 <table border="1">
 {% for item in tag_items %}
 <tr><td>{{ item|linky|safe }}</td><td>{{ item.day }}</td><td>{{ item.start }}</td></tr>
@@ -43,15 +52,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><td>No items with this tag yet</td></tr>
 {% endfor %}
 </table>
+{% endcomment %}
 
 <h2>People</h2>
-<table border="1">
-{% for person in tag_people %}
-<tr><td>{{ person|linky|safe }}</td></tr>
-{% empty %}
-<tr><td>No people with this tag yet</td></tr>
-{% endfor %}
-</table>
+
+<form action="{% url make_personlist %}" method="post">
+{% csrf_token %}
+{% render_table pttable %}
+<input type="hidden" name="tagid" value="{{ tag.id }}" />
+<input type="hidden" name="listname" value="People from tag {{ tag.id }}" />
+{% if perms.streampunk.send_item_email %}
+<br/>
+<input type="submit" name="email_select" value="Email selected people" />
+<input type="submit" name="save_select" value="Save selected people as a list" />
+{% endif %}
+</form>
 {% endif %}
 
 {% endblock %}

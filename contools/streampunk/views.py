@@ -313,8 +313,12 @@ class show_tag_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_tag_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
-    context['tag_items'] = self.object.item_set.all()
-    context['tag_people'] = self.object.person_set.all()
+    context['ittable'] = make_tabler(Item, ItemTable, request=self.request,
+                                     qs=self.object.item_set.all(), prefix='it-', empty='No items',
+                                     extra_exclude=['edit', 'remove'])
+    context['pttable'] = make_tabler(Person, PersonTable, request=self.request,
+                                     qs=self.object.person_set.all(), prefix='pt-', empty='No people',
+                                     extra_exclude=['edit'])
     return context
 
 
