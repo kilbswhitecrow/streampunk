@@ -14,13 +14,11 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {%if perms.streampunk.read_private %}
 <h2>Availability</h2>
-<table border="1">
-{% for av in avail %}
-<tr><td>{{ av }}</td></tr>
-{% empty %}
-<tr><td>{{ noAvailMsg|default:"No availability information entered yet"}}</td></tr>
-{% endfor %}
-</table>
+{% render_table atable %}
 {% endif %}

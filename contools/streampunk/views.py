@@ -33,10 +33,12 @@ from streampunk.tables import KitRequestTable
 from streampunk.tables import KitRoomAssignmentTable
 from streampunk.tables import KitItemAssignmentTable
 from streampunk.tables import ItemPersonTable, KitBundleTable
+from streampunk.tables import PersonAvailabilityTable, RoomAvailabilityTable, KitAvailabilityTable
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
 from streampunk.models import UserProfile, ItemKind, RoomCapacity
+from streampunk.models import PersonAvailability, RoomAvailability, KitAvailability
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm
 from streampunk.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from streampunk.forms import TagForm, RoomForm, CheckModelFormSet
@@ -216,6 +218,8 @@ class show_room_detail(DetailView):
                                      qs=context['room_items'], prefix='ri-', empty='No items in this room',
                                      extra_exclude=['room', 'edit', 'remove'])
     context['avail'] = self.object.availability.all()
+    context['atable'] = make_tabler(RoomAvailability, RoomAvailabilityTable, request=self.request,
+                                      qs=context['avail'], prefix='a-', empty='No availability defined')
     context['kitrooms'] = KitRoomAssignment.objects.filter(room=self.object)
     context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
                                       qs=context['kitrooms'], prefix='kra-', empty='No kit assigned',
@@ -311,6 +315,8 @@ class show_person_detail(DetailView):
     context['tagtable'] = make_tabler(Tag, TagTable, request=self.request, qs=tagqs, prefix='tag-', empty='No tags',
                                       extra_exclude=['description', 'visible', 'edit', 'remove'])
     context['avail'] = self.object.availability.all()
+    context['atable'] = make_tabler(PersonAvailability, PersonAvailabilityTable, request=self.request,
+                                      qs=context['avail'], prefix='a-', empty='No availability defined')
     return context
 
 class show_tag_detail(DetailView):
@@ -350,6 +356,8 @@ class show_kitthing_detail(DetailView):
                                       qs=context['kitrooms'], prefix='kra-', empty='Not assigned to rooms',
                                       extra_exclude=['thing'])
     context['avail'] = self.object.availability.all()
+    context['atable'] = make_tabler(KitAvailability, KitAvailabilityTable, request=self.request,
+                                      qs=context['avail'], prefix='a-', empty='No availability defined')
     return context
 
 

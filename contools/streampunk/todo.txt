@@ -69,48 +69,8 @@ Table2 Issues
 - Although I'm hiding the pagination outputs, the Tables are still being
 created with a paginator, and so not all the tags are appearing in the
 list. Need to turn this off somehow.
-- The KitRequest listing is traversing through the request, to the room, to the name, etc.
-This needs hacky methods in the KitRequest to work with my Rower class.
 - I need to figure out how to handle the Delete links - or at least check whether deletion
 is safe at the end of the link.
-- I need to arrange to have the email-items-to-person, etc. in show_item and show_person.
-
-Show person:
-	- Items
-	- tags
-	- Availability
-Show room:
-	- kit room assignments
-	- Items
-	- Availability
-Show tag:
-	- Items
-	- People
-Show Bundle:
-	- Kit Things
-	- Kit Item Assignments
-	- Kit Room Assignments
-Show Kit Thing:
-	- Kit Bundles
-	- Kit Item Assignments
-	- Kit Room Assignments
-	- Availability
-Show Kit Requetst:
-	- Items making request
-Kit Usage:
-	- Kit Room Assignments
-	- Kit Item Assignments
-	- Kit Requests
-Checks
-
-So, generally:
-	- How to have one of:
-		multiple items per cell
-		rowspan
-		some kind of tree structure
-	Don't think these are possible, with Tables2 - will need something else
-	(unless we can do something clever with attributes).
-	- Could create something different that also renders...
 
 Other Things
 ------------

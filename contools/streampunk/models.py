@@ -69,6 +69,16 @@ class Availability(models.Model):
     itemstart = datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(minutes=item.start.start)
     itemend = itemstart + timedelta(minutes=item.length.length)
     return self.fromWhen <= itemstart and itemend <= self.toWhen
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({  "pk":       "pk",
+                    "label":    "label",
+                    "fromWhen": "fromWhen",
+                    "toWhen":   "toWhen" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
     
 
 class KitAvailability(Availability):

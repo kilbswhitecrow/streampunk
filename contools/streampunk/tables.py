@@ -189,3 +189,18 @@ class RoomCapacityTable(tables.Table):
   count = tables.Column()
   class Meta:
     attrs = { "class": "paleblue" }
+
+class AvailabilityTable(tables.Table):
+  label = tables.Column()
+  fromWhen = tables.DateTimeColumn(verbose_name='From')
+  toWhen = tables.DateTimeColumn(verbose_name='To')
+
+class PersonAvailabilityTable(AvailabilityTable):
+  class Meta:
+    attrs = { "class": "paleblue" }
+class RoomAvailabilityTable(AvailabilityTable):
+  class Meta:
+    attrs = { "class": "paleblue" }
+class KitAvailabilityTable(AvailabilityTable):
+  class Meta:
+    attrs = { "class": "paleblue" }
