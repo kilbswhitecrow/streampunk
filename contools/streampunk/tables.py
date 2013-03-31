@@ -139,3 +139,22 @@ class ItemPersonTable(tables.Table):
   remove = tables.LinkColumn('delete_itemperson', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue", "id": "ipt_tbl" }
+
+class ListColumn(tables.Column):
+  def render(self, value):
+    if (len(value)):
+      return mark_safe(reduce((lambda x, y: x+'<br />'+y),
+                              map((lambda z: '<a href="%s">%s</a>' % (z.get_absolute_url(), escape(str(z)))), value)))
+    else:
+      return ''
+
+class KitBundleTable(tables.Table):
+  name = tables.LinkColumn('show_kitbundle_detail', args=[A('pk')])
+  status = tables.Column()
+  things = ListColumn(orderable=False)
+  rooms = ListColumn(orderable=False)
+  # If we call 'used_by' "items", rendering breaks. Can't figure out why
+  used_by = ListColumn(orderable=False, verbose_name='Used by')
+  remove = tables.LinkColumn('delete_kitbundle', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue" }

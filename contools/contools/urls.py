@@ -34,7 +34,7 @@ from streampunk.views import main_page, static_page, list_grids, EditView, NewVi
 from streampunk.views import show_grid, show_slot_detail, email_person, emailed_person, emailed_item, email_item_with_personlist, email_personlist
 from streampunk.views import edit_tags_for_item, edit_tags_for_person
 from streampunk.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
-from streampunk.views import show_kitthing, show_kitbundle
+from streampunk.views import show_kitthing
 from streampunk.views import add_kitbundle_to_room, add_kitbundle_to_item
 from streampunk.views import delete_kitbundle_from_room, delete_kitbundle_from_item
 from streampunk.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item, kit_usage
@@ -45,6 +45,7 @@ from streampunk.views import show_kititemassignment_detail
 from streampunk.views import show_personlist_detail, show_request, make_personlist, make_con_groups
 from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_tags, list_kitthings, list_kitrequests
+from streampunk.views import list_kitbundles
 
 from django_tables2 import SingleTableView
 
@@ -115,9 +116,7 @@ urlpatterns = patterns('',
     url(r'^streampunk/rooms/$', VisibleView.as_view(model=Room,
                                              template_name='streampunk/list_rooms.html'), name='list_rooms'),
     url(r'^streampunk/tags/$', list_tags, name='list_tags'),
-    url(r'^streampunk/kitbundles/$', AllView.as_view(model=KitBundle,
-                                             template_name='streampunk/kitbundle_list.html',
-                                             context_object_name='kitbundles'), name='list_kitbundles'),
+    url(r'^streampunk/kitbundles/$', list_kitbundles, name='list_kitbundles'),
     url(r'^streampunk/kitthings/$', list_kitthings, name='list_kitthings'),
     url(r'^streampunk/kitrequests/$', list_kitrequests, name='list_kitrequests'),
     url(r'^streampunk/itemspeople/$', VisibleView.as_view(model=ItemPerson), name='list_itemspeople'),

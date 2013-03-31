@@ -572,15 +572,19 @@ class KitBundle(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
-  def rooms(self):
-    return KitRoomAssignment.objects.order_by('room').filter(bundle=self)
-  def items(self):
-    return KitItemAssignment.objects.order_by('item').filter(bundle=self)
+  def things_all(self):
+     return self.things.all()
+  def rooms_unique(self):
+    "Provide a set of the rooms using this bundle (so each room appears once)"
+    return set([ kra.room for kra in KitRoomAssignment.objects.order_by('room').filter(bundle=self) ])
+  def items_unique(self):
+    "Provide a set of the items using this bundle (so each items appears once)"
+    return set([ kia.item for kia in KitItemAssignment.objects.order_by('item').filter(bundle=self) ])
 
   def room_count(self):
-    return self.rooms().count()
+    return len(self.rooms_unique())
   def item_count(self):
-    return self.items().count()
+    return len(self.items_unique())
 
   def in_use(self):
     if self.room_count() > 0:
@@ -588,6 +592,19 @@ class KitBundle(models.Model):
     if self.item_count() > 0:
       return True
     return False
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":       "pk",
+                   "name":     "name",
+                   "status":   "status",
+                   "things":   "things_all",
+                   "rooms":    "rooms_unique",
+                   "used_by":  "items_unique",
+                   "remove":   "Remove" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
 
 class KitRoomAssignment(models.Model):
   """

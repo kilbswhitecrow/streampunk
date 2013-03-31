@@ -32,7 +32,7 @@ from streampunk.tables import TagTable, KitThingTable
 from streampunk.tables import KitRequestTable
 from streampunk.tables import KitRoomAssignmentTable
 from streampunk.tables import KitItemAssignmentTable
-from streampunk.tables import ItemPersonTable
+from streampunk.tables import ItemPersonTable, KitBundleTable
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
@@ -214,6 +214,9 @@ class show_room_detail(DetailView):
     context['room_items'] = self.object.item_set.all()
     context['avail'] = self.object.availability.all()
     context['kitrooms'] = KitRoomAssignment.objects.filter(room=self.object)
+    context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
+                                      qs=context['kitrooms'], prefix='kra-', empty='No kit assigned',
+                                      extra_exclude=['item', 'day', 'time'])
     return context
 
 def show_grid(request, dy, gr):
@@ -348,16 +351,6 @@ class show_kitthing_detail(DetailView):
     return context
 
 
-def show_kitbundle(request, kb):
-  kbid = int(kb)
-  kitbundle = KitBundle.objects.get(id = kbid)
-  kitthings = kitbundle.things.all()
-  kititems = KitItemAssignment.objects.filter(bundle = kitbundle)
-  kitrooms = KitRoomAssignment.objects.filter(bundle = kitbundle)
-  return render_to_response('streampunk/show_kitbundle.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
 class show_kitbundle_detail(DetailView):
   context_object_name = 'kitbundle'
   model = KitBundle
@@ -367,8 +360,14 @@ class show_kitbundle_detail(DetailView):
     context = super(show_kitbundle_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
     context['kitthings'] = self.object.things.all()
+    context['kttable'] = make_tabler(KitThing, KitThingTable, request=self.request,
+                                     qs=context['kitthings'], prefix='kt-', empty='No kit things')
     context['kititems'] = KitItemAssignment.objects.filter(bundle = self.object)
+    context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
+                                      qs=context['kititems'], prefix='kia-', empty='No kit assigned')
     context['kitrooms'] = KitRoomAssignment.objects.filter(bundle = self.object)
+    context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
+                                      qs=context['kitrooms'], prefix='kra-', empty='No kit assigned')
     return context
 
 class show_kitrequest_detail(DetailView):
@@ -876,3 +875,9 @@ def list_tags(request):
   table = make_tabler(Tag, TagTable, request=request, qs=qs, prefix='t-', empty='No tags')
   return render(request, "streampunk/list_tags.html", { "ttable": table,
                                                         "verbose_name": 'tag' })
+
+def list_kitbundles(request):
+  table = make_tabler(KitBundle, KitBundleTable, request=request,
+                      qs=KitBundle.objects.all(), prefix='kb-', empty='No kit bundles')
+  return render(request, "streampunk/kitbundle_list.html", { "kbtable": table,
+                                                             "verbose_name": 'kit bundle' })
