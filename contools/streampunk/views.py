@@ -27,7 +27,7 @@ from django.db.models import Count, Sum
 
 from django.shortcuts import render
 from django_tables2 import RequestConfig
-from streampunk.tables import ItemTable, PersonTable, RoomTable, ItemKindTable
+from streampunk.tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
 from streampunk.tables import TagTable, KitThingTable
 from streampunk.tables import KitRequestTable
 from streampunk.tables import KitRoomAssignmentTable
@@ -36,7 +36,7 @@ from streampunk.tables import ItemPersonTable, KitBundleTable
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
-from streampunk.models import UserProfile, ItemKind
+from streampunk.models import UserProfile, ItemKind, RoomCapacity
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm
 from streampunk.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from streampunk.forms import TagForm, RoomForm, CheckModelFormSet
@@ -212,11 +212,16 @@ class show_room_detail(DetailView):
     context = super(show_room_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
     context['room_items'] = self.object.item_set.all()
+    context['ritable'] = make_tabler(Item, ItemTable, request=self.request,
+                                     qs=context['room_items'], prefix='ri-', empty='No items in this room',
+                                     extra_exclude=['room', 'edit', 'remove'])
     context['avail'] = self.object.availability.all()
     context['kitrooms'] = KitRoomAssignment.objects.filter(room=self.object)
     context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
                                       qs=context['kitrooms'], prefix='kra-', empty='No kit assigned',
                                       extra_exclude=['item', 'day', 'time'])
+    context['rctable'] = make_tabler(RoomCapacity, RoomCapacityTable, request=self.request,
+                                     qs=context['room'].capacities.all(), prefix='rc-', empty='No capacities defined')
     return context
 
 def show_grid(request, dy, gr):
@@ -880,3 +885,29 @@ def list_kitbundles(request):
                       qs=KitBundle.objects.all(), prefix='kb-', empty='No kit bundles')
   return render(request, "streampunk/kitbundle_list.html", { "kbtable": table,
                                                              "verbose_name": 'kit bundle' })
+
+def list_rooms_filtered(request, extra_exclude):
+  if request.user.has_perm('progb2.read_private'):
+    qs = Room.objects.all()
+  else:
+    qs = Room.objects.filter(visible = True)
+  table = make_tabler(Room, RoomTable, request=request,
+                      qs=qs, prefix='r-', empty='No rooms', extra_exclude=extra_exclude)
+  return render(request, "streampunk/list_rooms.html", { "rtable": table,
+                                                             "verbose_name": 'room' })
+
+def list_rooms(request):
+  return list_rooms_filtered(request, [ 'canClash', 'needsSound', 'naturalLight', 'securable',
+                                        'controlLightsInRoom', 'controlAirConInRoom',
+                                        'accessibleOnFlat', 'hasCableRuns', 'openableWindows',
+                                        'closableCurtains', 'inRadioRange', 'hasWifi', 'techNotes', 'privNotes' ])
+
+def list_rooms_prog(request):
+  return list_rooms_filtered(request, [ 'isDefault', 'isUndefined', 'canClash',
+                                        'needsSound', 'naturalLight', 'securable',
+                                        'controlLightsInRoom', 'controlAirConInRoom',
+                                        'accessibleOnFlat', 'hasCableRuns', 'openableWindows',
+                                        'closableCurtains', 'inRadioRange' ])
+
+def list_rooms_tech(request):
+  return list_rooms_filtered(request, [ 'gridOrder', 'visible', 'isDefault', 'isUndefined', 'canClash', 'parent'])

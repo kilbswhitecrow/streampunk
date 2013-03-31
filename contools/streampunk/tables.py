@@ -52,7 +52,29 @@ class PersonTable(tables.Table):
 
 class RoomTable(tables.Table):
   name = tables.LinkColumn('show_room_detail', args=[A('pk')])
-  grid = tables.Column()
+  gridOrder = tables.Column(verbose_name='Grid Order')
+  visible = tables.BooleanColumn()
+  isDefault = tables.BooleanColumn(verbose_name='Default?')
+  isUndefined = tables.BooleanColumn(verbose_name='Undef?')
+  canClash = tables.BooleanColumn(verbose_name='Clash?')
+  parent = tables.LinkColumn('show_room_detail', args=[A('parent.id')])
+  description = tables.Column()
+  privNotes = tables.Column()
+  needsSound = tables.BooleanColumn(verbose_name='Sound?')
+  naturalLight = tables.BooleanColumn(verbose_name='NatLight?')
+  securable = tables.BooleanColumn(verbose_name='Secure?')
+  controlLightsInRoom = tables.BooleanColumn(verbose_name='Lights?')
+  controlAirConInRoom = tables.BooleanColumn(verbose_name='AirCon?')
+  accessibleOnFlat = tables.BooleanColumn(verbose_name='Flat?')
+  hasWifi = tables.BooleanColumn(verbose_name='Wifi?')
+  hasCableRuns = tables.BooleanColumn(verbose_name='CblRuns?')
+  openableWindows = tables.BooleanColumn(verbose_name='OpnWnds?')
+  closableCurtains = tables.BooleanColumn(verbose_name='Curtains?')
+  inRadioRange = tables.BooleanColumn(verbose_name='Radio?')
+  techNotes = tables.Column(verbose_name='Tech Notes')
+
+  edit = tables.LinkColumn('edit_room', args=[A('pk')])
+  remove = tables.Column()
   class Meta:
     attrs = { "class": "paleblue" }
 
@@ -156,5 +178,11 @@ class KitBundleTable(tables.Table):
   # If we call 'used_by' "items", rendering breaks. Can't figure out why
   used_by = ListColumn(orderable=False, verbose_name='Used by')
   remove = tables.LinkColumn('delete_kitbundle', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue" }
+
+class RoomCapacityTable(tables.Table):
+  layout = tables.Column()
+  count = tables.Column()
   class Meta:
     attrs = { "class": "paleblue" }

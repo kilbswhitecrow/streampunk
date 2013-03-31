@@ -761,6 +761,16 @@ class RoomCapacity(models.Model):
   def __unicode__(self):
     return u"%s: %d" % (self.layout, self.count)
 
+  @classmethod
+  def rower(cls, request):
+    return Rower({  "pk":        "pk",
+                    "layout":    "layout",
+                    "count":     "count" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
+
+
 class Room(models.Model):
   """
   A Room is where a programme item can take place.
@@ -853,6 +863,42 @@ class Room(models.Model):
       if not self.satisfies_kit_request(req, item):
         return False
     return True
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({  "pk":                 "pk",
+                    "name":               "name",
+                    "gridOrder":          "gridOrder",
+                    "visible":            "visible",
+                    "isDefault":          "isDefault",
+                    "isUndefined":        "isUndefined",
+                    "canClash":           "canClash",
+                    "description":        "description",
+                    "parent":              "parent",
+                    "privNotes":           "privNotes",
+                    "needsSound":          "needsSound",
+                    "naturalLight":        "naturalLight",
+                    "securable":           "securable",
+                    "controlLightsInRoom": "controlLightsInRoom",
+                    "controlAirConInRoom": "controlAirConInRoom",
+                    "accessibleOnFlat":    "accessibleOnFlat",
+                    "hasWifi":             "hasWifi",
+                    "hasCableRuns":        "hasCableRuns",
+                    "openableWindows":     "openableWindows",
+                    "closableCurtains":    "closableCurtains",
+                    "inRadioRange":        "inRadioRange",
+                    "techNotes":           "techNotes",
+                    "edit":                "Edit",
+                    "remove":              "Remove" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    if request.user.has_perm('progb2.read_private'):
+      if request.user.has_perm('progb2.edit_room'):
+        return None
+      else:
+        return ['edit', 'remove']
+    else:
+      return ['visible', 'isDefault', 'isUndefined', 'canClash', 'edit', 'remove']
 
 class Person(models.Model):
   """

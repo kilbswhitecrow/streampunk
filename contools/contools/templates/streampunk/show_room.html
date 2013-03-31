@@ -16,10 +16,12 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
 {% block scripts %}
 <script type="text/javascript" src="{{ STATIC_URL }}show_room.js"></script>
 {% endblock %}
 {% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}show_room.css" />
 {% endblock %}
 {% block title %}Room: {{ room.name }}{% endblock %}
@@ -45,6 +47,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <tr><th>Can clash?</th><td>{{ room.canClash }}</td></tr>
   {% endif %}
 </table>
+
+<p>
+{% render_table rctable %}
+</p>
+<h2>Items</h2>
+{% render_table ritable %}
+
 
 {% if perms.streampunk.read_private or perms.streampunk.edit_tech %}
   <div id="TechVisible">
@@ -88,14 +97,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <p><a href="{% url edit_room pk=room.id %}">Edit room</a>.</p>
 {% endif %}
 
-<h2>Items</h2>
-<table border="1">
-{% for item in room_items %}
-<tr><td>{{ item|linky|safe }}</td><td>{{ item.day }}</td><td>{{ item.start }}</td></tr>
-{% empty %}
-<tr><td>No items in this room</td></tr>
-{% endfor %}
-</table>
 {% include "streampunk/list_avail.html" %}
 
 {% endblock %}

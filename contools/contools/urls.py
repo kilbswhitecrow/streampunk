@@ -44,6 +44,7 @@ from streampunk.views import show_kititemassignment_detail
 from streampunk.views import show_personlist_detail, show_request, make_personlist, make_con_groups
 from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_tags, list_kitthings, list_kitrequests
+from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
 from streampunk.views import list_kitbundles
 
 from django_tables2 import SingleTableView
@@ -112,8 +113,9 @@ urlpatterns = patterns('',
     url(r'^streampunk/grids/$', list_grids, name='list_grids'),
     url(r'^streampunk/people/$', list_people, name='list_people'),
     url(r'^streampunk/items/$', list_items, name='list_items'),
-    url(r'^streampunk/rooms/$', VisibleView.as_view(model=Room,
-                                             template_name='streampunk/list_rooms.html'), name='list_rooms'),
+    url(r'^streampunk/rooms/$', list_rooms, name='list_rooms'),
+    url(r'^streampunk/rooms-prog/$', list_rooms_prog, name='list_rooms_prog'),
+    url(r'^streampunk/rooms-tech/$', list_rooms_tech, name='list_rooms_tech'),
     url(r'^streampunk/tags/$', list_tags, name='list_tags'),
     url(r'^streampunk/kitbundles/$', list_kitbundles, name='list_kitbundles'),
     url(r'^streampunk/kitthings/$', list_kitthings, name='list_kitthings'),

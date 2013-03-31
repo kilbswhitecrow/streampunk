@@ -16,19 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}Rooms{% endblock %}
 {% block body_content %}
-<table border>
-{% for room in room_list %}
-  <tr><td>{{ room|linky|safe }}</td>
-  {% if perms.streampunk.read_private %}
-    {% for cap in room.capacities.all %}
-      <td>{{ cap.layout }}: {{ cap.count }}</td>
-    {% endfor %}
-  {% endif %}
-  </tr>
-{% empty %}
-  <tr><td>No rooms yet</td></tr>
-{% endfor %}
-</table>
+{% render_table rtable %}
 {% endblock %}

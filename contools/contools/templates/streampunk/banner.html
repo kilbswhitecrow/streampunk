@@ -42,6 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {% if perms.streampunk.edit_rooms %}
       <ul class="streampunk_menu_subuls">
        <li><a href="{% url list_rooms %}">List Rooms</a></li>
+       <li><a href="{% url list_rooms_prog %}">List Rooms - Prog</a></li>
+       <li><a href="{% url list_rooms_tech %}">List Rooms - Tech</a></li>
        <li><a href="{% url new_room %}">New Room</a></li>
       </ul>
     {% endif %}
