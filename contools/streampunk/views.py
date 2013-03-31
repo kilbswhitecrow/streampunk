@@ -280,7 +280,7 @@ class show_item_detail(DetailView):
     context['kitrequests'] = self.object.kitRequests.all()
     context['krtable'] = make_tabler(KitRequest, KitRequestTable, request=self.request, qs=context['kitrequests'],
                                      prefix='kr-', empty='No kit requests yet',
-                                     extra_exclude=['item', 'room', 'day', 'start'])
+                                     extra_exclude=['item', 'room', 'day', 'start', 'status', 'notes', 'setup'])
     context['kititems'] = KitItemAssignment.objects.filter(item=self.object)
     context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
                                       qs=context['kititems'], prefix='kia-', empty='No kit assigned',
@@ -378,6 +378,17 @@ class show_kitrequest_detail(DetailView):
   context_object_name = 'kitrequest'
   model = KitRequest
   template_name = 'streampunk/show_kitrequest.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_kitrequest_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['krtable'] = make_tabler(KitRequest, KitRequestTable, request=self.request,
+                                     qs=[ context['kitrequest'] ], prefix='kr-', empty='No kit requests',
+                                     extra_exclude=['item', 'room', 'day', 'start', 'sat'])
+    context['itable'] = make_tabler(KitRequest, KitRequestTable, request=self.request,
+                                    qs=[ context['kitrequest'] ], prefix='kr-', empty='No kit requests',
+                                    extra_exclude=['name', 'kind', 'count', 'status', 'setup', 'notes'])
+    return context
 
 class show_kitroomassignment_detail(DetailView):
   context_object_name = 'kitroomassignment'
@@ -839,7 +850,8 @@ def kit_usage(request):
   kiatable = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=request,
                       qs=KitItemAssignment.objects.all(), prefix='kia-', empty='No kit item assignments')
   krtable = make_tabler(KitRequest, KitRequestTable, request=request,
-                     qs=KitRequest.objects.all(), prefix='kr-', empty='No kit requests')
+                     qs=KitRequest.objects.all(), prefix='kr-', empty='No kit requests',
+                     extra_exclude=['setup', 'notes', 'status'])
   return render_to_response('streampunk/kit_usage.html',
                             locals(),
                             context_instance=RequestContext(request))
@@ -866,7 +878,8 @@ def list_kitthings(request):
                                                             "verbose_name": 'kit thing' })
 
 def list_kitrequests(request):
-  table = make_tabler(KitRequest, KitRequestTable, request=request, qs=KitRequest.objects.all(), prefix='kr-', empty='No kit things')
+  table = make_tabler(KitRequest, KitRequestTable, request=request, qs=KitRequest.objects.all(), prefix='kr-', empty='No kit things',
+                      extra_exclude=['setup', 'notes'])
   return render(request, "streampunk/kitrequest_list.html", { "krtable": table,
                                                             "verbose_name": 'kit thing' })
 

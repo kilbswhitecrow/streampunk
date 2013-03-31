@@ -16,15 +16,13 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %} Kit Request: {{ kitrequest }}{% endblock %}
 {% block body_content %}
-<table border>
-<tr><th>Kind</th><td>{{ kitrequest.kind }}</td></tr>
-<tr><th>Count</th><td>{{ kitrequest.count }}</td></tr>
-<tr><th>Status</th><td>{{ kitrequest.status }}</td></tr>
-<tr><th>Setup Assistance?</th><td>{{ kitrequest.setupAssistance }}</td></tr>
-<tr><th>Notes</th><td>{{ kitrequest.notes }}</td></tr>
-</table>
+{% render_table krtable %}
 
 {% if kitrequest.okay_to_edit %}
 <p><a href="{% url edit_kitrequest pk=kitrequest.id %}">Edit this request</a>.</p>
@@ -34,26 +32,7 @@ cannot edit it.</p>
 {% endif %}
 <h2>Items making this request</h2>
 <p>
-<table border>
-    <tr>
-      <th>Item</th>
-      <th>Room</th>
-      <th>Day</th>
-      <th>Start</th>
-      <th>Satisfied by?</th>
-    </tr>
-    {% for item in kitrequest.item_set.all %}
-      <tr>
-          <td>{{ item|linky|safe }}</td>
-          <td>{{ item.room|linky|safe}}</td>
-          <td>{{ item.day }}</td>
-          <td>{{ item.start }}</td>
-          <td>{{ kitrequest.is_satisfied_by_first }}</td>
-     </tr>
-    {% empty %}
-      <tr><td colspan="5">Not assigned to any items</td></tr>
-    {% endfor %}
-</table>
+{% render_table itable %}
 </p>
 
 {% endblock %}
