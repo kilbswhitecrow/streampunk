@@ -50,11 +50,12 @@ class Tabler:
     self.rower = rower
     self.tclass = tclass
     self.paginate = paginate
+    self.empty_text = empty_text
 
   def table(self, qs, request=None, prefix=None, exclude=None):
     template = 'streampunk/table.html'
     data = [ self.rower.row(thing) for thing in qs ]
-    t = self.tclass(data, prefix=prefix, template=template, exclude=exclude)
+    t = self.tclass(data, prefix=prefix, template=template, exclude=exclude, empty_text=self.empty_text)
     if request:
       config = RequestConfig(request)
       config.configure(t)
@@ -64,5 +65,5 @@ def make_tabler(mcls, tcls, request, qs, prefix=None, empty=None, extra_exclude=
   rower = mcls.rower(request)
   exclude = mcls.tabler_exclude(request)
   exclude = extra_exclude if exclude == None else exclude + extra_exclude
-  tbl = Tabler(tcls, rower, empty)
+  tbl = Tabler(tcls, rower, empty_text=empty)
   return tbl.table(qs, request=request, prefix=prefix, exclude=exclude)
