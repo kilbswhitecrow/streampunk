@@ -16,12 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% if perms.streampunk.read_private %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 <h2>Kit Things</h2>
-<table border>
-{% for thing in kitthings %}
-  <tr><td>{{ thing|linky|safe }}</td></tr>
-{% empty %}
-  <tr><td>No things yet</td></tr>
-{% endfor %}
-</table>
+{% render_table kttable %}
 {% endif %}

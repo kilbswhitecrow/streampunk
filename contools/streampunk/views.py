@@ -325,17 +325,6 @@ class show_tag_detail(DetailView):
     return context
 
 
-def show_kitthing(request, kt):
-  ktid = int(kt)
-  kitthing = KitThing.objects.get(id = ktid)
-  kitbundles = kitthing.kitbundle_set.all()
-  kititems = KitItemAssignment.objects.filter(thing = kitthing)
-  kitrooms = KitRoomAssignment.objects.filter(thing = kitthing)
-  avail = kitthing.availability.all()
-  return render_to_response('streampunk/show_kitthing.html',
-                            locals(),
-                            context_instance=RequestContext(request))
-
 class show_kitthing_detail(DetailView):
   context_object_name = 'kitthing'
   model = KitThing
@@ -345,8 +334,16 @@ class show_kitthing_detail(DetailView):
     context = super(show_kitthing_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
     context['kitbundles'] = self.object.kitbundle_set.all()
+    context['kbtable'] = make_tabler(KitBundle, KitBundleTable, request=self.request,
+                                     qs=context['kitbundles'], prefix='kb-', empty='Not part of any bundle')
     context['kititems'] = KitItemAssignment.objects.filter(thing = self.object)
+    context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
+                                      qs=context['kititems'], prefix='kia-', empty='Not assigned to items',
+                                      extra_exclude=['thing'])
     context['kitrooms'] = KitRoomAssignment.objects.filter(thing = self.object)
+    context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
+                                      qs=context['kitrooms'], prefix='kra-', empty='Not assigned to rooms',
+                                      extra_exclude=['thing'])
     context['avail'] = self.object.availability.all()
     return context
 
@@ -364,10 +361,12 @@ class show_kitbundle_detail(DetailView):
                                      qs=context['kitthings'], prefix='kt-', empty='No kit things')
     context['kititems'] = KitItemAssignment.objects.filter(bundle = self.object)
     context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
-                                      qs=context['kititems'], prefix='kia-', empty='No kit assigned')
+                                      qs=context['kititems'], prefix='kia-', empty='Not assigned to items',
+                                      extra_exclude=['bundle'])
     context['kitrooms'] = KitRoomAssignment.objects.filter(bundle = self.object)
     context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
-                                      qs=context['kitrooms'], prefix='kra-', empty='No kit assigned')
+                                      qs=context['kitrooms'], prefix='kra-', empty='Not assigned to rooms',
+                                      extra_exclude=['thing', 'bundle'])
     return context
 
 class show_kitrequest_detail(DetailView):

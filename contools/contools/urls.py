@@ -34,7 +34,6 @@ from streampunk.views import main_page, static_page, list_grids, EditView, NewVi
 from streampunk.views import show_grid, show_slot_detail, email_person, emailed_person, emailed_item, email_item_with_personlist, email_personlist
 from streampunk.views import edit_tags_for_item, edit_tags_for_person
 from streampunk.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
-from streampunk.views import show_kitthing
 from streampunk.views import add_kitbundle_to_room, add_kitbundle_to_item
 from streampunk.views import delete_kitbundle_from_room, delete_kitbundle_from_item
 from streampunk.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item, kit_usage
