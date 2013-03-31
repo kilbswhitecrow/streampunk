@@ -104,9 +104,9 @@ class KitRequestTable(tables.Table):
     attrs = { "class": "paleblue" }
 
 class KitRoomAssignmentTable(tables.Table):
-  thing = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
-  room = tables.LinkColumn('show_room_detail', args=[A('pk')])
-  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('pk')])
+  thing = tables.LinkColumn('show_kitthing_detail', args=[A('thing.id')])
+  room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
+  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
   fromday = tables.Column()
   fromtime = tables.Column()
   today = tables.Column()
@@ -116,10 +116,10 @@ class KitRoomAssignmentTable(tables.Table):
     attrs = { "class": "paleblue" }
 
 class KitItemAssignmentTable(tables.Table):
-  thing = tables.LinkColumn('show_kitthing_detail', args=[A('pk')])
-  item = tables.LinkColumn('show_item_detail', args=[A('pk')])
-  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('pk')])
-  room = tables.LinkColumn('show_room_detail', args=[A('pk')])
+  thing = tables.LinkColumn('show_kitthing_detail', args=[A('thing.id')])
+  item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
+  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
+  room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
   day = tables.Column()
   time = tables.Column()
   remove = tables.LinkColumn('delete_kititemassignment', args=[A('pk')])
