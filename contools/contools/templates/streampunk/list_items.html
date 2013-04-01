@@ -28,7 +28,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   {% render_table itable %}
 {% endblock %}
 {% block list_tail %}
-{% if perms.streampunk.edit_kit or perms.streampunk.edit_programme or  perms.streampunk.edit_private %}
-<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
-{% endif %}
 {% endblock %}

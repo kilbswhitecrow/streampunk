@@ -23,9 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}{{ verbose_name_plural }} {% endblock %}
 {% block body_content %}
 {% render_table kttable %}
-{% if perms.streampunk.edit_kit %}
-<p><a href="{{ new_url }}">Add new {{ verbose_name }}</a>.</p>
-{% endif %}
 <hr/>
 <p>This is kitthing_list.html</p>
 {% endblock %}

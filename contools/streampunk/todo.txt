@@ -1,10 +1,3 @@
-Deleting
---------
-The Remove? link for items isn't active. People doesn't have one. Have we
-forgotten about deleting things on the main tables? Probably.
-Ditto for Adding New things - links are missing, or are to the list page, not
-the addition page. But the links on the banner work, so use that instead.
-
 Kit, Generally
 --------------
 - object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
@@ -71,10 +64,6 @@ Table2 Issues
 - Although I'm hiding the pagination outputs, the Tables are still being
 created with a paginator, and so not all the tags are appearing in the
 list. Need to turn this off somehow.
-- I need to figure out how to handle the Delete links - or at least check whether deletion
-is safe at the end of the link.
-	- KitThing and KitBundle have in_use()
-	- KitRequest has okay_to_edit()
 
 Other Things
 ------------
