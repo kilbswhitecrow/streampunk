@@ -96,7 +96,7 @@ class RoomTable(tables.Table):
 class ItemTable(tables.Table):
   day = tables.Column(order_by=[A('day.date')])
   time = tables.Column(order_by=[A('time.start')])
-  room = tables.LinkColumn('show_room_detail', args=[A('pk')], order_by=[A('room.name')])
+  room = tables.LinkColumn('show_room_detail', args=[A('room.id')], order_by=[A('room.name')])
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
   shortname = tables.Column()
   edit = EditColumn('edit_item', args=[A('pk')])
