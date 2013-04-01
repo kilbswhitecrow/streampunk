@@ -443,6 +443,10 @@ class KitRequest(models.Model):
     "This should never return false, because the same Request shouldn't be used by multiple items."
     return self.item_set.count() < 2
 
+  def okay_to_delete(self):
+    "This should never return false, because the same Request shouldn't be used by multiple items."
+    return self.item_set.count() < 2
+
   def is_satisfied_by(self):
     """
     Returns a list of all the KitItemAssignments and KitRoomAssignments that satisfy this request.
@@ -551,6 +555,10 @@ class KitThing(models.Model):
 
   def in_use(self):
     return self.kitbundle_set.exists() or self.kititemassignment_set.exists() or self.kitroomassignment_set.exists()
+  def okay_to_edit(self):
+    return (self.kitbundle_set.count() + self.kititemassignment_set.count() + self.kitroomassignment_set.count()) < 2
+  def okay_to_delete(self):
+    return not self.in_use()
 
   @classmethod
   def rower(cls, request=None):
@@ -559,6 +567,7 @@ class KitThing(models.Model):
                    "kind":   "kind",
                    "count":  "count",
                    "notes":  "notes",
+                   "edit":   "Edit",
                    "remove": "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
@@ -605,6 +614,11 @@ class KitBundle(models.Model):
     if self.item_count() > 0:
       return True
     return False
+
+  def okay_to_edit(self):
+    return (self.room_count() + self.item_count()) < 2
+  def okay_to_delete(self):
+    return not self.in_use()
 
   @classmethod
   def rower(cls, request):
@@ -1047,7 +1061,8 @@ class Person(models.Model):
                    "lastName":   "lastName",
                    "badge":      "badge",
                    "email":      "email",
-                   "edit":       "Edit" })
+                   "edit":       "Edit",
+                   "remove":     "Remove" })
 
   @classmethod
   def tabler_exclude(cls, request):

@@ -38,6 +38,20 @@ def select_attrs(tbl):
   }
   return attrs
 
+class EditColumn(tables.LinkColumn):
+  def render(self, value, record, bound_column):
+    if record['okay_to_edit']:
+      return super(EditColumn, self).render(value=value, record=record, bound_column=bound_column)
+    else:
+      return '-'
+
+class RemoveColumn(tables.LinkColumn):
+  def render(self, value, record, bound_column):
+    if record['okay_to_delete']:
+      return super(RemoveColumn, self).render(value=value, record=record, bound_column=bound_column)
+    else:
+      return '-'
+
 class PersonTable(tables.Table):
   select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('persontable') )
   name = tables.LinkColumn('show_person_detail', args=[A('pk')])
@@ -46,7 +60,8 @@ class PersonTable(tables.Table):
   lastName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   badge = tables.LinkColumn('show_person_detail', args=[A('pk')])
   email = tables.EmailColumn()
-  edit = tables.LinkColumn('edit_person', args=[A('pk')])
+  edit = EditColumn('edit_person', args=[A('pk')])
+  remove = RemoveColumn('delete_person', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue", "id": "sel_tbl" }
 
@@ -73,8 +88,8 @@ class RoomTable(tables.Table):
   inRadioRange = tables.BooleanColumn(verbose_name='Radio?')
   techNotes = tables.Column(verbose_name='Tech Notes')
 
-  edit = tables.LinkColumn('edit_room', args=[A('pk')])
-  remove = tables.Column()
+  edit = EditColumn('edit_room', args=[A('pk')])
+  remove = RemoveColumn('delete_room', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 
@@ -84,8 +99,8 @@ class ItemTable(tables.Table):
   room = tables.LinkColumn('show_room_detail', args=[A('pk')], order_by=[A('room.name')])
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
   shortname = tables.Column()
-  edit = tables.LinkColumn('edit_item', args=[A('pk')])
-  remove = tables.Column()
+  edit = EditColumn('edit_item', args=[A('pk')])
+  remove = RemoveColumn('delete_item', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 
@@ -99,8 +114,8 @@ class TagTable(tables.Table):
   name = tables.LinkColumn('show_tag_detail', args=[A('pk')])
   description = tables.Column()
   visible = tables.BooleanColumn()
-  edit = tables.LinkColumn('edit_tag', args=[A('pk')])
-  remove = tables.Column()
+  edit = EditColumn('edit_tag', args=[A('pk')])
+  remove = RemoveColumn('delete_tag', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 
@@ -109,7 +124,8 @@ class KitThingTable(tables.Table):
   kind = tables.Column(order_by=[A('kind.name')])
   count = tables.Column()
   notes = tables.Column()
-  remove = tables.LinkColumn('delete_kitthing', args=[A('pk')])
+  edit = EditColumn('edit_kitthing', args=[A('pk')])
+  remove = RemoveColumn('delete_kitthing', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
   
@@ -136,7 +152,7 @@ class KitRoomAssignmentTable(tables.Table):
   fromtime = tables.Column()
   today = tables.Column()
   totime = tables.Column()
-  remove = tables.LinkColumn('delete_kitroomassignment', args=[A('pk')])
+  remove = RemoveColumn('delete_kitroomassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 
@@ -147,7 +163,7 @@ class KitItemAssignmentTable(tables.Table):
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
   day = tables.Column()
   time = tables.Column()
-  remove = tables.LinkColumn('delete_kititemassignment', args=[A('pk')])
+  remove = RemoveColumn('delete_kititemassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 
@@ -160,8 +176,8 @@ class ItemPersonTable(tables.Table):
   visible = tables.BooleanColumn()
   distEmail = tables.BooleanColumn(verbose_name='share email addr?')
   recordingOkay = tables.BooleanColumn(verbose_name='Record item?')
-  edit = tables.LinkColumn('edit_itemperson', args=[A('pk')])
-  remove = tables.LinkColumn('delete_itemperson', args=[A('pk')])
+  edit = EditColumn('edit_itemperson', args=[A('pk')])
+  remove = RemoveColumn('delete_itemperson', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue", "id": "ipt_tbl" }
 
@@ -180,7 +196,7 @@ class KitBundleTable(tables.Table):
   rooms = ListColumn(orderable=False)
   # If we call 'used_by' "items", rendering breaks. Can't figure out why
   used_by = ListColumn(orderable=False, verbose_name='Used by')
-  remove = tables.LinkColumn('delete_kitbundle', args=[A('pk')])
+  remove = RemoveColumn('delete_kitbundle', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 

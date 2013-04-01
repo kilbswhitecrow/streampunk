@@ -42,6 +42,19 @@ class Rower:
           except (AttributeError, TypeError):
             # use the string as a literal
             r[k] = v
+    # Add a couple of standard attributes to the record that aren't
+    # part of the table, but are used to drive the rendering of the
+    # Edit/Remove fields. If the object doesn't include methods for
+    # determining that, then default to saying 'yes', okay. Note
+    # that permissions are checked separately.
+    try:
+      r['okay_to_edit'] = thing.okay_to_edit()
+    except AttributeError:
+      r['okay_to_edit'] = True
+    try:
+      r['okay_to_delete'] = thing.okay_to_delete()
+    except AttributeError:
+      r['okay_to_delete'] = True
     return r
 
 

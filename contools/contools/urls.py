@@ -163,6 +163,14 @@ urlpatterns = patterns('',
           model=KitBundle)), name='delete_kitbundle'),
     url(r'^streampunk/delete_kitthing/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=KitThing)), name='delete_kitthing'),
+    url(r'^streampunk/delete_item/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=Item)), name='delete_item'),
+    url(r'^streampunk/delete_room/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=Room)), name='delete_room'),
+    url(r'^streampunk/delete_person/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=Person)), name='delete_person'),
+    url(r'^streampunk/delete_tag/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=Tag)), name='delete_tag'),
 
     url(r'^streampunk/edit_item/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(EditView.as_view(
           model = Item,
