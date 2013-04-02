@@ -1,6 +1,35 @@
+Comments from Michael Abbot
+---------------------------
+Save and restore (related to backups)
+timing clash asap
+short description and long description (latter is for panellists, to include email to panellists)
+bug report: availabilty: superset of smaller avail couldn't be deleted. John Jarrold.
+multiple versions of notes fields, wherein the committee decide which are pub/priv, including in email.
+swamp two items function. (Or rotate N items)
+kit things - move-delays.
+Bug: if person added multiple times, can't just remove one.
+Suggestions for ways to fix clashes.
+Check: concurrent items that have the same tag.
+training course for progdb
+
+Comments from Steve R
+---------------------
+Include memnum in person listing. And item count.
+"has projector" button.
+notification that tech-related things have changed. How to have a change by Steve R
+notify Lindsay that something has changed? Have people subscribe, to ask for email?
+
+
+Next up
+-------
+- Restructure the days/grids/slots, to have different slots per day.
+
 Kit, Generally
 --------------
+- Add a flag from prog team to tech team "please take note of this!" or
+  "I don't understand this request!"
 - object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
+- We should have different Forms for editing rooms, based on the view of the person editing.
 
 - Current links (all needs updating again):
 	- Item:
@@ -58,6 +87,10 @@ some changes:
 - Or we could make the Slot have the ManyToManyField to the ConDay, and then
   we'd be able to assert that each possible start-time was unique. We'd be
   complicating the start-time selection, though.
+- Perhaps just add a foreign key from Slot to ConDay, and so when you select
+  the start of an item, you're selecting (day time), rather than selecting
+  the day and time separately? That might actually be easier than selecting
+  the day and time separately.
 
 Table2 Issues
 -------------
@@ -87,7 +120,6 @@ Other Things
 	And include the ability to edit the profile - seems we're
 	missing that at present, so clicking on the username in
 	the banner causes an exception.
-- Revisions
 - AJAX
 - Regression testing
 - PDF generation
@@ -97,8 +129,10 @@ Other Things
 - XML dump
 - Static pages
 - Distribution mechanism (not just pushed up to github).
+- Email attachments
 - Item Moves. Add when we need that.
 - Revisions
+	Hide from edit field, default to latest.
 	Need to model personel changes, too.
 - User creation
 	When we create a user, we should trigger the password-reset
@@ -135,3 +169,6 @@ Bugs:
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have
   that converted to mins.
+
+We should add %p1, %p2 kind of things to item blurb, so that people on the
+programme can be named in the blurb.
