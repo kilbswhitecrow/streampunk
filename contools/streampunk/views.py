@@ -28,7 +28,7 @@ from django.db.models import Count, Sum
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from streampunk.tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
-from streampunk.tables import TagTable, KitThingTable
+from streampunk.tables import TagTable, KitThingTable, GridTable
 from streampunk.tables import KitRequestTable
 from streampunk.tables import KitRoomAssignmentTable
 from streampunk.tables import KitItemAssignmentTable
@@ -199,8 +199,8 @@ def main_page(request):
                             context_instance=RequestContext(request))
 
 def list_grids(request):
-  grid_list = Grid.objects.all()
-  day_list = ConDay.objects.all()
+  gtable = make_tabler(Grid, GridTable, request=request,
+                       qs=Grid.objects.all(), prefix='g-', empty='No grids')
   return render_to_response('streampunk/list_grids.html',
                             locals(),
                             context_instance=RequestContext(request))
@@ -228,20 +228,18 @@ class show_room_detail(DetailView):
                                      qs=context['room'].capacities.all(), prefix='rc-', empty='No capacities defined')
     return context
 
-def show_grid(request, dy, gr):
-  did = int(dy)
-  day = ConDay.objects.get(id = did)
+def show_grid(request, gr):
   gid = int(gr)
   grid = Grid.objects.get(id = gid)
   slots = grid.slots.all()
   # Following is buggy: it won't include any items that start
   # earlier, but run into this grid.
   if request.user.has_perm('progb2.read_private'):
-    items = Item.objects.filter(day = day, start__in = slots)
+    items = Item.objects.filter(start__in = slots)
     people = ItemPerson.objects.filter(item__in=items)
     rooms = Room.objects.all();
   else:
-    items = Item.objects.filter(day = day, start__in = slots, visible=True)
+    items = Item.objects.filter(start__in = slots, visible=True)
     people = ItemPerson.objects.filter(visible=True).filter(item__in=items)
     rooms = Room.objects.filter(visible=True);
       
@@ -750,35 +748,31 @@ def add_kitrequest_to_item(request, pk):
                             locals(),
                             context_instance=RequestContext(request))
 
-def fill_slot_gen(request, d, g, r, s, cls, suf):
-  did = int(d)
-  gid = int(g)
+def fill_slot_gen(request, r, s, cls, suf):
   rid = int(r)
   sid = int(s)
-  day = ConDay.objects.get(id = did)
-  grid = Grid.objects.get(id = gid)
   room = Room.objects.get(id = rid)
   slot = Slot.objects.get(id = sid)
+  grid = slot.grid_set.all()[0]
   if request.method == 'POST':
     form = cls(request.POST)
     if form.is_valid():
       item = form.cleaned_data['item']
       item.room = room
       item.start = slot
-      item.day = day
       item.save()
-      return HttpResponseRedirect(reverse('show_grid', args=(did, gid,)))
+      return HttpResponseRedirect(reverse('show_grid', args=(grid.id,)))
   else:
     form = cls()
   return render_to_response('streampunk/fill_slot.html',
                             locals(),
                             context_instance=RequestContext(request))
 
-def fill_slot_sched(request, d, g, r, s):
-  return fill_slot_gen(request, d, g, r, s, FillSlotSchedForm, 's')
+def fill_slot_sched(request, r, s):
+  return fill_slot_gen(request, r, s, FillSlotSchedForm, 's')
 
-def fill_slot_unsched(request, d, g, r, s):
-  return fill_slot_gen(request, d, g, r, s, FillSlotUnschedForm, 'u')
+def fill_slot_unsched(request, r, s):
+  return fill_slot_gen(request, r, s, FillSlotUnschedForm, 'u')
 
 def list_checks(request):
   CheckFormSet = modelformset_factory(Check, extra=0, formset=CheckModelFormSet, fields=())

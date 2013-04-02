@@ -16,18 +16,11 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
+{% load render_table from django_tables2 %}
+{% block styles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+{% endblock %}
 {% block title %}Grids{% endblock %}
 {% block body_content %}
-<table border>
-{% for day in day_list %}
-<tr><th>{{ day }}</th>
-{% for grid in grid_list %}
-  <td>{{ grid|linky2:day|safe }}</td>
-{% empty %}
-  <td><em>No grid items!</em></td>
-{% endfor %}
-{% empty %}
-<tr><td><em>No days!</em></td></tr>
-{% endfor %}</tr>
-</table>
+{% render_table gtable %}
 {% endblock %}

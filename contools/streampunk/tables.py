@@ -94,8 +94,7 @@ class RoomTable(tables.Table):
     attrs = { "class": "paleblue" }
 
 class ItemTable(tables.Table):
-  day = tables.Column(order_by=[A('day.date')])
-  time = tables.Column(order_by=[A('time.start')])
+  start = tables.Column(order_by=[A('start.start')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')], order_by=[A('room.name')])
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
   shortname = tables.Column()
@@ -138,7 +137,6 @@ class KitRequestTable(tables.Table):
   notes = tables.Column()
   item = tables.LinkColumn('show_item_detail', args=[A('item.pk')], verbose_name='Requested by')
   room = tables.LinkColumn('show_room_detail', args=[A('room.pk')])
-  day = tables.Column()
   start = tables.Column()
   sat = tables.Column(verbose_name='Satisfied by?')
   class Meta:
@@ -148,10 +146,8 @@ class KitRoomAssignmentTable(tables.Table):
   thing = tables.LinkColumn('show_kitthing_detail', args=[A('thing.id')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
   bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
-  fromday = tables.Column()
-  fromtime = tables.Column()
-  today = tables.Column()
-  totime = tables.Column()
+  fromSlot = tables.Column()
+  toSlot = tables.Column()
   remove = RemoveColumn('delete_kitroomassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
@@ -161,7 +157,6 @@ class KitItemAssignmentTable(tables.Table):
   item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
   bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
-  day = tables.Column()
   time = tables.Column()
   remove = RemoveColumn('delete_kititemassignment', args=[A('pk')])
   class Meta:
@@ -218,5 +213,10 @@ class RoomAvailabilityTable(AvailabilityTable):
   class Meta:
     attrs = { "class": "paleblue" }
 class KitAvailabilityTable(AvailabilityTable):
+  class Meta:
+    attrs = { "class": "paleblue" }
+
+class GridTable(tables.Table):
+  name = tables.LinkColumn('show_grid', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }

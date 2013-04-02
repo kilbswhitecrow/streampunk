@@ -22,7 +22,9 @@ notify Lindsay that something has changed? Have people subscribe, to ask for ema
 
 Next up
 -------
-- Restructure the days/grids/slots, to have different slots per day.
+- Find a way to display the grids as a day x time grid, again.
+- XML dump, for ConText
+- Fix "fill slot" logic.
 
 Kit, Generally
 --------------
@@ -75,22 +77,10 @@ Thing assignment, but that won't help for deleting all the things in a bundle.)
 
 Grid Issues
 -----------
-There have been several cons that have wanted different grid layouts
-on different days, so we should recognise that. We'll need to make
-some changes:
-- Grids would need a ManyToManyField for ConDay, to indicate which
-  day uses them.
-- Grids currently assume that the ManyToManyField for Slot are consecutive
-  slots, though I haven't checked what happens if they're not. Perhaps we
-  should be saying that the slots must be contiguous, so that each slot's
-  length fills the gap until the next slot's starting time.
-- Or we could make the Slot have the ManyToManyField to the ConDay, and then
-  we'd be able to assert that each possible start-time was unique. We'd be
-  complicating the start-time selection, though.
-- Perhaps just add a foreign key from Slot to ConDay, and so when you select
-  the start of an item, you're selecting (day time), rather than selecting
-  the day and time separately? That might actually be easier than selecting
-  the day and time separately.
+- Doesn't currently display items that start before the grid does.
+- Doesn't list the grids in (day x time) table.
+- Fill-slot doesn't list scheduled/unscheduled items. Should just
+do that as two separate forms within the page, with two submits.
 
 Table2 Issues
 -------------

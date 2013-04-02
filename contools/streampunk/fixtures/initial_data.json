@@ -116,6 +116,49 @@
       "slotText": "10-11am", 
       "visible": true, 
       "startText": "10am", 
+      "day": 1,
+      "start": 600, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 85, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "10-11am", 
+      "visible": true, 
+      "startText": "10am", 
+      "day": 2,
+      "start": 600, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 101, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "10-11am", 
+      "visible": true, 
+      "startText": "10am", 
+      "day": 3,
+      "start": 600, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 117, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "10-11am", 
+      "visible": true, 
+      "startText": "10am", 
+      "day": 4,
       "start": 600, 
       "length": 22, 
       "isDefault": false, 
@@ -129,6 +172,49 @@
       "slotText": "11am-Noon", 
       "visible": true, 
       "startText": "11am", 
+      "day": 1,
+      "start": 660, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 86, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "11am-Noon", 
+      "visible": true, 
+      "startText": "11am", 
+      "day": 2,
+      "start": 660, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 102, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "11am-Noon", 
+      "visible": true, 
+      "startText": "11am", 
+      "day": 3,
+      "start": 660, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 118, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "11am-Noon", 
+      "visible": true, 
+      "startText": "11am", 
+      "day": 4,
       "start": 660, 
       "length": 22, 
       "isDefault": false, 
@@ -142,6 +228,49 @@
       "slotText": "Noon-1pm", 
       "visible": true, 
       "startText": "Noon", 
+      "day": 1,
+      "start": 720, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 87, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "Noon-1pm", 
+      "visible": true, 
+      "startText": "Noon", 
+      "day": 2,
+      "start": 720, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 103, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "Noon-1pm", 
+      "visible": true, 
+      "startText": "Noon", 
+      "day": 3,
+      "start": 720, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 119, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "Noon-1pm", 
+      "visible": true, 
+      "startText": "Noon", 
+      "day": 4,
       "start": 720, 
       "length": 22, 
       "isDefault": false, 
@@ -155,6 +284,49 @@
       "slotText": "1-2pm", 
       "visible": true, 
       "startText": "1pm", 
+      "day": 1,
+      "start": 780, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 88, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "1-2pm", 
+      "visible": true, 
+      "startText": "1pm", 
+      "day": 2,
+      "start": 780, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 104, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "1-2pm", 
+      "visible": true, 
+      "startText": "1pm", 
+      "day": 3,
+      "start": 780, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 120, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "1-2pm", 
+      "visible": true, 
+      "startText": "1pm", 
+      "day": 4,
       "start": 780, 
       "length": 22, 
       "isDefault": false, 
@@ -168,6 +340,49 @@
       "slotText": "2-3pm", 
       "visible": true, 
       "startText": "2pm", 
+      "day": 1,
+      "start": 840, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 89, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "2-3pm", 
+      "visible": true, 
+      "startText": "2pm", 
+      "day": 2,
+      "start": 840, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 105, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "2-3pm", 
+      "visible": true, 
+      "startText": "2pm", 
+      "day": 3,
+      "start": 840, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 121, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "2-3pm", 
+      "visible": true, 
+      "startText": "2pm", 
+      "day": 4,
       "start": 840, 
       "length": 22, 
       "isDefault": false, 
@@ -181,6 +396,49 @@
       "slotText": "3-4pm", 
       "visible": true, 
       "startText": "3pm", 
+      "day": 1,
+      "start": 900, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 90, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "3-4pm", 
+      "visible": true, 
+      "startText": "3pm", 
+      "day": 2,
+      "start": 900, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 106, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "3-4pm", 
+      "visible": true, 
+      "startText": "3pm", 
+      "day": 3,
+      "start": 900, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 122, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "3-4pm", 
+      "visible": true, 
+      "startText": "3pm", 
+      "day": 4,
       "start": 900, 
       "length": 22, 
       "isDefault": false, 
@@ -194,6 +452,49 @@
       "slotText": "4-5pm", 
       "visible": true, 
       "startText": "4pm", 
+      "day": 1,
+      "start": 960, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 91, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "4-5pm", 
+      "visible": true, 
+      "startText": "4pm", 
+      "day": 2,
+      "start": 960, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 107, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "4-5pm", 
+      "visible": true, 
+      "startText": "4pm", 
+      "day": 3,
+      "start": 960, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 123, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "4-5pm", 
+      "visible": true, 
+      "startText": "4pm", 
+      "day": 4,
       "start": 960, 
       "length": 22, 
       "isDefault": false, 
@@ -207,6 +508,49 @@
       "slotText": "5-6pm", 
       "visible": true, 
       "startText": "5pm", 
+      "day": 1,
+      "start": 1020, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 92, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "5-6pm", 
+      "visible": true, 
+      "startText": "5pm", 
+      "day": 2,
+      "start": 1020, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 108, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "5-6pm", 
+      "visible": true, 
+      "startText": "5pm", 
+      "day": 3,
+      "start": 1020, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 124, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "5-6pm", 
+      "visible": true, 
+      "startText": "5pm", 
+      "day": 4,
       "start": 1020, 
       "length": 22, 
       "isDefault": false, 
@@ -220,6 +564,49 @@
       "slotText": "6-7pm", 
       "visible": true, 
       "startText": "6pm", 
+      "day": 1,
+      "start": 1080, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 93, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "6-7pm", 
+      "visible": true, 
+      "startText": "6pm", 
+      "day": 2,
+      "start": 1080, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 109, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "6-7pm", 
+      "visible": true, 
+      "startText": "6pm", 
+      "day": 3,
+      "start": 1080, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 125, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "6-7pm", 
+      "visible": true, 
+      "startText": "6pm", 
+      "day": 4,
       "start": 1080, 
       "length": 22, 
       "isDefault": false, 
@@ -233,6 +620,49 @@
       "slotText": "7-8pm", 
       "visible": true, 
       "startText": "7pm", 
+      "day": 1,
+      "start": 1140, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 94, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "7-8pm", 
+      "visible": true, 
+      "startText": "7pm", 
+      "day": 2,
+      "start": 1140, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 110, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "7-8pm", 
+      "visible": true, 
+      "startText": "7pm", 
+      "day": 3,
+      "start": 1140, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 126, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "7-8pm", 
+      "visible": true, 
+      "startText": "7pm", 
+      "day": 4,
       "start": 1140, 
       "length": 22, 
       "isDefault": false, 
@@ -246,6 +676,49 @@
       "slotText": "8-9pm", 
       "visible": true, 
       "startText": "8pm", 
+      "day": 1,
+      "start": 1200, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 95, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "8-9pm", 
+      "visible": true, 
+      "startText": "8pm", 
+      "day": 2,
+      "start": 1200, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 111, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "8-9pm", 
+      "visible": true, 
+      "startText": "8pm", 
+      "day": 3,
+      "start": 1200, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 127, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "8-9pm", 
+      "visible": true, 
+      "startText": "8pm", 
+      "day": 4,
       "start": 1200, 
       "length": 22, 
       "isDefault": false, 
@@ -259,6 +732,49 @@
       "slotText": "9-10pm", 
       "visible": true, 
       "startText": "9pm", 
+      "day": 1,
+      "start": 1260, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 96, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "9-10pm", 
+      "visible": true, 
+      "startText": "9pm", 
+      "day": 2,
+      "start": 1260, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 112, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "9-10pm", 
+      "visible": true, 
+      "startText": "9pm", 
+      "day": 3,
+      "start": 1260, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 128, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "9-10pm", 
+      "visible": true, 
+      "startText": "9pm", 
+      "day": 4,
       "start": 1260, 
       "length": 22, 
       "isDefault": false, 
@@ -272,6 +788,49 @@
       "slotText": "10-11pm", 
       "visible": true, 
       "startText": "10pm", 
+      "day": 1,
+      "start": 1320, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 97, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "10-11pm", 
+      "visible": true, 
+      "startText": "10pm", 
+      "day": 2,
+      "start": 1320, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 113, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "10-11pm", 
+      "visible": true, 
+      "startText": "10pm", 
+      "day": 3,
+      "start": 1320, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 129, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "10-11pm", 
+      "visible": true, 
+      "startText": "10pm", 
+      "day": 4,
       "start": 1320, 
       "length": 22, 
       "isDefault": false, 
@@ -285,6 +844,49 @@
       "slotText": "11pm-Midnight", 
       "visible": true, 
       "startText": "11pm", 
+      "day": 1,
+      "start": 1380, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 98, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "11pm-Midnight", 
+      "visible": true, 
+      "startText": "11pm", 
+      "day": 2,
+      "start": 1380, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 114, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "11pm-Midnight", 
+      "visible": true, 
+      "startText": "11pm", 
+      "day": 3,
+      "start": 1380, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 130, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "11pm-Midnight", 
+      "visible": true, 
+      "startText": "11pm", 
+      "day": 4,
       "start": 1380, 
       "length": 22, 
       "isDefault": false, 
@@ -298,6 +900,49 @@
       "slotText": "Midnight-1am", 
       "visible": true, 
       "startText": "Midnight", 
+      "day": 1,
+      "start": 1440, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 99, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "Midnight-1am", 
+      "visible": true, 
+      "startText": "Midnight", 
+      "day": 2,
+      "start": 1440, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 115, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "Midnight-1am", 
+      "visible": true, 
+      "startText": "Midnight", 
+      "day": 3,
+      "start": 1440, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 131, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "Midnight-1am", 
+      "visible": true, 
+      "startText": "Midnight", 
+      "day": 4,
       "start": 1440, 
       "length": 22, 
       "isDefault": false, 
@@ -311,6 +956,49 @@
       "slotText": "1-2am", 
       "visible": true, 
       "startText": "1am", 
+      "day": 1,
+      "start": 1500, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 100, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "1-2am", 
+      "visible": true, 
+      "startText": "1am", 
+      "day": 2,
+      "start": 1500, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 116, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "1-2am", 
+      "visible": true, 
+      "startText": "1am", 
+      "day": 3,
+      "start": 1500, 
+      "length": 22, 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 132, 
+    "model": "streampunk.slot", 
+    "fields": {
+      "slotText": "1-2am", 
+      "visible": true, 
+      "startText": "1am", 
+      "day": 4,
       "start": 1500, 
       "length": 22, 
       "isDefault": false, 
@@ -329,33 +1017,19 @@
       "isDefault": true, 
       "isUndefined": true
     }
-  }, 
+  },
   {
-    "pk": 8, 
+    "pk": 5, 
     "model": "streampunk.grid", 
     "fields": {
-      "gridOrder": 4, 
+      "gridOrder": 1, 
       "slots": [
-        80, 
-        81, 
-        82, 
-        83
+        68, 
+        69, 
+        70, 
+        71
       ], 
-      "name": "10pm-2am"
-    }
-  }, 
-  {
-    "pk": 7, 
-    "model": "streampunk.grid", 
-    "fields": {
-      "gridOrder": 3, 
-      "slots": [
-        76, 
-        77, 
-        78, 
-        79
-      ], 
-      "name": "6-10pm"
+      "name": "Friday 10am-2pm"
     }
   }, 
   {
@@ -369,23 +1043,205 @@
         74, 
         75
       ], 
-      "name": "2-6pm"
+      "name": "Friday 2-6pm"
     }
   }, 
   {
-    "pk": 5, 
+    "pk": 7, 
     "model": "streampunk.grid", 
     "fields": {
-      "gridOrder": 1, 
+      "gridOrder": 3, 
       "slots": [
-        68, 
-        69, 
-        70, 
-        71
+        76, 
+        77, 
+        78, 
+        79
       ], 
-      "name": "10am-2pm"
+      "name": "Friday 6-10pm"
     }
   }, 
+  {
+    "pk": 8, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 4, 
+      "slots": [
+        80, 
+        81, 
+        82, 
+        83
+      ], 
+      "name": "Friday 10pm-2am"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 5, 
+      "slots": [
+        85, 
+        86, 
+        87, 
+        88
+      ], 
+      "name": "Saturday 10am-2pm"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 6, 
+      "slots": [
+        89, 
+        90, 
+        91, 
+        92
+      ], 
+      "name": "Saturday 2-6pm"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 7, 
+      "slots": [
+        93, 
+        94, 
+        95, 
+        96
+      ], 
+      "name": "Saturday 6-10pm"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 8, 
+      "slots": [
+        97, 
+        98, 
+        99, 
+        100
+      ], 
+      "name": "Saturday 10pm-2am"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 9, 
+      "slots": [
+        101, 
+        102, 
+        103, 
+        104
+      ], 
+      "name": "Sunday 10am-2pm"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 10, 
+      "slots": [
+        105, 
+        106, 
+        107, 
+        108
+      ], 
+      "name": "Sunday 2-6pm"
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 11, 
+      "slots": [
+        109, 
+        110, 
+        111, 
+        112
+      ], 
+      "name": "Sunday 6-10pm"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 12, 
+      "slots": [
+        113, 
+        114, 
+        115, 
+        116
+      ], 
+      "name": "Sunday 10pm-2am"
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 13, 
+      "slots": [
+        117, 
+        118, 
+        119, 
+        120
+      ], 
+      "name": "Monday 10am-2pm"
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 14, 
+      "slots": [
+        121, 
+        122, 
+        123, 
+        124
+      ], 
+      "name": "Monday 2-6pm"
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 15, 
+      "slots": [
+        125, 
+        126, 
+        127, 
+        128
+      ], 
+      "name": "Monday 6-10pm"
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "streampunk.grid", 
+    "fields": {
+      "gridOrder": 16, 
+      "slots": [
+        129, 
+        130, 
+        131, 
+        132
+      ], 
+      "name": "Monday 10pm-2am"
+    }
+  },
   {
     "pk": 2, 
     "model": "streampunk.gender", 

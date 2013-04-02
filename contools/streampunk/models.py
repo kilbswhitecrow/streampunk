@@ -65,7 +65,7 @@ class Availability(models.Model):
 
   def covers(self, item):
     "Return true if the item falls entirely within this period of availability."
-    dt = item.day.date
+    dt = item.start.day.date
     itemstart = datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(minutes=item.start.start)
     itemend = itemstart + timedelta(minutes=item.length.length)
     return self.fromWhen <= itemstart and itemend <= self.toWhen
@@ -216,6 +216,8 @@ class Slot(models.Model):
   start = models.IntegerField(help_text="When the slot will start, in minutes after midnight.")
   length = models.ForeignKey(SlotLength, default=SlotLength.objects.find_default,
                              help_text="How long the slot lasts, in the programme")
+  day = models.ForeignKey(ConDay, default=ConDay.objects.find_default,
+                             help_text="Which day this slot occurs on")
   startText = models.CharField(max_length=20,
                                help_text="A convenient label for the slot, e.g. 7pm")
   slotText = models.CharField(max_length=20,
@@ -227,10 +229,11 @@ class Slot(models.Model):
   objects = DefUndefManager()
 
   class Meta:
-    ordering = [ 'isDefault', 'start' ]
+    ordering = [ 'isDefault', 'day', 'start' ]
 
   def __unicode__(self):
-    return self.startText
+    return "%s %s" % (self.day, self.startText)
+    # return self.startText
   def get_absolute_url(self):
     return mk_url(self)
 
@@ -250,6 +253,14 @@ class Grid(models.Model):
 
   def __unicode__(self):
     return self.name
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({  "pk":      "pk",
+                    "name":    "name" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
 
 class Revision(models.Model):
   """
@@ -471,9 +482,6 @@ class KitRequest(models.Model):
   def requested_by_first_room(self):
     return self.requested_by_first().room
 
-  def requested_by_first_day(self):
-    return self.requested_by_first().day
-
   def requested_by_first_start(self):
     return self.requested_by_first().start
 
@@ -488,7 +496,6 @@ class KitRequest(models.Model):
                   "notes":  "notes",
                   "item":   "requested_by_first",
                   "room":   "requested_by_first_room",
-                  "day":    "requested_by_first_day",
                   "start":  "requested_by_first_start",
                   "sat":    "is_satisfied_by_first" })
 
@@ -646,12 +653,8 @@ class KitRoomAssignment(models.Model):
                             help_text="If you're assigning a single kit thing, choose it here.")
   bundle = models.ForeignKey(KitBundle, null=True, blank=True,
                              help_text="the bundle which assigned this thing to the room, if part of a bundle assignment.")
-  fromDay = models.ForeignKey(ConDay, related_name='kitroomfrom_set',
-                              help_text="The day on which the assignment begins")
   fromSlot = models.ForeignKey(Slot, related_name='kitroomfrom_set',
                                help_text="The slot at which the assignment starts. The kit thing can satisfy requests that need the kit in this slot")
-  toDay = models.ForeignKey(ConDay, related_name='kitroomto_set',
-                              help_text="The day on which the assignment ends")
   toSlot = models.ForeignKey(Slot, related_name='kitroomto_set',
                              help_text="The last slot for this assignment. The assignment can satisfy items that are in this slot.")
   toLength = models.ForeignKey(SlotLength,
@@ -662,32 +665,32 @@ class KitRoomAssignment(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
-  def starts_before_day_and_slot(self, day, slot, mins):
+  def starts_before_slot(self, slot, mins):
     """
     Return true if this assignment begins before (or at the same time as) this many minutes
-    past the given day/slot.
+    past the given slot.
     """
-    return (   self.fromDay.date < day.date
-            or (    self.fromDay.date == day.date 
+    return (   self.fromSlot.day.date < slot.day.date
+            or (    self.fromSlot.day.date == slot.day.date 
                 and self.fromSlot.start <= slot.start))
 
-  def finishes_after_day_and_slot(self, day, slot, mins):
+  def finishes_after_slot(self, slot, mins):
     """
     Returns true if the assignment lasts until at least the end of this day/slot.
     """
     # Bug: toSlot is inclusive, but what's the length of that slot?
-    return (   day.date < self.toDay.date
-            or (    day.date == self.toDay.date
+    return (   slot.day.date < self.toSlot.day.date
+            or (    slot.day.date == self.toSlot.day.date
                 and (slot.start + mins) <= self.toSlot.start))
 
 
   def starts_before(self, item):
     "True if the assignment starts before the item does."
-    return self.starts_before_day_and_slot(item.day, item.start, 0)
+    return self.starts_before_slot(item.start, 0)
 
   def finishes_after(self, item):
     "True if the assignment finishes after the item does"
-    return self.finishes_after_day_and_slot(item.day, item.start, item.length.length)
+    return self.finishes_after_slot(item.start, item.length.length)
 
   def covers(self, item):
     "True if the assignment entirely encompasses the period for the item."
@@ -695,13 +698,13 @@ class KitRoomAssignment(models.Model):
 
   def overlaps(self, item):
     "True if any part of the assignment is concurrent with any part of the item."
-    return (    self.starts_before_day_and_slot(item.day, item.start, item.length.length)
-            and self.finishes_after_day_and_slot(item.day, item.start, item.length.length))
+    return (    self.starts_before_slot(item.start, item.length.length)
+            and self.finishes_after_slot(item.start, item.length.length))
 
   def overlaps_room_assignment(self, other):
     "True if any part of the assignment is concurrent with the other assignment."
-    return (    self.starts_before_day_and_slot(other.toDay, other.toSlot, 0)
-            and self.finishes_after_day_and_slot(other.fromDay, other.fromSlot, 0))
+    return (    self.starts_before_slot(other.toSlot, 0)
+            and self.finishes_after_slot(other.fromSlot, 0))
 
   def satisfies(self, req, item):
     "Return True if this assignment satisfies the request"
@@ -715,10 +718,8 @@ class KitRoomAssignment(models.Model):
                    "thing":    "thing",
                    "bundle":   "bundle",
                    "room":     "room",
-                   "fromday":  "fromDay",
-                   "fromtime": "fromSlot",
-                   "today":    "toDay",
-                   "totime":   "toSlot",
+                   "fromSlot": "fromSlot",
+                   "toSlot":   "toSlot",
                    "remove":   "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
@@ -749,7 +750,7 @@ class KitItemAssignment(models.Model):
     return r
 
   def item_day(self):
-    return self.item.day
+    return self.item.start.day
   def item_start(self):
     return self.item.start.startText
   def item_room(self):
@@ -1078,20 +1079,18 @@ class Person(models.Model):
 class ScheduledManager(models.Manager):
   "A manager for returning only items that have been scheduled. Useful for checking for problems."
   def get_query_set(self):
-    undef_day = ConDay.objects.find_undefined()
     undef_slot = Slot.objects.find_undefined()
     undef_len = SlotLength.objects.find_undefined()
     undef_room = Room.objects.find_undefined()
-    return super(ScheduledManager, self).get_query_set().exclude(day=undef_day).exclude(start=undef_slot).exclude(length=undef_len).exclude(room=undef_room)
+    return super(ScheduledManager, self).get_query_set().exclude(start=undef_slot).exclude(length=undef_len).exclude(room=undef_room)
 
 class UnscheduledManager(models.Manager):
   "A manager that only returns unscheduled items. Useful for when filling slots in the grid."
   def get_query_set(self):
-    undef_day = ConDay.objects.find_undefined()
     undef_slot = Slot.objects.find_undefined()
     undef_len = SlotLength.objects.find_undefined()
     undef_room = Room.objects.find_undefined()
-    return super(UnscheduledManager, self).get_query_set().filter(Q(day=undef_day) | Q(start=undef_slot) | Q(length=undef_len) | Q(room=undef_room))
+    return super(UnscheduledManager, self).get_query_set().filter(Q(start=undef_slot) | Q(length=undef_len) | Q(room=undef_room))
 
 class Item(models.Model):
   "An Item is a single scheduled item in the programme."
@@ -1101,8 +1100,6 @@ class Item(models.Model):
                                help_text="Shorthand for the item. Handy for grids, back-of-badge labels, etc.") 
   blurb = models.TextField(blank=True,
                            help_text="A public description about the item, so people know what it's about")
-  day = models.ForeignKey(ConDay, null=True, default=ConDay.objects.find_default,
-                          help_text="Which day the item occurs on")
   start = models.ForeignKey(Slot, null=True, default=Slot.objects.find_default,
                             help_text="The slot in which the item will begin")
   length = models.ForeignKey(SlotLength, default=SlotLength.objects.find_default,
@@ -1169,7 +1166,6 @@ class Item(models.Model):
   @classmethod
   def list_sort_fields(cls):
     return [
-      'day',
       'start',
       'room',
       'shortname',
@@ -1179,8 +1175,7 @@ class Item(models.Model):
   @classmethod
   def rower(cls, request):
     return Rower({ "pk":        "id",
-                   "day":       "day",
-                   "time":      "start",
+                   "start":      "start",
                    "room":      "room",
                    "shortname": "shortname",
                    "title":     "title",
@@ -1223,7 +1218,7 @@ class Item(models.Model):
     "Returns true if this item overlaps another item"
     if (self == other):
       return False
-    return (    self.day == other.day
+    return (    self.start.day == other.start.day
             and self.start.start < (other.start.start + other.length.length)
             and other.start.start < (self.start.start + self.length.length))
 
@@ -1270,6 +1265,11 @@ class Item(models.Model):
 
   def has_unsatisfied_kit_requests(self):
     return len(self.unsatisfied_kit_requests()) > 0
+
+  def day(self):
+    return self.start.day
+  def startText(self):
+    return self.start.startText
 
 
 class ItemPerson(models.Model):

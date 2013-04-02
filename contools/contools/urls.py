@@ -137,10 +137,10 @@ urlpatterns = patterns('',
     url(r'^streampunk/itemperson/(?P<pk>\d+)/$', show_itemperson_detail.as_view(), name='show_itemperson_detail'),
     url(r'^streampunk/personlist/(?P<pk>\d+)/$', show_personlist_detail.as_view(), name='show_personlist_detail'),
 
-    url(r'^streampunk/conday/(\d+)/grid/(\d+)/$', show_grid, name='show_grid'),
+    url(r'^streampunk/grid/(\d+)/$', show_grid, name='show_grid'),
     url(r'^streampunk/slot/(?P<pk>\d+)/$', show_slot_detail.as_view(), name='show_slot_detail'),
-    url(r'^streampunk/fill/d/(?P<d>\d+)/g/(?P<g>\d+)/r/(?P<r>\d+)/s/(?P<s>\d+)/u/$', fill_slot_unsched, name='fill_slot_unsched'),
-    url(r'^streampunk/fill/d/(?P<d>\d+)/g/(?P<g>\d+)/r/(?P<r>\d+)/s/(?P<s>\d+)/s/$', fill_slot_sched, name='fill_slot_sched'),
+    url(r'^streampunk/fill/r/(?P<r>\d+)/s/(?P<s>\d+)/u/$', fill_slot_unsched, name='fill_slot_unsched'),
+    url(r'^streampunk/fill/r/(?P<r>\d+)/s/(?P<s>\d+)/s/$', fill_slot_sched, name='fill_slot_sched'),
 
     url(r'^streampunk/add_kitbundle_to_room/$', add_kitbundle_to_room, name='add_kitbundle_to_room'),
     url(r'^streampunk/add_kitbundle_to_item/$', add_kitbundle_to_item, name='add_kitbundle_to_item'),

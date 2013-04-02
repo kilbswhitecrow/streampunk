@@ -22,10 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block styles %}
 <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}show_grid.css" />
 {% endblock %}
-{% block title %}Grid: {{ day }} {{ grid.name }}{% endblock %}
+{% block title %}Grid: {{ grid.name }}{% endblock %}
 {% block body_content %}
-
-<h2>{{ day }}</h2>
 
 <h2>Slots</h2>
 <table border="1">
