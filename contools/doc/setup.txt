@@ -170,6 +170,20 @@ Django's runserver is ONLY for development; it's not something you could deploy
 a working Streampunk system on. To do that, you'll need to set up a proper
 webserver which can run Django. To do that, please see the Django documentation.
 
+The basic import of data populates rooms, items, people, etc., but doesn't
+connect them very much. To do that, there's a file, streampunk/connect.py.
+To use this, do:
+
+$ python manage.py shell
+>>> from streampunk.connect import connect_people
+>>> connect_people()
+>>> ^D
+$
+
+This will put people on items and assign tags to people and items. It's
+a largely nonsensical assignment - it's just so that you can see how
+data looks when it's connected up.
+
 Email
 -----
 If you want to be able to send email, then you need a backend defined, in your
