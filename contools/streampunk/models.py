@@ -1044,6 +1044,14 @@ class Person(models.Model):
       return ConInfoBool.objects.no_avail_means_always_avail()
     return False
 
+  def scheduled_items(self):
+    "Returns the list of items this person is on"
+    return [ i for i in ItemPerson.objects.filter(person=self) ]
+
+  def item_count(self):
+    "Returns the number of items this person is on"
+    return len(self.scheduled_items())
+
   @classmethod
   def list_sort_fields(cls):
     return [
@@ -1056,12 +1064,14 @@ class Person(models.Model):
   @classmethod
   def rower(cls, request):
     return Rower({ "pk":         "id",
+                   "memnum":     "memnum",
                    "name":       "as_badge",
                    "firstName":  "firstName",
                    "middleName": "middleName",
                    "lastName":   "lastName",
                    "badge":      "badge",
                    "email":      "email",
+                   "item_count": "item_count",
                    "edit":       "Edit",
                    "remove":     "Remove" })
 
@@ -1073,7 +1083,7 @@ class Person(models.Model):
       else:
         return ['edit', 'name']
     else:
-      return ['edit', 'firstName', 'middleName', 'lastName', 'email']
+      return ['edit', 'memnum', 'firstName', 'middleName', 'lastName', 'email']
  
 
 class ScheduledManager(models.Manager):

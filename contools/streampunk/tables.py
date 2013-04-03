@@ -54,12 +54,14 @@ class RemoveColumn(tables.LinkColumn):
 
 class PersonTable(tables.Table):
   select = tables.CheckBoxColumn(verbose_name='Select', accessor='pk', attrs= select_attrs('persontable') )
+  memnum = tables.Column()
   name = tables.LinkColumn('show_person_detail', args=[A('pk')])
   firstName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   middleName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   lastName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   badge = tables.LinkColumn('show_person_detail', args=[A('pk')])
   email = tables.EmailColumn()
+  item_count = tables.Column()
   edit = EditColumn('edit_person', args=[A('pk')])
   remove = RemoveColumn('delete_person', args=[A('pk')])
   class Meta:
