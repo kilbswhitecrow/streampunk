@@ -104,6 +104,11 @@ DATABASES = {
 
 (Use whatever path you want, to the file which will be your Streampunk database.)
 
+Now update TEMPLATE_CONTEXT_PROCESSORS, to include the following:
+  "django.core.context_processors.request",
+and:
+  "streampunk.context_processors.banner_info",
+
 Once you've saved settings.py, create your database, with the username and
 password, if needed by your database back-end. If you're using sqlite3, then
 you don't need to do this, because it'll be done in the next step for you.
