@@ -80,6 +80,12 @@ def get_initial_data_from_request(request, models):
 class NewView(CreateView):
   template_name = 'streampunk/editform.html'
 
+  def get_context_data(self, **kwargs):
+    context = super(CreateView, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
   def get_initial(self):
     models = { 'item': Item, 'person': Person }
     initial = super(NewView, self).get_initial()
@@ -102,6 +108,14 @@ class NewView(CreateView):
 class EditView(UpdateView):
   template_name = 'streampunk/editform.html'
 
+  def get_context_data(self, **kwargs):
+    context = super(EditView, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
+
+
 class AllView(ListView):
   template_name = 'streampunk/object_list.html'
 
@@ -119,6 +133,7 @@ class AllView(ListView):
   def get_context_data(self, **kwargs):
     context = super(AllView, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['verbose_name'] = self.model._meta.verbose_name
     context['verbose_name_plural'] = self.model._meta.verbose_name_plural
     context['new_url'] = r'/streampunk/new_%s/' % ( self.model.__name__.lower() )
@@ -133,6 +148,12 @@ class VisibleView(AllView):
       return self.model.objects.filter(visible = True)
 
 class AfterDeleteView(DeleteView):
+  def get_context_data(self, **kwargs):
+    context = super(AfterDeleteView, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
   def get_success_url(self):
     if self.request.POST.has_key('after'):
       return self.request.POST.get('after')
@@ -140,10 +161,12 @@ class AfterDeleteView(DeleteView):
       return '/streampunk/main/'
 
 def static_page(request, template):
-  return render_to_response(template, context_instance=RequestContext(request))
+  banner_grids = Grid.objects.all()
+  return render_to_response(template, locals(), context_instance=RequestContext(request))
 
 @login_required
 def edit_user_profile(request):
+  banner_grids = Grid.objects.all()
   userprofile = request.user.get_profile()
   if request.method == 'POST':
     if request.user.has_perm('streampunk.read_private'):
@@ -170,6 +193,7 @@ def edit_user_profile(request):
 
 @login_required
 def show_profile_detail(request):
+  banner_grids = Grid.objects.all()
   userprofile = request.user.get_profile()
   return render_to_response('streampunk/show_userprofile.html',
                             locals(),
@@ -179,6 +203,7 @@ def show_profile_detail(request):
 
 
 def main_page(request):
+  banner_grids = Grid.objects.all()
   num_items = Item.scheduled.count()
   num_people = Person.objects.count()
   # e.g. {'num_people__sum': 5, 'budget__sum': 0}
@@ -199,6 +224,7 @@ def main_page(request):
                             context_instance=RequestContext(request))
 
 def list_grids(request):
+  banner_grids = Grid.objects.all()
   gtable = make_tabler(Grid, GridTable, request=request,
                        qs=Grid.objects.all(), prefix='g-', empty='No grids')
   return render_to_response('streampunk/list_grids.html',
@@ -213,6 +239,7 @@ class show_room_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_room_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['room_items'] = self.object.item_set.all()
     context['ritable'] = make_tabler(Item, ItemTable, request=self.request,
                                      qs=context['room_items'], prefix='ri-', empty='No items in this room',
@@ -229,6 +256,7 @@ class show_room_detail(DetailView):
     return context
 
 def show_grid(request, gr):
+  banner_grids = Grid.objects.all()
   gid = int(gr)
   grid = Grid.objects.get(id = gid)
   slots = grid.slots.all()
@@ -255,6 +283,7 @@ class show_slot_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_slot_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['items'] = Item.objects.filter(start = self.object).order_by('start')
     context['itable'] = make_tabler(Item, ItemTable, request=self.request,
                                      qs=context['items'], prefix='it-', empty='No items',
@@ -270,6 +299,7 @@ class show_item_detail(DetailView):
     empty= 'Nobody on this item yet'
     context = super(show_item_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     if self.request.user.has_perm('progb2.read_private'):
       qs = ItemPerson.objects.filter(item=self.object)
       context['item_people'] = qs
@@ -301,6 +331,7 @@ class show_person_detail(DetailView):
     empty= 'Not on any items yet'
     context = super(show_person_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     if self.request.user.has_perm('progb2.read_private'):
       context['person_name'] = "%s" % self.object
       tagqs = self.object.tags.all()
@@ -328,6 +359,7 @@ class show_tag_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_tag_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['ittable'] = make_tabler(Item, ItemTable, request=self.request,
                                      qs=self.object.item_set.all(), prefix='it-', empty='No items',
                                      extra_exclude=['edit', 'remove'])
@@ -345,6 +377,7 @@ class show_kitthing_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_kitthing_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['kitbundles'] = self.object.kitbundle_set.all()
     context['kbtable'] = make_tabler(KitBundle, KitBundleTable, request=self.request,
                                      qs=context['kitbundles'], prefix='kb-', empty='Not part of any bundle')
@@ -370,6 +403,7 @@ class show_kitbundle_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_kitbundle_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['kitthings'] = self.object.things.all()
     context['kttable'] = make_tabler(KitThing, KitThingTable, request=self.request,
                                      qs=context['kitthings'], prefix='kt-', empty='No kit things')
@@ -391,6 +425,7 @@ class show_kitrequest_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_kitrequest_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
     context['krtable'] = make_tabler(KitRequest, KitRequestTable, request=self.request,
                                      qs=[ context['kitrequest'] ], prefix='kr-', empty='No kit requests',
                                      extra_exclude=['item', 'room', 'day', 'start', 'sat'])
@@ -404,20 +439,47 @@ class show_kitroomassignment_detail(DetailView):
   model = KitRoomAssignment
   template_name = 'streampunk/show_kitroomassignment.html'
 
+  def get_context_data(self, **kwargs):
+    context = super(show_kitroomassignment_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
 class show_kititemassignment_detail(DetailView):
   context_object_name = 'kititemassignment'
   model = KitItemAssignment
   template_name = 'streampunk/show_kititemassignment.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_kititemassignment_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
 
 class show_itemperson_detail(DetailView):
   context_object_name = 'itemperson'
   model = ItemPerson
   template_name = 'streampunk/show_itemperson.html'
 
+  def get_context_data(self, **kwargs):
+    context = super(show_itemperson_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
+
 class show_personlist_detail(DetailView):
   context_object_name = 'personlist'
   model = PersonList
   template_name = 'streampunk/show_personlist.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_personlist_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    context['banner_grids'] = Grid.objects.all()
+    return context
+
 
 
 def is_from_item(request):
@@ -429,6 +491,7 @@ def is_from_person(request):
   return referer.find('/person/') >= 0
 
 def add_person_to_item(request, p=None, i=None):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = ItemPersonForm(request.POST)
     if form.is_valid():
@@ -461,6 +524,7 @@ def mkemail(request, dirvars, subject, person):
 
 @permission_required('streampunk.send_direct_email')
 def email_person(request, pk):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = EmailForm(request.POST)
     if form.is_valid():
@@ -489,6 +553,7 @@ def email_person(request, pk):
 
 @permission_required('streampunk.send_direct_email')
 def emailed_person(request, pk):
+  banner_grids = Grid.objects.all()
   pid = int(pk)
   person = Person.objects.get(id = pid)
   return render_to_response('streampunk/emailed.html',
@@ -497,6 +562,7 @@ def emailed_person(request, pk):
 
 
 def send_mail_to_personlist(request, personlist, subject=None, success_url=None, cancel_url=None, edittemplate='streampunk/mail_personlist.html'):
+  banner_grids = Grid.objects.all()
   people = personlist.people.exclude(email='')
   nomail = personlist.people.filter(email='')
 
@@ -567,6 +633,7 @@ def email_item_with_personlist(request, ipk, plpk):
 
 @permission_required('streampunk.send_item_email')
 def emailed_item(request, pk):
+  banner_grids = Grid.objects.all()
   iid = int(pk)
   item = Item.objects.get(id = iid)
   people = item.people.exclude(email='')
@@ -576,6 +643,7 @@ def emailed_item(request, pk):
 
 @permission_required('streampunk.edit_tags')
 def edit_tags_for_item(request, i):
+  banner_grids = Grid.objects.all()
   iid = int(i)
   item = Item.objects.get(id = iid)
   if request.method == 'POST':
@@ -592,6 +660,7 @@ def edit_tags_for_item(request, i):
 
 @permission_required('streampunk.edit_tags')
 def edit_tags_for_person(request, p):
+  banner_grids = Grid.objects.all()
   pid = int(p)
   person = Person.objects.get(id = pid)
   if request.method == 'POST':
@@ -607,6 +676,7 @@ def edit_tags_for_person(request, p):
                             context_instance=RequestContext(request))
 
 def add_tags(request):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = AddMultipleTagsForm(request.POST)
     if form.is_valid():
@@ -630,6 +700,7 @@ def add_tags(request):
                             context_instance=RequestContext(request))
 
 def add_kitbundle_to_room(request):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = AddBundleToRoomForm(request.POST)
     if form.is_valid():
@@ -656,6 +727,7 @@ def add_kitbundle_to_room(request):
                             context_instance=RequestContext(request))
 
 def delete_kitbundle_from_room(request, kb, room):
+  banner_grids = Grid.objects.all()
   kbid = int(kb)
   rid = int(room)
   kitb = KitBundle.objects.get(id = kbid)
@@ -664,6 +736,7 @@ def delete_kitbundle_from_room(request, kb, room):
   return HttpResponseRedirect(reverse('show_room_detail', args=(rid,)))
 
 def add_kitbundle_to_item(request):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = AddBundleToItemForm(request.POST)
     if form.is_valid():
@@ -683,6 +756,7 @@ def add_kitbundle_to_item(request):
                             context_instance=RequestContext(request))
 
 def delete_kitbundle_from_item(request, kb, item):
+  banner_grids = Grid.objects.all()
   kbid = int(kb)
   iid = int(item)
   kitb = KitBundle.objects.get(id = kbid)
@@ -691,6 +765,7 @@ def delete_kitbundle_from_item(request, kb, item):
   return HttpResponseRedirect(reverse('show_item_detail', args=(iid,)))
 
 def add_kitthing_to_room(request):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = AddThingToRoomForm(request.POST)
     if form.is_valid():
@@ -713,6 +788,7 @@ def add_kitthing_to_room(request):
                             context_instance=RequestContext(request))
 
 def add_kitthing_to_item(request):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = AddThingToItemForm(request.POST)
     if form.is_valid():
@@ -730,6 +806,7 @@ def add_kitthing_to_item(request):
                             context_instance=RequestContext(request))
 
 def add_kitrequest_to_item(request, pk):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     form = KitRequestForm(request.POST)
     if form.is_valid():
@@ -752,6 +829,7 @@ def add_kitrequest_to_item(request, pk):
                             context_instance=RequestContext(request))
 
 def fill_slot_gen(request, r, s, cls, suf):
+  banner_grids = Grid.objects.all()
   rid = int(r)
   sid = int(s)
   room = Room.objects.get(id = rid)
@@ -778,6 +856,7 @@ def fill_slot_unsched(request, r, s):
   return fill_slot_gen(request, r, s, FillSlotUnschedForm, 'u')
 
 def list_checks(request):
+  banner_grids = Grid.objects.all()
   CheckFormSet = modelformset_factory(Check, extra=0, formset=CheckModelFormSet, fields=())
   if request.method == 'POST':
     formset = CheckFormSet(request.POST)
@@ -803,6 +882,7 @@ def list_checks(request):
                             context_instance=RequestContext(request))
 
 def make_personlist(request):
+  banner_grids = Grid.objects.all()
   if request.method == 'POST':
     if request.POST.has_key('email_all') or request.POST.has_key('save_all'):
       peeps = request.POST.getlist('allpeople')
@@ -840,6 +920,7 @@ def make_personlist(request):
     return HttpResponseRedirect(reverse('new_personlist'))
   
 def make_con_groups(request):
+  banner_grids = Grid.objects.all()
   if request.user.is_superuser:
     added_perms = add_con_groups()
     status_msg = u"Added permissions"
@@ -850,6 +931,7 @@ def make_con_groups(request):
                             context_instance=RequestContext(request))
 
 def kit_usage(request):
+  banner_grids = Grid.objects.all()
   kratable = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=request,
                       qs=KitRoomAssignment.objects.all(), prefix='kra-', empty='No kit room assignments')
   kiatable = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=request,
@@ -862,49 +944,62 @@ def kit_usage(request):
                             context_instance=RequestContext(request))
 
 def list_people(request):
+  banner_grids = Grid.objects.all()
   table = make_tabler(Person, PersonTable, request=request, qs=Person.objects.all(), prefix='p-', empty='No people')
   return render(request, "streampunk/list_people.html", { "ptable": table,
+                                                          "banner_grids": banner_grids,
                                                           "verbose_name": 'person' })
 
 
 def list_items(request):
+  banner_grids = Grid.objects.all()
   if request.user.has_perm('progb2.read_private'):
     qs = Item.objects.all()
   else:
     qs = Item.objects.filter(visible = True)
   table = make_tabler(Item, ItemTable, request=request, qs=qs, prefix='i-', empty='No items')
   return render(request, "streampunk/list_items.html", { "itable": table,
+                                                          "banner_grids": banner_grids,
                                                          "verbose_name": 'item' })
 
 
 def list_kitthings(request):
+  banner_grids = Grid.objects.all()
   table = make_tabler(KitThing, KitThingTable, request=request, qs=KitThing.objects.all(), prefix='kt-', empty='No kit things')
   return render(request, "streampunk/kitthing_list.html", { "kttable": table,
+                                                          "banner_grids": banner_grids,
                                                             "verbose_name": 'kit thing' })
 
 def list_kitrequests(request):
+  banner_grids = Grid.objects.all()
   table = make_tabler(KitRequest, KitRequestTable, request=request, qs=KitRequest.objects.all(), prefix='kr-', empty='No kit things',
                       extra_exclude=['setup', 'notes'])
   return render(request, "streampunk/kitrequest_list.html", { "krtable": table,
+                                                          "banner_grids": banner_grids,
                                                             "verbose_name": 'kit thing' })
 
 
 def list_tags(request):
+  banner_grids = Grid.objects.all()
   if request.user.has_perm('progb2.read_private'):
     qs = Tag.objects.all()
   else:
     qs = Tag.objects.filter(visible = True)
   table = make_tabler(Tag, TagTable, request=request, qs=qs, prefix='t-', empty='No tags')
   return render(request, "streampunk/list_tags.html", { "ttable": table,
+                                                          "banner_grids": banner_grids,
                                                         "verbose_name": 'tag' })
 
 def list_kitbundles(request):
+  banner_grids = Grid.objects.all()
   table = make_tabler(KitBundle, KitBundleTable, request=request,
                       qs=KitBundle.objects.all(), prefix='kb-', empty='No kit bundles')
   return render(request, "streampunk/kitbundle_list.html", { "kbtable": table,
+                                                          "banner_grids": banner_grids,
                                                              "verbose_name": 'kit bundle' })
 
 def list_rooms_filtered(request, extra_exclude):
+  banner_grids = Grid.objects.all()
   if request.user.has_perm('progb2.read_private'):
     qs = Room.objects.all()
   else:
@@ -912,15 +1007,18 @@ def list_rooms_filtered(request, extra_exclude):
   table = make_tabler(Room, RoomTable, request=request,
                       qs=qs, prefix='r-', empty='No rooms', extra_exclude=extra_exclude)
   return render(request, "streampunk/list_rooms.html", { "rtable": table,
+                                                          "banner_grids": banner_grids,
                                                              "verbose_name": 'room' })
 
 def list_rooms(request):
+  banner_grids = Grid.objects.all()
   return list_rooms_filtered(request, [ 'canClash', 'needsSound', 'naturalLight', 'securable',
                                         'controlLightsInRoom', 'controlAirConInRoom',
                                         'accessibleOnFlat', 'hasCableRuns', 'openableWindows',
                                         'closableCurtains', 'inRadioRange', 'hasWifi', 'techNotes', 'privNotes' ])
 
 def list_rooms_prog(request):
+  banner_grids = Grid.objects.all()
   return list_rooms_filtered(request, [ 'isDefault', 'isUndefined', 'canClash',
                                         'needsSound', 'naturalLight', 'securable',
                                         'controlLightsInRoom', 'controlAirConInRoom',
@@ -928,4 +1026,5 @@ def list_rooms_prog(request):
                                         'closableCurtains', 'inRadioRange' ])
 
 def list_rooms_tech(request):
+  banner_grids = Grid.objects.all()
   return list_rooms_filtered(request, [ 'gridOrder', 'visible', 'isDefault', 'isUndefined', 'canClash', 'parent'])

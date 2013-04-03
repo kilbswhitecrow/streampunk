@@ -21,7 +21,6 @@ notify Lindsay that something has changed? Have people subscribe, to ask for ema
 
 Next up
 -------
-- Find a way to display the grids as a day x time grid, again.
 - XML dump, for ConText
 - Fix "fill slot" logic.
 
