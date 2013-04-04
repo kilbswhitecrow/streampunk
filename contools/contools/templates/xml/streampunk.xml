@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='no'?>
+<?xml-stylesheet href='streampunk.xsl' type='application/xml'?>
+<!DOCTYPE streampunk SYSTEM 'streampunk.dtd'>
+<streampunk name="{{ con_name }}" timestamp="{% now "r" %}">
+<rooms>
+{% for r in rooms %}
+{{ r.as_xml }}
+{% endfor %}
+</rooms>
+<people>
+{% for p in people %}
+{{ p.as_xml }}
+{% endfor %}
+</people>
+<items>
+{% for i in items %}
+{{ i.as_xml }}
+{% endfor %}
+</items>
+</streampunk>

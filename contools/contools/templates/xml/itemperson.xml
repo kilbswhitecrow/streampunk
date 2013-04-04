@@ -1,0 +1,5 @@
+<participant id="person{{ ip.person.id }}"
+  name="{{ ip.person.as_name }}"
+  vis="{{ ip.visible }}"
+  role="{{ ip.role }}"
+  status="{{ ip.status }}" />

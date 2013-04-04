@@ -45,7 +45,7 @@ from streampunk.views import show_personlist_detail, show_request, make_personli
 from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_tags, list_kitthings, list_kitrequests
 from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
-from streampunk.views import list_kitbundles
+from streampunk.views import list_kitbundles, xml_dump, xsl_stylesheet
 
 from django_tables2 import SingleTableView
 
@@ -249,4 +249,9 @@ urlpatterns = patterns('',
 
     url(r'^streampunk/checks/$', list_checks, name='list_checks'),
     url(r'^streampunk/make_con_groups/$', make_con_groups, name='make_con_groups'),
+    url(r'^streampunk/xml_dump/$', xml_dump, name='xml_dump'),
+    url(r'^streampunk/xml_dump/streampunk.dtd$', static_page,
+        { 'template': 'xml/streampunk.dtd' }, name='xml_dtd'),
+    url(r'^streampunk/xml_dump/streampunk.xsl$', xsl_stylesheet,
+        { 'template': 'xml/streampunk.xsl' }, name='xml_xsl'),
 )

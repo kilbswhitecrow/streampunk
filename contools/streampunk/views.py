@@ -969,3 +969,17 @@ def list_rooms_prog(request):
 
 def list_rooms_tech(request):
   return list_rooms_filtered(request, [ 'gridOrder', 'visible', 'isDefault', 'isUndefined', 'canClash', 'parent'])
+
+def xml_dump(request):
+  con_name = ConInfoString.objects.con_name()
+  rooms = Room.objects.all()
+  people = Person.objects.all()
+  allitems = Item.objects.all()
+
+  return render_to_response('xml/streampunk.xml',
+                            { "rooms": rooms, "people": people, "items": allitems, "con_name": con_name },
+                            context_instance=RequestContext(request),
+                            mimetype='application/xml')
+
+def xsl_stylesheet(request, template):
+  return render_to_response(template, locals(), context_instance=RequestContext(request), mimetype='text/xsl')

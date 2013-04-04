@@ -1,0 +1,40 @@
+<item id="item{{ i.id }}"
+  shortname="{{ i.shortname }}"
+  title="{{ i.title }}"
+  start="{{ i.start }}"
+  length="{{ i.length }}"
+  kind="{{ i.kind }}"
+  visible="{{ i.visible }}"
+  exp="{{ i.expAudience }}"
+  seating="{{ i.seating }}"
+  gophers="{{ i.gophers }}"
+  complete="{{ i.complete }}"
+  notes="{{ i.notes }}"
+  blurb="{{ i.blurb }}"
+  bring="{{ i.pubBring }}"
+  projector="TBA"
+  budget="{{ i.budget }}"
+  tech_needed="{{ i.techNeeded }}">
+  <itemroom id="room{{ i.room.id }}" name="{{ i.room.name }}" />
+  <participants>
+  {% for ip in i.itempeople %}
+  {{ ip.as_xml }}
+  {% endfor %}
+  </participants>
+  <tag_uses>
+  {% for t in i.tags.all %}
+  {{ t.as_xml }}
+  {% endfor %}
+  </tag_uses>
+  <kitrequests>
+  {% for kr in i.kitRequests.all %}
+  {{ kr.as_xml }}
+  {% endfor %}
+  </kitrequests>
+  <kitthings>
+  {% for kt in i.kit.all %}
+  {{ kt.as_xml }}
+  {% endfor %}
+  </kitthings>
+
+</item>

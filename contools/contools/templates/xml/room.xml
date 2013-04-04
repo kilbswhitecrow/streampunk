@@ -1,0 +1,12 @@
+<room id="room{{ r.id }}"
+  name="{{ r.name }}"
+  desc="{{ r.description }}"
+  visible="{{ r.visible }}"
+  gridorder="{{ r.gridOrder }}"
+  projector="TBD">
+  <capacities>
+  {% for c in r.capacities.all %}
+  {{ c.as_xml }}
+  {% endfor %}
+  </capacities>
+</room>

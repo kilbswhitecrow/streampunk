@@ -1,0 +1,138 @@
+<!ELEMENT streampunk (rooms,people,tech_items,items)>
+<!ATTLIST streampunk
+ name CDATA #REQUIRED
+ timestamp CDATA #REQUIRED
+>
+
+<!ELEMENT rooms (room*)>
+
+<!ELEMENT room (capacities)>
+<!ATTLIST room
+ id ID #REQUIRED
+ name CDATA #REQUIRED
+ desc CDATA #REQUIRED
+ gridorder CDATA #REQUIRED
+ visible (Yes|No|TBD) #REQUIRED
+ projector (Yes|No|TBD) #REQUIRED
+>
+
+<!ELEMENT capacities (room_capacity*)>
+
+<!ELEMENT room_capacity EMPTY>
+<!ATTLIST room_capacity
+ seatid CDATA #REQUIRED
+ name CDATA #REQUIRED
+ capacity CDATA #REQUIRED
+>
+
+<!ELEMENT people (person*)>
+
+<!ELEMENT person (tag_uses)>
+<!ATTLIST person
+ id ID #REQUIRED
+ name CDATA #REQUIRED
+ badge CDATA #REQUIRED
+ memnum CDATA #REQUIRED
+ notes CDATA #REQUIRED
+ contact CDATA #REQUIRED
+ email CDATA #REQUIRED
+>
+
+<!ELEMENT tag_uses (tag_use*)>
+
+<!ELEMENT tag_use EMPTY>
+<!ATTLIST tag_use
+ id CDATA #REQUIRED
+ name CDATA #REQUIRED
+>
+<!-- NB. id can't be an IDREF because the tags are not defined. -->
+
+<!ELEMENT tech_items (tech_item*)>
+
+<!ELEMENT tech_item (class,department,source,basis)>
+<!ATTLIST tech_item
+ id ID #REQUIRED
+ name CDATA #REQUIRED
+ description CDATA #REQUIRED
+ cost CDATA #REQUIRED
+ notes CDATA #REQUIRED
+ move_immediately (Yes|No|TBD) #REQUIRED
+>
+
+<!ELEMENT class EMPTY>
+<!ATTLIST class
+ id CDATA #REQUIRED
+ name CDATA #REQUIRED
+>
+<!-- NB. id can't be an IDREF because the classes are not defined. -->
+
+<!ELEMENT department EMPTY>
+<!ATTLIST department
+ id CDATA #REQUIRED
+ name CDATA #REQUIRED
+>
+<!-- NB. id can't be IDREF because the departments are not defined. -->
+
+<!ELEMENT source EMPTY>
+<!ATTLIST source
+ id CDATA #REQUIRED
+ name CDATA #REQUIRED
+>
+<!-- NB. id can't be IDREF because the sources are not defined. -->
+
+<!ELEMENT basis EMPTY>
+<!ATTLIST basis
+ id CDATA #REQUIRED
+ name CDATA #REQUIRED
+>
+<!-- NB. id can't be IDREF because the bases are not defined. -->
+
+<!ELEMENT items (item*)>
+
+<!ELEMENT item (itemroom,participants,tech_uses,tag_uses)>
+<!ATTLIST item 
+ id ID #REQUIRED
+ shortname CDATA #REQUIRED
+ title CDATA #REQUIRED
+ start CDATA #REQUIRED
+ length CDATA #REQUIRED
+ kind CDATA #REQUIRED
+ visible (Yes|No|TBD) #REQUIRED
+ projector (Yes|No|TBD) #REQUIRED
+ exp CDATA #REQUIRED
+ seating CDATA #REQUIRED
+ gophers CDATA #REQUIRED
+ complete (Yes|No|TBD) #REQUIRED
+ notes CDATA #REQUIRED
+ blurb CDATA #REQUIRED
+ bring CDATA #REQUIRED
+ budget CDATA #REQUIRED
+ tech_needed (Yes|No|TBD) #REQUIRED
+ tables CDATA #REQUIRED
+>
+
+<!ELEMENT itemroom EMPTY>
+<!ATTLIST itemroom
+ id IDREF #REQUIRED
+ name CDATA #REQUIRED
+>
+
+<!ELEMENT participants (participant*)>
+
+<!ELEMENT participant EMPTY>
+<!ATTLIST participant
+ id IDREF #REQUIRED
+ name CDATA #REQUIRED
+ vis (Yes|No|TBD) #REQUIRED
+ role CDATA #REQUIRED
+ status CDATA #REQUIRED
+>
+
+<!ELEMENT tech_uses (tech_use*)>
+
+<!ELEMENT tech_use EMPTY>
+<!ATTLIST tech_use
+ id IDREF #REQUIRED
+ name CDATA #REQUIRED
+ setup CDATA #REQUIRED
+>

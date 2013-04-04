@@ -1,0 +1,1 @@
+<avail label="{{ a.label }}" from="{{ a.fromWhen }}" to="{{ a.toWhen }}" />

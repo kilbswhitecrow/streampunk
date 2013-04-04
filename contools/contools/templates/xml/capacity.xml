@@ -1,0 +1,1 @@
+<room_capacity seatid="seat{{ c.layout.id }}" name="{{ c.layout }}" capacity="{{ c.count }}" />

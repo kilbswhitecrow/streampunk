@@ -1,0 +1,7 @@
+<kitrequest id="kitrequest{{ kr.id }}"
+  notes="{{ kr.notes }}"
+  setup="{{ kr.setupAssistance }}"
+  status="{{ kr.status }}"
+  kind="{{ kr.kind }}"
+  count="{{ kr.count }}" />
+

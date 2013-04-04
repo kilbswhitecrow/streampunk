@@ -1,0 +1,6 @@
+<kitthing id="kitthing{{ kt.id }}"
+  name="{{ kt.name }}"
+  description="{{ kt.description }}"
+  kind="{{ kt.kind }}"
+  count="{{ kt.count }}" />
+

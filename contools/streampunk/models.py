@@ -24,6 +24,7 @@ from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.template.loader import render_to_string
 
 from streampunk.tabler import Rower
 
@@ -62,6 +63,9 @@ class Availability(models.Model):
       return u"%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
     else:
       return "%s - %s" % (self.fromWhen, self.toWhen)
+
+  def as_xml(self):
+    return render_to_string('xml/availability.xml', { "a": self } )
 
   def covers(self, item):
     "Return true if the item falls entirely within this period of availability."
@@ -373,6 +377,9 @@ class Tag(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml(self):
+    return render_to_string('xml/tag.xml', { "t": self } )
+
   @classmethod
   def rower(cls, request):
     return Rower({ "pk":          "id",
@@ -449,6 +456,9 @@ class KitRequest(models.Model):
     return u"%s: %d" % (self.kind, self.count)
   def get_absolute_url(self):
     return mk_url(self)
+
+  def as_xml(self):
+    return render_to_string('xml/kitrequest.xml', { "kr": self } )
 
   def okay_to_edit(self):
     "This should never return false, because the same Request shouldn't be used by multiple items."
@@ -546,6 +556,9 @@ class KitThing(models.Model):
     return self.name
   def get_absolute_url(self):
     return mk_url(self)
+
+  def as_xml(self):
+    return render_to_string('xml/kitthing.xml', { "kt": self } )
 
   def available_for(self, item):
     """
@@ -789,6 +802,9 @@ class RoomCapacity(models.Model):
   def __unicode__(self):
     return u"%s: %d" % (self.layout, self.count)
 
+  def as_xml(self):
+    return render_to_string('xml/capacity.xml', { "c": self } )
+
   @classmethod
   def rower(cls, request):
     return Rower({  "pk":        "pk",
@@ -854,6 +870,9 @@ class Room(models.Model):
     return self.name
   def get_absolute_url(self):
     return mk_url(self)
+
+  def as_xml(self):
+   return render_to_string('xml/room.xml', { "r": self } )
 
   def available_for(self, item):
     "Returns true if the room has availability info that entirely covers the duration of the item"
@@ -1012,6 +1031,9 @@ class Person(models.Model):
     return self.as_name_then_badge()
   def get_absolute_url(self):
     return mk_url(self)
+
+  def as_xml(self):
+    return render_to_string('xml/person.xml', { "p": self } )
 
   def clean_firstName(self):
     "Strip whitespace from the field"
@@ -1210,6 +1232,9 @@ class Item(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml(self):
+    return render_to_string('xml/item.xml', { "i": self } )
+
   def clean_title(self):
     "Strip whitespace from the field"
     return self.cleaned_data['title'].strip()
@@ -1281,6 +1306,10 @@ class Item(models.Model):
   def startText(self):
     return self.start.startText
 
+  def itempeople(self):
+    "Give access to the ItemPerson objects, rather than the Person objects that people gives."
+    return ItemPerson.objects.filter(item = self)
+
 
 class ItemPerson(models.Model):
   """
@@ -1309,6 +1338,9 @@ class ItemPerson(models.Model):
     return u"%s: %s [%s]" % (self.item, self.person, self.role)
   def get_absolute_url(self):
     return mk_url(self)
+
+  def as_xml(self):
+    return render_to_string('xml/itemperson.xml', { "ip": self } )
 
   @classmethod
   def rower(cls, request):

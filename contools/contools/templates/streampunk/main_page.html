@@ -43,6 +43,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </p>
 {% endif %}
 
+{% if perms.streampunk.read_private %}
+<p>
+<a href="{% url xml_dump %}">XML dump</a>.
+</p>
+{% endif %}
+
 {% if user.is_superuser %}
 <p>
 <a href="{% url make_con_groups %}">Set up all the group permissions</a>.
