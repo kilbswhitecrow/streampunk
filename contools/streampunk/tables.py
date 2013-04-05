@@ -100,6 +100,7 @@ class ItemTable(tables.Table):
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')], order_by=[A('room.name')])
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
   shortname = tables.Column()
+  projNeeded = tables.Column(verbose_name='Proj?')
   edit = EditColumn('edit_item', args=[A('pk')])
   remove = RemoveColumn('delete_item', args=[A('pk')])
   class Meta:
@@ -171,8 +172,8 @@ class ItemPersonTable(tables.Table):
   role = tables.Column(order_by=[A('role.name')])
   status = tables.Column(order_by=[A('status.name')])
   visible = tables.BooleanColumn()
-  distEmail = tables.BooleanColumn(verbose_name='share email addr?')
-  recordingOkay = tables.BooleanColumn(verbose_name='Record item?')
+  distEmail = tables.Column(verbose_name='share email addr?')
+  recordingOkay = tables.Column(verbose_name='Record item?')
   edit = EditColumn('edit_itemperson', args=[A('pk')])
   remove = RemoveColumn('delete_itemperson', args=[A('pk')])
   class Meta:

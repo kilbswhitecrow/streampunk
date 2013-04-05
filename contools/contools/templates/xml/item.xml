@@ -12,7 +12,7 @@
   notes="{{ i.notes }}"
   blurb="{{ i.blurb }}"
   bring="{{ i.pubBring }}"
-  projector="TBA"
+  projector="{{ i.projNeeded }}"
   budget="{{ i.budget }}"
   tech_needed="{{ i.techNeeded }}">
   <itemroom id="room{{ i.room.id }}" name="{{ i.room.name }}" />

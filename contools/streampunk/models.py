@@ -1156,8 +1156,10 @@ class Item(models.Model):
                                  help_text="Any stewards required by this item?")
   budget = models.IntegerField(default=0,
                                help_text="How much budget has been allocated to this item?")
+  projNeeded = models.CharField(max_length=4, choices=YesNo, default='TBA',
+                                help_text="Does the item require a projector?")
   techNeeded = models.CharField(max_length=4, choices=YesNo, default='TBA',
-                                help_text="Does the item require any Tech?")
+                                help_text="Does the item require any other Tech, besides a projector?")
   complete = models.CharField(max_length=4, choices=YesNo, default='No',
                               help_text="Mark as Yes when you no longer expect any changes to happen to this item.")
   privNotes = models.TextField(blank=True,
@@ -1206,13 +1208,14 @@ class Item(models.Model):
 
   @classmethod
   def rower(cls, request):
-    return Rower({ "pk":        "id",
-                   "start":      "start",
-                   "room":      "room",
-                   "shortname": "shortname",
-                   "title":     "title",
-                   "edit":      "Edit",
-                   "remove":    "Remove" })
+    return Rower({ "pk":         "id",
+                   "start":       "start",
+                   "room":       "room",
+                   "shortname":  "shortname",
+                   "projNeeded": "projNeeded",
+                   "title":      "title",
+                   "edit":       "Edit",
+                   "remove":     "Remove" })
  
   @classmethod
   def tabler_exclude(cls, request):

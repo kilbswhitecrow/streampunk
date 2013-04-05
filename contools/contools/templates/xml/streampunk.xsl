@@ -124,6 +124,7 @@
   <p>Blurb: <xsl:value-of select="@blurb"/></p>
   <p>Bring: <xsl:value-of select="@bring"/></p>
   <p>Budget: <xsl:value-of select="@budget"/></p>
+  <p>Proj Needed: <xsl:value-of select="@projector"/></p>
   <p>Tech Needed: <xsl:value-of select="@tech_needed"/></p>
   <p>Tables: <xsl:value-of select="@tables"/></p>
     <xsl:apply-templates select="itemroom"/>
