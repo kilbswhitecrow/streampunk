@@ -1,4 +1,4 @@
-<!ELEMENT streampunk (rooms,people,tech_items,items)>
+<!ELEMENT streampunk (rooms,people,items)>
 <!ATTLIST streampunk
  name CDATA #REQUIRED
  timestamp CDATA #REQUIRED
@@ -6,7 +6,7 @@
 
 <!ELEMENT rooms (room*)>
 
-<!ELEMENT room (capacities)>
+<!ELEMENT room (capacities, availability,kitthings)>
 <!ATTLIST room
  id ID #REQUIRED
  name CDATA #REQUIRED
@@ -14,6 +14,22 @@
  gridorder CDATA #REQUIRED
  visible (Yes|No|TBD) #REQUIRED
  projector (Yes|No|TBD) #REQUIRED
+ isDefault CDATA #REQUIRED
+ isUndefined CDATA #REQUIRED
+ canClash CDATA #REQUIRED
+ hasWifi CDATA #REQUIRED
+ parent CDATA #REQUIRED
+ privNotes CDATA #IMPLIED
+ techNotes CDATA #REQUIRED
+ needsSound CDATA #REQUIRED
+ naturalLight CDATA #REQUIRED
+ securable CDATA #REQUIRED
+ controlLightsInRoom CDATA #REQUIRED
+ controlAirConInRoom CDATA #REQUIRED
+ hasCableRuns CDATA #REQUIRED
+ openableWindows CDATA #REQUIRED
+ closableCurtains CDATA #REQUIRED
+ inRadioRange CDATA #REQUIRED
 >
 
 <!ELEMENT capacities (room_capacity*)>
@@ -27,15 +43,23 @@
 
 <!ELEMENT people (person*)>
 
-<!ELEMENT person (tag_uses)>
+<!ELEMENT person (tag_uses, availability)>
 <!ATTLIST person
  id ID #REQUIRED
  name CDATA #REQUIRED
  badge CDATA #REQUIRED
  memnum CDATA #REQUIRED
  notes CDATA #REQUIRED
- contact CDATA #REQUIRED
- email CDATA #REQUIRED
+ contact CDATA #IMPLIED
+ email CDATA #IMPLIED
+ firstName CDATA #IMPLIED
+ middleName CDATA #IMPLIED
+ lastName CDATA #IMPLIED
+ privNotes CDATA #IMPLIED
+ gender CDATA #IMPLIED
+ complete CDATA #IMPLIED
+ distEmail CDATA #IMPLIED
+ recordingOkay CDATA #IMPLIED
 >
 
 <!ELEMENT tag_uses (tag_use*)>
@@ -44,52 +68,13 @@
 <!ATTLIST tag_use
  id CDATA #REQUIRED
  name CDATA #REQUIRED
->
-<!-- NB. id can't be an IDREF because the tags are not defined. -->
-
-<!ELEMENT tech_items (tech_item*)>
-
-<!ELEMENT tech_item (class,department,source,basis)>
-<!ATTLIST tech_item
- id ID #REQUIRED
- name CDATA #REQUIRED
  description CDATA #REQUIRED
- cost CDATA #REQUIRED
- notes CDATA #REQUIRED
- move_immediately (Yes|No|TBD) #REQUIRED
+ visible CDATA #IMPLIED
 >
-
-<!ELEMENT class EMPTY>
-<!ATTLIST class
- id CDATA #REQUIRED
- name CDATA #REQUIRED
->
-<!-- NB. id can't be an IDREF because the classes are not defined. -->
-
-<!ELEMENT department EMPTY>
-<!ATTLIST department
- id CDATA #REQUIRED
- name CDATA #REQUIRED
->
-<!-- NB. id can't be IDREF because the departments are not defined. -->
-
-<!ELEMENT source EMPTY>
-<!ATTLIST source
- id CDATA #REQUIRED
- name CDATA #REQUIRED
->
-<!-- NB. id can't be IDREF because the sources are not defined. -->
-
-<!ELEMENT basis EMPTY>
-<!ATTLIST basis
- id CDATA #REQUIRED
- name CDATA #REQUIRED
->
-<!-- NB. id can't be IDREF because the bases are not defined. -->
 
 <!ELEMENT items (item*)>
 
-<!ELEMENT item (itemroom,participants,tech_uses,tag_uses)>
+<!ELEMENT item (itemroom,itempeople,tag_uses,kitrequests,kitthings)>
 <!ATTLIST item 
  id ID #REQUIRED
  shortname CDATA #REQUIRED
@@ -97,7 +82,6 @@
  start CDATA #REQUIRED
  length CDATA #REQUIRED
  kind CDATA #REQUIRED
- visible (Yes|No|TBD) #REQUIRED
  projector (Yes|No|TBD) #REQUIRED
  exp CDATA #REQUIRED
  seating CDATA #REQUIRED
@@ -106,9 +90,22 @@
  notes CDATA #REQUIRED
  blurb CDATA #REQUIRED
  bring CDATA #REQUIRED
- budget CDATA #REQUIRED
+ stewards CDATA #REQUIRED
  tech_needed (Yes|No|TBD) #REQUIRED
- tables CDATA #REQUIRED
+ tech_notes CDATA #REQUIRED
+ follows CDATA #REQUIRED
+ frontLayout CDATA #REQUIRED
+ audienceMics CDATA #REQUIRED
+ allTechCrew CDATA #REQUIRED
+ needsReset CDATA #REQUIRED
+ needsCleanup CDATA #REQUIRED
+ mediaStatus CDATA #REQUIRED
+
+ visible (Yes|No|TBD) #IMPLIED
+ budget CDATA #IMPLIED
+ privNotes CDATA #IMPLIED
+ revision CDATA #IMPLIED
+ exp CDATA #IMPLIED
 >
 
 <!ELEMENT itemroom EMPTY>
@@ -117,22 +114,53 @@
  name CDATA #REQUIRED
 >
 
-<!ELEMENT participants (participant*)>
+<!ELEMENT itempeople (itemperson*)>
 
-<!ELEMENT participant EMPTY>
-<!ATTLIST participant
+<!ELEMENT itemperson EMPTY>
+<!ATTLIST itemperson
  id IDREF #REQUIRED
  name CDATA #REQUIRED
- vis (Yes|No|TBD) #REQUIRED
+ vis (Yes|No|TBD) #IMPLIED
  role CDATA #REQUIRED
- status CDATA #REQUIRED
+ status CDATA #IMPLIED
 >
 
-<!ELEMENT tech_uses (tech_use*)>
+<!ELEMENT kitrequests (kitrequest*)>
 
-<!ELEMENT tech_use EMPTY>
-<!ATTLIST tech_use
- id IDREF #REQUIRED
- name CDATA #REQUIRED
- setup CDATA #REQUIRED
+<!ELEMENT kitrequest EMPTY>
+<!ATTLIST kitrequest
+  id CDATA #REQUIRED
+  notes CDATA #REQUIRED
+  setup CDATA #REQUIRED
+  status CDATA #REQUIRED
+  kind CDATA #REQUIRED
+  count CDATA #REQUIRED
+>
+
+<!ELEMENT kitthings (kitthing*)>
+
+<!ELEMENT kitthing (availability)>
+<!ATTLIST kitthing
+  id CDATA #REQUIRED
+  name CDATA #REQUIRED
+  description CDATA #REQUIRED
+  kind CDATA #REQUIRED
+  role CDATA #REQUIRED
+  source CDATA #REQUIRED
+  department CDATA #REQUIRED
+  basis CDATA #REQUIRED
+  status CDATA #REQUIRED
+  cost CDATA #REQUIRED
+  insurance CDATA #REQUIRED
+  notes CDATA #REQUIRED
+  coordinator CDATA #REQUIRED
+  count CDATA #REQUIRED
+>
+<!ELEMENT availability (avail*)>
+<!ELEMENT avail EMPTY>
+<!ATTLIST avail
+  id CDATA #REQUIRED
+  label CDATA #REQUIRED
+  from CDATA #REQUIRED
+  to CDATA #REQUIRED
 >

@@ -3,10 +3,42 @@
   desc="{{ r.description }}"
   visible="{{ r.visible }}"
   gridorder="{{ r.gridOrder }}"
-  projector="TBD">
+  projector="TBD"
+  isDefault="{{ r.isDefault }}"
+  isUndefined="{{ r.isUndefined }}"
+  canClash="{{ r.canClash }}"
+  disabledAccess="{{ r.disabledAccess }}"
+  hasWifi="{{ r.hasWifi }}"
+  parent="{{ r.parent }}"
+{% if perms.streampunk.read_private %}
+  privNotes="{{ r.privNotes }}"
+{% endif %}
+  techNotes="{{ r.techNotes }}"
+  needsSound="{{ r.needsSound }}"
+  naturalLight="{{ r.naturalLight }}"
+  securable="{{ r.securable }}"
+  controlLightsInRoom="{{ r.controlLightsInRoom }}"
+  controlAirConInRoom="{{ r.controlAirConInRoom }}"
+  hasCableRuns="{{ r.hasCableRuns }}"
+  openableWindows="{{ r.openableWindows }}"
+  closableCurtains="{{ r.closableCurtains }}"
+  inRadioRange="{{ r.inRadioRange }}"
+  >
   <capacities>
   {% for c in r.capacities.all %}
   {{ c.as_xml }}
   {% endfor %}
   </capacities>
+  <availability>
+  {% if perms.streampunk.read_private %}
+    {% for a in r.availability.all %}
+    {{ a.as_xml }}
+    {% endfor %}
+  {% endif %}
+  </availability>
+  <kitthings>
+    {% for kt in r.kit.all %}
+      {{ kt.as_xml }}
+    {% endfor %}
+  </kitthings>
 </room>

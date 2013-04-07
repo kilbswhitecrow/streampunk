@@ -1,14 +1,34 @@
 <person id="person{{ p.id }}"
-  name="{{ p.as_name }}"
-  badge="{{ p.badge }}"
-  memnum="{{ p.memnum }}"
-  notes="{{ p.notes }}"
+{% if perms.streampunk.read_private %}
   contact="{{ p.contact }}"
   email="{{ p.email }}">
+  name="{{ p.as_name }}"
+  firstName="{{ p.firstName }}"
+  middleName="{{ p.middleName }}"
+  lastName="{{ p.lastName }}"
+  privNotes="{{ p.privNotes }}"
+  gender="{{ p.gender }}"
+  complete="{{ p.complete }}"
+  distEmail="{{ p.distEmail }}"
+  recordingOkay="{{ p.recordingOkay }}"
+{% else %}
+  name="{{ p.as_badge }}"
+{% endif %}
+  badge="{{ p.badge }}"
+  memnum="{{ p.memnum }}"
+  notes="{{ p.pubNotes }}"
+>
   <tag_uses>
   {% for t in p.tags.all %}
   {{ t.as_xml }}
   {% endfor %}
   </tag_uses>
+  <availability>
+{% if perms.streampunk.read_private %}
+  {% for a in p.availability.all %}
+  {{ a.as_xml }}
+  {% endfor %}
+{% endif %}
+  </availability>
 </person>
 

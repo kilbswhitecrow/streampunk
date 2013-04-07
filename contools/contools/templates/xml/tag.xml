@@ -1,2 +1,9 @@
+{% if perms.streampunk.read_private or t.visible %}
 <tag_use id="tag{{ t.id }}"
-  name="{{ t.name }}" />
+  name="{{ t.name }}"
+  description="{{ t.name }}"
+  {% if perms.streampunk.read_private %}
+  visible="{{ t.visible }}"
+  {% endif %}
+ />
+{% endif %}

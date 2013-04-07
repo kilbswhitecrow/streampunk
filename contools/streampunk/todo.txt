@@ -22,6 +22,8 @@ Next up
 -------
 - XML dump, for ConText
 - Fix "fill slot" logic.
+- Update to django 1.5.1.
+- Revisions
 
 Kit, Generally
 --------------

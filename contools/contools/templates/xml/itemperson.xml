@@ -1,5 +1,12 @@
-<participant id="person{{ ip.person.id }}"
+{% if perms.streampunk.read_private or ip.visible %}
+<itemperson id="person{{ ip.person.id }}"
+  {% if perms.streampunk.read_private %}
   name="{{ ip.person.as_name }}"
   vis="{{ ip.visible }}"
-  role="{{ ip.role }}"
   status="{{ ip.status }}" />
+  {% else %}
+  name="{{ ip.person.as_badge }}"
+  {% endif %}
+  role="{{ ip.role }}"
+/>
+{% endif %}

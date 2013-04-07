@@ -1,11 +1,10 @@
+{% if perms.streampunk.read_private or i.visible %}
 <item id="item{{ i.id }}"
   shortname="{{ i.shortname }}"
   title="{{ i.title }}"
   start="{{ i.start }}"
   length="{{ i.length }}"
   kind="{{ i.kind }}"
-  visible="{{ i.visible }}"
-  exp="{{ i.expAudience }}"
   seating="{{ i.seating }}"
   gophers="{{ i.gophers }}"
   complete="{{ i.complete }}"
@@ -13,14 +12,30 @@
   blurb="{{ i.blurb }}"
   bring="{{ i.pubBring }}"
   projector="{{ i.projNeeded }}"
+  stewards="{{ i.stewards }}"
+  tech_needed="{{ i.techNeeded }}"
+  tech_notes="{{ i.techNotes }}"
+  follows="{{ i.follows }}"
+  frontLayout="{{ i.frontLayout }}"
+  audienceMics="{{ i.audienceMics }}"
+  allTechCrew="{{ i.allTechCrew }}"
+  needsReset="{{ i.needsReset }}"
+  needsCleanup="{{ i.needsCleanup }}"
+  mediaStatus="{{ i.mediaStatus }}"
+{% if perms.streampunk.read_private %}
+  visible="{{ i.visible }}"
   budget="{{ i.budget }}"
-  tech_needed="{{ i.techNeeded }}">
+  privNotes="{{ i.privNotes }}"
+  revision="{{ i.revision }}"
+  exp="{{ i.expAudience }}"
+{% endif %}
+>
   <itemroom id="room{{ i.room.id }}" name="{{ i.room.name }}" />
-  <participants>
+  <itempeople>
   {% for ip in i.itempeople %}
   {{ ip.as_xml }}
   {% endfor %}
-  </participants>
+  </itempeople>
   <tag_uses>
   {% for t in i.tags.all %}
   {{ t.as_xml }}
@@ -38,3 +53,4 @@
   </kitthings>
 
 </item>
+{% endif %}

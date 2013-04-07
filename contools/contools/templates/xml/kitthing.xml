@@ -2,5 +2,20 @@
   name="{{ kt.name }}"
   description="{{ kt.description }}"
   kind="{{ kt.kind }}"
-  count="{{ kt.count }}" />
+  role="{{ kt.role }}"
+  source="{{ kt.source }}"
+  department="{{ kt.department }}"
+  basis="{{ kt.basis }}"
+  status="{{ kt.status }}"
+  cost="{{ kt.cost }}"
+  insurance="{{ kt.insurance }}"
+  notes="{{ kt.notes }}"
+  coordinator="{{ kt.coordinator }}"
+  count="{{ kt.count }}">
+  <availability>
+  {% for a in kt.availability.all %}
+  {{ a.as_xml }}
+  {% endfor %}
+  </availability>
+</kitthing>
 
