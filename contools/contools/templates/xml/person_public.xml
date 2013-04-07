@@ -1,0 +1,15 @@
+<person id="person{{ p.id }}"
+  name="{{ p.as_badge }}"
+  badge="{{ p.badge }}"
+  memnum="{{ p.memnum }}"
+  notes="{{ p.pubNotes }}"
+>
+  <tag_uses>
+  {% for t in p.tags.all %}
+  {{ t.as_xml_public }}
+  {% endfor %}
+  </tag_uses>
+  <availability>
+  </availability>
+</person>
+

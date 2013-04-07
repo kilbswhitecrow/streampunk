@@ -64,6 +64,8 @@ class Availability(models.Model):
     else:
       return "%s - %s" % (self.fromWhen, self.toWhen)
 
+  def as_xml_public(self):
+    return render_to_string('xml/availability_public.xml', { "a": self } )
   def as_xml(self):
     return render_to_string('xml/availability.xml', { "a": self } )
 
@@ -377,6 +379,8 @@ class Tag(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+    return render_to_string('xml/tag_public.xml', { "t": self } )
   def as_xml(self):
     return render_to_string('xml/tag.xml', { "t": self } )
 
@@ -457,6 +461,8 @@ class KitRequest(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+    return render_to_string('xml/kitrequest_public.xml', { "kr": self } )
   def as_xml(self):
     return render_to_string('xml/kitrequest.xml', { "kr": self } )
 
@@ -557,6 +563,8 @@ class KitThing(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+    return render_to_string('xml/kitthing_public.xml', { "kt": self } )
   def as_xml(self):
     return render_to_string('xml/kitthing.xml', { "kt": self } )
 
@@ -802,6 +810,8 @@ class RoomCapacity(models.Model):
   def __unicode__(self):
     return u"%s: %d" % (self.layout, self.count)
 
+  def as_xml_public(self):
+    return render_to_string('xml/capacity_public.xml', { "c": self } )
   def as_xml(self):
     return render_to_string('xml/capacity.xml', { "c": self } )
 
@@ -871,6 +881,8 @@ class Room(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+   return render_to_string('xml/room_public.xml', { "r": self } )
   def as_xml(self):
    return render_to_string('xml/room.xml', { "r": self } )
 
@@ -1032,6 +1044,8 @@ class Person(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+    return render_to_string('xml/person_public.xml', { "p": self } )
   def as_xml(self):
     return render_to_string('xml/person.xml', { "p": self } )
 
@@ -1235,6 +1249,8 @@ class Item(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+    return render_to_string('xml/item_public.xml', { "i": self } )
   def as_xml(self):
     return render_to_string('xml/item.xml', { "i": self } )
 
@@ -1342,6 +1358,8 @@ class ItemPerson(models.Model):
   def get_absolute_url(self):
     return mk_url(self)
 
+  def as_xml_public(self):
+    return render_to_string('xml/itemperson_public.xml', { "ip": self } )
   def as_xml(self):
     return render_to_string('xml/itemperson.xml', { "ip": self } )
 

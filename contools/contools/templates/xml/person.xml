@@ -1,7 +1,6 @@
 <person id="person{{ p.id }}"
-{% if perms.streampunk.read_private %}
   contact="{{ p.contact }}"
-  email="{{ p.email }}">
+  email="{{ p.email }}"
   name="{{ p.as_name }}"
   firstName="{{ p.firstName }}"
   middleName="{{ p.middleName }}"
@@ -11,9 +10,6 @@
   complete="{{ p.complete }}"
   distEmail="{{ p.distEmail }}"
   recordingOkay="{{ p.recordingOkay }}"
-{% else %}
-  name="{{ p.as_badge }}"
-{% endif %}
   badge="{{ p.badge }}"
   memnum="{{ p.memnum }}"
   notes="{{ p.pubNotes }}"
@@ -24,11 +20,9 @@
   {% endfor %}
   </tag_uses>
   <availability>
-{% if perms.streampunk.read_private %}
   {% for a in p.availability.all %}
   {{ a.as_xml }}
   {% endfor %}
-{% endif %}
   </availability>
 </person>
 

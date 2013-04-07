@@ -10,7 +10,6 @@
   disabledAccess="{{ r.disabledAccess }}"
   hasWifi="{{ r.hasWifi }}"
   parent="{{ r.parent }}"
-  privNotes="{{ r.privNotes }}"
   techNotes="{{ r.techNotes }}"
   needsSound="{{ r.needsSound }}"
   naturalLight="{{ r.naturalLight }}"
@@ -24,17 +23,14 @@
   >
   <capacities>
   {% for c in r.capacities.all %}
-  {{ c.as_xml }}
+  {{ c.as_xml_public }}
   {% endfor %}
   </capacities>
   <availability>
-    {% for a in r.availability.all %}
-    {{ a.as_xml }}
-    {% endfor %}
   </availability>
   <kitthings>
     {% for kt in r.kit.all %}
-      {{ kt.as_xml }}
+      {{ kt.as_xml_public }}
     {% endfor %}
   </kitthings>
 </room>

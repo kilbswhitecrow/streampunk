@@ -21,31 +21,26 @@
   needsReset="{{ i.needsReset }}"
   needsCleanup="{{ i.needsCleanup }}"
   mediaStatus="{{ i.mediaStatus }}"
-  visible="{{ i.visible }}"
-  budget="{{ i.budget }}"
-  privNotes="{{ i.privNotes }}"
-  revision="{{ i.revision }}"
-  exp="{{ i.expAudience }}"
 >
   <itemroom id="room{{ i.room.id }}" name="{{ i.room.name }}" />
   <itempeople>
   {% for ip in i.itempeople %}
-  {{ ip.as_xml }}
+  {{ ip.as_xml_public }}
   {% endfor %}
   </itempeople>
   <tag_uses>
   {% for t in i.tags.all %}
-  {{ t.as_xml }}
+  {{ t.as_xml_public }}
   {% endfor %}
   </tag_uses>
   <kitrequests>
   {% for kr in i.kitRequests.all %}
-  {{ kr.as_xml }}
+  {{ kr.as_xml_public }}
   {% endfor %}
   </kitrequests>
   <kitthings>
   {% for kt in i.kit.all %}
-  {{ kt.as_xml }}
+  {{ kt.as_xml_public }}
   {% endfor %}
   </kitthings>
 

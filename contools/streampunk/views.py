@@ -972,11 +972,17 @@ def list_rooms_tech(request):
 
 def xml_dump(request):
   con_name = ConInfoString.objects.con_name()
-  rooms = Room.objects.all()
+  if request.user.has_perm('progb2.read_private'):
+    rooms = Room.objects.all()
+    allitems = Item.objects.all()
+    template = 'xml/streampunk.xml'
+  else:
+    rooms = Room.objects.filter(visible = True)
+    allitems = Item.objects.filter(visible = True)
+    template = 'xml/streampunk_public.xml'
   people = Person.objects.all()
-  allitems = Item.objects.all()
 
-  return render_to_response('xml/streampunk.xml',
+  return render_to_response(template,
                             { "rooms": rooms, "people": people, "items": allitems, "con_name": con_name },
                             context_instance=RequestContext(request),
                             mimetype='application/xml')

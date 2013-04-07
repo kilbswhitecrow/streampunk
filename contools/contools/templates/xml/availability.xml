@@ -1,3 +1,1 @@
-{% if perms.streampunk.read_private %}
 <avail id="avail{{ a.id }}" label="{{ a.label }}" from="{{ a.fromWhen }}" to="{{ a.toWhen }}" />
-{% endif %}

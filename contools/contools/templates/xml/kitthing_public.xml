@@ -1,0 +1,19 @@
+<kitthing id="kitthing{{ kt.id }}"
+  name="{{ kt.name }}"
+  description="{{ kt.description }}"
+  kind="{{ kt.kind }}"
+  role="{{ kt.role }}"
+  source="{{ kt.source }}"
+  department="{{ kt.department }}"
+  basis="{{ kt.basis }}"
+  status="{{ kt.status }}"
+  notes="{{ kt.notes }}"
+  coordinator="{{ kt.coordinator }}"
+  count="{{ kt.count }}">
+  <availability>
+  {% for a in kt.availability.all %}
+  {{ a.as_xml_public }}
+  {% endfor %}
+  </availability>
+</kitthing>
+

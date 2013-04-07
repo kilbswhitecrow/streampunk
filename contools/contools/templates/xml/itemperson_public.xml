@@ -1,0 +1,6 @@
+{% if ip.visible %}
+<itemperson id="person{{ ip.person.id }}"
+  name="{{ ip.person.as_badge }}"
+  role="{{ ip.role }}"
+/>
+{% endif %}
