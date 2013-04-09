@@ -1555,7 +1555,7 @@
     "model": "streampunk.revision", 
     "fields": {
       "colour": "black", 
-      "baseline": "2012-03-01T00:00:00+00:00", 
+      "baseline": "2012-03-01T00:00:00", 
       "description": "First draft"
     }
   }, 
@@ -2092,6 +2092,66 @@
       "var": "email_from", 
       "name": "Email 'From' address", 
       "val": "steve@whitecrow.demon.co.uk"
+    }
+  },
+  {
+    "pk": 4, 
+    "model": "streampunk.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "canClash": false, 
+      "closableCurtains": false, 
+      "accessibleOnFlat": false, 
+      "visible": true, 
+      "techNotes": "", 
+      "naturalLight": false, 
+      "hasWifi": false, 
+      "inRadioRange": false, 
+      "availability": [], 
+      "hasCableRuns": false, 
+      "securable": false, 
+      "isDefault": false, 
+      "isUndefined": false, 
+      "gridOrder": 95, 
+      "description": "For items that are in no fixed location, e.g. a treasure hunt.", 
+      "parent": null, 
+      "capacities": [], 
+      "openableWindows": false, 
+      "controlAirConInRoom": false, 
+      "name": "Everywhere", 
+      "controlLightsInRoom": false, 
+      "privNotes": "", 
+      "needsSound": false
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "streampunk.room", 
+    "fields": {
+      "disabledAccess": true, 
+      "canClash": false, 
+      "closableCurtains": false, 
+      "accessibleOnFlat": false, 
+      "visible": false, 
+      "techNotes": "", 
+      "naturalLight": false, 
+      "hasWifi": false, 
+      "inRadioRange": false, 
+      "availability": [], 
+      "hasCableRuns": false, 
+      "securable": false, 
+      "isDefault": true, 
+      "isUndefined": true, 
+      "gridOrder": 99, 
+      "description": "For items that have not yet been allocated a room, or that do not need one.", 
+      "parent": null, 
+      "capacities": [], 
+      "openableWindows": false, 
+      "controlAirConInRoom": false, 
+      "name": "Nowhere", 
+      "controlLightsInRoom": false, 
+      "privNotes": "", 
+      "needsSound": false
     }
   }
 ]
