@@ -210,7 +210,10 @@ def main_page(request):
   con_name = ConInfoString.objects.con_name()
   num_panellists = totals['num_people__sum']
   budget = totals['budget__sum']
-  hours_scheduled = mins_scheduled['length__length__sum'] / 60
+  try:
+    hours_scheduled = mins_scheduled['length__length__sum'] / 60
+  except TypeError:
+    hours_scheduled = 0  # No items actually scheduled yet
   return render_to_response('streampunk/main_page.html',
                             locals(),
                             context_instance=RequestContext(request))
