@@ -196,24 +196,26 @@ def show_profile_detail(request):
 
 
 def main_page(request):
-  num_items = Item.scheduled.count()
   num_people = Person.objects.count()
-  # e.g. {'num_people__sum': 5, 'budget__sum': 0}
-  totals = Item.scheduled.annotate(num_people=Count('people')).aggregate(Sum('num_people'), Sum('budget'))
-  # {'length__length__sum': 870}
-  mins_scheduled = Item.scheduled.aggregate(Sum('length__length'))
-  # [ { 'kind__name': 'Panel', 'kind__count': N }, { 'kind__name': 'Talk', 'kind__count': Y } ]
-  item_kinds = Item.objects.values('kind__name').annotate(Count('kind')).order_by()
+  num_items = Item.scheduled.count()
+  if num_items > 0:
+    # e.g. {'num_people__sum': 5, 'budget__sum': 0}
+    totals = Item.scheduled.annotate(num_people=Count('people')).aggregate(Sum('num_people'), Sum('budget'))
+    # {'length__length__sum': 870}
+    mins_scheduled = Item.scheduled.aggregate(Sum('length__length'))
+    # [ { 'kind__name': 'Panel', 'kind__count': N }, { 'kind__name': 'Talk', 'kind__count': Y } ]
+    num_panellists = totals['num_people__sum']
+    budget = totals['budget__sum']
+    hours_scheduled = mins_scheduled['length__length__sum'] / 60
+  else:
+    num_panellists = 0
+    budget = 0
+    hours_scheduled = 0
 
+  item_kinds = Item.objects.values('kind__name').annotate(Count('kind')).order_by()
   kind_table = make_tabler(ItemKind, ItemKindTable, request=request, qs=item_kinds, prefix='ikc-', empty='No items yet')
 
   con_name = ConInfoString.objects.con_name()
-  num_panellists = totals['num_people__sum']
-  budget = totals['budget__sum']
-  try:
-    hours_scheduled = mins_scheduled['length__length__sum'] / 60
-  except TypeError:
-    hours_scheduled = 0  # No items actually scheduled yet
   return render_to_response('streampunk/main_page.html',
                             locals(),
                             context_instance=RequestContext(request))
