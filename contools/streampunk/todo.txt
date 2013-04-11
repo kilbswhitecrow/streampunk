@@ -1,3 +1,18 @@
+Testing
+-------
+- Django only loads initial_data.json by default, but I normally load a bunch of other fixtures
+before doing any queries. That doesn't happen with the testing database, so I didn't notice that
+just the default fixture doesn't support the find_default callable on Room. Fixed that, by moving
+Nowhere and Everywhere to initial_data.json.
+- Also removed the TZ from the baseline revision. Don't know why that was failing for the test
+database, but wasn't for the normal one.
+- There are a bunch of other tests that also fail, that have nothing to do
+with me (I think), so I should investigate them, first.
+
+Comments from Simon's LJ
+------------------------
+Provisionally put people on an item, then let Streampunk say when that item could be run.
+
 Comments from Michael Abbot
 ---------------------------
 Save and restore (related to backups)
