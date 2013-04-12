@@ -22,6 +22,7 @@ Replace this with more appropriate tests for your application.
 from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
+from django.contrib.auth.models import User
 
 from streampunk.models import Grid
 
@@ -71,7 +72,6 @@ class StreampunkTest(TestCase):
   def row_match(self, table, rec):
     "Test whether table has a row which matches the field/value pairs from dict rec."
     row = self.find_row(table, rec)
-    print "BOOGA: row_match: got %s\n" % (row)
     return True if row else False
 
   def has_row(self, table, rec):
@@ -102,8 +102,28 @@ class AuthTest(StreampunkTest):
     self.has_link_to('list_grids')
     self.has_link_to('list_people')
     self.has_link_to('list_rooms')
+    self.has_link_to('list_rooms_prog')
+    self.has_link_to('list_rooms_tech')
     self.has_link_to('list_items')
     self.has_link_to('list_tags')
+    self.has_link_to('new_person')
+    self.has_link_to('new_item')
+    self.has_link_to('new_room')
+    self.has_link_to('new_tag')
+    self.has_link_to('add_tags')
+    self.has_link_to('list_kitbundles')
+    self.has_link_to('list_kitthings')
+    self.has_link_to('kit_usage')
+    self.has_link_to('list_checks')
+    # To Add
+    # kit thing/bundle to room/item
+    # admin
+    # Profile
+
+  def mkroot(self):
+    user = User.objects.create_user(username='congod', password='xxx')
+    user.is_superuser = True
+    user.save()
 
 class nonauth_lists(NonauthTest):
   def setUp(self):
@@ -172,4 +192,95 @@ class nonauth_lists(NonauthTest):
     self.has_column(t, 'description')
     self.assertEqual(self.num_rows(t), 0)
     self.no_link_to('new_tag')
+
+class Auth_lists(AuthTest):
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def test_login(self):
+    self.assertTrue(self.logged_in_okay)
+
+  def test_main_page1(self):
+    "No items or people yet. Now logged in."
+    self.response = self.client.get(reverse('main_page'))
+    self.status_okay()
+    self.contextEqual('con_name', u'MyCon 2012')
+    self.contextEqual('num_items', 0)
+    self.contextEqual('num_people', 0)
+    self.contextEqual('num_panellists', 0)
+    self.contextEqual('budget', 0)
+    self.contextEqual('hours_scheduled', 0)
+    self.banner()
+    self.has_link_to('xml_dump')
+    self.has_link_to('new_itemperson')
+    self.has_link_to('add_tags')
+    self.has_link_to('make_con_groups')
+    self.has_column('kind_table', 'kind')
+    self.has_column('kind_table', 'count')
+
+  def test_items1(self):
+    "No items yet, but check we can see all columns"
+    t = 'itable'
+    self.response = self.client.get(reverse('list_items'))
+    self.status_okay()
+    self.has_column(t, 'title')
+    self.has_column(t, 'room')
+    self.has_column(t, 'start')
+    self.has_column(t, 'shortname')
+    self.has_column(t, 'edit')
+    self.has_column(t, 'remove')
+    self.assertEqual(self.num_rows(t), 0)
+    self.has_link_to('new_item')
+
+  def test_people1(self):
+    "No people yet, but there should be a table"
+    t = 'ptable'
+    self.response = self.client.get(reverse('list_people'))
+    self.status_okay()
+    self.no_column(t, 'name')
+    self.has_column(t, 'firstName')
+    self.has_column(t, 'middleName')
+    self.has_column(t, 'lastName')
+    self.has_column(t, 'badge')
+    self.has_column(t, 'memnum')
+    self.has_column(t, 'email')
+    self.has_column(t, 'edit')
+    self.has_column(t, 'remove')
+    self.assertEqual(self.num_rows(t), 0)
+    self.has_link_to('new_person')
+    # Need a way to test that there a submit buttons for forms, too.
+
+
+  def test_rooms1(self):
+    "We should have Nowhere and Everywhere, and be able to see both."
+    t = 'rtable'
+    self.response = self.client.get(reverse('list_rooms'))
+    self.status_okay()
+    self.has_column(t, 'name')
+    self.has_column(t, 'gridOrder')
+    self.has_column(t, 'description')
+    self.has_column(t, 'visible')
+    self.has_column(t, 'edit')
+    self.has_column(t, 'remove')
+    self.assertEqual(self.num_rows(t), 2)
+    self.has_row(t, { 'name': 'Nowhere', 'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
+    self.has_row(t, { 'name': 'Everywhere', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
+    self.has_link_to('new_room')
+
+  def test_tags1(self):
+    "No tags yet, but there should be a table"
+    t = 'ttable'
+    self.response = self.client.get(reverse('list_tags'))
+    self.status_okay()
+    self.has_column(t, 'name')
+    self.has_column(t, 'description')
+    self.has_column(t, 'visible')
+    self.has_column(t, 'edit')
+    self.has_column(t, 'remove')
+    self.assertEqual(self.num_rows(t), 0)
+    self.has_link_to('new_tag')
+    self.has_link_to('add_tags')
+
 
