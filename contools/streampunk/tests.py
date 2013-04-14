@@ -124,6 +124,10 @@ class AuthTest(StreampunkTest):
     user = User.objects.create_user(username='congod', password='xxx')
     user.is_superuser = True
     user.save()
+    self.rootuser = user
+
+  def zaproot(self):
+    self.rootuser.delete()
 
 class nonauth_lists(NonauthTest):
   def setUp(self):
@@ -198,6 +202,10 @@ class Auth_lists(AuthTest):
     self.mkroot()
     self.client = Client()
     self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
 
   def test_login(self):
     self.assertTrue(self.logged_in_okay)
@@ -283,4 +291,82 @@ class Auth_lists(AuthTest):
     self.has_link_to('new_tag')
     self.has_link_to('add_tags')
 
+class test_creation(AuthTest):
+  "Populate the tables somewhat"
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_mkpeople(self):
+    self.response = self.client.post(reverse('new_person'), {
+      "firstName":      "Rupert",
+      "lastName":       "Giles",
+      "badge":          "Ripper"
+    })
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_person'), {
+      "firstName":      "Buffy",
+      "lastName":       "Summers"
+    })
+    self.status_okay()
+
+  def test_mkrooms(self):
+    self.response = self.client.post(reverse('new_room'), {
+      "name":        "Main Hall",
+      "isDefault":   False,
+      "isUndefined": False,
+      "canClash":    False,
+      "gridOrder":   10
+    })
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_person'), {
+      "name":        "Programme",
+      "isDefault":   False,
+      "isUndefined": False,
+      "canClash":    False,
+      "gridOrder":   20
+    })
+    self.status_okay()
+
+  def test_mkitems(self):
+    self.response = self.client.post(reverse('new_item'), {
+      "title":     "Opening Ceremony",
+      "shortname": "opening ceremony"
+      })
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_item'), {
+      "title":     "Bid session",
+      "shortname": "bid"
+      })
+    self.status_okay()
+
+  def test_mktags(self):
+    self.response = self.client.post(reverse('new_tag'), {
+      "name": "books"
+    })
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_tag'), {
+      "name": "movies"
+    })
+    self.status_okay()
+
+  def test_mkkitthings(self):
+    self.response = self.client.post(reverse('new_kitthing'), {
+      "name": "Main Hall Projector"
+    })
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_kitthing'), {
+      "name": "Main Hall Screen"
+    })
+    self.status_okay()
 
