@@ -24,7 +24,9 @@ from django.test.client import Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
-from streampunk.models import Grid
+from streampunk.models import Grid, Gender, Slot, SlotLength, Room
+from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
+from streampunk.models import Revision, MediaStatus
 
 class StreampunkTest(TestCase):
 
@@ -64,7 +66,7 @@ class StreampunkTest(TestCase):
         # all of rec' keys appear in the row's record. Now get a list of
         # all the keys where the values are different. If this list is
         # empty, then this row matches the rec.
-        diffs = [ k for k in rec.keys() if rec[k] != row.record[k] ]
+        diffs = [ k for k in rec.keys() if not k in row.record or rec[k] != row.record[k] ]
         if not diffs:
           return row.record
     return None
@@ -295,6 +297,7 @@ class test_creation(AuthTest):
   "Populate the tables somewhat"
 
   def setUp(self):
+    self.mkroot()
     self.client = Client()
     self.logged_in_okay = self.client.login(username='congod', password='xxx')
 
@@ -303,61 +306,187 @@ class test_creation(AuthTest):
     self.zaproot()
 
   def test_mkpeople(self):
-    self.response = self.client.post(reverse('new_person'), {
+    def chkpeople(self, numrows):
+      t = 'ptable'
+      self.response = self.client.get(reverse('list_people'))
+      self.status_okay()
+      self.no_column(t, 'name')
+      self.has_column(t, 'firstName')
+      self.has_column(t, 'middleName')
+      self.has_column(t, 'lastName')
+      self.has_column(t, 'badge')
+      self.has_column(t, 'memnum')
+      self.has_column(t, 'email')
+      self.has_column(t, 'edit')
+      self.has_column(t, 'remove')
+      self.assertEqual(self.num_rows(t), numrows)
+      self.has_link_to('new_person')
+
+    def default_person(extras):
+      p = {
+        "firstName":      "Rupert",
+        "lastName":       "Giles",
+        "badge":          "Ripper",
+        "memnum":         -1,
+        "gender":         Gender.objects.find_default().id,
+        "complete":       "No",
+        "distEmail":      "No",
+        "recordingOkay":  "No"
+      }
+      for k in extras.keys():
+        p[k] = extras[k]
+      return p
+
+    t = 'ptable'
+    chkpeople(self, 0)
+    self.response = self.client.post(reverse('new_person'), default_person({
       "firstName":      "Rupert",
       "lastName":       "Giles",
       "badge":          "Ripper"
-    })
+    }), follow=True)
     self.status_okay()
+    chkpeople(self, 1)
+    self.has_row(t, { 'firstName': 'Rupert', 'lastName': 'Giles', 'edit': 'Edit', 'remove': 'Remove' })
 
-    self.response = self.client.post(reverse('new_person'), {
+    self.response = self.client.post(reverse('new_person'), default_person({
       "firstName":      "Buffy",
       "lastName":       "Summers"
-    })
+    }), follow=True)
     self.status_okay()
+    chkpeople(self, 2)
+    self.has_row(t, { 'firstName': 'Rupert', 'lastName': 'Giles', 'edit': 'Edit', 'remove': 'Remove' })
+    self.has_row(t, { 'firstName': 'Buffy', 'lastName': 'Summers', 'edit': 'Edit', 'remove': 'Remove' })
 
   def test_mkrooms(self):
+    def chkroom(self, numrows):
+      t = 'rtable'
+      self.response = self.client.get(reverse('list_rooms'))
+      self.status_okay()
+      self.has_column(t, 'name')
+      self.has_column(t, 'gridOrder')
+      self.has_column(t, 'description')
+      self.has_column(t, 'visible')
+      self.has_column(t, 'edit')
+      self.has_column(t, 'remove')
+      self.assertEqual(self.num_rows(t), numrows)
+      self.has_row(t, { 'name': 'Nowhere', 'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
+      self.has_row(t, { 'name': 'Everywhere', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
+      self.has_link_to('new_room')
+
+    t = 'rtable'
+    chkroom(self, 2)
     self.response = self.client.post(reverse('new_room'), {
       "name":        "Main Hall",
       "isDefault":   False,
       "isUndefined": False,
       "canClash":    False,
+      "visible":     True,
       "gridOrder":   10
-    })
+    }, follow=True)
     self.status_okay()
+    chkroom(self, 3)
+    self.has_row(t, { 'name': 'Main Hall', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
 
-    self.response = self.client.post(reverse('new_person'), {
-      "name":        "Programme",
+    self.response = self.client.post(reverse('new_room'), {
+      "name":        "Ops",
       "isDefault":   False,
       "isUndefined": False,
       "canClash":    False,
       "gridOrder":   20
-    })
+    }, follow=True)
     self.status_okay()
+    chkroom(self, 4)
+    self.has_row(t, { 'name': 'Main Hall', 'visible': True,  'edit': 'Edit', 'remove': 'Remove' })
+    self.has_row(t, { 'name': 'Ops',       'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
 
   def test_mkitems(self):
-    self.response = self.client.post(reverse('new_item'), {
-      "title":     "Opening Ceremony",
-      "shortname": "opening ceremony"
-      })
-    self.status_okay()
+    def chkitems(self, numrows):
+      t = 'itable'
+      self.response = self.client.get(reverse('list_items'))
+      self.status_okay()
+      self.has_column(t, 'title')
+      self.has_column(t, 'room')
+      self.has_column(t, 'start')
+      self.has_column(t, 'shortname')
+      self.has_column(t, 'edit')
+      self.has_column(t, 'remove')
+      self.assertEqual(self.num_rows(t), numrows)
+      self.has_link_to('new_item')
+    def default_item(extras):
+      i = {
+        "title":       "Some Item",
+        "shortname":   "some item",
+        "start":       Slot.objects.find_default().id,
+        "length":      SlotLength.objects.find_default().id,
+        "room":        Room.objects.find_default().id,
+        "kind":        ItemKind.objects.find_default().id,
+        "seating":     SeatingKind.objects.find_default().id,
+        "frontLayout": FrontLayoutKind.objects.find_default().id,
+        "revision":    Revision.objects.latest().id,
+        "expAudience": 0,
+        "gophers":     0,
+        "stewards":    0,
+        "budget":      0,
+        "projNeeded":  "No",
+        "techNeeded":  "No",
+        "complete":    "No",
+        "visible":     True,
+        "mediaStatus":  MediaStatus.objects.find_default().id
+      }
+      for k in extras.keys():
+        i[k] = extras[k]
+      return i
 
-    self.response = self.client.post(reverse('new_item'), {
-      "title":     "Bid session",
-      "shortname": "bid"
-      })
+    t = 'itable'
+    chkitems(self, 0)
+    self.response = self.client.post(reverse('new_item'), default_item({
+      "title":       "Opening Ceremony",
+      "shortname":   "opening ceremony",
+      }), follow=True)
     self.status_okay()
+    chkitems(self, 1)
+    self.has_row(t, { 'title': 'Opening Ceremony', 'edit': 'Edit', 'remove': 'Remove' })
+
+    self.response = self.client.post(reverse('new_item'), default_item({
+      "title":     "Bid Session",
+      "shortname": "bid"
+      }), follow=True)
+    self.status_okay()
+    chkitems(self, 2)
+    self.has_row(t, { 'title': 'Opening Ceremony', 'edit': 'Edit', 'remove': 'Remove' })
+    self.has_row(t, { 'title': 'Bid Session', 'edit': 'Edit', 'remove': 'Remove' })
 
   def test_mktags(self):
+    def chktags(self, numrows):
+      t = 'ttable'
+      self.response = self.client.get(reverse('list_tags'))
+      self.status_okay()
+      self.has_column(t, 'name')
+      self.has_column(t, 'description')
+      self.has_column(t, 'visible')
+      self.has_column(t, 'edit')
+      self.has_column(t, 'remove')
+      self.assertEqual(self.num_rows(t), numrows)
+      self.has_link_to('new_tag')
+      self.has_link_to('add_tags')
+
+    t = 'ttable'
+    chktags(self, 0)
     self.response = self.client.post(reverse('new_tag'), {
-      "name": "books"
-    })
+      "name": "books",
+      "visible": True
+    }, follow=True)
     self.status_okay()
+    chktags(self, 1)
+    self.has_row(t, { 'name': 'books', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
 
     self.response = self.client.post(reverse('new_tag'), {
       "name": "movies"
-    })
+    }, follow=True)
     self.status_okay()
+    chktags(self, 2)
+    self.has_row(t, { 'name': 'books', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
+    self.has_row(t, { 'name': 'movies', 'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
 
   def test_mkkitthings(self):
     self.response = self.client.post(reverse('new_kitthing'), {
