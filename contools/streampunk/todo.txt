@@ -35,9 +35,11 @@ notify Lindsay that something has changed? Have people subscribe, to ask for ema
 
 Next up
 -------
-- XML dump, for ConText
-- Fix "fill slot" logic.
+- XML dump, for ConText (Done; pending a review by Alex)
+- Get regression tests in place.
 - Update to django 1.5.1.
+- Revise the Slot structure *again*.
+- Fix "fill slot" logic.
 - Revisions
 
 Kit, Generally
@@ -91,10 +93,15 @@ Thing assignment, but that won't help for deleting all the things in a bundle.)
 
 Grid Issues
 -----------
+- As well as having different schedules for different days, we should also be
+able to have different schedules for different rooms. That would make the
+options for moving an item interesting, though, because selecting a room would
+change the possible time slots.
 - Doesn't currently display items that start before the grid does.
 - Doesn't list the grids in (day x time) table.
 - Fill-slot doesn't list scheduled/unscheduled items. Should just
 do that as two separate forms within the page, with two submits.
+- I should present fill slot, swap item, etc. via a pop-up menu similar to the banner.
 
 Table2 Issues
 -------------
