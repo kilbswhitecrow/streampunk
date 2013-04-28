@@ -1378,13 +1378,16 @@ class ItemPerson(models.Model):
 
   @classmethod
   def tabler_exclude(cls, request):
+    no_perms = ['select', 'edit', 'remove', 'status', 'visible', 'distEmail', 'recordingOkay']
+    if not request:
+      return no_perms
     if request.user.has_perm('progb2.read_private'):
       if request.user.has_perm('progb2.edit_programme'):
         return []
       else:
         return ['select', 'edit', 'remove']
     else:
-      return ['select', 'edit', 'remove', 'status', 'visible', 'distEmail', 'recordingOkay']
+      return no_perms
 
 class PersonList(models.Model):
   """
