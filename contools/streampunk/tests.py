@@ -27,6 +27,7 @@ from django.contrib.auth.models import User
 from streampunk.models import Grid, Gender, Slot, SlotLength, Room
 from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
 from streampunk.models import Revision, MediaStatus
+from streampunk.models import PersonStatus, PersonRole, Person, Item
 
 class StreampunkTest(TestCase):
 
@@ -60,6 +61,13 @@ class StreampunkTest(TestCase):
 
   def find_row(self, table, rec):
     "Locate a row which matches field/val pairs from rec, and return it"
+
+    # Warning: a row has a record, and it has items(). The record is what
+    # we pass to the Tables2 when we create the table, so will contain
+    # our data, as converted into a dict by make_tabler(). The result of
+    # items() will be the rendered cell content, inclding links.
+    # Note also that the keys in the record dict need not match the titles
+    # of the columns
     t = self.response.context[table]
     for row in t.rows:
       if rec <= row.record:
@@ -131,6 +139,10 @@ class AuthTest(StreampunkTest):
   def zaproot(self):
     self.rootuser.delete()
 
+
+# =========================================================
+
+
 class nonauth_lists(NonauthTest):
   def setUp(self):
     self.client = Client()
@@ -198,6 +210,10 @@ class nonauth_lists(NonauthTest):
     self.has_column(t, 'description')
     self.assertEqual(self.num_rows(t), 0)
     self.no_link_to('new_tag')
+
+
+# =========================================================
+
 
 class Auth_lists(AuthTest):
   def setUp(self):
@@ -292,6 +308,10 @@ class Auth_lists(AuthTest):
     self.assertEqual(self.num_rows(t), 0)
     self.has_link_to('new_tag')
     self.has_link_to('add_tags')
+
+
+# =========================================================
+
 
 class test_creation(AuthTest):
   "Populate the tables somewhat"
@@ -499,3 +519,79 @@ class test_creation(AuthTest):
     })
     self.status_okay()
 
+
+
+# =========================================================
+
+
+class test_add_panellists(AuthTest):
+  "Adding people to items."
+  fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_diff_people_diff_items(self):
+    def default_itemperson(extras):
+      ip = {
+        "item": None,
+        "person": None,
+        "role": PersonRole.objects.find_default().id,
+        "status": PersonStatus.objects.find_default().id,
+        "visible": True,
+        "distEmail": "No",
+        "recordingOkay": "No"
+      }
+      for k in extras.keys():
+        ip[k] = extras[k]
+      return ip
+  
+    buffy = Person.objects.get(firstName='Buffy')
+    giles = Person.objects.get(lastName='Giles')
+    ceilidh = Item.objects.get(shortname='Ceilidh')
+    disco = Item.objects.get(shortname='Disco')
+    panellist = PersonRole.objects.find_default()
+    
+    itable = 'item_people_table'  # people on the item
+    ptable = 'person_items_table' # items person is on
+
+    # Add Buffy to an item
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    disco.id,
+      "person":  buffy.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": buffy.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(ptable), 1)
+    self.has_row(ptable, { "item": disco, "role": panellist })
+
+    self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
+    self.status_okay()
+    self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
+
+    # Add Giles to an item
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    ceilidh.id,
+      "person":  giles.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": giles.id }))
+    self.status_okay()
+    self.has_row(ptable, { "item": ceilidh, "role": panellist, "visible": True })
+
+    self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": ceilidh.id }))
+    self.status_okay()
+    self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
