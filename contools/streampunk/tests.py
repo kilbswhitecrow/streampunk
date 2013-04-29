@@ -595,3 +595,45 @@ class test_add_panellists(AuthTest):
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": ceilidh.id }))
     self.status_okay()
     self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
+
+    # Add Buffy to another item
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    ceilidh.id,
+      "person":  buffy.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    # Add Giles to another item
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    disco.id,
+      "person":  giles.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": buffy.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(ptable), 2)
+    self.has_row(ptable, { "item": ceilidh, "role": panellist })
+    self.has_row(ptable, { "item": disco, "role": panellist })
+
+    self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": ceilidh.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(itable), 2)
+    self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
+    self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
+
+    self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": giles.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(ptable), 2)
+    self.has_row(ptable, { "item": disco, "role": panellist, "visible": True })
+    self.has_row(ptable, { "item": ceilidh, "role": panellist, "visible": True })
+
+    self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(itable), 2)
+    self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
+    self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
