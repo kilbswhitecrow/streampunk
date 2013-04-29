@@ -26,7 +26,7 @@ from django.contrib.auth.models import User
 
 from streampunk.models import Grid, Gender, Slot, SlotLength, Room
 from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
-from streampunk.models import Revision, MediaStatus
+from streampunk.models import Revision, MediaStatus, ItemPerson
 from streampunk.models import PersonStatus, PersonRole, Person, Item
 
 class StreampunkTest(TestCase):
@@ -651,3 +651,21 @@ class test_add_panellists(AuthTest):
 
     self.assertFormError(self.response, 'form', field=None,
                          errors='Itemperson with this Item and Person already exists.')
+
+    # Find where Buffy is on the Disco item
+    ip = ItemPerson.objects.get(person=buffy, item=disco)
+
+    # Try deleting with a GET, check Buffy's still there.
+    self.response = self.client.get(reverse('delete_itemperson', kwargs={ "pk": ip.id }))
+    self.status_okay()
+    self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
+    self.status_okay()
+    self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
+    
+    # But a POST should work.
+    self.response = self.client.post(reverse('delete_itemperson', kwargs={ "pk": ip.id }), {
+      "after": reverse('show_item_detail', kwargs={ "pk": disco.id })
+    },  follow=True)
+    self.status_okay()
+    self.no_row(itable, { "person": buffy, "role": panellist, "visible": True })
+
