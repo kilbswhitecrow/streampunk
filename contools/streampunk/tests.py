@@ -637,3 +637,17 @@ class test_add_panellists(AuthTest):
     self.assertEqual(self.num_rows(itable), 2)
     self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
     self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
+
+    # Add Giles to the same item
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    disco.id,
+      "person":  giles.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    # Giles shouldn't be on that item twice.
+
+    self.assertFormError(self.response, 'form', field=None,
+                         errors='Itemperson with this Item and Person already exists.')

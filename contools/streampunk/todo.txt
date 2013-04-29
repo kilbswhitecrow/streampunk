@@ -1,13 +1,13 @@
 Testing
 -------
-- Django only loads initial_data.json by default, but I normally load a bunch of other fixtures
-before doing any queries. That doesn't happen with the testing database, so I didn't notice that
-just the default fixture doesn't support the find_default callable on Room. Fixed that, by moving
-Nowhere and Everywhere to initial_data.json.
-- Also removed the TZ from the baseline revision. Don't know why that was failing for the test
-database, but wasn't for the normal one.
-- There are a bunch of other tests that also fail, that have nothing to do
-with me (I think), so I should investigate them, first.
+- Spotted the fixture-loading for individual tests, so using that.
+- Can't really see a way to test the grids with Django, since Django doesn't generate them as
+part of the ORM - it's all in the templates.
+- Disturbed to notice that the clean() method for people:
+	(a) is in the model Person, rather than in the ModelForm PersonForm.
+	(b) doesn't return cleaned data (presumably because it's in the model).
+- Added a constraint to ItemPerson to prevent the same person being added to the same item twice,
+  and added a test for that.
 
 Comments from Simon's LJ
 ------------------------

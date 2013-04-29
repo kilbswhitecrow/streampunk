@@ -1352,6 +1352,7 @@ class ItemPerson(models.Model):
   class Meta:
     verbose_name = 'itemperson'
     verbose_name_plural = 'itemspeople'
+    unique_together = (('item', 'person'),)
 
   def __unicode__(self):
     return u"%s: %s [%s]" % (self.item, self.person, self.role)
