@@ -537,7 +537,7 @@ class test_add_panellists(AuthTest):
     self.client.logout()
     self.zaproot()
 
-  def test_diff_people_diff_items(self):
+  def test_people_items(self):
     def default_itemperson(extras):
       ip = {
         "item": None,
@@ -660,6 +660,7 @@ class test_add_panellists(AuthTest):
     self.status_okay()
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
     self.status_okay()
+    self.assertEqual(self.num_rows(itable), 2)
     self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
     
     # But a POST should work.
@@ -667,5 +668,12 @@ class test_add_panellists(AuthTest):
       "after": reverse('show_item_detail', kwargs={ "pk": disco.id })
     },  follow=True)
     self.status_okay()
+    self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(itable), 1)
     self.no_row(itable, { "person": buffy, "role": panellist, "visible": True })
+    self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": buffy.id }))
+    self.status_okay()
+    self.assertEqual(self.num_rows(ptable), 1)
+    self.no_row(ptable, { "item": disco, "role": panellist, "visible": True })
 
