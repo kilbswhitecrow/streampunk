@@ -677,3 +677,31 @@ class test_add_panellists(AuthTest):
     self.assertEqual(self.num_rows(ptable), 1)
     self.no_row(ptable, { "item": disco, "role": panellist, "visible": True })
 
+  def test_edit_person(self):
+    def pdict(person):
+      return {
+        "firstName":      person.firstName,
+        "lastName":       person.lastName,
+        "badge":          person.badge,
+        "memnum":         person.memnum,
+        "gender":         person.gender.id,
+        "complete":       person.complete,
+        "distEmail":      person.distEmail,
+        "recordingOkay":  person.recordingOkay
+      }
+
+    buffy = Person.objects.get(firstName='Buffy')
+    eaddr = 'buffy@sunnydale.net'
+    self.response = self.client.get(reverse('edit_person', kwargs={ "pk": buffy.id }))
+    self.status_okay()
+    object = self.response.context['object']
+    postdata = pdict(object)
+    postdata['email'] = eaddr
+    self.response = self.client.post(reverse('edit_person', kwargs={ "pk": buffy.id }), postdata, follow=True)
+    self.status_okay()
+    person = self.response.context['person']
+    self.assertEqual(buffy.id, person.id)
+    self.assertEqual(eaddr, person.email)
+    buf2 = Person.objects.get(email=eaddr)
+    self.assertEqual(buffy.id, buf2.id)
+
