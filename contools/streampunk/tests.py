@@ -26,7 +26,7 @@ from django.contrib.auth.models import User
 
 from streampunk.models import Grid, Gender, Slot, SlotLength, Room
 from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
-from streampunk.models import Revision, MediaStatus, ItemPerson
+from streampunk.models import Revision, MediaStatus, ItemPerson, Tag
 from streampunk.models import PersonStatus, PersonRole, Person, Item
 
 class StreampunkTest(TestCase):
@@ -705,3 +705,41 @@ class test_add_panellists(AuthTest):
     buf2 = Person.objects.get(email=eaddr)
     self.assertEqual(buffy.id, buf2.id)
 
+  def test_person_tags(self):
+    def chk_tags(person, taglist):
+      # Check the person has the right tags.
+      alltags = person.tags.all()
+      self.assertEqual(alltags.count(), len(taglist))
+      for tag in taglist:
+        self.assertTrue(tag in alltags)
+      # Check the page shows the right tags.
+      t = 'tagtable'
+      self.response = self.client.get(reverse('show_person_detail', kwargs={'pk': person.id}))
+      self.status_okay()
+      self.assertEqual(self.num_rows(t), len(taglist))
+      for tag in taglist:
+        self.has_row(t, { "name": tag.name })
+
+    def tagids(tagqs):
+      return [ t.id for t in tagqs ]
+
+    buffy = Person.objects.get(firstName='Buffy')
+    giles = Person.objects.get(lastName='Giles')
+    books = Tag.objects.get(name='Books')
+    movies = Tag.objects.get(name='Movies')
+
+    # No tags for anyone yet
+    chk_tags(buffy, [])
+    chk_tags(giles, [])
+    self.response = self.client.get(reverse('edit_tags_for_person', args=[ buffy.id ]))
+    self.status_okay()
+
+    fperson = self.response.context['person']
+    newtags = [ t for t in fperson.tags.all() ] + [ books, movies ]
+
+    self.response = self.client.post(reverse('edit_tags_for_person', args=[ buffy.id ]), {
+      "tags": tagids(newtags)
+    }, follow=True)
+    self.status_okay()
+    chk_tags(buffy, newtags)
+    chk_tags(giles, [])
