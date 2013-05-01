@@ -735,11 +735,46 @@ class test_add_panellists(AuthTest):
     self.status_okay()
 
     fperson = self.response.context['person']
-    newtags = [ t for t in fperson.tags.all() ] + [ books, movies ]
 
+    # Create a new set of tags, that has a couple more
+    newtags = [ t for t in fperson.tags.all() ] + [ books, movies ]
     self.response = self.client.post(reverse('edit_tags_for_person', args=[ buffy.id ]), {
       "tags": tagids(newtags)
     }, follow=True)
     self.status_okay()
     chk_tags(buffy, newtags)
     chk_tags(giles, [])
+
+    # Again, but with only one new tag.
+    # Looks like this particular test currently fails.
+    newtags = [ books ]
+    self.response = self.client.post(reverse('edit_tags_for_person', args=[ buffy.id ]), {
+      "tags": tagids(newtags)
+    }, follow=True)
+    self.status_okay()
+    chk_tags(buffy, newtags)
+    chk_tags(giles, [])
+
+    # If we include tags twice, they should not get added twice.
+    newtags = [ books, movies ]
+    toomanytags = newtags + [ books, movies ]
+    self.response = self.client.post(reverse('edit_tags_for_person', args=[ buffy.id ]), {
+      "tags": tagids(toomanytags)
+    }, follow=True)
+    self.status_okay()
+    chk_tags(buffy, newtags)
+    chk_tags(giles, [])
+
+    # Check the person shows up under the tags page, too.
+    self.response = self.client.get(reverse('show_tag_detail', kwargs={'pk': books.id}))
+    self.status_okay()
+    t = 'pttable'
+    self.assertEqual(self.num_rows(t), 1)
+    self.has_row(t, { 'firstName': buffy.firstName })
+
+    self.response = self.client.get(reverse('show_tag_detail', kwargs={'pk': movies.id}))
+    self.status_okay()
+    t = 'pttable'
+    self.assertEqual(self.num_rows(t), 1)
+    self.has_row(t, { 'firstName': buffy.firstName })
+
