@@ -778,3 +778,149 @@ class test_add_panellists(AuthTest):
     self.assertEqual(self.num_rows(t), 1)
     self.has_row(t, { 'firstName': buffy.firstName })
 
+# Tests required
+# 	Delete person
+# 		Solo
+# 		When on items
+# 		With tags
+# 	Delete item
+# 		Solo
+# 		with people
+# 		with tags
+# 		with kit requests
+# 		with kit things
+# 		with kit bundles
+# 	Delete tag
+# 		solo
+# 		when on people
+# 		when on items
+# 	Delete room
+# 		solo
+# 		With items in room
+# 		With capacities
+# 		with kit things
+# 		with kit bundles
+# 
+# Items
+#	Edit
+#	Add tags
+#	Remove tags
+#	Lookup tags
+#	Add too many tags
+#	Change room
+#	Look up in room
+# 	Kit request
+# 		Create and Add to item
+# 		List
+# 		Edit when solo
+# 		Remove from item and delete
+# 		Edit when on item
+# 	Kit thing
+# 		Create
+# 		List
+# 		Edit, when solo
+# 		Add to item
+# 		Add to room
+# 		Edit, when on item
+# 		Edit, when on room
+# 		Delete, when on item
+# 		Delete, when on room
+# 		In kit usage
+# 	Kit bundle
+# 		List
+# 		Create, empty
+# 		Create, with contents
+# 		Edit, when solo
+# 		Delete, when solo
+# 		Add to item
+# 		edit, when on item
+# 		add to room
+# 		edit, when in room
+# 		in kit usage
+# 	Satisfaction
+# 		not satisfied - no thing
+# 		not satisfied - insufficient count
+# 		not satisfied - wrong type
+# 		not satisfied - thing satisfies other request on item
+# 		not satisfied - thing on room finishes sooner
+# 		not satisfied - thing on room starts later
+# 		satisfied by thing on item
+# 		satisfied by thing in room
+# 		included in not-satisfied list
+# 		satisfied-by listing is correct
+# 
+# 	Availability
+# 		Create and add to person
+# 		Create and add to room
+# 		Create and add to thing
+# 		Edit solo
+# 		Edit when on prson
+# 		Edit when on thing
+# 		Edit when on room
+# 		Delete solo
+# 		Delete when on person
+# 		Delete when on thing
+# 		Delete when on room
+# 
+# 	Grids
+# 		Item appears in slot (room by time)
+# 		item appears in slot (time by room)
+# 		Long item appears in multiple slots
+# 		Long item that starts before grid
+# 		long item that ends after grid
+# 		Multiple items in same slot
+# 		Move item here
+# 		Invisible items
+# 		Items with noone
+# 		Items with visible people
+# 			by name
+# 			by badge
+# 		Items with invisible people
+# 		With "fill slot"
+# 		Without "fill slot"
+# 		Invisible rooms
+# 		Unavailable rooms are grey
+# 	Checks
+# 		No email address
+# 		Haven't joined yet
+# 		Not complete
+# 		people clashes
+# 		People not available
+# 		items with no people
+# 		items with no room
+# 		items not scheduled
+# 		items with unknown gopher count
+# 		items not complete
+# 		items iwth unsatisfied kit requests
+# 		kit clashes
+# 
+# 	Main page
+# 		Correct scheduled items
+# 		Correct scheduled hours
+# 		Correct budget
+# 		Correct scheduled panellists
+# 		Correct programme participants
+# 		Correct item kind distro
+# 	XML Dump
+# 
+# 	Email
+# 		For: main person listing, person on item, person with tag
+# 			Select all people, when blank
+# 			Select all people, when some selected
+# 			Deselect all people, when all selected
+# 			Deselect all people, when some selected
+# 			Save as list, with default name
+# 			Save as list, with new name.
+# 			Save as list, edited.
+# 			Email people
+# 				With default subject
+# 				With new subject
+# 				With message, plain text
+# 				With message, formatting
+# 				Without items
+# 				With items
+# 				With items, when person is not on any.
+# 				With contact details
+# 				Without contact details
+# 				With availability
+# 				Without availability
