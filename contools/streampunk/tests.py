@@ -778,15 +778,185 @@ class test_add_panellists(AuthTest):
     self.assertEqual(self.num_rows(t), 1)
     self.has_row(t, { 'firstName': buffy.firstName })
 
+# =========================================================
+
+
+class test_delete_people(AuthTest):
+  "Deleting people"
+  fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_people_items(self):
+    def default_itemperson(extras):
+      ip = {
+        "item": None,
+        "person": None,
+        "role": PersonRole.objects.find_default().id,
+        "status": PersonStatus.objects.find_default().id,
+        "visible": True,
+        "distEmail": "No",
+        "recordingOkay": "No"
+      }
+      for k in extras.keys():
+        ip[k] = extras[k]
+      return ip
+  
+    buffy = Person.objects.get(firstName='Buffy')
+    willow = Person.objects.get(firstName='Willow')
+    dawn = Person.objects.get(firstName='Dawn')
+    disco = Item.objects.get(shortname='Disco')
+    ceilidh = Item.objects.get(shortname='Ceilidh')
+    books = Tag.objects.get(name='Books')
+    movies = Tag.objects.get(name='Movies')
+    panellist = PersonRole.objects.get(name='Panellist')
+
+    # Deleting via a GET should not remove the person
+    delpath = reverse('delete_person', kwargs={'pk': buffy.id})
+    self.response = self.client.get(delpath)
+    self.status_okay()
+    self.assertTrue(Person.objects.filter(firstName='Buffy').exists())
+
+    # Deleting via a POST should, however.
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Person.objects.filter(firstName='Buffy').exists())
+
+    # Check that it's okay to delete a person who is on some items.
+    # First, add a couple of tags.
+    delpath = reverse('delete_person', kwargs={'pk': willow.id})
+    self.response = self.client.post(reverse('edit_tags_for_person', args=[ willow.id ]), {
+      "tags": ( books.id, movies.id )
+    }, follow=True)
+    self.status_okay()
+    self.assertEqual(willow.tags.count(), 2)
+    # Now check that we can delete them.
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Person.objects.filter(firstName='Willow').exists())
+
+    # Check that it's okay to delete a person who is on some items
+    # First, add Dawn to a couple of items.
+
+    delpath = reverse('delete_person', kwargs={'pk': dawn.id})
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    disco.id,
+      "person":  dawn.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    ceilidh.id,
+      "person":  dawn.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+    self.assertEqual(ItemPerson.objects.filter(person=dawn).count(), 2)
+
+    # Now try deleting them.
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Person.objects.filter(firstName='Dawn').exists())
+
+# =========================================================
+
+class test_delete_items(AuthTest):
+  "Deleting people"
+  fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_people_items(self):
+    def default_itemperson(extras):
+      ip = {
+        "item": None,
+        "person": None,
+        "role": PersonRole.objects.find_default().id,
+        "status": PersonStatus.objects.find_default().id,
+        "visible": True,
+        "distEmail": "No",
+        "recordingOkay": "No"
+      }
+      for k in extras.keys():
+        ip[k] = extras[k]
+      return ip
+  
+    buffy = Person.objects.get(firstName='Buffy')
+    willow = Person.objects.get(firstName='Willow')
+    dawn = Person.objects.get(firstName='Dawn')
+    disco = Item.objects.get(shortname='Disco')
+    ceilidh = Item.objects.get(shortname='Ceilidh')
+    bid = Item.objects.get(shortname='bid session')
+    books = Tag.objects.get(name='Books')
+    movies = Tag.objects.get(name='Movies')
+    panellist = PersonRole.objects.get(name='Panellist')
+
+    # Deleting via a GET should not remove the item
+    delpath = reverse('delete_item', kwargs={'pk': bid.id})
+    self.response = self.client.get(delpath)
+    self.status_okay()
+    self.assertTrue(Item.objects.filter(shortname='bid session').exists())
+
+    # Deleting via a POST should, however.
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Item.objects.filter(shortname='bid session').exists())
+
+    # Check that it's okay to delete an item that has some tags
+    # First, add a couple of tags.
+    delpath = reverse('delete_item', kwargs={'pk': disco.id})
+    self.response = self.client.post(reverse('edit_tags_for_item', args=[ disco.id ]), {
+      "tags": ( books.id, movies.id )
+    }, follow=True)
+    self.status_okay()
+    self.assertEqual(disco.tags.count(), 2)
+    # Now check that we can delete them.
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Item.objects.filter(shortname='Disco').exists())
+
+    # Check that it's okay to delete an item that has people on it.
+    # First, add some people
+
+    delpath = reverse('delete_item', kwargs={'pk': ceilidh.id})
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    ceilidh.id,
+      "person":  dawn.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
+      "item":    ceilidh.id,
+      "person":  buffy.id,
+      "role":    panellist.id
+    }), follow=True)
+    self.status_okay()
+    self.assertEqual(ItemPerson.objects.filter(item=ceilidh).count(), 2)
+
+    # Now try deleting them.
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Item.objects.filter(shortname='Ceilidh').exists())
+
+
 # Tests required
-# 	Delete person
-# 		Solo
-# 		When on items
-# 		With tags
 # 	Delete item
-# 		Solo
-# 		with people
-# 		with tags
 # 		with kit requests
 # 		with kit things
 # 		with kit bundles
