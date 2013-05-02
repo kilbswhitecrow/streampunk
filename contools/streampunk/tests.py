@@ -28,6 +28,9 @@ from streampunk.models import Grid, Gender, Slot, SlotLength, Room
 from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
 from streampunk.models import Revision, MediaStatus, ItemPerson, Tag
 from streampunk.models import PersonStatus, PersonRole, Person, Item
+from streampunk.models import KitThing, KitRequest, KitBundle
+from streampunk.models import KitKind, KitStatus
+from streampunk.models import KitRoomAssignment, KitItemAssignment
 
 class StreampunkTest(TestCase):
 
@@ -868,7 +871,7 @@ class test_delete_people(AuthTest):
 
 # =========================================================
 
-class test_delete_items(AuthTest):
+class test_delete_items_with_stuff(AuthTest):
   "Deleting people"
   fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
 
@@ -881,7 +884,8 @@ class test_delete_items(AuthTest):
     self.client.logout()
     self.zaproot()
 
-  def test_people_items(self):
+  def test_items_people_tags(self):
+    "Test deleting items, with people and tags."
     def default_itemperson(extras):
       ip = {
         "item": None,
@@ -954,12 +958,75 @@ class test_delete_items(AuthTest):
     self.status_okay()
     self.assertFalse(Item.objects.filter(shortname='Ceilidh').exists())
 
+  def test_items_kit(self):
+    disco = Item.objects.get(shortname='Disco')
+    ceilidh = Item.objects.get(shortname='Ceilidh')
+    bid = Item.objects.get(shortname='bid session')
+    mhproj = KitThing.objects.get(name='Main hall projector')
+    mhscreen = KitThing.objects.get(name='Main hall screen')
+    mhkit = KitBundle.objects.get(name='Main hall kit')
+
+    self.assertEqual(KitRequest.objects.count(), 0)
+    self.assertEqual(KitItemAssignment.objects.count(), 0)
+
+    # Add a kit request to some items
+    self.response = self.client.post(reverse('add_kitrequest_to_item', args=[ disco.id ]), {
+      "kind": KitKind.objects.find_default().id,
+      "count": 1,
+      "setupAssistance": False,
+      "status": KitStatus.objects.find_default().id
+    }, follow=True)
+    self.status_okay()
+    self.assertEqual(KitRequest.objects.count(), 1)
+
+    self.response = self.client.post(reverse('add_kitrequest_to_item', args=[ ceilidh.id ]), {
+      "kind": KitKind.objects.find_default().id,
+      "count": 1,
+      "setupAssistance": False,
+      "status": KitStatus.objects.find_default().id
+    }, follow=True)
+    self.status_okay()
+    self.assertEqual(KitRequest.objects.count(), 2)
+
+    # Add KitThings to an item
+    self.response = self.client.post(reverse('add_kitthing_to_item'), {
+      "item": ceilidh.id,
+      "thing": mhproj.id
+    }, follow=True)
+    self.status_okay()
+    self.assertEqual(KitItemAssignment.objects.count(), 1)
+
+    self.response = self.client.post(reverse('add_kitbundle_to_item'), {
+      "item": bid.id,
+      "bundle": mhkit.id
+    }, follow=True)
+    self.status_okay()
+    self.assertEqual(KitItemAssignment.objects.count(), 1+mhkit.things.count())
+
+    # Check that we can delete those items now.
+    delpath = reverse('delete_item', kwargs={'pk': disco.id})
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Item.objects.filter(shortname='Disco').exists())
+    # The request should be gone now.
+    self.assertEqual(KitRequest.objects.count(), 0)
+
+    delpath = reverse('delete_item', kwargs={'pk': ceilidh.id})
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Item.objects.filter(shortname='Ceilidh').exists())
+    # The KitItemAssignment should have gone now.
+    self.assertEqual(KitItemAssignment.objects.count(), mhkit.things.count())
+
+    delpath = reverse('delete_item', kwargs={'pk': bid.id})
+    self.response = self.client.post(delpath, { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Item.objects.filter(shortname='bid session').exists())
+    # All assignments should be gone now.
+    self.assertEqual(KitItemAssignment.objects.count(), 0)
+
 
 # Tests required
-# 	Delete item
-# 		with kit requests
-# 		with kit things
-# 		with kit bundles
 # 	Delete tag
 # 		solo
 # 		when on people
