@@ -872,7 +872,7 @@ class test_delete_people(AuthTest):
 # =========================================================
 
 class test_delete_items_with_stuff(AuthTest):
-  "Deleting people"
+  "Deleting items"
   fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
 
   def setUp(self):
@@ -1027,12 +1027,79 @@ class test_delete_items_with_stuff(AuthTest):
     # All assignments should be gone now.
     self.assertEqual(KitItemAssignment.objects.count(), 0)
 
+# =========================================================
+
+class test_delete_tags(AuthTest):
+  "Deleting tags"
+  fixtures = [ 'room', 'person', 'items', 'tags' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_delete_tags_on_stuff(self):
+    "Test deleting tags, on people and items."
+    buffy = Person.objects.get(firstName='Buffy')
+    disco = Item.objects.get(shortname='Disco')
+    books = Tag.objects.get(name='Books')
+    movies = Tag.objects.get(name='Movies')
+    comics = Tag.objects.get(name='Comics')
+
+    # Add tag to an item
+    self.response = self.client.post(reverse('edit_tags_for_item', args=[ disco.id ]), {
+      "tags": ( books.id )
+    }, follow=True)
+    self.status_okay()
+    # Add tag to a person
+    self.response = self.client.post(reverse('edit_tags_for_person', args=[ buffy.id ]), {
+      "tags": ( movies.id )
+    }, follow=True)
+    self.status_okay()
+
+    # Establish that we've set things up properly.
+    self.assertEqual(books.item_set.count(), 1)
+    self.assertEqual(books.person_set.count(), 0)
+    self.assertEqual(movies.item_set.count(), 0)
+    self.assertEqual(movies.person_set.count(), 1)
+    self.assertEqual(comics.item_set.count(), 0)
+    self.assertEqual(comics.person_set.count(), 0)
+    self.assertTrue(buffy in movies.person_set.all())
+    self.assertTrue(disco in books.item_set.all())
+    self.assertEqual(buffy.tags.count(), 1)
+    self.assertEqual(disco.tags.count(), 1)
+    self.assertTrue(books in disco.tags.all())
+    self.assertTrue(movies in buffy.tags.all())
+
+    # Deleting via GET shouldn't work.
+    self.response = self.client.get(reverse('delete_tag', args=[ comics.id ]))
+    self.status_okay()
+    self.assertTrue(Tag.objects.filter(name='Comics').exists())
+
+    # Deleting via POST should.
+    self.response = self.client.post(reverse('delete_tag', args=[ comics.id ]), { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Tag.objects.filter(name='Comics').exists())
+
+    # And we should be able to delete a tag that's on a person...
+    self.response = self.client.post(reverse('delete_tag', args=[ movies.id ]), { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Tag.objects.filter(name='Movies').exists())
+
+    # And we should be able to delete a tag that's on an item...
+    self.response = self.client.post(reverse('delete_tag', args=[ books.id ]), { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Tag.objects.filter(name='Books').exists())
+
+    # Which should leave the person and item tag-bereft.
+    self.assertEqual(buffy.tags.count(), 0)
+    self.assertEqual(disco.tags.count(), 0)
 
 # Tests required
-# 	Delete tag
-# 		solo
-# 		when on people
-# 		when on items
 # 	Delete room
 # 		solo
 # 		With items in room
