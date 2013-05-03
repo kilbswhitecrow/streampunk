@@ -730,7 +730,7 @@ class KitRoomAssignment(models.Model):
   def satisfies(self, req, item):
     "Return True if this assignment satisfies the request"
     r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
-    print "%d %s sat %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
+    # print "%d %s sat %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
     return r
 
   @classmethod
@@ -767,7 +767,7 @@ class KitItemAssignment(models.Model):
   def satisfies(self, req):
     "Return True if this assignment satisfies the request"
     r = self.thing.kind == req.kind and self.thing.count >= req.count
-    print "%d %s sat %d %s? %s\n" % ( self.id, self, req.id, req, r)
+    # print "%d %s sat %d %s? %s\n" % ( self.id, self, req.id, req, r)
     return r
 
   def item_day(self):
@@ -1286,7 +1286,7 @@ class Item(models.Model):
 
   def satisfies_kit_request(self, req):
     "Returns true if the kit assigned to this item satisfies the given request"
-    print "CHECKING whether item %s satisfies request %s\n" % (self, req)
+    # print "CHECKING whether item %s satisfies request %s\n" % (self, req)
     for kas in KitItemAssignment.objects.filter(item = self):
       if kas.satisfies(req):
         return True
@@ -1296,16 +1296,16 @@ class Item(models.Model):
     "Returns true if the kit assigned to this item satisfies all the item's requests"
     for req in self.kitRequests.all():
       if not self.satisfies_kit_request(req):
-        print "%s does not satisfy its own requests\n" % (self)
+        # print "%s does not satisfy its own requests\n" % (self)
         return False
-    print "%s satisfies its own requests\n" % (self)
+    # print "%s satisfies its own requests\n" % (self)
     return True
 
   def room_satisfies_kit_requests(self):
     "Returns true if the item's kit requests are satisfied by the kit assigned to the item's room."
     if self.room:
       r = self.room.satisfies_kit_requests(self.kitRequests.all(), self)
-      print "%s's room satisfies all request? %s\n" % (self, r)
+      # print "%s's room satisfies all request? %s\n" % (self, r)
       return r
     return False
 
@@ -1328,6 +1328,11 @@ class Item(models.Model):
   def itempeople(self):
     "Give access to the ItemPerson objects, rather than the Person objects that people gives."
     return ItemPerson.objects.filter(item = self)
+
+  def delete(self):
+    "Don't leave KitRequests lying around if this item gets deleted."
+    self.kitRequests.all().delete()
+    return super(Item, self).delete()
 
 
 class ItemPerson(models.Model):
