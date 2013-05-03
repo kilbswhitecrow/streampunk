@@ -1009,12 +1009,14 @@ class test_delete_items_with_stuff(AuthTest):
     self.status_okay()
     self.assertFalse(Item.objects.filter(shortname='Disco').exists())
     # The request should be gone now.
-    self.assertEqual(KitRequest.objects.count(), 0)
+    self.assertEqual(KitRequest.objects.count(), 1)
 
     delpath = reverse('delete_item', kwargs={'pk': ceilidh.id})
     self.response = self.client.post(delpath, { }, follow=True)
     self.status_okay()
     self.assertFalse(Item.objects.filter(shortname='Ceilidh').exists())
+    # The other request should be gone now.
+    self.assertEqual(KitRequest.objects.count(), 0)
     # The KitItemAssignment should have gone now.
     self.assertEqual(KitItemAssignment.objects.count(), mhkit.things.count())
 
