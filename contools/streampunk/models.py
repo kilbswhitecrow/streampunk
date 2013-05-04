@@ -27,6 +27,7 @@ from django.db.models.signals import post_save
 from django.template.loader import render_to_string
 
 from streampunk.tabler import Rower
+from streampunk.exceptions import DeleteDefaultException, DeleteUndefException
 
 YesNo = (
   ( 'TBA', 'TBA'),
@@ -875,6 +876,19 @@ class Room(models.Model):
     ordering = [ 'isDefault', 'gridOrder' ]
     verbose_name = 'room'
     verbose_name_plural = 'rooms'
+
+  def delete(self):
+    if self.isUndefined:
+      # Don't want to delete list room, as it'll cause us problems.
+      raise DeleteUndefException()
+    elif self.isDefault:
+      # This will cause find_default() to fail
+      raise DeleteDefaultException()
+    else:
+      # Move items to the "no room defined" room
+      unsched = Room.objects.get(isUndefined=True)
+      Item.objects.filter(room=self).update(room=unsched)
+    return super(Room, self).delete()
 
   def __unicode__(self):
     return self.name

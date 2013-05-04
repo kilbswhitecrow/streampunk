@@ -31,6 +31,7 @@ from streampunk.models import PersonStatus, PersonRole, Person, Item
 from streampunk.models import KitThing, KitRequest, KitBundle
 from streampunk.models import KitKind, KitStatus
 from streampunk.models import KitRoomAssignment, KitItemAssignment
+from streampunk.exceptions import DeleteNeededObjectException
 
 class StreampunkTest(TestCase):
 
@@ -1099,13 +1100,70 @@ class test_delete_tags(AuthTest):
     self.assertEqual(buffy.tags.count(), 0)
     self.assertEqual(disco.tags.count(), 0)
 
+# =========================================================
+
+class test_delete_rooms(AuthTest):
+  "Deleting rooms"
+  fixtures = [ 'room', 'items', 'kit' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_delete_rooms_with_stuff(self):
+    "Test deleting rooms, with items and capacities."
+    disco = Item.objects.get(shortname='Disco')
+    video = Room.objects.get(name='Video')
+    ops = Room.objects.get(name='Ops')
+    nowhere = Room.objects.get(name='Nowhere')
+    mainhall = Room.objects.get(name='Main Hall')
+
+    # No items in Ops.
+    self.assertEqual(ops.item_set.count(), 0)
+
+    # deleting via GET should fail.
+    self.response = self.client.get(reverse('delete_room', args=[ ops.id ]))
+    self.status_okay()
+    self.assertTrue(Room.objects.filter(name='Ops').exists())
+
+    # deleting via POST should work
+    self.response = self.client.post(reverse('delete_room', args=[ ops.id ]), { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Room.objects.filter(name='Ops').exists())
+
+    # Lots of items in the main hall
+    self.assertEqual(mainhall.item_set.count(), 7)
+    mh_item_ids = [ i.id for i in mainhall.item_set.all() ]
+
+    # we can delete the Main Hall
+    self.response = self.client.post(reverse('delete_room', args=[ mainhall.id ]), { }, follow=True)
+    self.status_okay()
+    self.assertFalse(Room.objects.filter(name='Main Hall').exists())
+
+    # But all those items should still exist, now in Nowhere
+    for i in mh_item_ids:
+      self.assertTrue(Item.objects.filter(id=i, room=nowhere).exists())
+
+    # We should get an assertion if we try to delete nowhere, though.
+    with self.assertRaises(DeleteNeededObjectException):
+      self.client.post(reverse('delete_room', args=[ nowhere.id ]), { })
+    self.assertTrue(Room.objects.filter(name='Nowhere').exists())
+
+
 # Tests required
 # 	Delete room
 # 		solo
 # 		With items in room
+#			They should go back to Nowhere!
 # 		With capacities
 # 		with kit things
 # 		with kit bundles
+#		Avoid deleting Nowhere and Everywhere?
 # 
 # Items
 #	Edit
@@ -1154,6 +1212,16 @@ class test_delete_tags(AuthTest):
 # 		satisfied by thing in room
 # 		included in not-satisfied list
 # 		satisfied-by listing is correct
+#
+#	EnumTables
+#		raise exceptions if you try to delete the isDefault or isUndefined values.
+#		if deleting other values, move everything that uses it to the undef value
+#			ItemKind
+#			SeatingKind
+#			FrontLayoutKind
+#			PersonRole
+#			PersonStatus
+#			etc.
 # 
 # 	Availability
 # 		Create and add to person
@@ -1230,3 +1298,4 @@ class test_delete_tags(AuthTest):
 # 				Without contact details
 # 				With availability
 # 				Without availability
+# 404 templates
