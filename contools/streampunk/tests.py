@@ -1258,16 +1258,6 @@ class test_delete_enums(AuthTest):
 # 		included in not-satisfied list
 # 		satisfied-by listing is correct
 #
-#	EnumTables
-#		raise exceptions if you try to delete the isDefault or isUndefined values.
-#		if deleting other values, move everything that uses it to the undef value
-#			ItemKind
-#			SeatingKind
-#			FrontLayoutKind
-#			PersonRole
-#			PersonStatus
-#			etc.
-# 
 # 	Availability
 # 		Create and add to person
 # 		Create and add to room
