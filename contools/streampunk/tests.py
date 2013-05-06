@@ -1154,6 +1154,51 @@ class test_delete_rooms(AuthTest):
       self.client.post(reverse('delete_room', args=[ nowhere.id ]), { })
     self.assertTrue(Room.objects.filter(name='Nowhere').exists())
 
+# =========================================================
+
+class test_delete_enums(AuthTest):
+  "Deleting enumerations and other important things."
+  fixtures = [ 'room', 'items', 'kit' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_delete_needed_objects(self):
+    "Test deleting things that should not be deleted."
+
+    disco = Item.objects.get(shortname='Disco')
+    ikdefault = ItemKind.objects.get(isDefault=True)
+    ikundef = ItemKind.objects.get(isUndefined=True)
+    ikdisco = disco.kind
+    ikid = ikdisco.id
+    self.assertNotEqual(ikdefault, ikdisco)
+
+    # EnumTables don't have streampunk URLs for deleting - it's done
+    # through the admin interface, so let's just zap things directly.
+
+    ikdisco.delete()
+    self.assertFalse(ItemKind.objects.filter(id=ikid).exists())
+
+    # And anything that used the now-removed enum should be
+    # using its undef value instead
+    disco = Item.objects.get(shortname='Disco')
+    self.assertEqual(ikundef, disco.kind)
+
+    # Trying to delete the undefined kind should raise an exception
+    with self.assertRaises(DeleteNeededObjectException):
+      ikundef.delete()
+    self.assertEqual(ItemKind.objects.filter(isUndefined=True).count(), 1)
+
+    # Trying to delete the default kind should raise an exception
+    with self.assertRaises(DeleteNeededObjectException):
+      ikdefault.delete()
+    self.assertEqual(ItemKind.objects.filter(isDefault=True).count(), 1)
 
 # Tests required
 # 	Delete room

@@ -308,11 +308,23 @@ class EnumTable(models.Model):
   def __unicode__(self):
     return self.name
 
+  def delete_replacement(self):
+    "Returns what we should reassign to, when deleting this value."
+    if self.isUndefined:
+      raise DeleteUndefException
+    if self.isDefault:
+      raise DeleteDefaultException
+    return self.__class__.objects.get(isUndefined=True)
+
 class ItemKind(EnumTable):
   """
   An Item's ItemKind tells you what kind of activity
   the item is.
   """
+  def delete(self):
+    self.item_set.all().update(kind=self.delete_replacement())
+    return super(ItemKind, self).delete()
+
   @classmethod
   def rower(cls, request):
     return Rower({ "kind": "kind__name", "count": "kind__count" })
@@ -325,36 +337,52 @@ class SeatingKind(EnumTable):
   An Item's SeatingKind tells you how the item's
   room should be laid out.
   """
-  pass
+  def delete(self):
+    self.item_set.all().update(seating=self.delete_replacement())
+    return super(SeatingKind, self).delete()
+
 
 class FrontLayoutKind(EnumTable):
   """
   Used to describe how the front of the room - where panellist or a stage is - should be laid out.
   """
+  def delete(self):
+    self.item_set.all().update(frontLayout=self.delete_replacement())
+    return super(FrontLayoutKind, self).delete()
+
 
 class PersonRole(EnumTable):
   """
   A PersonRole defines the person's job, for
   a given Item
   """
-  pass
+  def delete(self):
+    self.item_set.all().update(role=self.delete_replacement())
+    return super(PersonRole, self).delete()
+
 
 class PersonStatus(EnumTable):
   """
   A PersonStatus indicates how confident you are
   that a person will turn up and carry out their role.
   """
-  pass
   class Meta:
     verbose_name = 'Person Status'
     verbose_name_plural = 'Person Statuses'
+  def delete(self):
+    self.item_set.all().update(status=self.delete_replacement())
+    return super(PersonStatus, self).delete()
+
 
 class Gender(EnumTable):
   """
   A Gender allows you to determine whether you have
   a suitable balance on your programme.
   """
-  pass
+  def delete(self):
+    self.item_set.all().update(gender=self.delete_replacement())
+    return super(Gender, self).delete()
+
 
 class Tag(models.Model):
   """
@@ -411,31 +439,52 @@ class Tag(models.Model):
 
 class KitKind(EnumTable):
   "What kind of kit this is, e.g. DVD player, flip chart."
-  pass
+  def delete(self):
+    self.item_set.all().update(kind=self.delete_replacement())
+    return super(KitKind, self).delete()
+
 
 class KitRole(EnumTable):
   "The purpose for this bit of kit, in the item, e.g. stage mic vs audience mic."
-  pass
+  def delete(self):
+    self.item_set.all().update(role=self.delete_replacement())
+    return super(KitRole, self).delete()
+
 
 class KitDepartment(EnumTable):
   "Which con dept is responsible for managing this bit of kit."
-  pass
+  def delete(self):
+    self.item_set.all().update(department=self.delete_replacement())
+    return super(KitDepartment, self).delete()
+
 
 class KitSource(EnumTable):
   "Where you're getting this bit of kit from."
-  pass
+  def delete(self):
+    self.item_set.all().update(source=self.delete_replacement())
+    return super(KitSource, self).delete()
+
 
 class KitBasis(EnumTable):
   "On what basis are you obtaining this bit of kit. Borrow, hire, buy, etc."
-  pass
+  def delete(self):
+    self.item_set.all().update(basis=self.delete_replacement())
+    return super(KitBasis, self).delete()
+
 
 class MediaStatus(EnumTable):
   "If an item requires some media as well, what is the status of the provision of that media"
-  pass
+  def delete(self):
+    self.item_set.all().update(mediaStatus=self.delete_replacement())
+    return super(MediaStatus, self).delete()
+
 
 class KitStatus(EnumTable):
   "What is the status of this bit of kit? Is it properly sorted?"
-  pass
+  def delete(self):
+    self.item_set.all().update(status=self.delete_replacement())
+    return super(KitStatus, self).delete()
+
 
 class KitRequest(models.Model):
   """
@@ -1430,7 +1479,10 @@ class PersonList(models.Model):
 
 class CheckResult(EnumTable):
   "Indicates what kind of result we get back from a particular check, so we know how to display it."
-  pass
+  def delete(self):
+    self.item_set.all().update(result=self.delete_replacement())
+    return super(ItemKind, self).delete()
+
 
 class Check(models.Model):
   """
