@@ -29,7 +29,7 @@ from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
 from streampunk.models import Revision, MediaStatus, ItemPerson, Tag
 from streampunk.models import PersonStatus, PersonRole, Person, Item
 from streampunk.models import KitThing, KitRequest, KitBundle
-from streampunk.models import KitKind, KitStatus
+from streampunk.models import KitKind, KitStatus, RoomCapacity
 from streampunk.models import KitRoomAssignment, KitItemAssignment
 from streampunk.exceptions import DeleteNeededObjectException
 
@@ -1154,6 +1154,51 @@ class test_delete_rooms(AuthTest):
       self.client.post(reverse('delete_room', args=[ nowhere.id ]), { })
     self.assertTrue(Room.objects.filter(name='Nowhere').exists())
 
+    # We don't currently have a GUI for adding capacities, so that has
+    # to be done through the Admin interface. Therefore, we'll just create
+    # some directly now.
+
+    theatre = SeatingKind.objects.get(name='Theatre')
+    empty = SeatingKind.objects.get(name='Empty')
+    cap1 = RoomCapacity(layout=theatre, count=60)
+    cap1.save()
+    cap2 = RoomCapacity(layout=empty, count=300)
+    cap2.save()
+
+    cap1id = cap1.id
+    cap2id = cap2.id
+
+    # check our counts: two capacity objects, none of which are
+    # attached to a room yet.
+    self.assertEqual(RoomCapacity.objects.count(), 2)
+    self.assertEqual(video.capacities.count(), 0)
+
+    # Attach cap1 to the Video room, but leave cap2 unattached.
+    video.capacities.add(cap1)
+    video.save()
+
+    self.assertEqual(video.capacities.count(), 1)
+    self.assertEqual(cap1.room_set.count(), 1)
+    self.assertEqual(cap2.room_set.count(), 0)
+
+    # Delete the Video room.
+    self.response = self.client.post(reverse('delete_room', args=[ video.id ]), { }, follow=True)
+    self.status_okay()
+
+    self.assertFalse(Room.objects.filter(name='Video').exists())
+
+    # Currently, we expect both capacity object to still exist, but
+    # we go back to cap1 no longer having a room attached.
+    self.assertEqual(RoomCapacity.objects.count(), 2)
+
+    self.assertTrue(RoomCapacity.objects.filter(id=cap1id).exists())
+    cap1 = RoomCapacity.objects.get(id=cap1id)
+    self.assertEqual(cap1.room_set.count(), 0)
+
+    self.assertTrue(RoomCapacity.objects.filter(id=cap2id).exists())
+    cap2 = RoomCapacity.objects.get(id=cap2id)
+    self.assertEqual(cap2.room_set.count(), 0)
+
 # =========================================================
 
 class test_delete_enums(AuthTest):
@@ -1202,13 +1247,8 @@ class test_delete_enums(AuthTest):
 
 # Tests required
 # 	Delete room
-# 		solo
-# 		With items in room
-#			They should go back to Nowhere!
-# 		With capacities
 # 		with kit things
 # 		with kit bundles
-#		Avoid deleting Nowhere and Everywhere?
 # 
 # Items
 #	Edit
