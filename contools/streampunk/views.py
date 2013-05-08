@@ -738,12 +738,10 @@ def add_kitthing_to_room(request):
     if form.is_valid():
       thing = form.cleaned_data['thing']
       room = form.cleaned_data['room']
-      fromDay = form.cleaned_data['fromDay']
       fromSlot = form.cleaned_data['fromSlot']
-      toDay = form.cleaned_data['toDay']
       toSlot = form.cleaned_data['toSlot']
       toLength = form.cleaned_data['toLength']
-      kras = KitRoomAssignment(thing=thing, room=room, fromDay=fromDay, fromSlot=fromSlot, toDay=toDay, toSlot=toSlot, toLength=toLength)
+      kras = KitRoomAssignment(thing=thing, room=room, fromSlot=fromSlot, toSlot=toSlot, toLength=toLength)
       kras.save()
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:

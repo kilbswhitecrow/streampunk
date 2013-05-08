@@ -25,6 +25,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from streampunk.models import Grid, Gender, Slot, SlotLength, Room
+from streampunk.models import SlotLength, ConDay
 from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
 from streampunk.models import Revision, MediaStatus, ItemPerson, Tag
 from streampunk.models import PersonStatus, PersonRole, Person, Item
@@ -1199,6 +1200,81 @@ class test_delete_rooms(AuthTest):
     cap2 = RoomCapacity.objects.get(id=cap2id)
     self.assertEqual(cap2.room_set.count(), 0)
 
+  def test_delete_rooms_with_kit(self):
+    "Test deleting rooms, with kit items and kit bundles."
+    video = Room.objects.get(name='Video')
+    ops = Room.objects.get(name='Ops')
+    mainhall = Room.objects.get(name='Main Hall')
+
+    greenproj = KitThing.objects.get(name='Green room projector')
+    greenscr = KitThing.objects.get(name='Green room screen')
+    mainhallkit = KitBundle.objects.get(name='Main hall kit')
+    mhcount = mainhallkit.things.count()
+
+    friday = ConDay.objects.get(name='Friday')
+    sunday = ConDay.objects.get(name='Sunday')
+    morning = Slot.objects.get(day=friday, startText='10am')
+    evening = Slot.objects.get(day=sunday, startText='8pm')
+    hour = SlotLength.objects.get(length=60)
+
+    # Nothing assigned to any rooms yet.
+    self.assertEqual(KitRoomAssignment.objects.count(), 0)
+
+    # Add the green room kit to Ops
+    for kt in [ greenproj, greenscr ]:
+      self.response = self.client.post(reverse('add_kitthing_to_room'), {
+        "room": ops.id,
+        "thing": kt.id,
+        "fromSlot": morning.id,
+        "toSlot": evening.id,
+        "toLength": hour.id
+      }, follow=True)
+      self.status_okay()
+    self.assertEqual(KitRoomAssignment.objects.count(), 2)
+    self.assertEqual(greenproj.room_set.count(), 1)
+    self.assertEqual(greenproj.room_set.count(), 1)
+
+    # Add the Main Hall bundle to the main hall
+    self.response = self.client.post(reverse('add_kitbundle_to_room'), {
+      "room": mainhall.id,
+      "bundle": mainhallkit.id,
+      "fromSlot": morning.id,
+      "toSlot": evening.id,
+      "toLength": hour.id
+     }, follow=True)
+    self.status_okay()
+    self.assertEqual(KitRoomAssignment.objects.count(), mhcount+2)
+    for kt in mainhallkit.things.all():
+      self.assertEqual(kt.room_set.count(), 1)
+    self.assertEqual(KitRoomAssignment.objects.filter(bundle=mainhallkit).count(), mhcount)
+
+    # Now delete the main hall.
+    self.response = self.client.post(reverse('delete_room', args=[ mainhall.id ]), {}, follow=True)
+    self.status_okay()
+ 
+    # The room should have gone.
+    self.assertFalse(Room.objects.filter(name='Main Hall').exists())
+ 
+    # The KitRoomAssignments for the main hall should have gone.
+    self.assertEqual(KitRoomAssignment.objects.count(), 2)
+    self.assertEqual(KitRoomAssignment.objects.filter(bundle=mainhallkit).count(), 0)
+    self.assertEqual(KitRoomAssignment.objects.filter(room=ops).count(), 2)
+ 
+    # but the bundle should stil be there.
+    self.assertTrue(KitBundle.objects.filter(name='Main hall kit').exists())
+    mainhallkit = KitBundle.objects.get(name='Main hall kit')
+    # with all its kit
+    self.assertEqual(mainhallkit.things.count(), mhcount)
+ 
+    # Now zap Ops
+    self.response = self.client.post(reverse('delete_room', args=[ ops.id ]), {}, follow=True)
+    self.status_okay()
+ 
+    # The other assignments should be gone, now.
+    self.assertEqual(KitRoomAssignment.objects.count(), 0)
+    # Our Things should still be there.
+    self.assertTrue(KitThing.objects.filter(name='Green room projector').exists())
+    self.assertTrue(KitThing.objects.filter(name='Green room screen').exists())
 # =========================================================
 
 class test_delete_enums(AuthTest):
@@ -1246,10 +1322,6 @@ class test_delete_enums(AuthTest):
     self.assertEqual(ItemKind.objects.filter(isDefault=True).count(), 1)
 
 # Tests required
-# 	Delete room
-# 		with kit things
-# 		with kit bundles
-# 
 # Items
 #	Edit
 #	Add tags
