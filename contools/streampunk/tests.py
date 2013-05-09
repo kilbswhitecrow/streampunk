@@ -1392,13 +1392,112 @@ class test_edit_items(AuthTest):
     self.assertEqual(i.kind, panel)
 
 
+  def test_edit_item_tags(self):
+    "Change the tags on an item."
+
+    def item_lists_tag(self, item, tag, yesno):
+      self.response = self.client.get(reverse('show_item_detail', args=[item.id]))
+      if yesno:
+        self.has_row('tagtable', { "name": tag.name })
+      else:
+        self.no_row('tagtable', { "name": tag.name })
+
+    def tag_lists_item(self, tag, item, yesno):
+      self.response = self.client.get(reverse('show_tag_detail', args=[tag.id]))
+      if yesno:
+        self.has_row('ittable', { "title": item.title })
+      else:
+        self.no_row('ittable', { "title": item.title })
+
+    disco = Item.objects.get(shortname='Disco')
+    editurl = reverse('edit_tags_for_item', args=[ disco.id ])
+    books = Tag.objects.get(name='Books')
+    movies = Tag.objects.get(name='Movies')
+
+    # Check that there's no tags on the item yet
+    self.assertEqual(disco.tags.count(), 0)
+    # Check that the tags aren't attached to any items
+    self.assertEqual(books.item_set.count(), 0)
+    self.assertEqual(movies.item_set.count(), 0)
+
+    # Check that the item doesn't appear in a search on the tags
+    tag_lists_item(self, books, disco, False)
+    tag_lists_item(self, movies, disco, False)
+    # And that the item doesn't list the tags
+    item_lists_tag(self, disco, books, False)
+    item_lists_tag(self, disco, movies, False)
+
+    # Add one of the tags to the item.
+    self.response = self.client.post(editurl, { "tags": [ books.id ] }, follow=True)
+    self.status_okay()
+
+    # Check that the item now lists books, but not movies.
+    tag_lists_item(self, books, disco, True)
+    tag_lists_item(self, movies, disco, False)
+    # And that the item lists only books
+    item_lists_tag(self, disco, books, True)
+    item_lists_tag(self, disco, movies, False)
+    self.assertEqual(disco.tags.count(), 1)
+    self.assertEqual(books.item_set.count(), 1)
+    self.assertEqual(movies.item_set.count(), 0)
+
+    # Add movies, too.
+    self.response = self.client.post(editurl, { "tags": [ books.id, movies.id ] }, follow=True)
+    self.status_okay()
+
+    # Check that the item now lists both books and movies.
+    tag_lists_item(self, books, disco, True)
+    tag_lists_item(self, movies, disco, True)
+    # And that the item lists only books
+    item_lists_tag(self, disco, books, True)
+    item_lists_tag(self, disco, movies, True)
+    self.assertEqual(disco.tags.count(), 2)
+    self.assertEqual(books.item_set.count(), 1)
+    self.assertEqual(movies.item_set.count(), 1)
+
+    # Edit to remove books, and leave movies there.
+    self.response = self.client.post(editurl, { "tags": [ movies.id ] }, follow=True)
+    self.status_okay()
+
+    # Check that the item now lists movies, but not books.
+    tag_lists_item(self, books, disco, False)
+    tag_lists_item(self, movies, disco, True)
+    # And that the item lists only books
+    item_lists_tag(self, disco, books, False)
+    item_lists_tag(self, disco, movies, True)
+    self.assertEqual(disco.tags.count(), 1)
+    self.assertEqual(books.item_set.count(), 0)
+    self.assertEqual(movies.item_set.count(), 1)
+
+    # Edit again, to have no tags.
+    self.response = self.client.post(editurl, { }, follow=True)
+    self.status_okay()
+
+    tag_lists_item(self, books, disco, False)
+    tag_lists_item(self, movies, disco, False)
+    # And that the item doesn't list the tags
+    item_lists_tag(self, disco, books, False)
+    item_lists_tag(self, disco, movies, False)
+    self.assertEqual(disco.tags.count(), 0)
+    self.assertEqual(books.item_set.count(), 0)
+    self.assertEqual(movies.item_set.count(), 0)
+
+    # Edit to include books twice; check that we don't get two instances.
+    self.response = self.client.post(editurl, { "tags": [ books.id, books.id ] }, follow=True)
+    self.status_okay()
+
+    tag_lists_item(self, books, disco, True)
+    tag_lists_item(self, movies, disco, False)
+    item_lists_tag(self, disco, books, True)
+    item_lists_tag(self, disco, movies, False)
+    self.assertEqual(disco.tags.count(), 1)
+    self.assertEqual(books.item_set.count(), 1)
+    self.assertEqual(movies.item_set.count(), 0)
+
+
 # Tests required
 # Items
-#	Add tags
-#	Remove tags
-#	Lookup tags
-#	Add too many tags
-#	Change room
+#	Move item to...
 #	Look up in room
 # 	Kit request
 # 		Create and Add to item
