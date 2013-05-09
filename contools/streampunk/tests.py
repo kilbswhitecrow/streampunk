@@ -1321,9 +1321,79 @@ class test_delete_enums(AuthTest):
       ikdefault.delete()
     self.assertEqual(ItemKind.objects.filter(isDefault=True).count(), 1)
 
+# =========================================================
+
+class test_edit_items(AuthTest):
+  "Editing aspects of an item."
+  fixtures = [ 'room', 'items', 'tags' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def idict(self, i):
+    "Given an item object, return a dict suitable for posting back."
+    d = dict()
+
+    # attributes that are just values
+    for k in [ 'title', 'shortname', 'blurb', 'revision', 'expAudience', 'gophers', 'stewards', 'budget',
+               'projNeeded', 'techNeeded', 'complete', 'privNotes', 'techNotes', 'pubBring', 'audienceMics',
+               'allTechCrew', 'needsReset', 'needsCleanUp', 'mediaStatus' ]:
+      d[k] = getattr(i, k)
+
+    # for attributes that are model objects, we want to post back the id.
+    for k in [ 'start', 'length', 'room', 'kind', 'seating', 'frontLayout', 'revision', 'follows' ]:
+      try:
+        d[k] = getattr(i, k).id
+      except AttributeError:
+        pass
+    return d
+
+  def test_edit_basic_stuff(self):
+    "Change some basic things about an item."
+
+    disco = Item.objects.get(shortname='Disco')
+    ops = Room.objects.get(name='Ops')
+    hour = SlotLength.objects.get(length=60)
+    panel = ItemKind.objects.get(name='Panel')
+
+    # Get a form for editing.
+    editurl = reverse('edit_item', args=[ disco.id ])
+    self.response = self.client.get(editurl)
+    self.status_okay()
+
+    # Fetch the item from the form presented
+    i = self.response.context['object']
+
+    self.assertEqual(i.shortname, disco.shortname)
+    self.assertNotEqual(i.room, ops)
+    self.assertNotEqual(i.length, hour)
+    self.assertNotEqual(i.kind, panel)
+
+    i = self.idict(i)
+    i['room'] = ops.id
+    i['length'] = hour.id
+    i['kind'] = panel.id
+
+    # Send the updated data back.
+    self.response = self.client.post(editurl, i, follow=True)
+    self.status_okay()
+    i = self.response.context['item']
+
+    # Check it's been changed
+    self.assertEqual(i.shortname, disco.shortname)
+    self.assertEqual(i.room, ops)
+    self.assertEqual(i.length, hour)
+    self.assertEqual(i.kind, panel)
+
+
 # Tests required
 # Items
-#	Edit
 #	Add tags
 #	Remove tags
 #	Lookup tags
