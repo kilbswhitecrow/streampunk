@@ -1343,11 +1343,11 @@ class test_edit_items(AuthTest):
     # attributes that are just values
     for k in [ 'title', 'shortname', 'blurb', 'revision', 'expAudience', 'gophers', 'stewards', 'budget',
                'projNeeded', 'techNeeded', 'complete', 'privNotes', 'techNotes', 'pubBring', 'audienceMics',
-               'allTechCrew', 'needsReset', 'needsCleanUp', 'mediaStatus' ]:
+               'allTechCrew', 'needsReset', 'needsCleanUp' ]:
       d[k] = getattr(i, k)
 
     # for attributes that are model objects, we want to post back the id.
-    for k in [ 'start', 'length', 'room', 'kind', 'seating', 'frontLayout', 'revision', 'follows' ]:
+    for k in [ 'start', 'length', 'room', 'kind', 'seating', 'frontLayout', 'revision', 'follows', 'mediaStatus' ]:
       try:
         d[k] = getattr(i, k).id
       except AttributeError:
@@ -1357,10 +1357,22 @@ class test_edit_items(AuthTest):
   def test_edit_basic_stuff(self):
     "Change some basic things about an item."
 
+    def room_lists_item(self, room, item, yesno):
+      self.response = self.client.get(reverse('show_room_detail', args=[room.id]))
+      self.status_okay()
+      if yesno:
+        self.has_row('ritable', { "title": item.title })
+      else:
+        self.no_row('ritable', { "title": item.title })
+
     disco = Item.objects.get(shortname='Disco')
+    mainhall = Room.objects.get(name='Main Hall')
     ops = Room.objects.get(name='Ops')
     hour = SlotLength.objects.get(length=60)
     panel = ItemKind.objects.get(name='Panel')
+
+    self.assertEqual(mainhall, disco.room)
+    room_lists_item(self, mainhall, disco, True)
 
     # Get a form for editing.
     editurl = reverse('edit_item', args=[ disco.id ])
@@ -1391,6 +1403,11 @@ class test_edit_items(AuthTest):
     self.assertEqual(i.length, hour)
     self.assertEqual(i.kind, panel)
 
+    disco = Item.objects.get(shortname='Disco')
+    mainhall = Room.objects.get(name='Main Hall')
+    ops = Room.objects.get(name='Ops')
+    room_lists_item(self, mainhall, disco, False)
+    room_lists_item(self, ops, disco, True)
 
   def test_edit_item_tags(self):
     "Change the tags on an item."
@@ -1497,8 +1514,6 @@ class test_edit_items(AuthTest):
 
 # Tests required
 # Items
-#	Move item to...
-#	Look up in room
 # 	Kit request
 # 		Create and Add to item
 # 		List
