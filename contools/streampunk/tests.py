@@ -52,6 +52,12 @@ class StreampunkTest(TestCase):
     link = '<a href="%s' % reverse(path, args=args)
     self.assertFalse(link in self.response.content)
 
+  def form_error(self):
+    self.assertTrue('errorlist' in self.response.content)
+
+  def form_okay(self):
+    self.assertFalse('errorlist' in self.response.content)
+
   def has_column(self, table, column):
     t = self.response.context[table]
     self.assertTrue(column in t.columns.names())
@@ -1325,7 +1331,7 @@ class test_delete_enums(AuthTest):
 
 class test_edit_items(AuthTest):
   "Editing aspects of an item."
-  fixtures = [ 'room', 'items', 'tags' ]
+  fixtures = [ 'room', 'items', 'tags', 'kit' ]
 
   def setUp(self):
     self.mkroot()
@@ -1353,6 +1359,13 @@ class test_edit_items(AuthTest):
       except AttributeError:
         pass
     return d
+
+  def test_item_edit_error(self):
+    "Test that we can detect an error occurred in an item edit"
+
+    disco = Item.objects.get(shortname='Disco')
+    self.response = self.client.post(reverse('edit_item', args=[disco.id]), { }, follow=True)
+    self.form_error()
 
   def test_edit_basic_stuff(self):
     "Change some basic things about an item."
@@ -1395,6 +1408,7 @@ class test_edit_items(AuthTest):
     # Send the updated data back.
     self.response = self.client.post(editurl, i, follow=True)
     self.status_okay()
+    self.form_okay()
     i = self.response.context['item']
 
     # Check it's been changed
@@ -1447,6 +1461,7 @@ class test_edit_items(AuthTest):
     # Add one of the tags to the item.
     self.response = self.client.post(editurl, { "tags": [ books.id ] }, follow=True)
     self.status_okay()
+    self.form_okay()
 
     # Check that the item now lists books, but not movies.
     tag_lists_item(self, books, disco, True)
@@ -1461,6 +1476,7 @@ class test_edit_items(AuthTest):
     # Add movies, too.
     self.response = self.client.post(editurl, { "tags": [ books.id, movies.id ] }, follow=True)
     self.status_okay()
+    self.form_okay()
 
     # Check that the item now lists both books and movies.
     tag_lists_item(self, books, disco, True)
@@ -1475,6 +1491,7 @@ class test_edit_items(AuthTest):
     # Edit to remove books, and leave movies there.
     self.response = self.client.post(editurl, { "tags": [ movies.id ] }, follow=True)
     self.status_okay()
+    self.form_okay()
 
     # Check that the item now lists movies, but not books.
     tag_lists_item(self, books, disco, False)
@@ -1489,6 +1506,7 @@ class test_edit_items(AuthTest):
     # Edit again, to have no tags.
     self.response = self.client.post(editurl, { }, follow=True)
     self.status_okay()
+    self.form_okay()
 
     tag_lists_item(self, books, disco, False)
     tag_lists_item(self, movies, disco, False)
@@ -1502,6 +1520,7 @@ class test_edit_items(AuthTest):
     # Edit to include books twice; check that we don't get two instances.
     self.response = self.client.post(editurl, { "tags": [ books.id, books.id ] }, follow=True)
     self.status_okay()
+    self.form_okay()
 
     tag_lists_item(self, books, disco, True)
     tag_lists_item(self, movies, disco, False)
@@ -1511,15 +1530,96 @@ class test_edit_items(AuthTest):
     self.assertEqual(books.item_set.count(), 1)
     self.assertEqual(movies.item_set.count(), 0)
 
+  def test_edit_kit_requests(self):
+    "Change kit requests on an item."
 
+    def item_lists_req(self, item, req, yesno):
+      "Check whether the kit request appears on the item's page."
+
+      self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
+      if yesno:
+        self.has_row('krtable', { "kind": req.kind, "count": req.count })
+      else:
+        self.no_row('krtable', { "kind": req.kind, "count": req.count })
+
+    def req_lists_item(self, req, item, yesno):
+      "Check whether the kit request lists use by the item."
+
+      self.response = self.client.get(reverse('show_kitrequest_detail', args=[ req.id ]))
+      if yesno:
+        self.has_row('itable', { "item": item.title })
+      else:
+        self.no_row('itable', { "item": item.title })
+
+    def usage_lists_req_for_item(self, req, item, yesno):
+      "Check whether the kit-usage page lists the req being used by the item."
+      self.response = self.client.get(reverse('kit_usage'))
+      if yesno:
+        self.has_row('krtable', { "kind": req.kind, "count": req.count })
+      else:
+        self.no_row('krtable', { "kind": req.kind, "count": req.count })
+
+    def krdict(req):
+      "Given a kit request, return a dict we can post for editing."
+      return {
+        "kind": req.kind.id,
+        "count": req.count,
+        "setupAssistance": req.setupAssistance,
+        "notes": req.notes,
+        "status": req.status.id
+      }
+
+    disco = Item.objects.get(shortname='Disco')
+
+    # No kit requests yet.
+    self.assertEqual(KitRequest.objects.count(), 0)
+
+    self.response = self.client.post(reverse('add_kitrequest_to_item', args=[ disco.id ]), {
+      "kind": KitKind.objects.find_default().id,
+      "count": 1,
+      "setupAssistance": False,
+      "status": KitStatus.objects.find_default().id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertEqual(KitRequest.objects.count(), 1)
+
+    # Let's see which one it is.
+    req = KitRequest.objects.all()[0]
+    reqid = req.id
+
+    # Make sure it's on the item, and vice versa
+    item_lists_req(self, disco, req, True)
+    # req_lists_item(self, req, disco, True)
+    usage_lists_req_for_item(self, req, disco, True)
+    disco = Item.objects.get(id = disco.id)
+    self.assertTrue(req in disco.kitRequests.all())
+    self.assertTrue(disco in req.item_set.all())
+    self.assertEqual(req.count, 1)
+
+    # Edit the item.
+    newreq = krdict(req)
+    newreq['count'] = 3
+    self.response = self.client.post(reverse('edit_kitrequest', args=[ req.id ]), newreq, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # fetch it again, then check it's still listed.
+    req = KitRequest.objects.get(id = reqid)
+    item_lists_req(self, disco, req, True)
+    # req_lists_item(self, req, disco, True)
+    usage_lists_req_for_item(self, req, disco, True)
+    disco = Item.objects.get(id = disco.id)
+    self.assertTrue(req in disco.kitRequests.all())
+    self.assertTrue(disco in req.item_set.all())
+    self.assertEqual(req.count, 3)
+
+    # Remove it, which should delete it.
+    
 # Tests required
 # Items
 # 	Kit request
-# 		Create and Add to item
-# 		List
-# 		Edit when solo
 # 		Remove from item and delete
-# 		Edit when on item
 # 	Kit thing
 # 		Create
 # 		List
