@@ -1614,12 +1614,13 @@ class test_edit_items(AuthTest):
     self.assertTrue(disco in req.item_set.all())
     self.assertEqual(req.count, 3)
 
-    # Remove it, which should delete it.
-    
+    # delete it.
+    self.response = self.client.post(reverse('delete_kitrequest', args=[ req.id ]), { }, follow=True)
+    self.status_okay()
+    self.assertEqual(KitRequest.objects.count(), 0)
+
 # Tests required
 # Items
-# 	Kit request
-# 		Remove from item and delete
 # 	Kit thing
 # 		Create
 # 		List
