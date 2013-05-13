@@ -417,7 +417,7 @@ class show_kitrequest_detail(DetailView):
                                      qs=[ context['kitrequest'] ], prefix='kr-', empty='No kit requests',
                                      extra_exclude=['item', 'room', 'day', 'start', 'sat'])
     context['itable'] = make_tabler(KitRequest, KitRequestTable, request=self.request,
-                                    qs=[ context['kitrequest'] ], prefix='kr-', empty='No kit requests',
+                                    qs=[ context['kitrequest'] ], prefix='ki-', empty='No kit requests',
                                     extra_exclude=['name', 'kind', 'count', 'status', 'setup', 'notes'])
     return context
 
