@@ -142,6 +142,8 @@ class KitRequestTable(tables.Table):
   room = tables.LinkColumn('show_room_detail', args=[A('room.pk')])
   start = tables.Column()
   sat = tables.Column(verbose_name='Satisfied by?')
+  edit = EditColumn('edit_kitrequest', args=[A('pk')])
+  remove = RemoveColumn('delete_kitrequest', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 

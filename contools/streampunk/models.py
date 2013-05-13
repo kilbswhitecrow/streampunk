@@ -563,7 +563,9 @@ class KitRequest(models.Model):
                   "item":   "requested_by_first",
                   "room":   "requested_by_first_room",
                   "start":  "requested_by_first_start",
-                  "sat":    "is_satisfied_by_first" })
+                  "sat":    "is_satisfied_by_first",
+                  "edit":   "Edit",
+                  "remove": "Remove" })
 
   @classmethod
   def tabler_exclude(cls, request):
