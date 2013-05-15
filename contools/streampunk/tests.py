@@ -33,6 +33,12 @@ from streampunk.models import KitThing, KitRequest, KitBundle
 from streampunk.models import KitKind, KitStatus, RoomCapacity
 from streampunk.models import KitRoomAssignment, KitItemAssignment
 from streampunk.exceptions import DeleteNeededObjectException
+from streampunk.testutils import itemdict, persondict, kitreqdict
+from streampunk.testutils import default_person, default_item, default_itemperson
+from streampunk.testutils import item_lists_req, req_lists_item
+from streampunk.testutils import item_lists_tag, tag_lists_item
+from streampunk.testutils import room_lists_item
+from streampunk.testutils import usage_lists_req_for_item
 
 class StreampunkTest(TestCase):
 
@@ -353,21 +359,6 @@ class test_creation(AuthTest):
       self.assertEqual(self.num_rows(t), numrows)
       self.has_link_to('new_person')
 
-    def default_person(extras):
-      p = {
-        "firstName":      "Rupert",
-        "lastName":       "Giles",
-        "badge":          "Ripper",
-        "memnum":         -1,
-        "gender":         Gender.objects.find_default().id,
-        "complete":       "No",
-        "distEmail":      "No",
-        "recordingOkay":  "No"
-      }
-      for k in extras.keys():
-        p[k] = extras[k]
-      return p
-
     t = 'ptable'
     chkpeople(self, 0)
     self.response = self.client.post(reverse('new_person'), default_person({
@@ -443,30 +434,6 @@ class test_creation(AuthTest):
       self.has_column(t, 'remove')
       self.assertEqual(self.num_rows(t), numrows)
       self.has_link_to('new_item')
-    def default_item(extras):
-      i = {
-        "title":       "Some Item",
-        "shortname":   "some item",
-        "start":       Slot.objects.find_default().id,
-        "length":      SlotLength.objects.find_default().id,
-        "room":        Room.objects.find_default().id,
-        "kind":        ItemKind.objects.find_default().id,
-        "seating":     SeatingKind.objects.find_default().id,
-        "frontLayout": FrontLayoutKind.objects.find_default().id,
-        "revision":    Revision.objects.latest().id,
-        "expAudience": 0,
-        "gophers":     0,
-        "stewards":    0,
-        "budget":      0,
-        "projNeeded":  "No",
-        "techNeeded":  "No",
-        "complete":    "No",
-        "visible":     True,
-        "mediaStatus":  MediaStatus.objects.find_default().id
-      }
-      for k in extras.keys():
-        i[k] = extras[k]
-      return i
 
     t = 'itable'
     chkitems(self, 0)
@@ -549,20 +516,6 @@ class test_add_panellists(AuthTest):
     self.zaproot()
 
   def test_people_items(self):
-    def default_itemperson(extras):
-      ip = {
-        "item": None,
-        "person": None,
-        "role": PersonRole.objects.find_default().id,
-        "status": PersonStatus.objects.find_default().id,
-        "visible": True,
-        "distEmail": "No",
-        "recordingOkay": "No"
-      }
-      for k in extras.keys():
-        ip[k] = extras[k]
-      return ip
-  
     buffy = Person.objects.get(firstName='Buffy')
     giles = Person.objects.get(lastName='Giles')
     ceilidh = Item.objects.get(shortname='Ceilidh')
@@ -689,24 +642,12 @@ class test_add_panellists(AuthTest):
     self.no_row(ptable, { "item": disco, "role": panellist, "visible": True })
 
   def test_edit_person(self):
-    def pdict(person):
-      return {
-        "firstName":      person.firstName,
-        "lastName":       person.lastName,
-        "badge":          person.badge,
-        "memnum":         person.memnum,
-        "gender":         person.gender.id,
-        "complete":       person.complete,
-        "distEmail":      person.distEmail,
-        "recordingOkay":  person.recordingOkay
-      }
-
     buffy = Person.objects.get(firstName='Buffy')
     eaddr = 'buffy@sunnydale.net'
     self.response = self.client.get(reverse('edit_person', kwargs={ "pk": buffy.id }))
     self.status_okay()
     object = self.response.context['object']
-    postdata = pdict(object)
+    postdata = persondict(object)
     postdata['email'] = eaddr
     self.response = self.client.post(reverse('edit_person', kwargs={ "pk": buffy.id }), postdata, follow=True)
     self.status_okay()
@@ -806,20 +747,6 @@ class test_delete_people(AuthTest):
     self.zaproot()
 
   def test_people_items(self):
-    def default_itemperson(extras):
-      ip = {
-        "item": None,
-        "person": None,
-        "role": PersonRole.objects.find_default().id,
-        "status": PersonStatus.objects.find_default().id,
-        "visible": True,
-        "distEmail": "No",
-        "recordingOkay": "No"
-      }
-      for k in extras.keys():
-        ip[k] = extras[k]
-      return ip
-  
     buffy = Person.objects.get(firstName='Buffy')
     willow = Person.objects.get(firstName='Willow')
     dawn = Person.objects.get(firstName='Dawn')
@@ -894,19 +821,6 @@ class test_delete_items_with_stuff(AuthTest):
 
   def test_items_people_tags(self):
     "Test deleting items, with people and tags."
-    def default_itemperson(extras):
-      ip = {
-        "item": None,
-        "person": None,
-        "role": PersonRole.objects.find_default().id,
-        "status": PersonStatus.objects.find_default().id,
-        "visible": True,
-        "distEmail": "No",
-        "recordingOkay": "No"
-      }
-      for k in extras.keys():
-        ip[k] = extras[k]
-      return ip
   
     buffy = Person.objects.get(firstName='Buffy')
     willow = Person.objects.get(firstName='Willow')
@@ -1342,24 +1256,6 @@ class test_edit_items(AuthTest):
     self.client.logout()
     self.zaproot()
 
-  def idict(self, i):
-    "Given an item object, return a dict suitable for posting back."
-    d = dict()
-
-    # attributes that are just values
-    for k in [ 'title', 'shortname', 'blurb', 'revision', 'expAudience', 'gophers', 'stewards', 'budget',
-               'projNeeded', 'techNeeded', 'complete', 'privNotes', 'techNotes', 'pubBring', 'audienceMics',
-               'allTechCrew', 'needsReset', 'needsCleanUp' ]:
-      d[k] = getattr(i, k)
-
-    # for attributes that are model objects, we want to post back the id.
-    for k in [ 'start', 'length', 'room', 'kind', 'seating', 'frontLayout', 'revision', 'follows', 'mediaStatus' ]:
-      try:
-        d[k] = getattr(i, k).id
-      except AttributeError:
-        pass
-    return d
-
   def test_item_edit_error(self):
     "Test that we can detect an error occurred in an item edit"
 
@@ -1369,14 +1265,6 @@ class test_edit_items(AuthTest):
 
   def test_edit_basic_stuff(self):
     "Change some basic things about an item."
-
-    def room_lists_item(self, room, item, yesno):
-      self.response = self.client.get(reverse('show_room_detail', args=[room.id]))
-      self.status_okay()
-      if yesno:
-        self.has_row('ritable', { "title": item.title })
-      else:
-        self.no_row('ritable', { "title": item.title })
 
     disco = Item.objects.get(shortname='Disco')
     mainhall = Room.objects.get(name='Main Hall')
@@ -1400,7 +1288,7 @@ class test_edit_items(AuthTest):
     self.assertNotEqual(i.length, hour)
     self.assertNotEqual(i.kind, panel)
 
-    i = self.idict(i)
+    i = itemdict(i)
     i['room'] = ops.id
     i['length'] = hour.id
     i['kind'] = panel.id
@@ -1425,20 +1313,6 @@ class test_edit_items(AuthTest):
 
   def test_edit_item_tags(self):
     "Change the tags on an item."
-
-    def item_lists_tag(self, item, tag, yesno):
-      self.response = self.client.get(reverse('show_item_detail', args=[item.id]))
-      if yesno:
-        self.has_row('tagtable', { "name": tag.name })
-      else:
-        self.no_row('tagtable', { "name": tag.name })
-
-    def tag_lists_item(self, tag, item, yesno):
-      self.response = self.client.get(reverse('show_tag_detail', args=[tag.id]))
-      if yesno:
-        self.has_row('ittable', { "title": item.title })
-      else:
-        self.no_row('ittable', { "title": item.title })
 
     disco = Item.objects.get(shortname='Disco')
     editurl = reverse('edit_tags_for_item', args=[ disco.id ])
@@ -1533,42 +1407,6 @@ class test_edit_items(AuthTest):
   def test_edit_kit_requests(self):
     "Change kit requests on an item."
 
-    def item_lists_req(self, item, req, yesno):
-      "Check whether the kit request appears on the item's page."
-
-      self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
-      if yesno:
-        self.has_row('krtable', { "kind": req.kind, "count": req.count })
-      else:
-        self.no_row('krtable', { "kind": req.kind, "count": req.count })
-
-    def req_lists_item(self, req, item, yesno):
-      "Check whether the kit request lists use by the item."
-
-      self.response = self.client.get(reverse('show_kitrequest_detail', args=[ req.id ]))
-      if yesno:
-        self.has_row('itable', { "item": item.title })
-      else:
-        self.no_row('itable', { "item": item.title })
-
-    def usage_lists_req_for_item(self, req, item, yesno):
-      "Check whether the kit-usage page lists the req being used by the item."
-      self.response = self.client.get(reverse('kit_usage'))
-      if yesno:
-        self.has_row('krtable', { "kind": req.kind, "count": req.count })
-      else:
-        self.no_row('krtable', { "kind": req.kind, "count": req.count })
-
-    def krdict(req):
-      "Given a kit request, return a dict we can post for editing."
-      return {
-        "kind": req.kind.id,
-        "count": req.count,
-        "setupAssistance": req.setupAssistance,
-        "notes": req.notes,
-        "status": req.status.id
-      }
-
     disco = Item.objects.get(shortname='Disco')
 
     # No kit requests yet.
@@ -1598,7 +1436,7 @@ class test_edit_items(AuthTest):
     self.assertEqual(req.count, 1)
 
     # Edit the item.
-    newreq = krdict(req)
+    newreq = kitreqdict(req)
     newreq['count'] = 3
     self.response = self.client.post(reverse('edit_kitrequest', args=[ req.id ]), newreq, follow=True)
     self.status_okay()
