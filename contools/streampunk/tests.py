@@ -37,6 +37,7 @@ from streampunk.testutils import itemdict, persondict, kitreqdict
 from streampunk.testutils import default_person, default_item, default_itemperson
 from streampunk.testutils import item_lists_req, req_lists_item
 from streampunk.testutils import item_lists_tag, tag_lists_item
+from streampunk.testutils import person_lists_tags
 from streampunk.testutils import room_lists_item
 from streampunk.testutils import usage_lists_req_for_item
 
@@ -658,19 +659,6 @@ class test_add_panellists(AuthTest):
     self.assertEqual(buffy.id, buf2.id)
 
   def test_person_tags(self):
-    def chk_tags(person, taglist):
-      # Check the person has the right tags.
-      alltags = person.tags.all()
-      self.assertEqual(alltags.count(), len(taglist))
-      for tag in taglist:
-        self.assertTrue(tag in alltags)
-      # Check the page shows the right tags.
-      t = 'tagtable'
-      self.response = self.client.get(reverse('show_person_detail', kwargs={'pk': person.id}))
-      self.status_okay()
-      self.assertEqual(self.num_rows(t), len(taglist))
-      for tag in taglist:
-        self.has_row(t, { "name": tag.name })
 
     def tagids(tagqs):
       return [ t.id for t in tagqs ]
@@ -681,8 +669,8 @@ class test_add_panellists(AuthTest):
     movies = Tag.objects.get(name='Movies')
 
     # No tags for anyone yet
-    chk_tags(buffy, [])
-    chk_tags(giles, [])
+    person_lists_tags(self, buffy, [])
+    person_lists_tags(self, giles, [])
     self.response = self.client.get(reverse('edit_tags_for_person', args=[ buffy.id ]))
     self.status_okay()
 
@@ -694,8 +682,8 @@ class test_add_panellists(AuthTest):
       "tags": tagids(newtags)
     }, follow=True)
     self.status_okay()
-    chk_tags(buffy, newtags)
-    chk_tags(giles, [])
+    person_lists_tags(self, buffy, newtags)
+    person_lists_tags(self, giles, [])
 
     # Again, but with only one new tag.
     # Looks like this particular test currently fails.
@@ -704,8 +692,8 @@ class test_add_panellists(AuthTest):
       "tags": tagids(newtags)
     }, follow=True)
     self.status_okay()
-    chk_tags(buffy, newtags)
-    chk_tags(giles, [])
+    person_lists_tags(self, buffy, newtags)
+    person_lists_tags(self, giles, [])
 
     # If we include tags twice, they should not get added twice.
     newtags = [ books, movies ]
@@ -714,8 +702,8 @@ class test_add_panellists(AuthTest):
       "tags": tagids(toomanytags)
     }, follow=True)
     self.status_okay()
-    chk_tags(buffy, newtags)
-    chk_tags(giles, [])
+    person_lists_tags(self, buffy, newtags)
+    person_lists_tags(self, giles, [])
 
     # Check the person shows up under the tags page, too.
     self.response = self.client.get(reverse('show_tag_detail', kwargs={'pk': books.id}))

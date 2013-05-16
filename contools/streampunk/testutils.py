@@ -173,6 +173,20 @@ def tag_lists_item(self, tag, item, yesno):
   else:
     self.no_row('ittable', { "title": item.title })
 
+def person_lists_tags(self, person, taglist):
+  # Check the person has the right tags.
+  alltags = person.tags.all()
+  self.assertEqual(alltags.count(), len(taglist))
+  for tag in taglist:
+    self.assertTrue(tag in alltags)
+  # Check the page shows the right tags.
+  t = 'tagtable'
+  self.response = self.client.get(reverse('show_person_detail', kwargs={'pk': person.id}))
+  self.status_okay()
+  self.assertEqual(self.num_rows(t), len(taglist))
+  for tag in taglist:
+    self.has_row(t, { "name": tag.name })
+
 def room_lists_item(self, room, item, yesno):
   self.response = self.client.get(reverse('show_room_detail', args=[room.id]))
   self.status_okay()
