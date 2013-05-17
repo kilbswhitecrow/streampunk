@@ -108,6 +108,74 @@ class StreampunkTest(TestCase):
   def no_row(self, table, rec):
     self.assertFalse(self.row_match(table, rec))
 
+  def get_buffy(self):
+    return Person.objects.get(firstName='Buffy')
+  def get_giles(self):
+    return Person.objects.get(lastName='Giles')
+  def get_willow(self):
+    return Person.objects.get(firstName='Willow')
+  def get_dawn(self):
+    return Person.objects.get(firstName='Dawn')
+
+  def get_ceilidh(self):
+    return Item.objects.get(shortname='Ceilidh')
+  def get_disco(self):
+    return Item.objects.get(shortname='Disco')
+  def get_bidsession(self):
+    return Item.objects.get(shortname='bid session')
+
+  def get_nowhere(self):
+    return Room.objects.get(name='Nowhere')
+  def get_everywhere(self):
+    return Room.objects.get(name='Everywhere')
+  def get_video(self):
+    return Room.objects.get(name='Video')
+  def get_ops(self):
+    return Room.objects.get(name='Ops')
+  def get_mainhall(self):
+    return Room.objects.get(name='Main Hall')
+
+  def get_greenroomproj(self):
+    return KitThing.objects.get(name='Green room projector')
+  def get_greenroomscr(self):
+    return KitThing.objects.get(name='Green room screen')
+  def get_mainhallkit(self):
+    return KitBundle.objects.get(name='Main hall kit')
+  def get_mainhallproj(self):
+    return  KitThing.objects.get(name='Main hall projector')
+  def get_mainhallscr(self):
+    return KitThing.objects.get(name='Main hall screen')
+
+  def get_friday(self):
+    return ConDay.objects.get(name='Friday')
+  def get_sunday(self):
+    return ConDay.objects.get(name='Sunday')
+  def get_morning(self):
+    friday = self.get_friday()
+    return Slot.objects.get(day=friday, startText='10am')
+  def get_evening(self):
+    sunday = self.get_sunday()
+    return Slot.objects.get(day=sunday, startText='8pm')
+  def get_hour(self):
+    return SlotLength.objects.get(length=60)
+
+  def get_books(self):
+    return Tag.objects.get(name='Books')
+  def get_movies(self):
+    return Tag.objects.get(name='Movies')
+  def get_comics(self):
+    return Tag.objects.get(name='Comics')
+
+  def get_panellist(self):
+    return PersonRole.objects.get(name='Panellist')
+  def get_panel(self):
+    return ItemKind.objects.get(name='Panel')
+
+  def get_theatre(self):
+    return SeatingKind.objects.get(name='Theatre')
+  def get_empty(self):
+    return SeatingKind.objects.get(name='Empty')
+
 class NonauthTest(StreampunkTest):
 
   def banner(self):
@@ -517,10 +585,10 @@ class test_add_panellists(AuthTest):
     self.zaproot()
 
   def test_people_items(self):
-    buffy = Person.objects.get(firstName='Buffy')
-    giles = Person.objects.get(lastName='Giles')
-    ceilidh = Item.objects.get(shortname='Ceilidh')
-    disco = Item.objects.get(shortname='Disco')
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    ceilidh = self.get_ceilidh()
+    disco = self.get_disco()
     panellist = PersonRole.objects.find_default()
     
     itable = 'item_people_table'  # people on the item
@@ -643,7 +711,7 @@ class test_add_panellists(AuthTest):
     self.no_row(ptable, { "item": disco, "role": panellist, "visible": True })
 
   def test_edit_person(self):
-    buffy = Person.objects.get(firstName='Buffy')
+    buffy = self.get_buffy()
     eaddr = 'buffy@sunnydale.net'
     self.response = self.client.get(reverse('edit_person', kwargs={ "pk": buffy.id }))
     self.status_okay()
@@ -663,10 +731,10 @@ class test_add_panellists(AuthTest):
     def tagids(tagqs):
       return [ t.id for t in tagqs ]
 
-    buffy = Person.objects.get(firstName='Buffy')
-    giles = Person.objects.get(lastName='Giles')
-    books = Tag.objects.get(name='Books')
-    movies = Tag.objects.get(name='Movies')
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    books = self.get_books()
+    movies = self.get_movies()
 
     # No tags for anyone yet
     person_lists_tags(self, buffy, [])
@@ -735,14 +803,14 @@ class test_delete_people(AuthTest):
     self.zaproot()
 
   def test_people_items(self):
-    buffy = Person.objects.get(firstName='Buffy')
-    willow = Person.objects.get(firstName='Willow')
-    dawn = Person.objects.get(firstName='Dawn')
-    disco = Item.objects.get(shortname='Disco')
-    ceilidh = Item.objects.get(shortname='Ceilidh')
-    books = Tag.objects.get(name='Books')
-    movies = Tag.objects.get(name='Movies')
-    panellist = PersonRole.objects.get(name='Panellist')
+    buffy = self.get_buffy()
+    willow = self.get_willow()
+    dawn = self.get_dawn()
+    disco = self.get_disco()
+    ceilidh = self.get_ceilidh()
+    books = self.get_books()
+    movies = self.get_movies()
+    panellist = self.get_panellist()
 
     # Deleting via a GET should not remove the person
     delpath = reverse('delete_person', kwargs={'pk': buffy.id})
@@ -810,15 +878,15 @@ class test_delete_items_with_stuff(AuthTest):
   def test_items_people_tags(self):
     "Test deleting items, with people and tags."
   
-    buffy = Person.objects.get(firstName='Buffy')
-    willow = Person.objects.get(firstName='Willow')
-    dawn = Person.objects.get(firstName='Dawn')
-    disco = Item.objects.get(shortname='Disco')
-    ceilidh = Item.objects.get(shortname='Ceilidh')
-    bid = Item.objects.get(shortname='bid session')
-    books = Tag.objects.get(name='Books')
-    movies = Tag.objects.get(name='Movies')
-    panellist = PersonRole.objects.get(name='Panellist')
+    buffy = self.get_buffy()
+    willow = self.get_willow()
+    dawn = self.get_disco()
+    disco = self.get_disco()
+    ceilidh = self.get_ceilidh()
+    bid = self.get_bidsession()
+    books = self.get_books()
+    movies = self.get_movies()
+    panellist = self.get_panellist()
 
     # Deleting via a GET should not remove the item
     delpath = reverse('delete_item', kwargs={'pk': bid.id})
@@ -869,12 +937,12 @@ class test_delete_items_with_stuff(AuthTest):
     self.assertFalse(Item.objects.filter(shortname='Ceilidh').exists())
 
   def test_items_kit(self):
-    disco = Item.objects.get(shortname='Disco')
-    ceilidh = Item.objects.get(shortname='Ceilidh')
-    bid = Item.objects.get(shortname='bid session')
-    mhproj = KitThing.objects.get(name='Main hall projector')
-    mhscreen = KitThing.objects.get(name='Main hall screen')
-    mhkit = KitBundle.objects.get(name='Main hall kit')
+    disco = self.get_disco()
+    ceilidh = self.get_ceilidh()
+    bid = self.get_bidsession()
+    mhproj = self.get_mainhallproj()
+    mhscreen = self.get_mainhallscr()
+    mhkit = self.get_mainhallkit()
 
     self.assertEqual(KitRequest.objects.count(), 0)
     self.assertEqual(KitItemAssignment.objects.count(), 0)
@@ -954,11 +1022,11 @@ class test_delete_tags(AuthTest):
 
   def test_delete_tags_on_stuff(self):
     "Test deleting tags, on people and items."
-    buffy = Person.objects.get(firstName='Buffy')
-    disco = Item.objects.get(shortname='Disco')
-    books = Tag.objects.get(name='Books')
-    movies = Tag.objects.get(name='Movies')
-    comics = Tag.objects.get(name='Comics')
+    buffy = self.get_buffy()
+    disco = self.get_disco()
+    books = self.get_books()
+    movies = self.get_movies()
+    comics = self.get_comics()
 
     # Add tag to an item
     self.response = self.client.post(reverse('edit_tags_for_item', args=[ disco.id ]), {
@@ -1026,11 +1094,11 @@ class test_delete_rooms(AuthTest):
 
   def test_delete_rooms_with_stuff(self):
     "Test deleting rooms, with items and capacities."
-    disco = Item.objects.get(shortname='Disco')
-    video = Room.objects.get(name='Video')
-    ops = Room.objects.get(name='Ops')
-    nowhere = Room.objects.get(name='Nowhere')
-    mainhall = Room.objects.get(name='Main Hall')
+    disco = self.get_disco()
+    video = self.get_video()
+    ops = self.get_ops()
+    nowhere = self.get_nowhere()
+    mainhall = self.get_mainhall()
 
     # No items in Ops.
     self.assertEqual(ops.item_set.count(), 0)
@@ -1067,8 +1135,8 @@ class test_delete_rooms(AuthTest):
     # to be done through the Admin interface. Therefore, we'll just create
     # some directly now.
 
-    theatre = SeatingKind.objects.get(name='Theatre')
-    empty = SeatingKind.objects.get(name='Empty')
+    theatre = self.get_theatre()
+    empty = self.get_empty()
     cap1 = RoomCapacity(layout=theatre, count=60)
     cap1.save()
     cap2 = RoomCapacity(layout=empty, count=300)
@@ -1110,20 +1178,20 @@ class test_delete_rooms(AuthTest):
 
   def test_delete_rooms_with_kit(self):
     "Test deleting rooms, with kit items and kit bundles."
-    video = Room.objects.get(name='Video')
-    ops = Room.objects.get(name='Ops')
-    mainhall = Room.objects.get(name='Main Hall')
+    video = self.get_video()
+    ops = self.get_ops()
+    mainhall = self.get_mainhall()
 
-    greenproj = KitThing.objects.get(name='Green room projector')
-    greenscr = KitThing.objects.get(name='Green room screen')
-    mainhallkit = KitBundle.objects.get(name='Main hall kit')
+    greenproj = self.get_greenroomproj()
+    greenscr = self.get_greenroomscr()
+    mainhallkit = self.get_mainhallkit()
     mhcount = mainhallkit.things.count()
 
-    friday = ConDay.objects.get(name='Friday')
-    sunday = ConDay.objects.get(name='Sunday')
-    morning = Slot.objects.get(day=friday, startText='10am')
-    evening = Slot.objects.get(day=sunday, startText='8pm')
-    hour = SlotLength.objects.get(length=60)
+    friday = self.get_friday()
+    sunday = self.get_sunday()
+    morning = self.get_morning()
+    evening = self.get_evening()
+    hour = self.get_hour()
 
     # Nothing assigned to any rooms yet.
     self.assertEqual(KitRoomAssignment.objects.count(), 0)
@@ -1170,7 +1238,7 @@ class test_delete_rooms(AuthTest):
  
     # but the bundle should stil be there.
     self.assertTrue(KitBundle.objects.filter(name='Main hall kit').exists())
-    mainhallkit = KitBundle.objects.get(name='Main hall kit')
+    mainhallkit = self.get_mainhallkit()
     # with all its kit
     self.assertEqual(mainhallkit.things.count(), mhcount)
  
@@ -1201,7 +1269,7 @@ class test_delete_enums(AuthTest):
   def test_delete_needed_objects(self):
     "Test deleting things that should not be deleted."
 
-    disco = Item.objects.get(shortname='Disco')
+    disco = self.get_disco()
     ikdefault = ItemKind.objects.get(isDefault=True)
     ikundef = ItemKind.objects.get(isUndefined=True)
     ikdisco = disco.kind
@@ -1216,7 +1284,7 @@ class test_delete_enums(AuthTest):
 
     # And anything that used the now-removed enum should be
     # using its undef value instead
-    disco = Item.objects.get(shortname='Disco')
+    disco = self.get_disco()
     self.assertEqual(ikundef, disco.kind)
 
     # Trying to delete the undefined kind should raise an exception
@@ -1247,18 +1315,18 @@ class test_edit_items(AuthTest):
   def test_item_edit_error(self):
     "Test that we can detect an error occurred in an item edit"
 
-    disco = Item.objects.get(shortname='Disco')
+    disco = self.get_disco()
     self.response = self.client.post(reverse('edit_item', args=[disco.id]), { }, follow=True)
     self.form_error()
 
   def test_edit_basic_stuff(self):
     "Change some basic things about an item."
 
-    disco = Item.objects.get(shortname='Disco')
-    mainhall = Room.objects.get(name='Main Hall')
-    ops = Room.objects.get(name='Ops')
-    hour = SlotLength.objects.get(length=60)
-    panel = ItemKind.objects.get(name='Panel')
+    disco = self.get_disco()
+    mainhall = self.get_mainhall()
+    ops = self.get_ops()
+    hour = self.get_hour()
+    panel = self.get_panel()
 
     self.assertEqual(mainhall, disco.room)
     room_lists_item(self, mainhall, disco, True)
@@ -1293,19 +1361,19 @@ class test_edit_items(AuthTest):
     self.assertEqual(i.length, hour)
     self.assertEqual(i.kind, panel)
 
-    disco = Item.objects.get(shortname='Disco')
-    mainhall = Room.objects.get(name='Main Hall')
-    ops = Room.objects.get(name='Ops')
+    disco = self.get_disco()
+    mainhall = self.get_mainhall()
+    ops = self.get_ops()
     room_lists_item(self, mainhall, disco, False)
     room_lists_item(self, ops, disco, True)
 
   def test_edit_item_tags(self):
     "Change the tags on an item."
 
-    disco = Item.objects.get(shortname='Disco')
+    disco = self.get_disco()
     editurl = reverse('edit_tags_for_item', args=[ disco.id ])
-    books = Tag.objects.get(name='Books')
-    movies = Tag.objects.get(name='Movies')
+    books = self.get_books()
+    movies = self.get_movies()
 
     # Check that there's no tags on the item yet
     self.assertEqual(disco.tags.count(), 0)
@@ -1395,7 +1463,7 @@ class test_edit_items(AuthTest):
   def test_edit_kit_requests(self):
     "Change kit requests on an item."
 
-    disco = Item.objects.get(shortname='Disco')
+    disco = self.get_disco()
 
     # No kit requests yet.
     self.assertEqual(KitRequest.objects.count(), 0)
@@ -1418,7 +1486,7 @@ class test_edit_items(AuthTest):
     item_lists_req(self, disco, req, True)
     # req_lists_item(self, req, disco, True)
     usage_lists_req_for_item(self, req, disco, True)
-    disco = Item.objects.get(id = disco.id)
+    disco = self.get_disco()
     self.assertTrue(req in disco.kitRequests.all())
     self.assertTrue(disco in req.item_set.all())
     self.assertEqual(req.count, 1)
@@ -1435,7 +1503,7 @@ class test_edit_items(AuthTest):
     item_lists_req(self, disco, req, True)
     # req_lists_item(self, req, disco, True)
     usage_lists_req_for_item(self, req, disco, True)
-    disco = Item.objects.get(id = disco.id)
+    disco = self.get_disco()
     self.assertTrue(req in disco.kitRequests.all())
     self.assertTrue(disco in req.item_set.all())
     self.assertEqual(req.count, 3)

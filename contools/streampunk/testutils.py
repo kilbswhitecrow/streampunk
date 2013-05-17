@@ -18,7 +18,8 @@ from django.core.urlresolvers import reverse
 from streampunk.models import PersonRole, PersonStatus
 from streampunk.models import Slot, SlotLength, Room, ItemKind, SeatingKind
 from streampunk.models import FrontLayoutKind, Revision, MediaStatus
-from streampunk.models import Gender
+from streampunk.models import Gender, KitKind, KitRole, KitSource, KitDepartment
+from streampunk.models import KitBasis, KitStatus
 
 def modeldict(i, conv):
   """
@@ -79,6 +80,17 @@ def kitreqdict(p):
   d['objects'] = [ 'kind', 'status' ]
   return modeldict(p, d)
 
+def kitthingdict(p):
+  "Given a kit thing object, return a dict suitable for posting back."
+
+  d = dict()
+
+  # Attributes that are just values
+  d['values'] = [ 'name', 'description', 'count', 'cost', 'insurance', 'notes', 'coordinator' ]
+
+  # for attributes that are model objects, we want to post back the id.
+  d['objects'] = [ 'kind', 'role', 'source', 'department', 'basis', 'status' ]
+  return modeldict(p, d)
 
 def def_extras(d, extras):
   for k in extras.keys():
@@ -133,6 +145,22 @@ def default_itemperson(extras):
   }
   return def_extras(ip, extras)
 
+def default_kitthing(extras):
+  kt = {
+    "name": "Bob's Thing",
+    "description": "A blue box",
+    "kind": KitKind.objects.find_default().id,
+    "count": 1,
+    "role": KitRole.objects.find_default().id,
+    "source": KitSource.objects.find_default().id,
+    "department": KitDepartment.objects.find_default().id,
+    "basis": KitBasis.objects.find_default().id,
+    "status": KitStatus.objects.find_default().id,
+    "coordinator": "Bob"
+  }
+  return def_extras(kt, extras)
+
+
 def item_lists_req(self, item, req, yesno):
   "Check whether the kit request appears on the item's page."
 
@@ -141,6 +169,15 @@ def item_lists_req(self, item, req, yesno):
     self.has_row('krtable', { "kind": req.kind, "count": req.count })
   else:
     self.no_row('krtable', { "kind": req.kind, "count": req.count })
+
+def item_lists_thing(self, item, thing, yesno):
+  "Check whether the kit thing appears on the item's page."
+
+  self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
+  if yesno:
+    self.has_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
+  else:
+    self.no_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
 
 def req_lists_item(self, req, item, yesno):
   "Check whether the kit request lists use by the item."
@@ -151,6 +188,15 @@ def req_lists_item(self, req, item, yesno):
   else:
     self.no_row('itable', { "item": item.title })
 
+def thing_lists_item(self, thing, item, yesno):
+  "Check whether the kit thing lists use by the item."
+
+  self.response = self.client.get(reverse('show_kitthing_detail', args=[ thing.id ]))
+  if yesno:
+    self.has_row('kiatable', { "item": item.title })
+  else:
+    self.no_row('kiatable', { "item": item.title })
+
 def usage_lists_req_for_item(self, req, item, yesno):
   "Check whether the kit-usage page lists the req being used by the item."
   self.response = self.client.get(reverse('kit_usage'))
@@ -158,6 +204,14 @@ def usage_lists_req_for_item(self, req, item, yesno):
     self.has_row('krtable', { "kind": req.kind, "count": req.count })
   else:
     self.no_row('krtable', { "kind": req.kind, "count": req.count })
+
+def usage_lists_thing_for_item(self, thing, item, yesno):
+  "Check whether the kit-usage page lists the thing being used by the item."
+  self.response = self.client.get(reverse('kit_usage'))
+  if yesno:
+    self.has_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
+  else:
+    self.no_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
 
 def item_lists_tag(self, item, tag, yesno):
   self.response = self.client.get(reverse('show_item_detail', args=[item.id]))

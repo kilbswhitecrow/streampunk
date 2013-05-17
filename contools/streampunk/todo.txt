@@ -37,6 +37,7 @@ Next up
 -------
 - XML dump, for ConText (Done; pending a review by Alex)
 - Get regression tests in place.
+- Uh, default count on a kit thing should be 1, surely? Ditto a request?
 - Update to django 1.5.1.
 - Revise the Slot structure *again*.
 - Fix "fill slot" logic.
