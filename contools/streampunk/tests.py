@@ -33,13 +33,14 @@ from streampunk.models import KitThing, KitRequest, KitBundle
 from streampunk.models import KitKind, KitStatus, RoomCapacity
 from streampunk.models import KitRoomAssignment, KitItemAssignment
 from streampunk.exceptions import DeleteNeededObjectException
-from streampunk.testutils import itemdict, persondict, kitreqdict
+from streampunk.testutils import itemdict, persondict, kitreqdict, kitthingdict
 from streampunk.testutils import default_person, default_item, default_itemperson
+from streampunk.testutils import default_kitthing
 from streampunk.testutils import item_lists_req, req_lists_item
 from streampunk.testutils import item_lists_tag, tag_lists_item
-from streampunk.testutils import person_lists_tags
-from streampunk.testutils import room_lists_item
-from streampunk.testutils import usage_lists_req_for_item
+from streampunk.testutils import person_lists_tags, item_lists_thing, thing_lists_item
+from streampunk.testutils import room_lists_item, room_lists_thing
+from streampunk.testutils import usage_lists_req_for_item, usage_lists_thing_for_item
 
 class StreampunkTest(TestCase):
 
@@ -83,16 +84,22 @@ class StreampunkTest(TestCase):
     # Warning: a row has a record, and it has items(). The record is what
     # we pass to the Tables2 when we create the table, so will contain
     # our data, as converted into a dict by make_tabler(). The result of
-    # items() will be the rendered cell content, inclding links.
+    # items() will be the rendered cell content, including links.
+    # We might be providing strings, or objects that render to strings, or
+    # callables that provide objects or strings, so we need to try each of
+    # these dereferences before giving up.
     # Note also that the keys in the record dict need not match the titles
-    # of the columns
+    # of the columns.
+
+    def rec_val(thing):
+      return thing() if callable(thing) else thing
     t = self.response.context[table]
     for row in t.rows:
       if rec <= row.record:
         # all of rec' keys appear in the row's record. Now get a list of
         # all the keys where the values are different. If this list is
         # empty, then this row matches the rec.
-        diffs = [ k for k in rec.keys() if not k in row.record or rec[k] != row.record[k] ]
+        diffs = [ k for k in rec.keys() if not k in row.record or str(rec[k]) != str(rec_val(row.record[k])) ]
         if not diffs:
           return row.record
     return None
@@ -134,6 +141,11 @@ class StreampunkTest(TestCase):
     return Room.objects.get(name='Ops')
   def get_mainhall(self):
     return Room.objects.get(name='Main Hall')
+
+  def get_proj(self):
+    return KitKind.objects.get(name='Projector')
+  def get_screen(self):
+    return KitKind.objects.get(name='Screen')
 
   def get_greenroomproj(self):
     return KitThing.objects.get(name='Green room projector')
@@ -1513,17 +1525,145 @@ class test_edit_items(AuthTest):
     self.status_okay()
     self.assertEqual(KitRequest.objects.count(), 0)
 
+  def test_edit_kit_things(self):
+    "Adding/removing/editing kit things on items and rooms."
+
+    def thing_gone(self, thingname, item=None, room=None):
+      self.response = self.client.get(reverse('list_kitthings'))
+      self.status_okay()
+      self.no_row('kttable', { "name": thingname })
+      self.response = self.client.get(reverse('kit_usage'))
+      self.status_okay()
+      self.no_row('kiatable', { "name": thingname })
+      if item:
+        self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
+        self.status_okay()
+        self.no_row('kiatable', { "name": thingname })
+      if room:
+        self.response = self.client.get(reverse('show_room_detail', args=[ room.id ]))
+        self.status_okay()
+        self.no_row('kratable', { "name": thingname })
+
+    proj = self.get_proj()
+    projname = "THX Projector"
+    projname2 = "Dolby Projector"
+
+    # Create a new thing
+    self.response = self.client.post(reverse('new_kitthing'), default_kitthing({
+      "name": projname,
+      "kind": proj.id
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Fetch that new item
+    thx = KitThing.objects.get(name=projname)
+    self.assertEqual(thx.count, 1)
+
+    # Should be listed with other kitthings.
+    self.response = self.client.get(reverse('list_kitthings'))
+    self.status_okay()
+    self.has_row('kttable', { "name": projname, "count": 1 })
+
+    # Should be able to modify it.
+    editurl = reverse('edit_kitthing', args=[ thx.id ])
+    self.response = self.client.get(editurl)
+    self.status_okay()
+    formobj = self.response.context['object']
+    d = kitthingdict(formobj)
+    d['name'] = projname2
+    d['count'] = 42
+
+    self.response = self.client.post(editurl, d, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Is it now listed as changed?
+    self.response = self.client.get(reverse('list_kitthings'))
+    self.status_okay()
+    self.no_row('kttable', { "name": projname })
+    self.has_row('kttable', { "name" : projname2, "count": 42 } )
+
+    # fetch it again
+    thx = KitThing.objects.get(id=thx.id)
+
+    # Add the thing to an item.
+
+    disco = self.get_disco()
+    item_lists_thing(self, disco, thx, False)
+    self.response = self.client.post(reverse('add_kitthing_to_item'), {
+      "thing": thx.id,
+      "item": disco.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    item_lists_thing(self, disco, thx, True)
+    thing_lists_item(self, thx, disco, True)
+    usage_lists_thing_for_item(self, thx, disco, True)
+
+    # Edit, while attached to the item.
+    d['count'] = 16
+    self.response = self.client.post(editurl, d, follow=True)
+    self.status_okay()
+    self.form_okay()
+    item_lists_thing(self, disco, thx, True)
+    thing_lists_item(self, thx, disco, True)
+    usage_lists_thing_for_item(self, thx, disco, True)
+
+    # Delete it again.
+    self.response = self.client.post(reverse('delete_kitthing', args=[ thx.id ]), { }, follow=True)
+    self.status_okay()
+
+    # Should now be gone
+    thing_gone(self, projname2, item=disco)
+
+    # create it again
+    self.response = self.client.post(reverse('new_kitthing'), default_kitthing({
+      "name": projname,
+      "kind": proj.id
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Fetch that new item
+    thx = KitThing.objects.get(name=projname)
+    self.assertEqual(thx.count, 1)
+
+    # Not on a room yet
+    mainhall = self.get_mainhall()
+    room_lists_thing(self, mainhall, thx, False)
+
+    # Attach it to a room
+    morning = self.get_morning()
+    evening = self.get_evening()
+    hour = self.get_hour()
+
+    self.response = self.client.post(reverse('add_kitthing_to_room'), {
+      "thing": thx.id,
+      "room": mainhall.id,
+      "fromSlot": morning.id,
+      "toSlot": evening.id,
+      "toLength": hour.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Now on the room
+    room_lists_thing(self, mainhall, thx, True)
+
+    # Delete it again.
+    self.response = self.client.post(reverse('delete_kitthing', args=[ thx.id ]), { }, follow=True)
+    self.status_okay()
+
+    # Should now be gone
+    thing_gone(self, projname, room=mainhall)
+
 # Tests required
 # Items
 # 	Kit thing
-# 		Create
-# 		List
-# 		Edit, when solo
-# 		Add to item
 # 		Add to room
-# 		Edit, when on item
 # 		Edit, when on room
-# 		Delete, when on item
 # 		Delete, when on room
 # 		In kit usage
 # 	Kit bundle

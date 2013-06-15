@@ -156,6 +156,8 @@ def default_kitthing(extras):
     "department": KitDepartment.objects.find_default().id,
     "basis": KitBasis.objects.find_default().id,
     "status": KitStatus.objects.find_default().id,
+    "insurance": 0,
+    "cost": 0,
     "coordinator": "Bob"
   }
   return def_extras(kt, extras)
@@ -175,9 +177,9 @@ def item_lists_thing(self, item, thing, yesno):
 
   self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
   if yesno:
-    self.has_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
+    self.has_row('kiatable', { "thing": thing.name })
   else:
-    self.no_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
+    self.no_row('kiatable', { "thing": thing.name })
 
 def req_lists_item(self, req, item, yesno):
   "Check whether the kit request lists use by the item."
@@ -209,9 +211,9 @@ def usage_lists_thing_for_item(self, thing, item, yesno):
   "Check whether the kit-usage page lists the thing being used by the item."
   self.response = self.client.get(reverse('kit_usage'))
   if yesno:
-    self.has_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
+    self.has_row('kiatable', { "thing": thing.name, "item": item.title, "room": item.room.name })
   else:
-    self.no_row('kiatable', { "name": thing.name, "kind": thing.kind, "count": thing.count })
+    self.no_row('kiatable', { "thing": thing.name, "item": item.title, "room": item.room.name })
 
 def item_lists_tag(self, item, tag, yesno):
   self.response = self.client.get(reverse('show_item_detail', args=[item.id]))
@@ -248,4 +250,12 @@ def room_lists_item(self, room, item, yesno):
     self.has_row('ritable', { "title": item.title })
   else:
     self.no_row('ritable', { "title": item.title })
+
+def room_lists_thing(self, room, thing, yesno):
+  self.response = self.client.get(reverse('show_room_detail', args=[room.id]))
+  self.status_okay()
+  if yesno:
+    self.has_row('kratable', { "thing": thing.name })
+  else:
+    self.no_row('kratable', { "thing": thing.name })
 
