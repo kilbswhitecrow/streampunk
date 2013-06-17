@@ -41,6 +41,7 @@ from streampunk.testutils import item_lists_tag, tag_lists_item
 from streampunk.testutils import person_lists_tags, item_lists_thing, thing_lists_item
 from streampunk.testutils import room_lists_item, room_lists_thing
 from streampunk.testutils import usage_lists_req_for_item, usage_lists_thing_for_item
+from streampunk.testutils import usage_lists_thing_for_room
 
 class StreampunkTest(TestCase):
 
@@ -1633,6 +1634,7 @@ class test_edit_items(AuthTest):
     # Not on a room yet
     mainhall = self.get_mainhall()
     room_lists_thing(self, mainhall, thx, False)
+    usage_lists_thing_for_room(self, thx, mainhall, False)
 
     # Attach it to a room
     morning = self.get_morning()
@@ -1651,6 +1653,26 @@ class test_edit_items(AuthTest):
 
     # Now on the room
     room_lists_thing(self, mainhall, thx, True)
+    usage_lists_thing_for_room(self, thx, mainhall, True)
+
+    # Should be able to modify it.
+    editurl = reverse('edit_kitthing', args=[ thx.id ])
+    self.response = self.client.get(editurl)
+    self.status_okay()
+    formobj = self.response.context['object']
+    d = kitthingdict(formobj)
+
+    # Edit, while attached to the room.
+    d['count'] = 666
+    self.response = self.client.post(editurl, d, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Fetch it again
+    thx = KitThing.objects.get(id=thx.id)
+    self.assertEqual(thx.count, 666)
+    room_lists_thing(self, mainhall, thx, True)
+    usage_lists_thing_for_room(self, thx, mainhall, True)
 
     # Delete it again.
     self.response = self.client.post(reverse('delete_kitthing', args=[ thx.id ]), { }, follow=True)
@@ -1661,11 +1683,6 @@ class test_edit_items(AuthTest):
 
 # Tests required
 # Items
-# 	Kit thing
-# 		Add to room
-# 		Edit, when on room
-# 		Delete, when on room
-# 		In kit usage
 # 	Kit bundle
 # 		List
 # 		Create, empty

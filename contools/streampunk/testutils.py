@@ -215,6 +215,14 @@ def usage_lists_thing_for_item(self, thing, item, yesno):
   else:
     self.no_row('kiatable', { "thing": thing.name, "item": item.title, "room": item.room.name })
 
+def usage_lists_thing_for_room(self, thing, room, yesno):
+  "Check whether the kit-usage page lists the thing being assigned to the room."
+  self.response = self.client.get(reverse('kit_usage'))
+  if yesno:
+    self.has_row('kratable', { "thing": thing.name, "room": room.name })
+  else:
+    self.no_row('kratable', { "thing": thing.name, "room": room.name })
+
 def item_lists_tag(self, item, tag, yesno):
   self.response = self.client.get(reverse('show_item_detail', args=[item.id]))
   if yesno:
