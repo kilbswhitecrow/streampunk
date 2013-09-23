@@ -15,9 +15,10 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
+{% load staticfiles %}
 {% load render_table from django_tables2 %}
 {% block styles %}
-<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+<link rel="stylesheet" href="{% static "django_tables2/themes/paleblue/css/screen.css" %}" />
 {% endblock %}
 {% block title %}Main Progdb Page{% endblock %}
 {% block body_content %}
