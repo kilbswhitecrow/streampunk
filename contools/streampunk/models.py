@@ -26,6 +26,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.template.loader import render_to_string
 
+from contools.settings import STREAMPUNK_ROOT
 from streampunk.tabler import Rower
 from streampunk.exceptions import DeleteDefaultException, DeleteUndefException
 
@@ -40,7 +41,7 @@ def mk_url(self, alt=None):
   text = alt
   if text == None:
     text = self.__class__.__name__.lower()
-  return r'/streampunk/%s/%d/' % (text, self.id)
+  return r'%s/%s/%d/' % (STREAMPUNK_ROOT, text, self.id)
 
 class DefUndefManager(models.Manager):
   """
