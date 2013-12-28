@@ -25,8 +25,8 @@ from django.forms import ModelForm, BooleanField, HiddenInput
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.template.loader import render_to_string
+from django.core.urlresolvers import reverse
 
-from contools.settings import STREAMPUNK_ROOT
 from streampunk.tabler import Rower
 from streampunk.exceptions import DeleteDefaultException, DeleteUndefException
 
@@ -35,13 +35,6 @@ YesNo = (
   ( 'Yes', 'Yes' ), 
   ( 'No', 'No'),
 )
-
-def mk_url(self, alt=None):
-  "A generic function for producing URLs to objects in the database."
-  text = alt
-  if text == None:
-    text = self.__class__.__name__.lower()
-  return r'%s/%s/%d/' % (STREAMPUNK_ROOT, text, self.id)
 
 class DefUndefManager(models.Manager):
   """
@@ -243,7 +236,7 @@ class Slot(models.Model):
     return "%s %s" % (self.day, self.startText)
     # return self.startText
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_slot_detail', kwargs={"pk": self.id})
 
 class Grid(models.Model):
   """
@@ -407,7 +400,7 @@ class Tag(models.Model):
   def __unicode__(self):
     return self.name
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_tag_detail', kwargs={"pk": self.id})
 
   def as_xml_public(self):
     return render_to_string('xml/tag_public.xml', { "t": self } )
@@ -510,7 +503,7 @@ class KitRequest(models.Model):
   def __unicode__(self):
     return u"%s: %d" % (self.kind, self.count)
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_kitrequest_detail', kwargs={"pk": self.id})
 
   def as_xml_public(self):
     return render_to_string('xml/kitrequest_public.xml', { "kr": self } )
@@ -614,7 +607,7 @@ class KitThing(models.Model):
   def __unicode__(self):
     return self.name
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_kitthing_detail', kwargs={"pk": self.id})
 
   def as_xml_public(self):
     return render_to_string('xml/kitthing_public.xml', { "kt": self } )
@@ -673,7 +666,7 @@ class KitBundle(models.Model):
   def __unicode__(self):
     return self.name
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_kitbundle_detail', kwargs={"pk": self.id})
 
   def things_all(self):
      return self.things.all()
@@ -737,7 +730,7 @@ class KitRoomAssignment(models.Model):
   def __unicode__(self):
     return u"%s in %s" % (self.thing, self.room)
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_kitroomassignment_detail', kwargs={"pk": self.id})
 
   def starts_before_slot(self, slot, mins):
     """
@@ -815,7 +808,7 @@ class KitItemAssignment(models.Model):
   def __unicode__(self):
     return u"%s to %s" % (self.thing, self.item)
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_kititemassignment_detail', kwargs={"pk": self.id})
 
   def satisfies(self, req):
     "Return True if this assignment satisfies the request"
@@ -945,7 +938,7 @@ class Room(models.Model):
   def __unicode__(self):
     return self.name
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_room_detail', kwargs={ "pk": self.id })
 
   def as_xml_public(self):
    return render_to_string('xml/room_public.xml', { "r": self } )
@@ -1108,7 +1101,7 @@ class Person(models.Model):
     """
     return self.as_name_then_badge()
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_person_detail', kwargs={ "pk": self.id })
 
   def as_xml_public(self):
     return render_to_string('xml/person_public.xml', { "p": self } )
@@ -1313,7 +1306,7 @@ class Item(models.Model):
     else:
       return self.shortname
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_item_detail', kwargs={ "pk": self.id })
 
   def as_xml_public(self):
     return render_to_string('xml/item_public.xml', { "i": self } )
@@ -1428,7 +1421,7 @@ class ItemPerson(models.Model):
   def __unicode__(self):
     return u"%s: %s [%s]" % (self.item, self.person, self.role)
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_itemperson_detail', kwargs={"pk": self.id})
 
   def as_xml_public(self):
     return render_to_string('xml/itemperson_public.xml', { "ip": self } )
@@ -1478,7 +1471,7 @@ class PersonList(models.Model):
   def __unicode__(self):
     return self.name
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_personlist_detail', kwargs={"pk": self.id})
 
 class CheckResult(EnumTable):
   "Indicates what kind of result we get back from a particular check, so we know how to display it."
@@ -1504,7 +1497,7 @@ class Check(models.Model):
   def __unicode__(self):
     return self.name
   def get_absolute_url(self):
-    return mk_url(self)
+    return reverse('show_check_detail', kwargs={"pk": self.id})
 
 
 NameOrder = (

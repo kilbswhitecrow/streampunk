@@ -36,7 +36,7 @@ notify Lindsay that something has changed? Have people subscribe, to ask for ema
 Next up
 -------
 - XML dump, for ConText (Done; pending a review by Alex)
-- Get regression tests in place.
+- Get regression tests in place. (in progress)
 - Uh, default count on a kit thing should be 1, surely? Ditto a request?
 - Update to django 1.5.1.
 - Revise the Slot structure *again*.
@@ -133,13 +133,15 @@ Other Things
 	missing that at present, so clicking on the username in
 	the banner causes an exception.
 - AJAX
-- Regression testing
+- Regression testing (in progress)
 - PDF generation
                - Door listings
                - Name cards
                - Drinks forms
-- XML dump
+- XML dump (pending review by Alex)
 - Static pages
+	If I meant "use Django's static pages", then this is in place as part of move to WSGI
+	If I meant "Generating static pages offline", then not done yet.
 - Distribution mechanism (not just pushed up to github).
 - Email attachments
 - Item Moves. Add when we need that.

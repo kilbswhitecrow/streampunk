@@ -24,7 +24,7 @@ from dajaxice.core import dajaxice_autodiscover
 dajaxice_autodiscover()
 
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
-from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment
+from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment, Check
 
 from streampunk.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPersonForm
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm, PersonListForm
@@ -136,6 +136,7 @@ urlpatterns = patterns('',
     url(r'^streampunk/kititemassignment/(?P<pk>\d+)/$', show_kititemassignment_detail.as_view(), name='show_kititemassignment_detail'),
     url(r'^streampunk/itemperson/(?P<pk>\d+)/$', show_itemperson_detail.as_view(), name='show_itemperson_detail'),
     url(r'^streampunk/personlist/(?P<pk>\d+)/$', show_personlist_detail.as_view(), name='show_personlist_detail'),
+    url(r'^streampunk/check/(?P<pk>\d+)/$', DetailView.as_view(model=Check), name='show_check_detail'),
 
     url(r'^streampunk/grid/(?P<gr>\d+)/$', show_grid, name='show_grid'),
     url(r'^streampunk/slot/(?P<pk>\d+)/$', show_slot_detail.as_view(), name='show_slot_detail'),
