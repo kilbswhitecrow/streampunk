@@ -97,7 +97,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <li class="streampunk_menu_mainitems"><a href="{% url list_checks %}">Checks</a></li>
 {% endif %}
 {% if user.is_staff %}
-  <li class="streampunk_menu_mainitems"><a href="/admin/">Admin</a></li> <!-- XXX what's the urlname for this? -->
+  <li class="streampunk_menu_mainitems"><a href="{% url admin:index %}">Admin</a></li> 
 {% endif %}
   <li class="streampunk_menu_mainitems">
 {% if user.is_authenticated %}
