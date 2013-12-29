@@ -33,15 +33,18 @@ from streampunk.models import KitThing, KitRequest, KitBundle
 from streampunk.models import KitKind, KitStatus, RoomCapacity
 from streampunk.models import KitRoomAssignment, KitItemAssignment
 from streampunk.exceptions import DeleteNeededObjectException
-from streampunk.testutils import itemdict, persondict, kitreqdict, kitthingdict
+from streampunk.testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
 from streampunk.testutils import default_person, default_item, default_itemperson
-from streampunk.testutils import default_kitthing
+from streampunk.testutils import default_kitthing, default_kitbundle
 from streampunk.testutils import item_lists_req, req_lists_item
 from streampunk.testutils import item_lists_tag, tag_lists_item
 from streampunk.testutils import person_lists_tags, item_lists_thing, thing_lists_item
 from streampunk.testutils import room_lists_item, room_lists_thing
-from streampunk.testutils import usage_lists_req_for_item, usage_lists_thing_for_item
-from streampunk.testutils import usage_lists_thing_for_room
+from streampunk.testutils import usage_lists_req_for_item, usage_lists_thing_for_item, usage_lists_bundle_for_item
+from streampunk.testutils import usage_lists_thing_for_room, usage_lists_bundle_for_room
+from streampunk.testutils import bundle_lists_thing, thing_lists_bundle
+from streampunk.testutils import bundle_lists_item, thing_lists_item, item_lists_bundle
+
 
 class StreampunkTest(TestCase):
 
@@ -1681,19 +1684,125 @@ class test_edit_items(AuthTest):
     # Should now be gone
     thing_gone(self, projname, room=mainhall)
 
+  def test_edit_kit_bundles(self):
+    "Adding/removing/editing kit bundles on items and rooms."
+
+    bname = 'Quiz Gear'
+    proj = self.get_proj()
+    projname = "THX Projector"
+    scr = self.get_screen()
+    scrname = "3D Screen"
+    bid = self.get_bidsession()
+    ops = self.get_ops()
+
+    self.response = self.client.post(reverse('new_kitthing'), default_kitthing({
+      "name": projname,
+      "kind": proj.id
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+    projector = KitThing.objects.get(name=projname)
+
+    self.response = self.client.post(reverse('new_kitthing'), default_kitthing({
+      "name": scrname,
+      "kind": scr.id
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+    screen = KitThing.objects.get(name=scrname)
+
+    # Check that the bundle we want isn't listed yet
+    self.response = self.client.post(reverse('list_kitbundles'), follow=True)
+    self.status_okay()
+    self.no_row('kbtable', { "name": bname })
+
+    # Create a new bundle
+    self.response = self.client.post(reverse('new_kitbundle'), default_kitbundle({
+      "name": bname,
+      "things": [ projector.id, screen.id ]
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Should now be listed
+    self.response = self.client.post(reverse('list_kitbundles'), { }, follow=True)
+    self.status_okay()
+    self.has_row('kbtable', { "name": bname })
+
+    # fetch it
+    qb = KitBundle.objects.get(name=bname)
+    bundle_lists_thing(self, qb, projector, True)
+    thing_lists_bundle(self, projector, qb, True)
+    bundle_lists_thing(self, qb, screen, True)
+    thing_lists_bundle(self, screen, qb, True)
+
+    editurl = reverse('edit_kitbundle', args=[ qb.id ])
+
+    # Add the bundle to an item
+    self.response = self.client.post(reverse('add_kitbundle_to_item'), {
+      "bundle": qb.id,
+      "item": bid.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # And to a room
+    morning = self.get_morning()
+    evening = self.get_evening()
+    hour = self.get_hour()
+
+    self.response = self.client.post(reverse('add_kitbundle_to_room'), {
+      "bundle": qb.id,
+      "room": ops.id,
+      "fromSlot": morning.id,
+      "toSlot": evening.id,
+      "toLength": hour.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+   # Now everything should list everything
+    item_lists_bundle(self, bid, qb, True)
+    bundle_lists_item(self, qb, bid, True)
+    usage_lists_bundle_for_item(self, qb, bid, True)
+    usage_lists_bundle_for_room(self, qb, ops, True)
+    bundle_lists_thing(self, qb, projector, True)
+    thing_lists_bundle(self, projector, qb, True)
+    bundle_lists_thing(self, qb, screen, True)
+    thing_lists_bundle(self, screen, qb, True)
+
+    # Remove the screen from the bundle, by setting the things to just the projector
+    self.response = self.client.get(editurl)
+    self.status_okay()
+    formobj = self.response.context['object']
+    d = kitbundledict(formobj)
+
+    # Edit, while attached to the room.
+    d['things'] = [ projector.id ]
+    self.response = self.client.post(editurl, d, follow=True)
+    self.status_okay()
+    self.form_okay()
+    bundle_lists_thing(self, qb, projector, True)
+    thing_lists_bundle(self, projector, qb, True)
+    bundle_lists_thing(self, qb, screen, False)
+    thing_lists_bundle(self, screen, qb, False)
+
+    # Delete it
+    self.response = self.client.post(reverse('delete_kitbundle', args=[qb.id]), { }, follow=True)
+    self.status_okay()
+
+    # Check that the bundle isn't listed anymore
+    self.response = self.client.post(reverse('list_kitbundles'), { }, follow=True)
+    self.status_okay()
+    self.no_row('kbtable', { "name": bname })
+
+    # And the things no longer think they're in the bundle
+    # XXX we may have a problem here, since qb will no longer be valid...
+    thing_lists_bundle(self, projector, qb, False)
+    thing_lists_bundle(self, screen, qb, False)
+
 # Tests required
 # Items
-# 	Kit bundle
-# 		List
-# 		Create, empty
-# 		Create, with contents
-# 		Edit, when solo
-# 		Delete, when solo
-# 		Add to item
-# 		edit, when on item
-# 		add to room
-# 		edit, when in room
-# 		in kit usage
 # 	Satisfaction
 # 		not satisfied - no thing
 # 		not satisfied - insufficient count

@@ -92,6 +92,15 @@ def kitthingdict(p):
   d['objects'] = [ 'kind', 'role', 'source', 'department', 'basis', 'status' ]
   return modeldict(p, d)
 
+
+def kitbundledict(p):
+  "Given a kit bundle object, return a dict suitable for posting back."
+  d = dict()
+  d['name' ] = p.name
+  d['status'] = p.status.id
+  d['things'] = [ thing.id for thing in p.things.all() ]
+  return d
+
 def def_extras(d, extras):
   for k in extras.keys():
     d[k] = extras[k]
@@ -162,6 +171,13 @@ def default_kitthing(extras):
   }
   return def_extras(kt, extras)
 
+def default_kitbundle(extras):
+  kb = {
+    "name": "Bob's Bundles",
+    "status": KitStatus.objects.find_default().id,
+    "things": [ ]
+  }
+  return def_extras(kb, extras)
 
 def item_lists_req(self, item, req, yesno):
   "Check whether the kit request appears on the item's page."
@@ -181,6 +197,15 @@ def item_lists_thing(self, item, thing, yesno):
   else:
     self.no_row('kiatable', { "thing": thing.name })
 
+def item_lists_bundle(self, item, bundle, yesno):
+  "Check whether the kit bundle appears on the item's page."
+
+  self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
+  if yesno:
+    self.has_row('kiatable', { "bundle": bundle.name })
+  else:
+    self.no_row('kiatable', { "bundle": bundle.name })
+
 def req_lists_item(self, req, item, yesno):
   "Check whether the kit request lists use by the item."
 
@@ -194,6 +219,15 @@ def thing_lists_item(self, thing, item, yesno):
   "Check whether the kit thing lists use by the item."
 
   self.response = self.client.get(reverse('show_kitthing_detail', args=[ thing.id ]))
+  if yesno:
+    self.has_row('kiatable', { "item": item.title })
+  else:
+    self.no_row('kiatable', { "item": item.title })
+
+def bundle_lists_item(self, bundle, item, yesno):
+  "Check whether the kit bundle lists use by the item."
+
+  self.response = self.client.get(reverse('show_kitbundle_detail', args=[ bundle.id ]))
   if yesno:
     self.has_row('kiatable', { "item": item.title })
   else:
@@ -215,6 +249,14 @@ def usage_lists_thing_for_item(self, thing, item, yesno):
   else:
     self.no_row('kiatable', { "thing": thing.name, "item": item.title, "room": item.room.name })
 
+def usage_lists_bundle_for_item(self, bundle, item, yesno):
+  "Check whether the kit-usage page lists the bundle being used by the item."
+  self.response = self.client.get(reverse('kit_usage'))
+  if yesno:
+    self.has_row('kiatable', { "bundle": bundle.name, "item": item.title, "room": item.room.name })
+  else:
+    self.no_row('kiatable', { "bundle": bundle.name, "item": item.title, "room": item.room.name })
+
 def usage_lists_thing_for_room(self, thing, room, yesno):
   "Check whether the kit-usage page lists the thing being assigned to the room."
   self.response = self.client.get(reverse('kit_usage'))
@@ -222,6 +264,30 @@ def usage_lists_thing_for_room(self, thing, room, yesno):
     self.has_row('kratable', { "thing": thing.name, "room": room.name })
   else:
     self.no_row('kratable', { "thing": thing.name, "room": room.name })
+
+def usage_lists_bundle_for_room(self, bundle, room, yesno):
+  "Check whether the kit-usage page lists the bundle being assigned to the room."
+  self.response = self.client.get(reverse('kit_usage'))
+  if yesno:
+    self.has_row('kratable', { "bundle": bundle.name, "room": room.name })
+  else:
+    self.no_row('kratable', { "bundle": bundle.name, "room": room.name })
+
+def bundle_lists_thing(self, bundle, thing, yesno):
+  "Check whether the detail page for the bundle lists the thing."
+  self.response = self.client.get(reverse('show_kitbundle_detail', args=[bundle.id]))
+  if yesno:
+    self.has_row('kttable', { "name": thing.name, "count": thing.count })
+  else:
+    self.no_row('kttable', { "name": thing.name, "count": thing.count })
+
+def thing_lists_bundle(self, thing, bundle, yesno):
+  "Check whether the thing thinks it's used by the bundle."
+  self.response = self.client.get(reverse('show_kitthing_detail', args=[thing.id]))
+  if yesno:
+    self.has_row('kbtable', { 'name': bundle.name })
+  else:
+    self.no_row('kbtable', { 'name': bundle.name })
 
 def item_lists_tag(self, item, tag, yesno):
   self.response = self.client.get(reverse('show_item_detail', args=[item.id]))
