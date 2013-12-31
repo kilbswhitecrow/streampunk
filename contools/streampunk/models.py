@@ -377,6 +377,13 @@ class Gender(EnumTable):
     self.item_set.all().update(gender=self.delete_replacement())
     return super(Gender, self).delete()
 
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "gender": "person__gender__name", "count": "person__gender__count" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
+
 
 class Tag(models.Model):
   """

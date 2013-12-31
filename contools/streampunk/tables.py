@@ -112,6 +112,12 @@ class ItemKindTable(tables.Table):
   class Meta:
     attrs = { "class": "paleblue" }
 
+class GenderTable(tables.Table):
+  gender = tables.Column()
+  count = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue" }
+
 class TagTable(tables.Table):
   name = tables.LinkColumn('show_tag_detail', args=[A('pk')])
   description = tables.Column()

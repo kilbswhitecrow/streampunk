@@ -28,7 +28,7 @@ from django.db.models import Count, Sum
 from django.shortcuts import render
 from django_tables2 import RequestConfig
 from streampunk.tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
-from streampunk.tables import TagTable, KitThingTable, GridTable
+from streampunk.tables import TagTable, KitThingTable, GridTable, GenderTable
 from streampunk.tables import KitRequestTable
 from streampunk.tables import KitRoomAssignmentTable
 from streampunk.tables import KitItemAssignmentTable
@@ -37,7 +37,7 @@ from streampunk.tables import PersonAvailabilityTable, RoomAvailabilityTable, Ki
 
 from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
-from streampunk.models import UserProfile, ItemKind, RoomCapacity
+from streampunk.models import UserProfile, ItemKind, RoomCapacity, Gender
 from streampunk.models import PersonAvailability, RoomAvailability, KitAvailability
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm
 from streampunk.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
@@ -214,6 +214,9 @@ def main_page(request):
 
   item_kinds = Item.objects.values('kind__name').annotate(Count('kind')).order_by()
   kind_table = make_tabler(ItemKind, ItemKindTable, request=request, qs=item_kinds, prefix='ikc-', empty='No items yet')
+
+  genders = ItemPerson.objects.values('person__gender__name').annotate(Count('person__gender')).order_by()
+  gender_table = make_tabler(Gender, GenderTable, request=request, qs=genders, prefix='gc-', empty='Nobody on items yet')
 
   con_name = ConInfoString.objects.con_name()
   return render_to_response('streampunk/main_page.html',
