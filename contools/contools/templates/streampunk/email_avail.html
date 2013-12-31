@@ -1,0 +1,9 @@
+<h2>Availability</h2>
+<p>We believe you are available to be on programme items during the following times:</p>
+<ul>
+{% for av in avail %}
+<li>{{ av }}</li>
+{% empty %}
+<li>{{ noAvailMsg|default:"No availability information entered yet"}}</li>
+{% endfor %}
+</ul>
