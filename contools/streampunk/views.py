@@ -840,7 +840,8 @@ def list_checks(request):
                                 context_instance=RequestContext(request))
 
   else:
-    formset = CheckFormSet()
+    # We want to order the checks so that they're predictable for testing.
+    formset = CheckFormSet(queryset=Check.objects.order_by('name'))
   return render_to_response('streampunk/checks.html',
                             locals(),
                             context_instance=RequestContext(request))

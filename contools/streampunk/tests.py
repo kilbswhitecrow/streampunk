@@ -35,7 +35,7 @@ from streampunk.models import KitRoomAssignment, KitItemAssignment
 from streampunk.exceptions import DeleteNeededObjectException
 from streampunk.testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
 from streampunk.testutils import default_person, default_item, default_itemperson
-from streampunk.testutils import default_kitthing, default_kitbundle
+from streampunk.testutils import default_kitthing, default_kitbundle, default_kitrequest
 from streampunk.testutils import item_lists_req, req_lists_item
 from streampunk.testutils import item_lists_tag, tag_lists_item
 from streampunk.testutils import person_lists_tags, item_lists_thing, thing_lists_item
@@ -44,6 +44,7 @@ from streampunk.testutils import usage_lists_req_for_item, usage_lists_thing_for
 from streampunk.testutils import usage_lists_thing_for_room, usage_lists_bundle_for_room
 from streampunk.testutils import bundle_lists_thing, thing_lists_bundle
 from streampunk.testutils import bundle_lists_item, thing_lists_item, item_lists_bundle
+from streampunk.testutils import check_lists_item
 
 
 class StreampunkTest(TestCase):
@@ -1800,6 +1801,59 @@ class test_edit_items(AuthTest):
     # XXX we may have a problem here, since qb will no longer be valid...
     thing_lists_bundle(self, projector, qb, False)
     thing_lists_bundle(self, screen, qb, False)
+
+# =========================================================
+
+class test_satisfaction(AuthTest):
+  "Satisfying Kit Requests."
+  fixtures = [ 'room', 'items', 'tags', 'kit' ]
+
+  ItemsWithUnsatisfiedKitReqs = "Items with unsatisfied kit requests"
+  KitClashes = "Kit clashes"
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def req_proj(self, count=1):
+    return default_kitrequest({ "count": count, "kind": self.get_proj().id })
+  def req_screen(self, count=1):
+    return default_kitrequest({ "count": count, "kind": self.get_screen().id })
+  def proj_thing(self, count=1):
+    return default_kitthing({ "count": count, "kind": self.get_proj().id })
+  def screen_thing(self, count=1):
+    return default_kitthing({ "count": count, "kind": self.get_screen().id })
+
+  def add_req_to_item(self, req, item):
+    nreqs = item.kitRequests.count()
+    addurl = reverse('add_kitrequest_to_item', args=[ item.id ])
+
+    # Add the kit req.
+    self.response = self.client.post(addurl, req, follow=True)
+    self.status_okay()
+    print self.response.content
+    self.assertEqual(nreqs+1, item.kitRequests.count())
+
+  def test_item_not_satisfied(self):
+    "Check that reqs on items are correctly not satisfied, when not fulfilled."
+
+    disco = self.get_disco()
+    req = self.req_proj()
+    self.assertEqual(disco.kitRequests.count(), 0)
+    self.assertEqual(disco.kit.count(), 0)
+    self.add_req_to_item(req, disco)
+    self.assertEqual(disco.kitRequests.count(), 1)
+
+    # Check directly
+    self.assertFalse(disco.satisfies_kit_requests())
+
+    # Check indirectly
+    check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
 
 # Tests required
 # Items

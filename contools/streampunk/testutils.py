@@ -19,7 +19,7 @@ from streampunk.models import PersonRole, PersonStatus
 from streampunk.models import Slot, SlotLength, Room, ItemKind, SeatingKind
 from streampunk.models import FrontLayoutKind, Revision, MediaStatus
 from streampunk.models import Gender, KitKind, KitRole, KitSource, KitDepartment
-from streampunk.models import KitBasis, KitStatus
+from streampunk.models import KitBasis, KitStatus, Check
 
 def modeldict(i, conv):
   """
@@ -179,6 +179,17 @@ def default_kitbundle(extras):
   }
   return def_extras(kb, extras)
 
+def default_kitrequest(extras):
+  kr = {
+    "kind": KitKind.objects.find_default().id,
+    "count": 1,
+    "setupAssistance": False,
+    "notes": "This is easy.",
+    "status": KitStatus.objects.find_default().id
+  }
+  return def_extras(kr, extras)
+
+
 def item_lists_req(self, item, req, yesno):
   "Check whether the kit request appears on the item's page."
 
@@ -333,3 +344,37 @@ def room_lists_thing(self, room, thing, yesno):
   else:
     self.no_row('kratable', { "thing": thing.name })
 
+def check_lists_item(self, checkname, item, yesno):
+  def check_label(idx, name):
+    # Model formsets use form-N-fieldname to label the fields in a form ('form' may be
+    # changed by prefx). N increases linearly from 0 through the formset, while
+    # form-N-id is a hidden field that contains the id of the model object.
+    return "form-%d-%s" % (idx, name)
+  def new_form_content(self, checkname):
+    # We're completely recreating the contents of the formset, by iterating over
+    # all the checks in the same order (name), and providing form-N-id and form-N-enable
+    # fields, where N goes from 0 to num_checks-1.
+    num_checks = Check.objects.count()
+    new_form = {
+      'form-TOTAL_FORMS': num_checks,
+      'form-INITIAL_FORMS': num_checks,
+      'form-MAX_NUM_FORMS': num_checks,
+    }
+
+    N = 0
+    for check in Check.objects.order_by('name'):
+      new_form[check_label(N, 'id')] = check.id
+      new_form[check_label(N, 'enable')] = 1 if check.name == checkname else 0
+      N = N + 1
+    return new_form
+  num_checks = Check.objects.count()
+  checkurl = reverse('list_checks')
+  self.response = self.client.get(checkurl)
+  self.status_okay()
+  self.response = self.client.post(checkurl, new_form_content(self, checkname) , follow=True)
+  self.status_okay()
+  self.form_okay()
+  if yesno:
+    self.has_link_to('show_item_detail', args=[item.id])
+  else:
+    self.no_link_to('show_item_detail', args=[item.id])

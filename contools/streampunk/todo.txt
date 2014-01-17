@@ -9,6 +9,9 @@ part of the ORM - it's all in the templates.
 - Added a constraint to ItemPerson to prevent the same person being added to the same item twice,
   and added a test for that.
 
+Checks need short names for internal testing. Well, we don't *need* them, but it makes it
+easier to find a Check in the db.
+
 Comments from Simon's LJ
 ------------------------
 Provisionally put people on an item, then let Streampunk say when that item could be run.
