@@ -531,8 +531,11 @@ class KitRequest(models.Model):
     There may be multiple assignments, if there's a choice.
     """
     # Note: we expect that self.item_set.all() will only return a single item
+    # print "What satisfies %s?\n" % ( self )
     kias = [ kia for i in self.item_set.all() for kia in i.kit_item_assignments() if kia.satisfies(self) ]
     kras = [ kra for i in self.item_set.all() for kra in i.kit_room_assignments() if kra.satisfies(self, i) ]
+    # print "ItemAsss: %s\n" % ( kias )
+    # print "RoomAsss: %s\n" % ( kras )
     return kias + kras
 
   def is_satisfied_by_first(self):
@@ -1377,6 +1380,7 @@ class Item(models.Model):
 
   def unsatisfied_kit_requests(self):
     "Returns a list of all the KitRequests that are not currently satisfied."
+    # XXX buggy - appears not to return things if there aren't any assignments.
     return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) == 0 ]
 
   def satisfied_kit_requests(self):

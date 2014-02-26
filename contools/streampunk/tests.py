@@ -1836,7 +1836,6 @@ class test_satisfaction(AuthTest):
     # Add the kit req.
     self.response = self.client.post(addurl, req, follow=True)
     self.status_okay()
-    print self.response.content
     self.assertEqual(nreqs+1, item.kitRequests.count())
 
   def test_item_not_satisfied(self):
@@ -1848,9 +1847,21 @@ class test_satisfaction(AuthTest):
     self.assertEqual(disco.kit.count(), 0)
     self.add_req_to_item(req, disco)
     self.assertEqual(disco.kitRequests.count(), 1)
+    # convert our dict back into the proper request
+    req = disco.kitRequests.all()[0]
+
+    # There's no KitThing on this item that satisfies the request.
+    # Nor is there a KitThing on the room that satisfies it.
 
     # Check directly
     self.assertFalse(disco.satisfies_kit_requests())
+    self.assertFalse(disco.room_satisfies_kit_requests())
+    self.assertTrue(disco.has_unsatisfied_kit_requests())
+    issat = disco.satisfied_kit_requests()
+    unsat = disco.unsatisfied_kit_requests()
+    self.assertEqual(len(issat), 0)
+    self.assertEqual(len(unsat), 1)
+    self.assertTrue(req in unsat)
 
     # Check indirectly
     check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
