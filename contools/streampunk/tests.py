@@ -1866,15 +1866,174 @@ class test_satisfaction(AuthTest):
     # Check indirectly
     check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
 
+    # Change the req to have a larger count.
+
+    req.count = 8
+    req.save()
+
+    # Add a Kit Thing of the correct type, but insufficient count.
+    projname = 'huckleberry'
+    self.response = self.client.post(reverse('new_kitthing'), default_kitthing({
+      "name": projname,
+      "kind": self.get_proj().id,
+      "count": 4
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Fetch that new item
+    ktproj = KitThing.objects.get(name=projname)
+
+    # Add a Kit Thing of the correct count, but wrong type.
+    scrname = 'snagglepuss'
+    self.response = self.client.post(reverse('new_kitthing'), default_kitthing({
+      "name": scrname,
+      "kind": self.get_screen().id,
+      "count": 8
+    }), follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Fetch that new item
+    ktscr = KitThing.objects.get(name=scrname)
+
+    # Add the things to the item.
+
+    item_lists_thing(self, disco, ktproj, False)
+    item_lists_thing(self, disco, ktscr, False)
+    self.response = self.client.post(reverse('add_kitthing_to_item'), {
+      "thing": ktproj.id,
+      "item": disco.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.response = self.client.post(reverse('add_kitthing_to_item'), {
+      "thing": ktscr.id,
+      "item": disco.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # There's still no KitThing on this item that satisfies the request.
+    # Nor is there a KitThing on the room that satisfies it.
+
+    # Check directly
+    self.assertFalse(disco.satisfies_kit_requests())
+    self.assertFalse(disco.room_satisfies_kit_requests())
+    self.assertTrue(disco.has_unsatisfied_kit_requests())
+    issat = disco.satisfied_kit_requests()
+    unsat = disco.unsatisfied_kit_requests()
+    self.assertEqual(len(issat), 0)
+    self.assertEqual(len(unsat), 1)
+    self.assertTrue(req in unsat)
+
+    # Check indirectly
+    check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
+
+    # Remove the KitThings from the item
+    KitItemAssignment.objects.get(thing=ktproj, item=disco).delete()
+    KitItemAssignment.objects.get(thing=ktscr, item=disco).delete()
+
+    # Attach the things to a room
+    morning = self.get_morning()
+    evening = self.get_evening()
+    hour = self.get_hour()
+
+    self.response = self.client.post(reverse('add_kitthing_to_room'), {
+      "thing": ktproj.id,
+      "room": disco.room.id,
+      "fromSlot": morning.id,
+      "toSlot": evening.id,
+      "toLength": hour.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    self.response = self.client.post(reverse('add_kitthing_to_room'), {
+      "thing": ktscr.id,
+      "room": disco.room.id,
+      "fromSlot": morning.id,
+      "toSlot": evening.id,
+      "toLength": hour.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # And neither of those should satisfy the item's request.
+
+    # Check directly
+    self.assertFalse(disco.satisfies_kit_requests())
+    self.assertFalse(disco.room_satisfies_kit_requests())
+    self.assertTrue(disco.has_unsatisfied_kit_requests())
+    issat = disco.satisfied_kit_requests()
+    unsat = disco.unsatisfied_kit_requests()
+    self.assertEqual(len(issat), 0)
+    self.assertEqual(len(unsat), 1)
+    self.assertTrue(req in unsat)
+
+    # Check indirectly
+    check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
+
+    # Clean up again
+    KitRoomAssignment.objects.get(thing=ktproj, room=disco.room).delete()
+    KitRoomAssignment.objects.get(thing=ktscr, room=disco.room).delete()
+
+    # Change both the KitThings to have the correct type/count
+    ktproj.count = req.count
+    ktproj.kind = req.kind
+    ktscr.count = req.count
+    ktscr.kind = req.kind
+    ktproj.save()
+    ktscr.save()
+
+    # Tweak the room assignments to miss the item.
+    # Make sure we exclude undefined slots, though.
+    slots_before = Slot.objects.filter(start__lt=disco.start.start, day=disco.start.day, isUndefined=False).reverse()
+    slot_before = slots_before[0]
+    slots_after = Slot.objects.filter(start__gt=disco.start.start, day=disco.start.day, isUndefined=False)
+    slot_after = slots_after[0]
+
+
+    self.response = self.client.post(reverse('add_kitthing_to_room'), {
+      "thing": ktproj.id,
+      "room": disco.room.id,
+      "fromSlot": morning.id,
+      "toSlot": slot_before.id,
+      "toLength": hour.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    self.response = self.client.post(reverse('add_kitthing_to_room'), {
+      "thing": ktscr.id,
+      "room": disco.room.id,
+      "fromSlot": slot_after.id,
+      "toSlot": evening.id,
+      "toLength": hour.id
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Should still not be satisfying req
+
+    # Check directly
+    self.assertFalse(disco.satisfies_kit_requests())
+    self.assertFalse(disco.room_satisfies_kit_requests())
+    self.assertTrue(disco.has_unsatisfied_kit_requests())
+    issat = disco.satisfied_kit_requests()
+    unsat = disco.unsatisfied_kit_requests()
+    self.assertEqual(len(issat), 0)
+    self.assertEqual(len(unsat), 1)
+    self.assertTrue(req in unsat)
+
+    # Check indirectly
+    check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
+
+
 # Tests required
 # Items
 # 	Satisfaction
-# 		not satisfied - no thing
-# 		not satisfied - insufficient count
-# 		not satisfied - wrong type
 # 		not satisfied - thing satisfies other request on item
-# 		not satisfied - thing on room finishes sooner
-# 		not satisfied - thing on room starts later
 # 		satisfied by thing on item
 # 		satisfied by thing in room
 # 		included in not-satisfied list
