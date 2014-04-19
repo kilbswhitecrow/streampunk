@@ -1804,6 +1804,150 @@ class test_edit_items(AuthTest):
 
 # =========================================================
 
+class test_item_assignment(AuthTest):
+  "Direct test of kit things and kit item assignment."
+  fixtures = [ 'room', 'items', 'kit' ]
+
+  def test_satisfaction_methods(self):
+    # Create some kit requests for different numbers of projectors
+    disco = self.get_disco()
+    krproj2 = KitRequest(kind=self.get_proj(), count=2, setupAssistance=False, notes='')
+    krproj2.save()
+    krproj4 = KitRequest(kind=self.get_proj(), count=4, setupAssistance=False, notes='')
+    krproj4.save()
+  
+    # Create kit things for projectors with the same counts.
+    ktproj2 = KitThing(name='Proj2', kind=self.get_proj(), count=2, coordinator='Bob')
+    ktproj2.save()
+    ktproj4 = KitThing(name='Proj4', kind=self.get_proj(), count=4, coordinator='Bob')
+    ktproj4.save()
+  
+    # Assign the kit things to the item.
+    kiaproj2 = KitItemAssignment(item=disco, thing=ktproj2)
+    kiaproj2.save()
+    kiaproj4 = KitItemAssignment(item=disco, thing=ktproj4)
+    kiaproj4.save()
+  
+    # Assign the requests to an item.
+    disco.kitRequests.add(krproj2)
+    disco.kitRequests.add(krproj4)
+  
+    # Make sure that kit assignments with the same count or greater will
+    # satisfy a request, but not one with fewer.
+    self.assertTrue(kiaproj2.satisfies(krproj2))
+    self.assertTrue(kiaproj4.satisfies(krproj2))
+    self.assertTrue(kiaproj4.satisfies(krproj4))
+    self.assertFalse(kiaproj2.satisfies(krproj4))
+  
+    # Check the same thing, from the item's point of view.
+    self.assertTrue(disco.satisfies_kit_request(krproj2))
+    self.assertTrue(disco.satisfies_kit_request(krproj4))
+    self.assertTrue(disco.satisfies_kit_requests())
+    self.assertFalse(disco.has_unsatisfied_kit_requests())
+  
+    # Alter the kit requests, so that the same overall amount is
+    # required, but a different split.
+    krproj2.count = 1
+    krproj2.save()
+    krproj1 = krproj2
+    krproj4.count = 5
+    krproj4.save()
+    krproj5 = krproj4
+
+    # Expect the count-of-1 req to be satisfied by the individual requests,
+    # but not the count-of-5.
+    self.assertTrue(kiaproj2.satisfies(krproj1))
+    self.assertTrue(kiaproj4.satisfies(krproj1))
+    self.assertFalse(kiaproj4.satisfies(krproj5))
+    self.assertFalse(kiaproj2.satisfies(krproj5))
+  
+    # Check the same thing, from the item's point of view.
+    # But now, ideally, we should find everything satisfied, because
+    # the combined assignments are sufficient.
+    self.assertTrue(disco.satisfies_kit_request(krproj1))
+
+    # XXX FIXME: At time of writing, the item satisfaction maps requests onto item
+    # assignments; it doesn't combine all the requests and all the item assignments
+    # and then check that the latter is sufficient to satisfy the former, so these
+    # tests would fail.
+    # self.assertTrue(disco.satisfies_kit_request(krproj5)) # would be great if this passed
+    # self.assertTrue(disco.satisfies_kit_requests()) # would be great if this passed
+    # self.assertFalse(disco.has_unsatisfied_kit_requests()) # would be great if this passed
+
+# =========================================================
+
+class test_room_assignment(AuthTest):
+  "Direct test of kit things and kit room assignment."
+  fixtures = [ 'room', 'items', 'kit' ]
+
+  def test_satisfaction_methods(self):
+    # Create some kit requests for different numbers of projectors
+    disco = self.get_disco()
+    krproj2 = KitRequest(kind=self.get_proj(), count=2, setupAssistance=False, notes='')
+    krproj2.save()
+    krproj4 = KitRequest(kind=self.get_proj(), count=4, setupAssistance=False, notes='')
+    krproj4.save()
+  
+    # Create kit things for projectors with the same counts.
+    ktproj2 = KitThing(name='Proj2', kind=self.get_proj(), count=2, coordinator='Bob')
+    ktproj2.save()
+    ktproj4 = KitThing(name='Proj4', kind=self.get_proj(), count=4, coordinator='Bob')
+    ktproj4.save()
+  
+    # Assign the kit things to the item's room, for the same period.
+    kraproj2 = KitRoomAssignment(room=disco.room, thing=ktproj2,
+                                 fromSlot=disco.start, toSlot=disco.start, toLength=disco.length)
+    kraproj2.save()
+    kraproj4 = KitRoomAssignment(room=disco.room, thing=ktproj4,
+                                 fromSlot=disco.start, toSlot=disco.start, toLength=disco.length)
+    kraproj4.save()
+  
+    # Assign the requests to an item.
+    disco.kitRequests.add(krproj2)
+    disco.kitRequests.add(krproj4)
+
+    # Basic checks of the comparison logic.
+    # Starts-before also includes "at the same time"
+    self.assertTrue(kraproj2.starts_before_slot(slot=disco.start, mins=0))
+    self.assertTrue(kraproj4.starts_before_slot(slot=disco.start, mins=0))
+    # Same for finishes-after
+    self.assertTrue(kraproj2.finishes_after_slot(slot=disco.start, mins=disco.length.length))
+    self.assertTrue(kraproj4.finishes_after_slot(slot=disco.start, mins=disco.length.length))
+
+    # This is therefore true for the item comparisons
+    self.assertTrue(kraproj2.starts_before(item=disco))
+    self.assertTrue(kraproj4.starts_before(item=disco))
+    self.assertTrue(kraproj2.finishes_after(item=disco))
+    self.assertTrue(kraproj4.finishes_after(item=disco))
+
+    # And that means we should be covering the item.
+    self.assertTrue(kraproj2.covers(disco))
+    self.assertTrue(kraproj4.covers(disco))
+
+    # We must certainly overlap the item's period, since we've copied it.
+    self.assertTrue(kraproj2.overlaps(disco))
+    self.assertTrue(kraproj4.overlaps(disco))
+
+    # And the two room assignments overlap each other.
+    self.assertTrue(kraproj2.overlaps_room_assignment(kraproj4))
+    self.assertTrue(kraproj2.overlaps_room_assignment(kraproj2))
+    self.assertTrue(kraproj4.overlaps_room_assignment(kraproj4))
+    self.assertTrue(kraproj4.overlaps_room_assignment(kraproj2))
+
+  
+    # Make sure that kit assignments with the same count or greater will
+    # satisfy a request, but not one with fewer.
+    self.assertTrue(kraproj2.satisfies(krproj2, disco))
+    self.assertTrue(kraproj4.satisfies(krproj2, disco))
+    self.assertTrue(kraproj4.satisfies(krproj4, disco))
+    self.assertFalse(kraproj2.satisfies(krproj4, disco))
+  
+    # Check the same thing, from the room's point of view.
+    self.assertTrue(disco.room.satisfies_kit_request(krproj2, disco))
+    self.assertTrue(disco.room.satisfies_kit_request(krproj4, disco))
+    self.assertTrue(disco.room.satisfies_kit_requests(disco.kitRequests.all(), disco))
+# =========================================================
+
 class test_satisfaction(AuthTest):
   "Satisfying Kit Requests."
   fixtures = [ 'room', 'items', 'tags', 'kit' ]
@@ -2029,11 +2173,46 @@ class test_satisfaction(AuthTest):
     # Check indirectly
     check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
 
+    # Change one of the room assignments so that it covers the item's slot.
+    kra = KitRoomAssignment.objects.get(room=disco.room, thing=ktproj)
+    kra.toSlot = disco.start
+    kra.toLength = disco.length
+    kra.save()
+
+    print "Req: %s\nDisco: %s %s\n" % (req, disco.start, disco.length)
+    print "Thing: %s (%s, %s)\n" % ( ktproj, ktproj.kind, ktproj.count )
+    print "KRA: %s (%s - %s:%s)\n" % ( kra, kra.fromSlot, kra.toSlot, kra.toLength )
+    print "Unsat: %s\n" % ( disco.unsatisfied_kit_requests() )
+
+    # At this point, the assignment SHOULD satisfy the req.
+    self.assertTrue(disco.room_satisfies_kit_requests())
+    self.assertFalse(disco.has_unsatisfied_kit_requests())
+
+    # create ANOTHER request that is satisfied by assignments.
+    req2 = self.req_proj()
+    req2['count'] = ktproj.count
+    self.add_req_to_item(req2, disco)
+    req2 = disco.kitRequests.all()[0]
+
+    # So now we have two reqs on the item, and the assignments to room
+    # can satisfy one, but not both.
+
+    # Check directly
+    self.assertFalse(disco.satisfies_kit_requests())
+    # XXX This is failing: we shouldn't be able to satisfy both at once.
+    self.assertFalse(disco.room_satisfies_kit_requests())
+    self.assertTrue(disco.has_unsatisfied_kit_requests())
+    issat = disco.satisfied_kit_requests()
+    unsat = disco.unsatisfied_kit_requests()
+    self.assertEqual(len(issat), 1)
+    self.assertEqual(len(unsat), 1)
+
+    # Check indirectly
+    check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
 
 # Tests required
 # Items
 # 	Satisfaction
-# 		not satisfied - thing satisfies other request on item
 # 		satisfied by thing on item
 # 		satisfied by thing in room
 # 		included in not-satisfied list
