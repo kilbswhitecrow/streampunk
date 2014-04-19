@@ -755,10 +755,9 @@ class KitRoomAssignment(models.Model):
     """
     Returns true if the assignment lasts until at least the end of this day/slot.
     """
-    # Bug: toSlot is inclusive, but what's the length of that slot?
     return (   slot.day.date < self.toSlot.day.date
             or (    slot.day.date == self.toSlot.day.date
-                and (slot.start + mins) <= self.toSlot.start))
+                and (slot.start + mins) <= (self.toSlot.start + self.toLength.length)))
 
 
   def starts_before(self, item):
@@ -771,7 +770,9 @@ class KitRoomAssignment(models.Model):
 
   def covers(self, item):
     "True if the assignment entirely encompasses the period for the item."
-    return self.starts_before(item) and self.finishes_after(item)
+    r = self.starts_before(item) and self.finishes_after(item)
+    # print "%s covers %s? %s\n" % ( self, item, r )
+    return r
 
   def overlaps(self, item):
     "True if any part of the assignment is concurrent with any part of the item."
@@ -786,7 +787,7 @@ class KitRoomAssignment(models.Model):
   def satisfies(self, req, item):
     "Return True if this assignment satisfies the request"
     r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
-    # print "%d %s sat %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
+    # print "Does %d %s satisfy %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
     return r
 
   @classmethod
@@ -986,9 +987,26 @@ class Room(models.Model):
       return False
     if self.kit.count() == 0:
       return False
+    kras = KitRoomAssignment.objects.filter(room=self)
+    kras_used = set()
+    reqs_unsatisfied = set([ r.id for r in requests ])
     # XXX should be a list comprehension
+    # Look at each request
     for req in requests:
-      if not self.satisfies_kit_request(req, item):
+      # and search for an assignment
+      for kra in kras:
+        # that hasn't already satisfied a different request
+        if kra.id not in kras_used:
+          # If it *does* satisfy this req
+          if kra.satisfies(req, item):
+            # Then note that the req has been satisfied, and that the assignment
+            # has been used.
+            reqs_unsatisfied.remove(req.id)
+            kras_used.add(kra.id)
+            break
+    # If there are any reqs remaining unsatisfied, then this room doesn't
+    # satisfy all the reqs.
+    if len(reqs_unsatisfied) > 0:
         return False
     return True
 
