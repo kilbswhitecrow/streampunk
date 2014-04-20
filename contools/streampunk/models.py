@@ -797,7 +797,6 @@ class KitRoomAssignment(models.Model):
   def covers(self, item):
     "True if the assignment entirely encompasses the period for the item."
     r = self.starts_before(item) and self.finishes_after(item)
-    # print "%s covers %s? %s\n" % ( self, item, r )
     return r
 
   def overlaps(self, item):

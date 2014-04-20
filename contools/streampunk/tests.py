@@ -2143,10 +2143,6 @@ class test_satisfaction(AuthTest):
     kra.toLength = disco.length
     kra.save()
 
-    print "Req: %s\nDisco: %s %s\n" % (req, disco.start, disco.length)
-    print "Thing: %s (%s, %s)\n" % ( ktproj, ktproj.kind, ktproj.count )
-    print "KRA: %s (%s - %s:%s)\n" % ( kra, kra.fromSlot, kra.toSlot, kra.toLength )
-
     # At this point, the assignment SHOULD satisfy the req.
     self.assertFalse(disco.has_unsatisfied_kit_requests())
 
