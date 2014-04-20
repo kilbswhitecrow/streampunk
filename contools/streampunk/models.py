@@ -1282,14 +1282,15 @@ class Item(models.Model):
 
   @classmethod
   def rower(cls, request):
-    return Rower({ "pk":         "id",
-                   "start":       "start",
-                   "room":       "room",
-                   "shortname":  "shortname",
-                   "projNeeded": "projNeeded",
-                   "title":      "title",
-                   "edit":       "Edit",
-                   "remove":     "Remove" })
+    return Rower({ "pk":                     "id",
+                   "start":                  "start",
+                   "room":                   "room",
+                   "shortname":              "shortname",
+                   "projNeeded":             "projNeeded",
+                   "title":                  "title",
+                   "satisfies_kit_requests": "satisfies_kit_requests",
+                   "edit":                   "Edit",
+                   "remove":                 "Remove" })
  
   @classmethod
   def tabler_exclude(cls, request):
@@ -1297,9 +1298,9 @@ class Item(models.Model):
       if request.user.has_perm('progb2.edit_programme'):
         return None
       else:
-        return ['edit', 'remove']
+        return ['edit', 'remove', 'satisfies_kit_requests']
     else:
-      return ['edit', 'remove', 'shortname']
+      return ['edit', 'remove', 'shortname', 'satisfies_kit_requests' ]
 
   def __unicode__(self):
     if self.title:
@@ -1347,6 +1348,10 @@ class Item(models.Model):
   def satisfies_kit_requests(self):
     "Returns true if the kit assigned to this item satisfies all the item's requests"
     return KitSatisfaction(self).satisfied
+
+  def satisfies_kit_requests_yesno(self):
+    "Returns true if the kit assigned to this item satisfies all the item's requests"
+    return "Yes" if KitSatisfaction(self).satisfied else "No"
 
   def has_unsatisfied_kit_requests(self):
     return not self.satisfies_kit_requests()

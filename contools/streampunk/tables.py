@@ -101,6 +101,7 @@ class ItemTable(tables.Table):
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
   shortname = tables.Column()
   projNeeded = tables.Column(verbose_name='Proj?')
+  satisfies_kit_requests = tables.BooleanColumn(verbose_name='Kit OK?')
   edit = EditColumn('edit_item', args=[A('pk')])
   remove = RemoveColumn('delete_item', args=[A('pk')])
   class Meta:

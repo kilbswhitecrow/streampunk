@@ -39,7 +39,7 @@ from streampunk.views import show_kitroomassignment_detail
 from streampunk.views import show_kititemassignment_detail
 from streampunk.views import show_personlist_detail, show_request, make_personlist, make_con_groups
 from streampunk.views import show_profile_detail, edit_user_profile
-from streampunk.views import list_people, list_items, list_tags, list_kitthings, list_kitrequests
+from streampunk.views import list_people, list_items, list_items_tech, list_tags, list_kitthings, list_kitrequests
 from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
 from streampunk.views import list_kitbundles, xml_dump, xsl_stylesheet
 
@@ -106,6 +106,7 @@ urlpatterns = patterns('',
     url(r'^streampunk/grids/$', list_grids, name='list_grids'),
     url(r'^streampunk/people/$', list_people, name='list_people'),
     url(r'^streampunk/items/$', list_items, name='list_items'),
+    url(r'^streampunk/items-tech/$', list_items_tech, name='list_items_tech'),
     url(r'^streampunk/rooms/$', list_rooms, name='list_rooms'),
     url(r'^streampunk/rooms-prog/$', list_rooms_prog, name='list_rooms_prog'),
     url(r'^streampunk/rooms-tech/$', list_rooms_tech, name='list_rooms_tech'),

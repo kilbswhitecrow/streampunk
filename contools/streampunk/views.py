@@ -911,15 +911,20 @@ def list_people(request):
                                                           "verbose_name": 'person' })
 
 
-def list_items(request):
+def list_items_filtered(request, extra_exclude):
   if request.user.has_perm('progb2.read_private'):
     qs = Item.objects.all()
   else:
     qs = Item.objects.filter(visible = True)
-  table = make_tabler(Item, ItemTable, request=request, qs=qs, prefix='i-', empty='No items')
+  table = make_tabler(Item, ItemTable, request=request, qs=qs, prefix='i-', empty='No items', extra_exclude=extra_exclude)
   return render(request, "streampunk/list_items.html", { "itable": table,
                                                          "verbose_name": 'item' })
 
+def list_items(request):
+  return list_items_filtered(request, [ 'projNeeded', 'satisfies_kit_requests' ])
+
+def list_items_tech(request):
+  return list_items_filtered(request, [ ])
 
 def list_kitthings(request):
   table = make_tabler(KitThing, KitThingTable, request=request, qs=KitThing.objects.all(), prefix='kt-', empty='No kit things')

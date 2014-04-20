@@ -1,7 +1,7 @@
 {% extends "streampunk/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012-2013 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -61,10 +61,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       <tr><th>All-hands item?</th><td>{{ item.allTechCrew }}</td></tr>
       <tr><th>Needs Reset before?</th><td>{{ item.needsReset }}</td></tr>
       <tr><th>Needs Cleanup afterwards?</th><td>{{ item.needsCleanup }}</td></tr>
+      <tr><th>Satisfies Kit Requests?</th><td>{{ item.satisfies_kit_requests_yesno }}</td></tr>
       </table>
 <h3>Kit Requests</h3>
 <p>
 {% render_table krtable %}
+</p>
+<p>
+All requests satisfied: {{ item.satisfies_kit_requests_yesno }}.
 </p>
 <h3>Kit Assigned to This Item</h3>
 <p>
