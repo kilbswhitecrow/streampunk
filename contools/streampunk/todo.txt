@@ -1,15 +1,12 @@
-XXX Currently redoing all the satisfaction code.
-
 Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
 Testing
 -------
-XXX why does Room.satisfies_kit_requests() get given both the item and the list
-of the item's reqs? Just the item should be needed.
-XXX Looks like the same room assignment can be considered to satisfy more than
-one item request at the same time, which is wrong.
+XXX Have added the checkbox for badge_only, for Steve R, but now I realise that I also need
+to provide a view of the whole person-list with that as a check-box, for ease of entering
+a lot of such changes.
 
 - Spotted the fixture-loading for individual tests, so using that.
 - Can't really see a way to test the grids with Django, since Django doesn't generate them as
@@ -34,7 +31,8 @@ timing clash asap
 short description and long description (latter is for panellists, to include email to panellists)
 bug report: availabilty: superset of smaller avail couldn't be deleted. John Jarrold.
 multiple versions of notes fields, wherein the committee decide which are pub/priv, including in email.
-swamp two items function. (Or rotate N items)
+swap two items function. (Or rotate N items)
+	- I should support permutations of ordering as well as rotations.
 kit things - move-delays.
 Bug: if person added multiple times, can't just remove one.
 Suggestions for ways to fix clashes.
@@ -45,7 +43,6 @@ Comments from Steve R
 ---------------------
 notification that tech-related things have changed. How to have a change by Steve R
 notify Lindsay that something has changed? Have people subscribe, to ask for email?
-Add checkbox for badge/name.
 
 Next up
 -------
@@ -53,7 +50,7 @@ Next up
 - XML dump, for ConText (Done; pending a review by Alex)
 - Get regression tests in place. (in progress)
 - Uh, default count on a kit thing should be 1, surely? Ditto a request?
-- Update to django 1.5.1.
+- Update to django 1.5.1, then 6.
 - Revise the Slot structure *again*.
 - Fix "fill slot" logic.
 - Revisions
@@ -64,40 +61,6 @@ Kit, Generally
   "I don't understand this request!"
 - object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
 - We should have different Forms for editing rooms, based on the view of the person editing.
-
-- Current links (all needs updating again):
-	- Item:
-		list_kitrequests.html
-		list_kititemassignments.html
-		Add Kit request to item	add_kitrequest_to_item
-		Add Kit bundle to item	add_kitbundle_to_item
-		add kit thing to item	add_kitthing_to_item
-	- Room:
-		list_kitroomassignments.html
-		Add kit bundle to room	add_kitbundle_to_room
-		Add kit thing to room	add_kitthing_to_room
-	- Bundle
-		list_kitthings.html
-		list_kititemassignments.html
-		list_kitroomassignments.html
-		Remove Bundle		delete_kitbundle_from_item
-		Remove Bundle		delete_kitbundle_from_room
-	- Thing
-		list_kitthings.html
-		list_kititemassignments.html
-		list_kitroomassignments.html
-		Remove Thing		delete_kititemassignment (via DeleteView)
-		Remove Thing		delete_kitroomassignment (via DeleteView)
-		Remove Bundle		delete_kitbundle_from_item
-		Remove Bundle		delete_kitbundle_from_room
-	- Request
-		Now lists items making the request.
-	- Usage
-		kit_usage.html
-		list_kitroomassignments.html
-		list_kititemassignments.html
-		list_kitrequests.html
-		Now includes removal links.
 
 - Show Room issues
 	- Kit Things don't show things in terms of bundles, just lists the Thing assignments.
@@ -170,6 +133,7 @@ Other Things
 
 Missing Defaults:
 - Availabilities should default to: first con day, last con day, etc.
+- KitThings and KitRequests should default to a count of 1.
 
 Missing Preferences:
 - Display title on grid

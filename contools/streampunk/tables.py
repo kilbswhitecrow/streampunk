@@ -60,6 +60,7 @@ class PersonTable(tables.Table):
   middleName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   lastName = tables.LinkColumn('show_person_detail', args=[A('pk')])
   badge = tables.LinkColumn('show_person_detail', args=[A('pk')])
+  badge_only = tables.BooleanColumn('Badge only')
   email = tables.EmailColumn()
   item_count = tables.Column()
   edit = EditColumn('edit_person', args=[A('pk')])

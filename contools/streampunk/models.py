@@ -1032,7 +1032,9 @@ class Person(models.Model):
   lastName = models.CharField(max_length=64,blank=True,
                               help_text="Someone's surname, e.g. Nixon. People will most often be listed sorted by this field. If someone only has a single name, probably best to put it here.")
   badge = models.CharField(max_length=64,blank=True,
-                           help_text="Optional. If you set this field, it will be used <em>instead</em> of the name fields in all of the public versions of the programme.")
+                           help_text="Optional.")
+  badge_only = models.BooleanField(default=False,
+                                   help_text="If you set this to true, only the badge name will be visible in the public versions of the programme.")
   email = models.EmailField(blank=True,
                             help_text="<em>Just</em> the email address")
   memnum = models.IntegerField(default=-1,
@@ -1086,8 +1088,8 @@ class Person(models.Model):
       return self.as_name()
 
   def as_badge(self):
-    "Returns the person's badge, if they have one, or their name if not."
-    if self.badge:
+    "Returns the person's badge, if badge_only is set, or their name if not."
+    if self.badge_only and self.badge:
       return self.badge
     else:
       return self.combined_name()
@@ -1129,6 +1131,8 @@ class Person(models.Model):
     from django.core.exceptions import ValidationError
     if not (self.firstName + self.middleName + self.lastName):
       raise ValidationError('At least one of first/middle/last name must be set')
+    if self.badge_only and not self.badge:
+      raise ValidationError('Cannot set badge_only if badge is not set')
 
   def available_for(self, item):
     "Returns true if the person's availability info says they're available for the entirety of the item."
@@ -1165,6 +1169,7 @@ class Person(models.Model):
                    "middleName": "middleName",
                    "lastName":   "lastName",
                    "badge":      "badge",
+                   "badge_only": "badge_only",
                    "email":      "email",
                    "item_count": "item_count",
                    "edit":       "Edit",
@@ -1178,7 +1183,7 @@ class Person(models.Model):
       else:
         return ['edit', 'name']
     else:
-      return ['edit', 'memnum', 'firstName', 'middleName', 'lastName', 'email']
+      return ['edit', 'memnum', 'firstName', 'middleName', 'lastName', 'email', 'badge_only' ]
  
 
 class ScheduledManager(models.Manager):
