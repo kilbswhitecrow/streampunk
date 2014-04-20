@@ -1,3 +1,5 @@
+XXX Currently redoing all the satisfaction code.
+
 Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
@@ -8,8 +10,6 @@ XXX why does Room.satisfies_kit_requests() get given both the item and the list
 of the item's reqs? Just the item should be needed.
 XXX Looks like the same room assignment can be considered to satisfy more than
 one item request at the same time, which is wrong.
-XXX I'm wondering whether we should take a different approach to satisfaction, in
-that we should create a satisfaction map, populate it, and use that all the time.
 
 - Spotted the fixture-loading for individual tests, so using that.
 - Can't really see a way to test the grids with Django, since Django doesn't generate them as

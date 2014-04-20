@@ -486,6 +486,54 @@ class KitStatus(EnumTable):
     self.item_set.all().update(status=self.delete_replacement())
     return super(KitStatus, self).delete()
 
+class KitSatisfaction(object):
+  """
+  An indication of how well an item's requests are satisfied.
+  Note: Not a model class.
+  """
+
+  def count_things(self, pairs):
+    d = dict([ (k,0) for (k,v) in pairs])
+    for (k,v) in pairs:
+      d[k] += v
+    return d
+
+  def __init__(self, i):
+   self.item = i
+
+   # Each of the Map members is a dict, mapping KitKind id onto a count.
+   # What the item wants
+   self.requestMap = self.count_things([ (r.kind.id, r.count) for r in self.item.kitRequests.all() ])
+   # What the item provides
+   self.itemMap = self.count_things([ (kia.thing.kind.id, kia.thing.count) for kia in KitItemAssignment.objects.filter(item=self.item) ])
+   # What the room provides
+   self.roomMap = self.count_things([ (kra.thing.kind.id, kra.thing.count) for kra in KitRoomAssignment.objects.filter(room=self.item.room) if kra.covers(self.item) ])
+   # Total of the two
+   self.totalMap = self.count_things(self.itemMap.items() + self.roomMap.items())
+
+   # Are there enough of each requested kind, in total?
+   # Let's start off assuming there are.
+   self.satisfied = True
+   self.missingMap = dict()
+
+   # Now let's take a look.
+   for (thing, count) in self.requestMap.items():
+     if thing in self.totalMap:
+       if self.totalMap[thing] >= count:
+         # We have enough. Yay.
+         pass
+       else:
+         # We have some, but not enough. Boo.
+         self.satisfied = False
+         self.missingMap[thing] = count - self.totalMap[thing]
+     else:
+       # We don't have any. Uh-oh.
+       self.satisfied = False
+       self.missingMap[thing] = count
+
+  def missing_things(self):
+    "Return a list of (KitKind, count) pairs of things we stil need for this item"
+    return [ (kind, self.missingMap[kind.id]) for kind in KitKind.objects.filter(id__in=self.missingMap.keys()) ]
 
 class KitRequest(models.Model):
   """
@@ -525,26 +573,26 @@ class KitRequest(models.Model):
     "This should never return false, because the same Request shouldn't be used by multiple items."
     return self.item_set.count() < 2
 
-  def is_satisfied_by(self):
-    """
-    Returns a list of all the KitItemAssignments and KitRoomAssignments that satisfy this request.
-    There may be multiple assignments, if there's a choice.
-    """
-    # Note: we expect that self.item_set.all() will only return a single item
-    # print "What satisfies %s?\n" % ( self )
-    kias = [ kia for i in self.item_set.all() for kia in i.kit_item_assignments() if kia.satisfies(self) ]
-    kras = [ kra for i in self.item_set.all() for kra in i.kit_room_assignments() if kra.satisfies(self, i) ]
-    # print "ItemAsss: %s\n" % ( kias )
-    # print "RoomAsss: %s\n" % ( kras )
-    return kias + kras
-
-  def is_satisfied_by_first(self):
-    "Same as is_satisfied_by(), but return just the first in the list"
-    by = self.is_satisfied_by()
-    if len(by) > 0:
-      return by[0]
-    else:
-      return None
+  #  def is_satisfied_by(self):
+  #    """
+  #    Returns a list of all the KitItemAssignments and KitRoomAssignments that satisfy this request.
+  #    There may be multiple assignments, if there's a choice.
+  #    """
+  #    # Note: we expect that self.item_set.all() will only return a single item
+  #    # print "What satisfies %s?\n" % ( self )
+  #    kias = [ kia for i in self.item_set.all() for kia in i.kit_item_assignments() if kia.satisfies(self) ]
+  #    kras = [ kra for i in self.item_set.all() for kra in i.kit_room_assignments() if kra.satisfies(self, i) ]
+  #    # print "ItemAsss: %s\n" % ( kias )
+  #    # print "RoomAsss: %s\n" % ( kras )
+  #    return kias + kras
+  #
+  #  def is_satisfied_by_first(self):
+  #    "Same as is_satisfied_by(), but return just the first in the list"
+  #    by = self.is_satisfied_by()
+  #    if len(by) > 0:
+  #      return by[0]
+  #    else:
+  #      return None
 
   def requested_by_first(self):
     return self.item_set.all()[0]
@@ -567,7 +615,7 @@ class KitRequest(models.Model):
                   "item":   "requested_by_first",
                   "room":   "requested_by_first_room",
                   "start":  "requested_by_first_start",
-                  "sat":    "is_satisfied_by_first",
+  #                 "sat":    "is_satisfied_by_first",
                   "edit":   "Edit",
                   "remove": "Remove" })
 
@@ -784,11 +832,11 @@ class KitRoomAssignment(models.Model):
     return (    self.starts_before_slot(other.toSlot, 0)
             and self.finishes_after_slot(other.fromSlot, 0))
 
-  def satisfies(self, req, item):
-    "Return True if this assignment satisfies the request"
-    r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
-    # print "Does %d %s satisfy %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
-    return r
+  #  def satisfies(self, req, item):
+  #    "Return True if this assignment satisfies the request"
+  #    r = self.thing.kind == req.kind and self.thing.count >= req.count and self.covers(item)
+  #    # print "Does %d %s satisfy %d %s for %d %s? %s\n" % ( self.id, self, req.id, req, item.id, item, r)
+  #    return r
 
   @classmethod
   def rower(cls, request):
@@ -821,11 +869,11 @@ class KitItemAssignment(models.Model):
   def get_absolute_url(self):
     return reverse('show_kititemassignment_detail', kwargs={"pk": self.id})
 
-  def satisfies(self, req):
-    "Return True if this assignment satisfies the request"
-    r = self.thing.kind == req.kind and self.thing.count >= req.count
-    # print "%d %s sat %d %s? %s\n" % ( self.id, self, req.id, req, r)
-    return r
+  #  def satisfies(self, req):
+  #    "Return True if this assignment satisfies the request"
+  #    r = self.thing.kind == req.kind and self.thing.count >= req.count
+  #    # print "%d %s sat %d %s? %s\n" % ( self.id, self, req.id, req, r)
+  #    return r
 
   def item_day(self):
     return self.item.start.day
@@ -969,46 +1017,46 @@ class Room(models.Model):
     "Returns all the KitRoomAssignments assigned to this room"
     return KitRoomAssignment.objects.filter(room = self)
 
-  def satisfies_kit_request(self, request, item):
-    "Returns true if the kit assigned to this room can satisfy this item's particular request"
-    if self.isUndefined:
-      return False
-    if self.kit.count() == 0:
-      return False
-    # XXX should be a list comprehension
-    for k in KitRoomAssignment.objects.filter(room=self):
-      if k.satisfies(request, item):
-        return True
-    return False
-
-  def satisfies_kit_requests(self, requests, item):
-    "Returns true if the kit assigned to this room satisfies all the kit requests of this item"
-    if self.isUndefined:
-      return False
-    if self.kit.count() == 0:
-      return False
-    kras = KitRoomAssignment.objects.filter(room=self)
-    kras_used = set()
-    reqs_unsatisfied = set([ r.id for r in requests ])
-    # XXX should be a list comprehension
-    # Look at each request
-    for req in requests:
-      # and search for an assignment
-      for kra in kras:
-        # that hasn't already satisfied a different request
-        if kra.id not in kras_used:
-          # If it *does* satisfy this req
-          if kra.satisfies(req, item):
-            # Then note that the req has been satisfied, and that the assignment
-            # has been used.
-            reqs_unsatisfied.remove(req.id)
-            kras_used.add(kra.id)
-            break
-    # If there are any reqs remaining unsatisfied, then this room doesn't
-    # satisfy all the reqs.
-    if len(reqs_unsatisfied) > 0:
-        return False
-    return True
+  #  def satisfies_kit_request(self, request, item):
+  #    "Returns true if the kit assigned to this room can satisfy this item's particular request"
+  #    if self.isUndefined:
+  #      return False
+  #    if self.kit.count() == 0:
+  #      return False
+  #    # XXX should be a list comprehension
+  #    for k in KitRoomAssignment.objects.filter(room=self):
+  #      if k.satisfies(request, item):
+  #        return True
+  #    return False
+  #
+  #  def satisfies_kit_requests(self, requests, item):
+  #    "Returns true if the kit assigned to this room satisfies all the kit requests of this item"
+  #    if self.isUndefined:
+  #      return False
+  #    if self.kit.count() == 0:
+  #      return False
+  #    kras = KitRoomAssignment.objects.filter(room=self)
+  #    kras_used = set()
+  #    reqs_unsatisfied = set([ r.id for r in requests ])
+  #    # XXX should be a list comprehension
+  #    # Look at each request
+  #    for req in requests:
+  #      # and search for an assignment
+  #      for kra in kras:
+  #        # that hasn't already satisfied a different request
+  #        if kra.id not in kras_used:
+  #          # If it *does* satisfy this req
+  #          if kra.satisfies(req, item):
+  #            # Then note that the req has been satisfied, and that the assignment
+  #            # has been used.
+  #            reqs_unsatisfied.remove(req.id)
+  #            kras_used.add(kra.id)
+  #            break
+  #    # If there are any reqs remaining unsatisfied, then this room doesn't
+  #    # satisfy all the reqs.
+  #    if len(reqs_unsatisfied) > 0:
+  #        return False
+  #    return True
 
   @classmethod
   def rower(cls, request):
@@ -1371,42 +1419,37 @@ class Item(models.Model):
     "Return all the KitRoomAssignments for this item's room"
     return self.room.kit_room_assignments()
 
-  def satisfies_kit_request(self, req):
-    "Returns true if the kit assigned to this item satisfies the given request"
-    # print "CHECKING whether item %s satisfies request %s\n" % (self, req)
-    for kas in KitItemAssignment.objects.filter(item = self):
-      if kas.satisfies(req):
-        return True
-    return False
+  #  def satisfies_kit_request(self, req):
+  #    "Returns true if the kit assigned to this item satisfies the given request"
+  #    # print "CHECKING whether item %s satisfies request %s\n" % (self, req)
+  #    for kas in KitItemAssignment.objects.filter(item = self):
+  #      if kas.satisfies(req):
+  #        return True
+  #    return False
 
   def satisfies_kit_requests(self):
     "Returns true if the kit assigned to this item satisfies all the item's requests"
-    for req in self.kitRequests.all():
-      if not self.satisfies_kit_request(req):
-        # print "%s does not satisfy its own requests\n" % (self)
-        return False
-    # print "%s satisfies its own requests\n" % (self)
-    return True
+    return KitSatisfaction(self).satisfied
 
-  def room_satisfies_kit_requests(self):
-    "Returns true if the item's kit requests are satisfied by the kit assigned to the item's room."
-    if self.room:
-      r = self.room.satisfies_kit_requests(self.kitRequests.all(), self)
-      # print "%s's room satisfies all request? %s\n" % (self, r)
-      return r
-    return False
+  #  def room_satisfies_kit_requests(self):
+  #    "Returns true if the item's kit requests are satisfied by the kit assigned to the item's room."
+  #    if self.room:
+  #      r = self.room.satisfies_kit_requests(self.kitRequests.all(), self)
+  #      # print "%s's room satisfies all request? %s\n" % (self, r)
+  #      return r
+  #    return False
 
-  def unsatisfied_kit_requests(self):
-    "Returns a list of all the KitRequests that are not currently satisfied."
-    # XXX buggy - appears not to return things if there aren't any assignments.
-    return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) == 0 ]
+  #  def unsatisfied_kit_requests(self):
+  #    "Returns a list of all the KitRequests that are not currently satisfied."
+  #    # XXX buggy - appears not to return things if there aren't any assignments.
+  #    return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) == 0 ]
 
-  def satisfied_kit_requests(self):
-    "Returns a list of all the KitRequests that are currently satisfied"
-    return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) > 0 ]
+  # def satisfied_kit_requests(self):
+  #    "Returns a list of all the KitRequests that are currently satisfied"
+  #    return [ kr for kr in self.kitRequests.all() if len(kr.is_satisfied_by()) > 0 ]
 
   def has_unsatisfied_kit_requests(self):
-    return len(self.unsatisfied_kit_requests()) > 0
+    return not self.satisfies_kit_requests()
 
   def day(self):
     return self.start.day
