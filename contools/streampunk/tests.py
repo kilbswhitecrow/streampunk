@@ -2212,7 +2212,7 @@ class test_satisfaction(AuthTest):
 # 		items not scheduled
 # 		items with unknown gopher count
 # 		items not complete
-# 		items iwth unsatisfied kit requests
+# 		items with unsatisfied kit requests
 # 		kit clashes
 # 
 # 	Main page
