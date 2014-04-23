@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012-2014 Stephen Kilbane
+# Copyright (C) 2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -15,19 +15,16 @@
 
 from django.db.models import Count
 from streampunk.checks.base import CheckOutput
-from streampunk.models import Item, ItemPerson, Person, ConInfoBool
+from streampunk.models import Room, KitThing, KitRoomAssignment
 
 def run_check(check):
   """
-  List of people who are not available for items on which they've been scheduled.
+  List of KitThings which are not available for rooms to which they've been assigned.
   """
   things = []
 
-  # Only interested in scheduled items that actually have people on them.
-  items = Item.scheduled.all().annotate(num_people=Count('people')).filter(num_people__gt=0)
-  for itemx in items:
-    peoplex = itemx.people.all()
-    for person in peoplex:
-      if not person.available_for(itemx):
-        things.append((itemx, person))
+  # Only interested in scheduled items
+  for kra in KitRoomAssignment.all()
+    if not kra.thing.available_for(kra) or not kra.room.available_for(kra):
+      things.append((kra.room, kra.thing))
   return CheckOutput(check, things)

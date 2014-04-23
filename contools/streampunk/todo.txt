@@ -2,6 +2,11 @@ Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
+Have modified availability to be a list of slots, rather than specific time periods,
+but more needs to be done, here:
+- checks need updating because they're not currently rendering results.
+- Should write tests.
+
 Testing
 -------
 XXX Have added the checkbox for badge_only, for Steve R, but now I realise that I also need
@@ -133,6 +138,11 @@ Other Things
 
 Missing Defaults:
 - Availabilities should default to: first con day, last con day, etc.
+	- I should add them as per KitRequests, i.e. create and add in one, then can edit, and remove/delete.
+	- I should add defaults that pull out the first and last slots in the con.
+	- I should add some JavaScript buttons that set the fields to each day.
+	- I need a Form that gives us date/time values in a more sane fashion, which we then map onto
+	  actual DateTime fields for Availability.
 - KitThings and KitRequests should default to a count of 1.
 
 Missing Preferences:

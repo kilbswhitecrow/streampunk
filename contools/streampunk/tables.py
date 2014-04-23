@@ -19,7 +19,7 @@ Tables for Streampunk, to support sortable displays of data.
 
 import django_tables2 as tables
 from django_tables2 import A
-from models import Item, Person
+from models import Item, Person, Slot
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
@@ -213,18 +213,8 @@ class RoomCapacityTable(tables.Table):
   class Meta:
     attrs = { "class": "paleblue" }
 
-class AvailabilityTable(tables.Table):
-  label = tables.Column()
-  fromWhen = tables.DateTimeColumn(verbose_name='From')
-  toWhen = tables.DateTimeColumn(verbose_name='To')
-
-class PersonAvailabilityTable(AvailabilityTable):
-  class Meta:
-    attrs = { "class": "paleblue" }
-class RoomAvailabilityTable(AvailabilityTable):
-  class Meta:
-    attrs = { "class": "paleblue" }
-class KitAvailabilityTable(AvailabilityTable):
+class SlotTable(tables.Table):
+  slot = tables.Column()
   class Meta:
     attrs = { "class": "paleblue" }
 

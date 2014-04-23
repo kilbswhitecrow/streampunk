@@ -25,4 +25,6 @@ class CheckOutput:
     self.person_list = check.result.name == 'Person List'
     self.item_list = check.result.name == 'Item List'
     self.mixed_tuple_list = check.result.name == 'Mixed Tuple'
+    self.room_list = check.result.name == 'Room List'
+    self.kitthing_list = check.result.name == 'KitThing List'
 

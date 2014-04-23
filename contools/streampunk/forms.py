@@ -21,7 +21,8 @@ from django.db import models
 from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
 from django.forms.models import BaseModelFormSet
-from streampunk.models import ItemPerson, Item, Person, Tag, Room, Check
+from django.forms.extras.widgets import Select
+from streampunk.models import ItemPerson, Item, Person, Tag, Room, Check, ConDay
 from streampunk.models import KitThing, KitBundle, KitRequest, PersonList
 from streampunk.models import KitRoomAssignment, KitItemAssignment, UserProfile
 
@@ -155,3 +156,4 @@ class UserProfileFullForm(ModelForm):
   class Meta:
     model = UserProfile
     exclude = [ 'user', ]
+

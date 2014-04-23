@@ -46,50 +46,61 @@ class DefUndefManager(models.Manager):
   def find_undefined(self):
     return self.get(isUndefined=True)
 
+def avail_for_slots(avail, slots):
+  """
+  avail and slots are both querysets of slots. Return true if all of
+  the slots listed in slots are also listed in avail, and false otherwise.
+  """
+  avail_set = set([ s.id for s in avail ])
+  slots_set = set([ s.id for s in slots ])
+  not_covered = slots_set - avail_set
+  return len(not_covered) == 0
 
-class Availability(models.Model):
-  label = models.CharField(max_length=24, blank=True,
-                           help_text='A convenient name to refer to this range by')
-  fromWhen = models.DateTimeField(help_text='Start of period when this is available')
-  toWhen = models.DateTimeField(help_text='End of period when this is available')
-
-  def __unicode__(self):
-    if self.label:
-      return u"%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
-    else:
-      return "%s - %s" % (self.fromWhen, self.toWhen)
-
-  def as_xml_public(self):
-    return render_to_string('xml/availability_public.xml', { "a": self } )
-  def as_xml(self):
-    return render_to_string('xml/availability.xml', { "a": self } )
-
-  def covers(self, item):
-    "Return true if the item falls entirely within this period of availability."
-    dt = item.start.day.date
-    itemstart = datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(minutes=item.start.start)
-    itemend = itemstart + timedelta(minutes=item.length.length)
-    return self.fromWhen <= itemstart and itemend <= self.toWhen
-
-  @classmethod
-  def rower(cls, request):
-    return Rower({  "pk":       "pk",
-                    "label":    "label",
-                    "fromWhen": "fromWhen",
-                    "toWhen":   "toWhen" })
-  @classmethod
-  def tabler_exclude(cls, request):
-    return None
-    
-
-class KitAvailability(Availability):
-  pass
-
-class RoomAvailability(Availability):
-  pass
-
-class PersonAvailability(Availability):
-  pass
+# class Availability(models.Model):
+#   label = models.CharField(max_length=24, blank=True,
+#                            help_text='A convenient name to refer to this range by')
+#   fromWhen = models.DateTimeField(help_text='Start of period when this is available')
+#   toWhen = models.DateTimeField(help_text='End of period when this is available')
+# 
+#   def __unicode__(self):
+#     if self.label:
+#       return u"%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
+#     else:
+#       return "%s - %s" % (self.fromWhen, self.toWhen)
+# 
+#   def as_xml_public(self):
+#     return render_to_string('xml/availability_public.xml', { "a": self } )
+#   def as_xml(self):
+#     return render_to_string('xml/availability.xml', { "a": self } )
+# 
+#   def covers(self, item):
+#     "Return true if the item falls entirely within this period of availability."
+#     dt = item.start.day.date
+#     itemstart = datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(minutes=item.start.start)
+#     itemend = itemstart + timedelta(minutes=item.length.length)
+#     return self.fromWhen <= itemstart and itemend <= self.toWhen
+# 
+#   @classmethod
+#   def rower(cls, request):
+#     return Rower({  "pk":       "pk",
+#                     "label":    "label",
+#                     "fromWhen": "fromWhen",
+#                     "toWhen":   "toWhen",
+#                     "edit":     "Edit",
+#                     "remove":   "Remove" })
+#   @classmethod
+#   def tabler_exclude(cls, request):
+#     return None
+#     
+# 
+# class KitAvailability(Availability):
+#   pass
+# 
+# class RoomAvailability(Availability):
+#   pass
+# 
+# class PersonAvailability(Availability):
+#   pass
 
 class ConInfoBoolManager(models.Manager):
   "A manager that knows how to look up certain flags within the database."
@@ -237,6 +248,15 @@ class Slot(models.Model):
     # return self.startText
   def get_absolute_url(self):
     return reverse('show_slot_detail', kwargs={"pk": self.id})
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({  "pk":          "pk",
+                    "slot":    "__unicode__" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None
+
 
 class Grid(models.Model):
   """
@@ -633,8 +653,8 @@ class KitThing(models.Model):
                            help_text="Any additional notes required")
   coordinator = models.CharField(max_length=64,
                                  help_text="The name of the person responsible for sourcing this bit of kit")
-  availability = models.ManyToManyField(KitAvailability, null=True, blank=True,
-                                        help_text="The periods during when the kit is available for allocation")
+  availability = models.ManyToManyField(Slot, null=True, blank=True,
+                                        help_text="The slots during when the kit is available for allocation")
 
   class Meta:
     verbose_name = 'kitthing'
@@ -650,18 +670,29 @@ class KitThing(models.Model):
   def as_xml(self):
     return render_to_string('xml/kitthing.xml', { "kt": self } )
 
+  def always_available(self):
+    """
+    Return true if there are no slots where the thing is not available.
+    If there are no slots listed, then it's a con preference whether that
+    means "always available" or never available".
+    """
+    return self.availability.count() == 0 and ConInfoBool.objects.no_avail_means_always_avail()
+
+  def never_available(self):
+    """
+    Return true if there are no slots listed, and that should be interpreted
+    as 'never available'.
+    """
+    return self.availability.count() == 0 and not ConInfoBool.objects.no_avail_means_always_avail()
+
   def available_for(self, item):
     """
     Return true if the item falls entirely within one of the kit thing's periods of
     availability. If the thing has NO availability listed, that might be a problem,
     or it might mean it's always available - con preference.
+    NOTE: "item" might actually be a Room, not an Item.
     """
-    for av in self.availability.all():
-      if av.covers(item):
-        return True
-    if len(self.availability.all()) == 0:
-      return ConInfoBool.objects.no_avail_means_always_avail()
-    return False
+    return self.always_available() or avail_for_slots(self.availability.all(), item.slots()) 
 
   def in_use(self):
     return self.kitbundle_set.exists() or self.kititemassignment_set.exists() or self.kitroomassignment_set.exists()
@@ -809,6 +840,10 @@ class KitRoomAssignment(models.Model):
     return (    self.starts_before_slot(other.toSlot, 0)
             and self.finishes_after_slot(other.fromSlot, 0))
 
+  def slots(self):
+    "Return a queryset of the slots this assignment occupies"
+    return Slot.objects.filter(day=self.fromSlot.day, start__gte=self.fromSlot.start, start__lt=self.toSlot.start+self.toLength.length)
+
   @classmethod
   def rower(cls, request):
     return Rower({ "pk":       "id",
@@ -937,8 +972,8 @@ class Room(models.Model):
                              help_text="If this room is really part of a larger, subdividable room, set this field to the parent room")
   capacities = models.ManyToManyField(RoomCapacity, null=True, blank=True,
                                       help_text="Use room capacities to indicate how many people can fit in the room in a given layout")
-  availability = models.ManyToManyField(RoomAvailability, null=True, blank=True,
-                                        help_text="Add availabilities to indicate which periods the room is available for.")
+  availability = models.ManyToManyField(Slot, null=True, blank=True,
+                                        help_text="Add availabilities to indicate which slots the room is available for.")
   objects = DefUndefManager()
 
   class Meta:
@@ -969,14 +1004,29 @@ class Room(models.Model):
   def as_xml(self):
    return render_to_string('xml/room.xml', { "r": self } )
 
+  def always_available(self):
+    """
+    Return true if there are no slots where the room is not available.
+    If there are no slots listed, then it's a con preference whether that
+    means "always available" or never available".
+    """
+    return self.availability.count() == 0 and ConInfoBool.objects.no_avail_means_always_avail()
+
+  def never_available(self):
+    """
+    Return true if there are no slots listed, and that should be interpreted
+    as 'never available'.
+    """
+    return self.availability.count() == 0 and not ConInfoBool.objects.no_avail_means_always_avail()
+
   def available_for(self, item):
-    "Returns true if the room has availability info that entirely covers the duration of the item"
-    for av in self.availability.all():
-      if av.covers(item):
-        return True
-    if len(self.availability.all()) == 0:
-      return ConInfoBool.objects.no_avail_means_always_avail()
-    return False
+    """
+    Return true if the item falls entirely within one of the room's periods of
+    availability. If the room has NO availability listed, that might be a problem,
+    or it might mean it's always available - con preference.
+    """
+    return self.always_available() or avail_for_slots(self.availability.all(), item.slots())
+
 
   def kit_room_assignments(self):
     "Returns all the KitRoomAssignments assigned to this room"
@@ -1055,7 +1105,7 @@ class Person(models.Model):
                                    help_text="True if the person has confirmed they're okay with being recorded (audio or video) on programme items")
   tags = models.ManyToManyField(Tag,null=True,blank=True,
                                 help_text="Allocate whatever tags you think are appropriate to this person")
-  availability = models.ManyToManyField(PersonAvailability, null=True, blank=True,
+  availability = models.ManyToManyField(Slot, null=True, blank=True,
                                         help_text="Add availability entries to this person to indicate when they're available for scheduling")
 
   class Meta:
@@ -1134,14 +1184,29 @@ class Person(models.Model):
     if self.badge_only and not self.badge:
       raise ValidationError('Cannot set badge_only if badge is not set')
 
+  def always_available(self):
+    """
+    Return true if there are no slots where the person is not available.
+    If there are no slots listed, then it's a con preference whether that
+    means "always available" or never available".
+    """
+    return self.availability.count() == 0 and ConInfoBool.objects.no_avail_means_always_avail()
+
+  def never_available(self):
+    """
+    Return true if there are no slots listed, and that should be interpreted
+    as 'never available'.
+    """
+    return self.availability.count() == 0 and not ConInfoBool.objects.no_avail_means_always_avail()
+
   def available_for(self, item):
-    "Returns true if the person's availability info says they're available for the entirety of the item."
-    for av in self.availability.all():
-      if av.covers(item):
-        return True
-    if len(self.availability.all()) == 0:
-      return ConInfoBool.objects.no_avail_means_always_avail()
-    return False
+    """
+    Return true if the item falls entirely within one of the person's periods of
+    availability. If the person has NO availability listed, that might be a problem,
+    or it might mean it's always available - con preference.
+    """
+    return self.always_available() or avail_for_slots(self.availability.all(), item.slots())
+
 
   def scheduled_items(self):
     "Returns the list of items this person is on"
@@ -1332,6 +1397,10 @@ class Item(models.Model):
     from django.core.exceptions import ValidationError
     if not (self.shortname + self.title):
       raise ValidationError('At least one of title/shortname must be set')
+
+  def slots(self):
+    "Return a queryset of the slots this item occupies"
+    return Slot.objects.filter(day=self.start.day, start__gte=self.start.start, start__lt=self.start.start+self.length.length)
 
   def overlaps(self, other):
     "Returns true if this item overlaps another item"

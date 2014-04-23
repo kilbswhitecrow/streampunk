@@ -18,7 +18,7 @@ from streampunk.models import SlotLength, Slot, Grid, ConDay, ItemKind, SeatingK
 from streampunk.models import RoomCapacity, Room, Revision, Tag, ItemPerson, Item, Person, Gender, CheckResult, Check
 from streampunk.models import FrontLayoutKind, KitKind, KitRole, KitDepartment, KitSource, KitBasis, KitStatus
 from streampunk.models import MediaStatus, KitRequest, KitThing, KitBundle, KitRoomAssignment, KitItemAssignment
-from streampunk.models import Availability, KitAvailability, RoomAvailability, PersonAvailability, PersonList
+from streampunk.models import PersonList
 from streampunk.models import ConInfoInt, ConInfoString, ConInfoBool, UserProfile
 
 admin.site.register(SlotLength)
@@ -52,10 +52,6 @@ admin.site.register(KitThing)
 admin.site.register(KitBundle)
 admin.site.register(KitRoomAssignment)
 admin.site.register(KitItemAssignment)
-admin.site.register(KitAvailability)
-admin.site.register(RoomAvailability)
-admin.site.register(PersonAvailability)
-admin.site.register(Availability)
 admin.site.register(ConInfoInt)
 admin.site.register(ConInfoString)
 admin.site.register(ConInfoBool)

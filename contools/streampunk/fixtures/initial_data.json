@@ -1923,6 +1923,28 @@
     }
   }, 
   {
+    "pk": 4, 
+    "model": "streampunk.checkresult", 
+    "fields": {
+      "gridOrder": 2, 
+      "description": "Check returns a list of rooms.", 
+      "name": "Room List", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "streampunk.checkresult", 
+    "fields": {
+      "gridOrder": 2, 
+      "description": "Check returns a list of kit things.", 
+      "name": "KitThing List", 
+      "isDefault": false, 
+      "isUndefined": false
+    }
+  }, 
+  {
     "pk": 1, 
     "model": "streampunk.check", 
     "fields": {
@@ -2020,6 +2042,76 @@
       "name": "Kit clashes", 
       "module": "kit_clashes", 
       "description": "List kit assignments which clash with other kit assignments"
+    }
+  },
+  {
+    "pk": 11, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 2, 
+      "name": "People without availability", 
+      "module": "person_no_avail", 
+      "description": "List people who have no availability info entered"
+    }
+  },
+  {
+    "pk": 12, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 3, 
+      "name": "People unavailable", 
+      "module": "person_not_avail", 
+      "description": "List people who have items assigned outside available slots"
+    }
+  },
+  {
+    "pk": 13, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 3, 
+      "name": "Items in unavailable rooms", 
+      "module": "room_not_avail", 
+      "description": "List items that are scheduled in rooms when the room is unavailable"
+    }
+  },
+  {
+    "pk": 14, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 3, 
+      "name": "Items with unavailable kit", 
+      "module": "kit_not_avail_for_item", 
+      "description": "List items that have kit assigned to them when the kit is unavailable"
+    }
+  },
+  {
+    "pk": 15, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 3, 
+      "name": "Kit/room availability mismatch", 
+      "module": "kit_not_avail_for_room", 
+      "description": "List cases where kit is assigned to a room, in a period where one or both is unavailable"
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 4, 
+      "name": "Rooms without availability", 
+      "module": "room_no_avail", 
+      "description": "List rooms with no availabiliy info"
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "streampunk.check", 
+    "fields": {
+      "result": 5, 
+      "name": "KitThings without availability", 
+      "module": "kit_no_avail", 
+      "description": "List kit things with no availability info"
     }
   }, 
   {

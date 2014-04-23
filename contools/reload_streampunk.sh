@@ -33,7 +33,7 @@ case "$dbtype" in
 esac
 
 python manage.py syncdb --noinput
-python manage.py loaddata room person items tags avail kit
+python manage.py loaddata room person items tags kit
 user=congod
 echo Enter password for superuser $user - suggest 'xxx'
 python manage.py createsuperuser --user $user --email steve@whitecrow.demon.co.uk

@@ -590,7 +590,7 @@ class test_creation(AuthTest):
 
 class test_add_panellists(AuthTest):
   "Adding people to items."
-  fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
+  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
 
   def setUp(self):
     self.mkroot()
@@ -808,7 +808,7 @@ class test_add_panellists(AuthTest):
 
 class test_delete_people(AuthTest):
   "Deleting people"
-  fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
+  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
 
   def setUp(self):
     self.mkroot()
@@ -881,7 +881,7 @@ class test_delete_people(AuthTest):
 
 class test_delete_items_with_stuff(AuthTest):
   "Deleting items"
-  fixtures = [ 'room', 'person', 'items', 'tags', 'avail', 'kit' ]
+  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
 
   def setUp(self):
     self.mkroot()

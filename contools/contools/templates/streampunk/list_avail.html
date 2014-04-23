@@ -1,6 +1,6 @@
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -19,6 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
 {% endblock %}
 {%if perms.streampunk.read_private %}
-<h2>Availability</h2>
-{% render_table atable %}
+  <h2>Availability</h2>
+  {% if always_available %}
+    <p>Always available.</p>
+  {% else %}
+    {% if never_available %}
+      <p>Never available.</p>
+    {% else %}
+      {% render_table atable %}
+    {% endif %}
+  {% endif %}
 {% endif %}
