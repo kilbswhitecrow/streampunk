@@ -25,7 +25,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from streampunk.models import Grid, Gender, Slot, SlotLength, Room
-from streampunk.models import SlotLength, ConDay
+from streampunk.models import SlotLength, ConDay, ConInfoBool
 from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
 from streampunk.models import Revision, MediaStatus, ItemPerson, Tag
 from streampunk.models import PersonStatus, PersonRole, Person, Item
@@ -2161,6 +2161,188 @@ class test_satisfaction(AuthTest):
 
     # Check indirectly
     check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
+# =========================================================
+
+class test_room_availability(AuthTest):
+  "Direct test of room availability."
+  fixtures = [ 'room', 'items' ]
+
+  def test_never_and_always(self):
+
+    # Get some rooms to play with
+    ops = self.get_ops()
+    video = self.get_video()
+
+    # Neither should have any availability yet
+    self.assertEqual(ops.availability.count(), 0)
+    self.assertEqual(video.availability.count(), 0)
+    self.assertTrue(ConInfoBool.objects.no_avail_means_always_avail())
+
+    # So we should consider them always available.
+    self.assertTrue(ops.always_available())
+    self.assertTrue(video.always_available())
+    self.assertFalse(ops.never_available())
+    self.assertFalse(video.never_available())
+
+    # Let's add a slot to each.
+    ops.availability.add(self.get_morning())
+    ops.save()
+    video.availability.add(self.get_evening())
+    video.save()
+
+    # So should no longer be always available, or never available.
+    self.assertFalse(ops.always_available())
+    self.assertFalse(video.always_available())
+    self.assertFalse(ops.never_available())
+    self.assertFalse(video.never_available())
+
+    # Change the setting for the con default.
+    no_avail = ConInfoBool.objects.get(var='no_avail_means_always_avail')
+    no_avail.val = False
+    no_avail.save()
+    self.assertFalse(ConInfoBool.objects.no_avail_means_always_avail())
+
+    # Shouldn't have affected the rooms' status, though.
+    self.assertFalse(ops.always_available())
+    self.assertFalse(video.always_available())
+    self.assertFalse(ops.never_available())
+    self.assertFalse(video.never_available())
+
+    # Until we remove their availability again
+    ops.availability.remove(self.get_morning())
+    ops.save()
+    video.availability.remove(self.get_evening())
+    ops.save()
+    self.assertEqual(ops.availability.count(), 0)
+    self.assertEqual(video.availability.count(), 0)
+
+    # And now we should treat that as never available.
+    self.assertFalse(ops.always_available())
+    self.assertFalse(video.always_available())
+    self.assertTrue(ops.never_available())
+    self.assertTrue(video.never_available())
+
+# =========================================================
+
+class test_person_availability(AuthTest):
+  "Direct test of person availability."
+  fixtures = [ 'room', 'person', 'items' ]
+
+  def test_never_and_always(self):
+
+    # Get some people to play with
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+
+    # Neither should have any availability yet
+    self.assertEqual(buffy.availability.count(), 0)
+    self.assertEqual(giles.availability.count(), 0)
+    self.assertTrue(ConInfoBool.objects.no_avail_means_always_avail())
+
+    # So we should consider them always available.
+    self.assertTrue(buffy.always_available())
+    self.assertTrue(giles.always_available())
+    self.assertFalse(buffy.never_available())
+    self.assertFalse(giles.never_available())
+
+    # Let's add a slot to each.
+    buffy.availability.add(self.get_morning())
+    buffy.save()
+    giles.availability.add(self.get_evening())
+    giles.save()
+
+    # So should no longer be always available, or never available.
+    self.assertFalse(buffy.always_available())
+    self.assertFalse(giles.always_available())
+    self.assertFalse(buffy.never_available())
+    self.assertFalse(giles.never_available())
+
+    # Change the setting for the con default.
+    no_avail = ConInfoBool.objects.get(var='no_avail_means_always_avail')
+    no_avail.val = False
+    no_avail.save()
+    self.assertFalse(ConInfoBool.objects.no_avail_means_always_avail())
+
+    # Shouldn't have affected the people's status, though.
+    self.assertFalse(buffy.always_available())
+    self.assertFalse(giles.always_available())
+    self.assertFalse(buffy.never_available())
+    self.assertFalse(giles.never_available())
+
+    # Until we remove their availability again
+    buffy.availability.remove(self.get_morning())
+    buffy.save()
+    giles.availability.remove(self.get_evening())
+    buffy.save()
+    self.assertEqual(buffy.availability.count(), 0)
+    self.assertEqual(giles.availability.count(), 0)
+
+    # And now we should treat that as never available.
+    self.assertFalse(buffy.always_available())
+    self.assertFalse(giles.always_available())
+    self.assertTrue(buffy.never_available())
+    self.assertTrue(giles.never_available())
+
+# =========================================================
+
+class test_kit_availability(AuthTest):
+  "Direct test of kit availability."
+  fixtures = [ 'room', 'items', 'kit' ]
+
+  def test_never_and_always(self):
+
+    # Get some stuff to play with
+    proj = self.get_greenroomproj()
+    screen = self.get_greenroomscr()
+
+    # Neither should have any availability yet
+    self.assertEqual(proj.availability.count(), 0)
+    self.assertEqual(screen.availability.count(), 0)
+    self.assertTrue(ConInfoBool.objects.no_avail_means_always_avail())
+
+    # So we should consider them always available.
+    self.assertTrue(proj.always_available())
+    self.assertTrue(screen.always_available())
+    self.assertFalse(proj.never_available())
+    self.assertFalse(screen.never_available())
+
+    # Let's add a slot to each.
+    proj.availability.add(self.get_morning())
+    proj.save()
+    screen.availability.add(self.get_evening())
+    screen.save()
+
+    # So should no longer be always available, or never available.
+    self.assertFalse(proj.always_available())
+    self.assertFalse(screen.always_available())
+    self.assertFalse(proj.never_available())
+    self.assertFalse(screen.never_available())
+
+    # Change the setting for the con default.
+    no_avail = ConInfoBool.objects.get(var='no_avail_means_always_avail')
+    no_avail.val = False
+    no_avail.save()
+    self.assertFalse(ConInfoBool.objects.no_avail_means_always_avail())
+
+    # Shouldn't have affected the things' status, though.
+    self.assertFalse(proj.always_available())
+    self.assertFalse(screen.always_available())
+    self.assertFalse(proj.never_available())
+    self.assertFalse(screen.never_available())
+
+    # Until we remove their availability again
+    proj.availability.remove(self.get_morning())
+    proj.save()
+    screen.availability.remove(self.get_evening())
+    proj.save()
+    self.assertEqual(proj.availability.count(), 0)
+    self.assertEqual(screen.availability.count(), 0)
+
+    # And now we should treat that as never available.
+    self.assertFalse(proj.always_available())
+    self.assertFalse(screen.always_available())
+    self.assertTrue(proj.never_available())
+    self.assertTrue(screen.never_available())
 
 # Tests required
 # Items
