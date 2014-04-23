@@ -1,0 +1,8 @@
+{% load streampunk_filters %}
+<table border="1">
+{% for thing in checkOutput.things %}
+<tr><td>{{ thing|linky|safe }}</td></tr>
+{% empty %}
+<tr><td>No problems found</td></tr>
+{% endfor %}
+</table>

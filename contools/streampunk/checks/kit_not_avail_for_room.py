@@ -24,7 +24,7 @@ def run_check(check):
   things = []
 
   # Only interested in scheduled items
-  for kra in KitRoomAssignment.all()
+  for kra in KitRoomAssignment.objects.all():
     if not kra.thing.available_for(kra) or not kra.room.available_for(kra):
       things.append((kra.room, kra.thing))
   return CheckOutput(check, things)

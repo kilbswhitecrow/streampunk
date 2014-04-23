@@ -23,7 +23,7 @@ def run_check(check):
 
   # Only interested in scheduled items (that eliminates Nowhere) that are in
   # rooms that participate in clashes.
-  rooms = Room.objects.filter(CanClash=True)
+  rooms = Room.objects.filter(canClash=True)
   for r in rooms:
     items = Item.scheduled.filter(room=r)
     for itemx in items:

@@ -35,6 +35,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% if checkOutput.mixed_tuple_list %}
 {% include "streampunk/checks/mixed_tuple_list.html" %}
 {% endif %}
+{% if checkOutput.room_list %}
+{% include "streampunk/checks/room_list.html" %}
+{% endif %}
+{% if checkOutput.kitthing_list %}
+{% include "streampunk/checks/kitthing_list.html" %}
+{% endif %}
 {% empty %}
 <p>No checks selected...</p>
 {% endfor %}

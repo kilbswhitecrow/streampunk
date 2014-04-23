@@ -4,7 +4,6 @@ T = [ x for x in S if x % 2 == 0 ]
 
 Have modified availability to be a list of slots, rather than specific time periods,
 but more needs to be done, here:
-- checks need updating because they're not currently rendering results.
 - Should write tests.
 
 Testing
