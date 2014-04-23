@@ -11,6 +11,7 @@
   distEmail="{{ p.distEmail }}"
   recordingOkay="{{ p.recordingOkay }}"
   badge="{{ p.badge }}"
+  badge_only="{{ p.badge_only }}"
   memnum="{{ p.memnum }}"
   notes="{{ p.pubNotes }}"
 >
