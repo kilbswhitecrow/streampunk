@@ -2521,6 +2521,49 @@ class test_kit_availability(AuthTest):
       proj.availability.add(s)
     self.assertFalse(proj.available_for(disco))
 
+  def test_kit_avail_for_room(self):
+
+    # Get a room, a thing and some slots.
+    disco = self.get_disco()
+    ops = self.get_ops()
+    proj = self.get_greenroomproj()
+
+    self.assertEqual(ops.availability.count(), 0)
+    self.assertEqual(proj.availability.count(), 0)
+
+    # Give each of them a slot, so that they're not always available
+    ops.availability.add(self.get_morning())
+    proj.availability.add(self.get_morning())
+    self.assertFalse(ops.always_available())
+    self.assertFalse(proj.always_available())
+
+    # Assign the thing to the room for some slots
+    kra = KitRoomAssignment(room=ops, thing=proj, fromSlot=disco.start, toSlot=disco.start, toLength=disco.length)
+    kra.save()
+
+    # Neither the room nor the thing should be available
+    self.assertFalse(ops.available_for(kra))
+    self.assertFalse(proj.available_for(kra))
+
+    # Add all the slots for the days of the item.
+    for s in Slot.objects.filter(day=disco.start.day):
+      ops.availability.add(s)
+    self.assertTrue(ops.available_for(kra))
+    self.assertFalse(proj.available_for(kra))
+    for s in Slot.objects.filter(day=disco.start.day):
+      proj.availability.add(s)
+    self.assertTrue(ops.available_for(kra))
+    self.assertTrue(proj.available_for(kra))
+
+    # Zap the relevant slot from their availability
+    ops.availability.remove(disco.start)
+    self.assertFalse(ops.available_for(kra))
+    self.assertTrue(proj.available_for(kra))
+    proj.availability.remove(disco.start)
+    self.assertFalse(ops.available_for(kra))
+    self.assertFalse(proj.available_for(kra))
+
+
 # Tests required
 # Items
 # 	Satisfaction
