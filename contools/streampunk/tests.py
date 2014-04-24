@@ -2222,6 +2222,65 @@ class test_room_availability(AuthTest):
     self.assertTrue(ops.never_available())
     self.assertTrue(video.never_available())
 
+  def test_available_for_item(self):
+
+    # Get a room with an item
+    disco = self.get_disco()
+    room = disco.room
+
+    # No avail yet
+    self.assertEqual(room.availability.count(), 0)
+
+    # But is always available, so should be available for the item
+    self.assertTrue(room.always_available())
+    self.assertTrue(room.available_for(disco))
+
+    # Add a slot that doesn't cover the disco - that should stop the
+    # always-available, and will mean the room is no longer available
+    # for the disco.
+    room.availability.add(self.get_morning())
+    self.assertFalse(room.always_available())
+    self.assertFalse(room.available_for(disco))
+
+    # Get the slots that cover the disco
+    slots = disco.slots()
+    self.assertTrue(len(slots) == 2)
+
+    # Add the first. Should not be enough.
+    room.availability.add(slots[0])
+    self.assertFalse(room.available_for(disco))
+
+    # Remove that, and add the last. Should not be enough.
+    room.availability.remove(slots[0])
+    room.availability.add(slots[1])
+    self.assertFalse(room.available_for(disco))
+
+    # Add all. Should now be available.
+    room.availability.add(slots[0])
+    self.assertTrue(room.available_for(disco))
+
+    # Remove them both, again.
+    
+    room.availability.remove(slots[0])
+    room.availability.remove(slots[1])
+
+    # Add all slots on the same day. Will be available.
+    for s in Slot.objects.filter(day=slots[0].day):
+      room.availability.add(s)
+    self.assertTrue(room.available_for(disco))
+
+    # remove one of the item's slots. No longer available.
+    room.availability.remove(slots[0])
+    self.assertFalse(room.available_for(disco))
+
+    # Get a different day, and make the room available for
+    # all of that day.
+    sunday = self.get_sunday()
+    self.assertNotEqual(sunday, disco.start.day)
+    for s in Slot.objects.filter(day=sunday):
+      room.availability.add(s)
+    self.assertFalse(room.available_for(disco))
+
 # =========================================================
 
 class test_person_availability(AuthTest):
@@ -2283,6 +2342,65 @@ class test_person_availability(AuthTest):
     self.assertTrue(buffy.never_available())
     self.assertTrue(giles.never_available())
 
+  def test_available_for_item(self):
+
+    # Get a person and an item
+    disco = self.get_disco()
+    buffy = self.get_buffy()
+
+    # No avail yet
+    self.assertEqual(buffy.availability.count(), 0)
+
+    # But is always available, so should be available for the item
+    self.assertTrue(buffy.always_available())
+    self.assertTrue(buffy.available_for(disco))
+
+    # Add a slot that doesn't cover the disco - that should stop the
+    # always-available, and will mean the buffy is no longer available
+    # for the disco.
+    buffy.availability.add(self.get_morning())
+    self.assertFalse(buffy.always_available())
+    self.assertFalse(buffy.available_for(disco))
+
+    # Get the slots that cover the disco
+    slots = disco.slots()
+    self.assertTrue(len(slots) == 2)
+
+    # Add the first. Should not be enough.
+    buffy.availability.add(slots[0])
+    self.assertFalse(buffy.available_for(disco))
+
+    # Remove that, and add the last. Should not be enough.
+    buffy.availability.remove(slots[0])
+    buffy.availability.add(slots[1])
+    self.assertFalse(buffy.available_for(disco))
+
+    # Add all. Should now be available.
+    buffy.availability.add(slots[0])
+    self.assertTrue(buffy.available_for(disco))
+
+    # Remove them both, again.
+    
+    buffy.availability.remove(slots[0])
+    buffy.availability.remove(slots[1])
+
+    # Add all slots on the same day. Will be available.
+    for s in Slot.objects.filter(day=slots[0].day):
+      buffy.availability.add(s)
+    self.assertTrue(buffy.available_for(disco))
+
+    # remove one of the item's slots. No longer available.
+    buffy.availability.remove(slots[0])
+    self.assertFalse(buffy.available_for(disco))
+
+    # Get a different day, and make the buffy available for
+    # all of that day.
+    sunday = self.get_sunday()
+    self.assertNotEqual(sunday, disco.start.day)
+    for s in Slot.objects.filter(day=sunday):
+      buffy.availability.add(s)
+    self.assertFalse(buffy.available_for(disco))
+
 # =========================================================
 
 class test_kit_availability(AuthTest):
@@ -2343,6 +2461,65 @@ class test_kit_availability(AuthTest):
     self.assertFalse(screen.always_available())
     self.assertTrue(proj.never_available())
     self.assertTrue(screen.never_available())
+
+  def test_available_for_item(self):
+
+    # Get a thing and an item
+    disco = self.get_disco()
+    proj = self.get_greenroomproj()
+
+    # No avail yet
+    self.assertEqual(proj.availability.count(), 0)
+
+    # But is always available, so should be available for the item
+    self.assertTrue(proj.always_available())
+    self.assertTrue(proj.available_for(disco))
+
+    # Add a slot that doesn't cover the disco - that should stop the
+    # always-available, and will mean the proj is no longer available
+    # for the disco.
+    proj.availability.add(self.get_morning())
+    self.assertFalse(proj.always_available())
+    self.assertFalse(proj.available_for(disco))
+
+    # Get the slots that cover the disco
+    slots = disco.slots()
+    self.assertTrue(len(slots) == 2)
+
+    # Add the first. Should not be enough.
+    proj.availability.add(slots[0])
+    self.assertFalse(proj.available_for(disco))
+
+    # Remove that, and add the last. Should not be enough.
+    proj.availability.remove(slots[0])
+    proj.availability.add(slots[1])
+    self.assertFalse(proj.available_for(disco))
+
+    # Add all. Should now be available.
+    proj.availability.add(slots[0])
+    self.assertTrue(proj.available_for(disco))
+
+    # Remove them both, again.
+    
+    proj.availability.remove(slots[0])
+    proj.availability.remove(slots[1])
+
+    # Add all slots on the same day. Will be available.
+    for s in Slot.objects.filter(day=slots[0].day):
+      proj.availability.add(s)
+    self.assertTrue(proj.available_for(disco))
+
+    # remove one of the item's slots. No longer available.
+    proj.availability.remove(slots[0])
+    self.assertFalse(proj.available_for(disco))
+
+    # Get a different day, and make the proj available for
+    # all of that day.
+    sunday = self.get_sunday()
+    self.assertNotEqual(sunday, disco.start.day)
+    for s in Slot.objects.filter(day=sunday):
+      proj.availability.add(s)
+    self.assertFalse(proj.available_for(disco))
 
 # Tests required
 # Items
