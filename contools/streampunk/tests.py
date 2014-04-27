@@ -2689,6 +2689,93 @@ class test_grids(AuthTest):
     self.assertTrue(dawn in cabaret.people_public())
     self.assertFalse(dawn in bidsession.people_public())
 
+class test_grids_public(NonauthTest):
+  "Test what the templates retrieve, for grids."
+  fixtures = [ 'room', 'items', 'person' ]
+
+  def test_people_on_items_in_cells(self):
+    "Check that people are visible on items in cells (or not)."
+
+    disco = self.get_disco()
+    cabaret = self.get_cabaret()
+    bidsession = self.get_bidsession()
+
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    dawn = self.get_dawn()
+
+    bidsession.visible = False
+    bidsession.save()
+
+    self.assertTrue(disco.visible)
+    self.assertTrue(cabaret.visible)
+    self.assertFalse(bidsession.visible)
+
+    # Move each of these items to 10pm, on consecutive days
+
+    disco.start = Slot.objects.get(startText='10pm', day__name='Friday')
+    disco.save()
+    cabaret.start = Slot.objects.get(startText='10pm', day__name='Saturday')
+    cabaret.save()
+    bidsession.start = Slot.objects.get(startText='10pm', day__name='Sunday')
+    bidsession.save()
+
+    # Add each of the people to each of the items, but mix-and-match
+    # who should be visible on each.
+
+    ip = ItemPerson(item=disco, person=buffy, visible=True)
+    ip.save()
+    ip = ItemPerson(item=cabaret, person=buffy, visible=True)
+    ip.save()
+    ip = ItemPerson(item=bidsession, person=buffy, visible=True)
+    ip.save()
+    ip = ItemPerson(item=disco, person=giles, visible=False)
+    ip.save()
+    ip = ItemPerson(item=cabaret, person=giles, visible=False)
+    ip.save()
+    ip = ItemPerson(item=bidsession, person=giles, visible=False)
+    ip.save()
+    ip = ItemPerson(item=disco, person=dawn, visible=True)
+    ip.save()
+    ip = ItemPerson(item=cabaret, person=dawn, visible=True)
+    ip.save()
+    ip = ItemPerson(item=bidsession, person=dawn, visible=False)
+    ip.save()
+
+    # Everyone but Giles should be visible, for the disco
+
+    grid = Grid.objects.get(name='Friday 10pm-2am')
+    self.assertTrue(disco.start in grid.slots.all())
+    self.response = self.client.get(reverse('show_grid', kwargs={ "gr": grid.id }))
+    self.status_okay()
+    self.has_link_to('show_item_detail', args=[int(disco.id)])
+    self.has_link_to('show_person_detail', args=[int(buffy.id)])
+    self.has_link_to('show_person_detail', args=[int(dawn.id)])
+    self.no_link_to('show_person_detail', args=[int(giles.id)])
+
+    # Buffy and Dawn are visible on the cabaret, but Giles is not.
+
+    grid = Grid.objects.get(name='Saturday 10pm-2am')
+    self.assertTrue(cabaret.start in grid.slots.all())
+    self.response = self.client.get(reverse('show_grid', kwargs={ "gr": grid.id }))
+    self.status_okay()
+    self.has_link_to('show_item_detail', args=[int(cabaret.id)])
+    self.has_link_to('show_person_detail', args=[int(buffy.id)])
+    self.has_link_to('show_person_detail', args=[int(dawn.id)])
+    self.no_link_to('show_person_detail', args=[int(giles.id)])
+
+    # The bid session isn't visible, so we shouldn't see it, or anyone on it.
+
+    grid = Grid.objects.get(name='Sunday 10pm-2am')
+    self.assertTrue(bidsession.start in grid.slots.all())
+    self.response = self.client.get(reverse('show_grid', kwargs={ "gr": grid.id }))
+    self.status_okay()
+    self.no_link_to('show_item_detail', args=[int(bidsession.id)])
+    self.no_link_to('show_person_detail', args=[int(buffy.id)])
+    self.no_link_to('show_person_detail', args=[int(dawn.id)])
+    self.no_link_to('show_person_detail', args=[int(giles.id)])
+
+    
 # Tests required
 # Items
 # 	Satisfaction
