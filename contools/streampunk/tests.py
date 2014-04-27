@@ -2567,24 +2567,9 @@ class test_kit_availability(AuthTest):
 # Tests required
 # Items
 # 	Satisfaction
-# 		satisfied by thing on item
-# 		satisfied by thing in room
 # 		included in not-satisfied list
 # 		satisfied-by listing is correct
 #
-# 	Availability
-# 		Create and add to person
-# 		Create and add to room
-# 		Create and add to thing
-# 		Edit solo
-# 		Edit when on prson
-# 		Edit when on thing
-# 		Edit when on room
-# 		Delete solo
-# 		Delete when on person
-# 		Delete when on thing
-# 		Delete when on room
-# 
 # 	Grids
 # 		Item appears in slot (room by time)
 # 		item appears in slot (time by room)
