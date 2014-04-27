@@ -2572,10 +2572,18 @@ class test_grids(AuthTest):
   fixtures = [ 'room', 'items', 'person' ]
 
   def test_items_in_cells(self):
+    "Check the items() methods on slots and rooms."
     # Get some items
     disco = self.get_disco()
     cabaret = self.get_cabaret()
     bidsession = self.get_bidsession()
+
+    cabaret.visible = False
+    cabaret.save()
+
+    self.assertTrue(disco.visible)
+    self.assertTrue(bidsession.visible)
+    self.assertFalse(cabaret.visible)
 
     self.assertEqual(len(disco.slots()), 2)
     self.assertEqual(len(cabaret.slots()), 2)
@@ -2591,6 +2599,23 @@ class test_grids(AuthTest):
         self.assertTrue(i in s.items())
         self.assertTrue(i in s.items(i.room))
 
+    # Verify that the visible items appear in items_public(), but the
+    # non-visible item does not.
+
+    for i in [ disco, bidsession ]:
+      self.assertTrue(i in i.room.items_public())
+      for s in i.slots():
+        self.assertTrue(i in i.room.items_public(s))
+        self.assertTrue(i in s.items_public())
+        self.assertTrue(i in s.items_public(i.room))
+
+    for i in [ cabaret ]:
+      self.assertFalse(i in i.room.items_public())
+      for s in i.slots():
+        self.assertFalse(i in i.room.items_public(s))
+        self.assertFalse(i in s.items_public())
+        self.assertFalse(i in s.items_public(i.room))
+
     # Verify that the items don't appear in other rooms or other slots.
 
     for i in [ disco, cabaret, bidsession ]:
@@ -2603,6 +2628,66 @@ class test_grids(AuthTest):
         self.assertFalse(i in s.items())
         for r in Room.objects.all():
           self.assertFalse(i in s.items(r))
+
+  def test_people_on_items_in_cells(self):
+    "Check that people are visible on items in cells (or not)."
+
+    disco = self.get_disco()
+    cabaret = self.get_cabaret()
+    bidsession = self.get_bidsession()
+
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    dawn = self.get_dawn()
+
+    # XXX There's a question of a bug here. If we make an item non-visible,
+    # should that make us treat all the people as non-visible too, regardless
+    # of how they've been added? Should we just make that a Check?
+    bidsession.visible = False
+    bidsession.save()
+
+    self.assertTrue(disco.visible)
+    self.assertTrue(cabaret.visible)
+    self.assertFalse(bidsession.visible)
+
+    # Add each of the people to each of the items, but mix-and-match
+    # who should be visible on each.
+
+    ip = ItemPerson(item=disco, person=buffy, visible=True)
+    ip.save()
+    ip = ItemPerson(item=cabaret, person=buffy, visible=True)
+    ip.save()
+    ip = ItemPerson(item=bidsession, person=buffy, visible=True)
+    ip.save()
+    ip = ItemPerson(item=disco, person=giles, visible=False)
+    ip.save()
+    ip = ItemPerson(item=cabaret, person=giles, visible=False)
+    ip.save()
+    ip = ItemPerson(item=bidsession, person=giles, visible=False)
+    ip.save()
+    ip = ItemPerson(item=disco, person=dawn, visible=True)
+    ip.save()
+    ip = ItemPerson(item=cabaret, person=dawn, visible=True)
+    ip.save()
+    ip = ItemPerson(item=bidsession, person=dawn, visible=False)
+    ip.save()
+
+    # Everyone should all be returned by the people lists, because they don't filter.
+
+    for p in [ buffy, giles, dawn ]:
+      for i in [ disco, cabaret, bidsession ]:
+        self.assertTrue(p in i.people.all())
+
+    # Buffy should also be in the public list for each item, but Giles should not be.
+
+    for i in [ disco, cabaret, bidsession ]:
+      self.assertTrue(buffy in i.people_public())
+      self.assertFalse(giles in i.people_public())
+
+    # Dawn should be in the public list for disco and cabaret, but not the big session.
+    self.assertTrue(dawn in disco.people_public())
+    self.assertTrue(dawn in cabaret.people_public())
+    self.assertFalse(dawn in bidsession.people_public())
 
 # Tests required
 # Items

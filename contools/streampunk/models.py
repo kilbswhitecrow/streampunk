@@ -1020,7 +1020,7 @@ class Room(models.Model):
     Returns the list of items that are scheduled in this room, filtered to just the public
     items. If Slot is specified, the filter only includes the items in that slot.
     """
-    return [ i for i in self.item(slot) if i.visible ]
+    return [ i for i in self.items(slot) if i.visible ]
 
   def kit_room_assignments(self):
     "Returns all the KitRoomAssignments assigned to this room"
