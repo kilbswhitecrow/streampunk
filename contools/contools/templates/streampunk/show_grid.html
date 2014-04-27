@@ -52,7 +52,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% for s in slots %}
 <tr><th>{{ s }}</th>
   {% for r in rooms %}
-    {% include "streampunk/grid_cell.html" %}
+    {% if perms.streampunk.read_private %}
+      {% include "streampunk/grid_cell.html" %}
+    {% else %}
+      {% include "streampunk/grid_cell_public.html" %}
+    {% endif %}
   {% endfor %}
 </tr>
 {% endfor %}
@@ -69,7 +73,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% for r in rooms %}
 <tr><th>{{ r }}</th>
   {% for s in slots %}
-    {% include "streampunk/grid_cell.html" %}
+    {% if perms.streampunk.read_private %}
+      {% include "streampunk/grid_cell.html" %}
+    {% else %}
+      {% include "streampunk/grid_cell_public.html" %}
+    {% endif %}
   {% endfor %}
 </tr>
 {% endfor %}

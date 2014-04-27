@@ -56,52 +56,6 @@ def avail_for_slots(avail, slots):
   not_covered = slots_set - avail_set
   return len(not_covered) == 0
 
-# class Availability(models.Model):
-#   label = models.CharField(max_length=24, blank=True,
-#                            help_text='A convenient name to refer to this range by')
-#   fromWhen = models.DateTimeField(help_text='Start of period when this is available')
-#   toWhen = models.DateTimeField(help_text='End of period when this is available')
-# 
-#   def __unicode__(self):
-#     if self.label:
-#       return u"%s: (%s - %s)" % (self.label, self.fromWhen, self.toWhen)
-#     else:
-#       return "%s - %s" % (self.fromWhen, self.toWhen)
-# 
-#   def as_xml_public(self):
-#     return render_to_string('xml/availability_public.xml', { "a": self } )
-#   def as_xml(self):
-#     return render_to_string('xml/availability.xml', { "a": self } )
-# 
-#   def covers(self, item):
-#     "Return true if the item falls entirely within this period of availability."
-#     dt = item.start.day.date
-#     itemstart = datetime(year=dt.year, month=dt.month, day=dt.day) + timedelta(minutes=item.start.start)
-#     itemend = itemstart + timedelta(minutes=item.length.length)
-#     return self.fromWhen <= itemstart and itemend <= self.toWhen
-# 
-#   @classmethod
-#   def rower(cls, request):
-#     return Rower({  "pk":       "pk",
-#                     "label":    "label",
-#                     "fromWhen": "fromWhen",
-#                     "toWhen":   "toWhen",
-#                     "edit":     "Edit",
-#                     "remove":   "Remove" })
-#   @classmethod
-#   def tabler_exclude(cls, request):
-#     return None
-#     
-# 
-# class KitAvailability(Availability):
-#   pass
-# 
-# class RoomAvailability(Availability):
-#   pass
-# 
-# class PersonAvailability(Availability):
-#   pass
-
 class ConInfoBoolManager(models.Manager):
   "A manager that knows how to look up certain flags within the database."
   def show_shortname(self):
@@ -248,6 +202,33 @@ class Slot(models.Model):
     # return self.startText
   def get_absolute_url(self):
     return reverse('show_slot_detail', kwargs={"pk": self.id})
+
+  def items(self, room=None):
+    """
+    Returns the list of items that are on (but may start earlier) during
+    this slot.
+    """
+    all = Item.objects.filter(start__day=self.day, start__start__lte=self.start)
+    if room:
+      all = all.filter(room=room)
+    overlaps = [ i for i in all if (self.start < (i.start.start + i.length.length)) ]
+    return overlaps
+
+  def items_public(self, room=None):
+    """
+    Returns the list of items that are on (but may start earlier) during
+    this slot. Filters out things that are not visible.
+    """
+    return [ i for i in self.items(room) if i.visible ]
+
+  def items_starting(self, room=None):
+    """
+    Returns the list of items that start in this slot.
+    """
+    if room:
+      return Item.objects.filter(start=self, room=room)
+    else:
+      return Item.objects.filter(start=self)
 
   @classmethod
   def rower(cls, request):
@@ -1027,6 +1008,19 @@ class Room(models.Model):
     """
     return self.always_available() or avail_for_slots(self.availability.all(), item.slots())
 
+  def items(self, slot=None):
+    """
+    Returns the list of items that are scheduled in this room. If Slot is specified,
+    the list is filtered to just those items that overlap with that slot.
+    """
+    return slot.items(self) if slot else Item.objects.filter(room=self)
+
+  def items_public(self, slot=None):
+    """
+    Returns the list of items that are scheduled in this room, filtered to just the public
+    items. If Slot is specified, the filter only includes the items in that slot.
+    """
+    return [ i for i in self.item(slot) if i.visible ]
 
   def kit_room_assignments(self):
     "Returns all the KitRoomAssignments assigned to this room"
@@ -1437,6 +1431,10 @@ class Item(models.Model):
   def itempeople(self):
     "Give access to the ItemPerson objects, rather than the Person objects that people gives."
     return ItemPerson.objects.filter(item = self)
+
+  def people_public(self):
+    "Return all the people who are publicly visible on this item."
+    return [ ip.person for ip in self.itempeople() if ip.visible ]
 
   def delete(self):
     "Don't leave KitRequests lying around if this item gets deleted."

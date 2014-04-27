@@ -258,15 +258,9 @@ def show_grid(request, gr):
   gid = int(gr)
   grid = Grid.objects.get(id = gid)
   slots = grid.slots.all()
-  # Following is buggy: it won't include any items that start
-  # earlier, but run into this grid.
   if request.user.has_perm('progb2.read_private'):
-    items = Item.objects.filter(start__in = slots)
-    people = ItemPerson.objects.filter(item__in=items)
     rooms = Room.objects.all();
   else:
-    items = Item.objects.filter(start__in = slots, visible=True)
-    people = ItemPerson.objects.filter(visible=True).filter(item__in=items)
     rooms = Room.objects.filter(visible=True);
       
   return render_to_response('streampunk/show_grid.html',

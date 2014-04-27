@@ -1,6 +1,6 @@
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012-2014 Stephen Kilbane
+Copyright (C) 2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -16,17 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
 <td>
-{% for i in s.items %}
+{% for i in s.items_public %}
   {% ifequal i.room r %}
     {{ i|linky|safe }}
     <br/>
-    {% for p in i.people.all %}
-        <span class="personname">{{ p|linky|safe }}<br/></span>
+    {% for p in i.people_public %}
+        <span class="personname">{{ p|linky:p.as_badge|safe }}<br/></span>
     {% endfor %}
   {% endifequal %}
 {% endfor %}
-{% if perms.streampunk.edit_programme %}
-<br/>
-<span class="FillSlot"><a href="{% url fill_slot_unsched r=r.id s=s.id %}">Fill slot</a></span>
-{% endif %}
 </td>
