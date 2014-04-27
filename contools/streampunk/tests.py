@@ -133,6 +133,8 @@ class StreampunkTest(TestCase):
     return Item.objects.get(shortname='Ceilidh')
   def get_disco(self):
     return Item.objects.get(shortname='Disco')
+  def get_cabaret(self):
+    return Item.objects.get(shortname='Masquerade')
   def get_bidsession(self):
     return Item.objects.get(shortname='bid session')
 
@@ -2563,6 +2565,44 @@ class test_kit_availability(AuthTest):
     self.assertFalse(ops.available_for(kra))
     self.assertFalse(proj.available_for(kra))
 
+# =========================================================
+
+class test_grids(AuthTest):
+  "Direct test of what appears in grid cells."
+  fixtures = [ 'room', 'items', 'person' ]
+
+  def test_items_in_cells(self):
+    # Get some items
+    disco = self.get_disco()
+    cabaret = self.get_cabaret()
+    bidsession = self.get_bidsession()
+
+    self.assertEqual(len(disco.slots()), 2)
+    self.assertEqual(len(cabaret.slots()), 2)
+    self.assertEqual(len(bidsession.slots()), 1)
+
+    # Verify that for each of these items, the Slots and Rooms also think
+    # that the item is scheduled there.
+
+    for i in [ disco, cabaret, bidsession ]:
+      self.assertTrue(i in i.room.items())
+      for s in i.slots():
+        self.assertTrue(i in i.room.items(s))
+        self.assertTrue(i in s.items())
+        self.assertTrue(i in s.items(i.room))
+
+    # Verify that the items don't appear in other rooms or other slots.
+
+    for i in [ disco, cabaret, bidsession ]:
+      for r in Room.objects.exclude(id=i.room.id):
+        self.assertFalse(i in r.items())
+        for s in Slot.objects.all():
+          self.assertFalse(i in r.items(s))
+          self.assertFalse(i in s.items(r))
+      for s in Slot.objects.exclude(id__in=[ s.id for s in i.slots() ]):
+        self.assertFalse(i in s.items())
+        for r in Room.objects.all():
+          self.assertFalse(i in s.items(r))
 
 # Tests required
 # Items
