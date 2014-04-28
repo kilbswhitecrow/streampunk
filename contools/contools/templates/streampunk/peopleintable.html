@@ -25,12 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endblock %}
 {% block title %}People{% endblock %}
 {% block list_content %}
-<form action="{% url make_personlist %}" method="post">
+<form action="{% url "make_personlist" %}" method="post">
 {% csrf_token %}
 {% render_table table %}
 <br />
-<a href="{% url peopleintable %}?sort=firstName">Sort by first name</a><br />
-<a href="{% url peopleintable %}?sort=lastName">Sort by last name</a><br />
+<a href="{% url "peopleintable" %}?sort=firstName">Sort by first name</a><br />
+<a href="{% url "peopleintable" %}?sort=lastName">Sort by last name</a><br />
 <br />
 <input type="hidden" name="listname" value="People List for {{ user.username }}" />
 {% if perms.streampunk.send_mass_email %}

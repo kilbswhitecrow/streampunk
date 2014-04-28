@@ -395,7 +395,7 @@ class Tag(models.Model):
                           help_text="The name for the tag")
   description = models.TextField(blank=True,
                                  help_text="An explanation of what this tag means")
-  icon = models.URLField(verify_exists=False, blank=True,
+  icon = models.URLField(blank=True,
                          help_text="You can make this the URL of an image, in which case the image can be displayed on the grids")
   visible = models.BooleanField(default=True,
                                 help_text="Set this if the tag should be visible in the printed programme")

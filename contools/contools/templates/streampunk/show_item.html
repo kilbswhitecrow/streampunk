@@ -76,11 +76,11 @@ All requests satisfied: {{ item.satisfies_kit_requests_yesno }}.
 </p>
 {% if perms.streampunk.edit_kit %}
 <p>
-<a href="{% url add_kitrequest_to_item pk=item.id %}">Add Kit request to '{{ item }}'</a></p>
+<a href="{% url "add_kitrequest_to_item" pk=item.id %}">Add Kit request to '{{ item }}'</a></p>
 <p>
-<a href="{% url add_kitbundle_to_item %}?item={{ item.id }}">Add Kit bundle to '{{ item }}'</a></p>
+<a href="{% url "add_kitbundle_to_item" %}?item={{ item.id }}">Add Kit bundle to '{{ item }}'</a></p>
 <p>
-<a href="{% url add_kitthing_to_item %}?item={{ item.id }}">Add Kit thing to '{{ item }}'</a></p>
+<a href="{% url "add_kitthing_to_item" %}?item={{ item.id }}">Add Kit thing to '{{ item }}'</a></p>
 {% endif %}
 
     </div>
@@ -93,11 +93,11 @@ All requests satisfied: {{ item.satisfies_kit_requests_yesno }}.
 {% endif %}
 
 {% if perms.streampunk.edit_programme or perms.streampunk.edit_private %}
-<p> <a href="{% url edit_item pk=item.id %}">Edit item</a>.</p>
+<p> <a href="{% url "edit_item" pk=item.id %}">Edit item</a>.</p>
 {% endif %}
 
 <h2>People on this item</h2>
-<form action="{% url make_personlist %}" method="post">
+<form action="{% url "make_personlist" %}" method="post">
 {% csrf_token %}
 {% render_table item_people_table %}
 <input type="hidden" name="itemid" value="{{ item.id }}" />
@@ -110,13 +110,13 @@ All requests satisfied: {{ item.satisfies_kit_requests_yesno }}.
 </form>
 
 {% if perms.streampunk.edit_programme %}
-<p><a href="{% url new_itemperson %}?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
+<p><a href="{% url "new_itemperson" %}?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
 {% endif %}
 
 
 <h2>Tags</h2>
 {% render_table tagtable %}
 {% if perms.streampunk.edit_tags %}
-<p><a href="{% url edit_tags_for_item item.id %}">Edit tags for {{ item }}</a>.</p>
+<p><a href="{% url "edit_tags_for_item" item.id %}">Edit tags for {{ item }}</a>.</p>
 {% endif %}
 {% endblock %}

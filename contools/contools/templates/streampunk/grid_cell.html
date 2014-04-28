@@ -27,6 +27,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endfor %}
 {% if perms.streampunk.edit_programme %}
 <br/>
-<span class="FillSlot"><a href="{% url fill_slot_unsched r=r.id s=s.id %}">Fill slot</a></span>
+<span class="FillSlot"><a href="{% url "fill_slot_unsched" r=r.id s=s.id %}">Fill slot</a></span>
 {% endif %}
 </td>

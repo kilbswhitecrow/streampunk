@@ -36,7 +36,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <tr>
     <td>{{ req|linky|safe }}</td>
     <td>{{ req.is_satisfied_by_first }}</td>
-    <td><a href="{% url delete_kitrequest pk=req.id %}">Delete</a></td>
+    <td><a href="{% url "delete_kitrequest" pk=req.id %}">Delete</a></td>
     </tr>
   {% empty %}
     <tr><td colspan="3">No kit requests yet</td></tr>

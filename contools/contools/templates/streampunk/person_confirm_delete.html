@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {% csrf_token %}
     <input type="hidden"
            name="after"
-           value="{% url list_people %}" />
+           value="{% url "list_people" %}" />
     <input type="submit"
            value="Remove person {{ object }}"
            name="DeleteAndShowItem" />

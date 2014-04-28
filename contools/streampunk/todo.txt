@@ -2,9 +2,19 @@ Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
-Have modified availability to be a list of slots, rather than specific time periods,
-but more needs to be done, here:
-- Should write tests.
+Upgrading:
+1.4.11: Passes all tests.
+1.5.6 Installed.
+	- had to remove verify_exists from URLField.
+	- Have to change all the {% url %} instances.
+	- Passing 44 tests. streampunk.tests.test_satisfaction had a typo.
+	- All tests now pass.
+	- Runs from browser.
+1.6.3: Installed.
+	- Have to run with python manage.py test streampunk.tests.test_satisfaction.
+	- Passing 44 tests. streampunk.tests.test_satisfaction had a typo.
+	- All tests now pass.
+	- Runs from browser.
 
 Testing
 -------

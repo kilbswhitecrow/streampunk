@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </table>
 
 {% if perms.streampunk.edit_programme or perms.streampunk.edit_private %}
-<p><a href="{% url edit_person pk=person.id %}">Edit person</a>.</p>
+<p><a href="{% url "edit_person" pk=person.id %}">Edit person</a>.</p>
 {% endif %}
 
 <h2>Items</h2>
@@ -67,7 +67,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
 {% if perms.progdg2.edit_programme %}
-  <td><a href="{% url delete_itemperson pk=itemperson.id %}">Remove</a></td>
+  <td><a href="{% url "delete_itemperson" pk=itemperson.id %}">Remove</a></td>
 {% endif %}
 </tr>
 {% empty %}
@@ -81,9 +81,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </p>
 
 {% if perms.progdg2.edit_programme %}
-<p><a href="{% url new_itemperson %}?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
+<p><a href="{% url "new_itemperson" %}?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
 {% if person.email %}
-<p><a href="{% url email_person pk=person.id %}">Email {{ person }}</a>.</p>
+<p><a href="{% url "email_person" pk=person.id %}">Email {{ person }}</a>.</p>
 {% else %}
 <p>(No email address for {{person}}.)</p>
 {% endif %}
@@ -101,7 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </table>
 {% endcomment %}
 {% if perms.streampunk.edit_tags %}
-<p><a href="{% url edit_tags_for_person person.id %}">Edit tags for {{ person }}</a>.</p>
+<p><a href="{% url "edit_tags_for_person" person.id %}">Edit tags for {{ person }}</a>.</p>
 {% endif %}
 {% include "streampunk/list_avail.html" %}
 {% endblock %}

@@ -41,9 +41,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <td>{{ kt.item.day }}</td>
   <td>{{ kt.item.start }}</td>
 {% if kt.bundle %}
-  <td><a href="{% url delete_kitbundle_from_item kb=kt.bundle.id item=kt.item.id %}">Remove Bundle</a></td>
+  <td><a href="{% url "delete_kitbundle_from_item" kb=kt.bundle.id item=kt.item.id %}">Remove Bundle</a></td>
 {% else %}
-  <td><a href="{% url delete_kititemassignment pk=kt.id %}">Remove Thing</a></td>
+  <td><a href="{% url "delete_kititemassignment" pk=kt.id %}">Remove Thing</a></td>
 {% endif %}
 </tr>
 {% empty %}

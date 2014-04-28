@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block body_content %}
 
 {% if user.is_authenticated %}
-<p>You're already logged in as {{ user.username }. <a href="{% url logout_then_login %}">Login as someone else</a>.</p>
+<p>You're already logged in as {{ user.username }. <a href="{% url "logout_then_login" %}">Login as someone else</a>.</p>
 {% else %}
 {% if form.errors %}
   <p class="error">Sorry, that's not a valid username/password.</p>
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <input type="hidden" name="next" value="{{ next }}" />
 </form>
 <p>
-Forgotten your password? <a href="{% url password_reset %}">Reset it</a>.
+Forgotten your password? <a href="{% url "password_reset" %}">Reset it</a>.
 </p>
 {% endif %}
 {% endblock %}

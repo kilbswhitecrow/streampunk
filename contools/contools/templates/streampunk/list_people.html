@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endblock %}
 {% block title %}People{% endblock %}
 {% block list_content %}
-<form action="{% url make_personlist %}" method="post">
+<form action="{% url "make_personlist" %}" method="post">
 {% csrf_token %}
 {% render_table ptable %}
 <br />

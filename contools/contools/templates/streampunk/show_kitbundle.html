@@ -26,16 +26,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% if kitbundle.in_use %}
 <p>This bundle is in use - it can not be edited.</p>
 {% else %}
-<p><a href="{% url edit_kitbundle pk=kitbundle.id %}">Edit this bundle</a>.</p>
+<p><a href="{% url "edit_kitbundle" pk=kitbundle.id %}">Edit this bundle</a>.</p>
 {% endif %}
 
 {% include "streampunk/list_kitthings.html" %}
 {% include "streampunk/list_kititemassignments.html" %}
 {% include "streampunk/list_kitroomassignments.html" %}
 <p>
-<a href="{% url add_kitbundle_to_room %}?bundle={{ kitbundle.id }}">Allocate {{ kitbundle }} to a room</a>.
+<a href="{% url "add_kitbundle_to_room" %}?bundle={{ kitbundle.id }}">Allocate {{ kitbundle }} to a room</a>.
 </p>
 <p>
-<a href="{% url add_kitbundle_to_item %}?bundle={{ kitbundle.id }}">Allocate {{ kitbundle }} to an item</a>.
+<a href="{% url "add_kitbundle_to_item" %}?bundle={{ kitbundle.id }}">Allocate {{ kitbundle }} to an item</a>.
 </p>
 {% endblock %}

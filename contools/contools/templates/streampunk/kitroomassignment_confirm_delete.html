@@ -51,7 +51,7 @@ as it is assigned as part of Kit Bundle
 {% csrf_token %}
 <input type="hidden"
        name="after"
-       value="{% url kit_usage %}" />
+       value="{% url "kit_usage" %}" />
 <input type="submit"
        value="Remove and display kit usage"
        name="DeleteAndShowUsage" />

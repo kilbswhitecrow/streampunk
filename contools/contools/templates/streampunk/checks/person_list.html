@@ -1,5 +1,5 @@
 {% load streampunk_filters %}
-<form action="{% url make_personlist %}" method="post">
+<form action="{% url "make_personlist" %}" method="post">
 {% csrf_token %}
 <table border="1">
 {% for person in checkOutput.things %}

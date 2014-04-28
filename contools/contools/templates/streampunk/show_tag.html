@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 
 {% if perms.streampunk.edit_tags %}
-<p><a href="{% url edit_tag pk=tag.id %}">Edit tag</a>.</p>
+<p><a href="{% url "edit_tag" pk=tag.id %}">Edit tag</a>.</p>
 {% endif %}
 
 {% if tag.visible or perms.streampunk.read_private %}
@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <h2>People</h2>
 
-<form action="{% url make_personlist %}" method="post">
+<form action="{% url "make_personlist" %}" method="post">
 {% csrf_token %}
 {% render_table pttable %}
 <input type="hidden" name="tagid" value="{{ tag.id }}" />

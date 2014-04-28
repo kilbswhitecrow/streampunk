@@ -26,6 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><th>To</th><td>{{ kitroomassignment.toDay }} {{ kitroomassignment.toSlot }} ({{ kitroomassignment.toLength }})</td></tr>
 </table>
 
-<p><a href="{% url edit_kitroomassignment pk=kitroomassignment.id %}">Edit this assignment</a>.</p>
+<p><a href="{% url "edit_kitroomassignment" pk=kitroomassignment.id %}">Edit this assignment</a>.</p>
 
 {% endblock %}

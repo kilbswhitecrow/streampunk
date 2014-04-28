@@ -34,9 +34,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endfor %}
 </table>
 </p>
-<p><a href="{% url edit_personlist pk=personlist.id %}">Edit PersonList</a>.</p>
+<p><a href="{% url "edit_personlist" pk=personlist.id %}">Edit PersonList</a>.</p>
 
 {% if perms.streampunk.send_mass_email %}
-<p><a href="{% url email_personlist pk=personlist.id %}">Send email to the people on this list</a>.</p>
+<p><a href="{% url "email_personlist" pk=personlist.id %}">Send email to the people on this list</a>.</p>
 {% endif %}
 {% endblock %}

@@ -26,7 +26,7 @@ def run_check(check):
   # Only interested in scheduled items
   items = Item.scheduled.all()
   for item in items:
-    for kit in item.kit.all():
+    for kt in item.kit.all():
       if not kt.available_for(item):
         things.append((item, kt))
   return CheckOutput(check, things)
