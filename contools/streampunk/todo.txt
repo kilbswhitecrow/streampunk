@@ -15,6 +15,7 @@ Upgrading:
 	- Passing 44 tests. streampunk.tests.test_satisfaction had a typo.
 	- All tests now pass.
 	- Runs from browser.
+	- SHOULD TRY manage.py check.
 
 Testing
 -------
@@ -60,11 +61,9 @@ notify Lindsay that something has changed? Have people subscribe, to ask for ema
 
 Next up
 -------
-- Look into tastypie for a REST API. (Needs Django 1.5.1, though)
+- Look into tastypie for a REST API.
 - XML dump, for ConText (Done; pending a review by Alex)
-- Get regression tests in place. (in progress)
 - Uh, default count on a kit thing should be 1, surely? Ditto a request?
-- Update to django 1.5.1, then 6.
 - Revise the Slot structure *again*.
 - Fix "fill slot" logic.
 - Revisions
@@ -110,13 +109,6 @@ Other Things
 - use url in templates
 	- Done, except for /admin/
 
-- Additional checks
-		- Kit clashes
-		- Item requests or room assingments where there are multiple things of the same kind
-
-- Additional reports
-	- Add a generic report for each item type, showing the counts of each.
-
 - Grid:
 	- Include kit in the grids.
 
@@ -125,12 +117,10 @@ Other Things
 	missing that at present, so clicking on the username in
 	the banner causes an exception.
 - AJAX
-- Regression testing (in progress)
 - PDF generation
                - Door listings
                - Name cards
                - Drinks forms
-- XML dump (pending review by Alex)
 - Static pages
 	If I meant "use Django's static pages", then this is in place as part of move to WSGI
 	If I meant "Generating static pages offline", then not done yet.
@@ -146,12 +136,6 @@ Other Things
 	their password.
 
 Missing Defaults:
-- Availabilities should default to: first con day, last con day, etc.
-	- I should add them as per KitRequests, i.e. create and add in one, then can edit, and remove/delete.
-	- I should add defaults that pull out the first and last slots in the con.
-	- I should add some JavaScript buttons that set the fields to each day.
-	- I need a Form that gives us date/time values in a more sane fashion, which we then map onto
-	  actual DateTime fields for Availability.
 - KitThings and KitRequests should default to a count of 1.
 
 Missing Preferences:
@@ -163,20 +147,7 @@ Model corrections:
 		inRadioRange
 
 Bugs:
-	- There's a problem with both Availability and Kit Requests, in that
-	the same one can be assigned to multiple items; editing the object then
-	changes it for every usage. We should have copy-and-save instead of edit,
-	for these things, from the usual GUI
-		- fix by marking them as "global"? Okay for a global instance to
-		be shared. Editing a global instance bad.
-	- For now, I've added a check to the Show_KitBundle page that removes the
-	edit link if the bundle is in use.
-	- For Kit Requests, I've removed the ability to create them *without* them
-	being assigned to an item, and there isn't a way to assign them to an item
-	if the kitrequest already exists, so no kit request should be used more
-	than once.
-	- Also applies to Room Capacities. Basically, anything that has a
-	ManyToMany.
+	- RoomCapacities should only be created on demand, when added to an item.
 
 Things that need something better than the admin interface:
 - The slot form: need to be able to enter a time, and have
