@@ -74,7 +74,7 @@ class ConInfoBool(models.Model):
                           help_text='A descriptive name for this flag')
   var = models.SlugField(max_length=64,
                          help_text='The name used internally to access this flag: Alphanumerics only, no whitespace')
-  val = models.BooleanField(help_text="The flag's value")
+  val = models.BooleanField(default=False,help_text="The flag's value")
   objects = ConInfoBoolManager()
   def __unicode__(self):
     return self.name
@@ -146,9 +146,9 @@ class ConDay(models.Model):
                           help_text="The name of the day, e.g. Friday, or Bank Holiday Monday")
   date = models.DateField(help_text="The actual date of the day.")
   order = models.IntegerField(help_text="This could be used for determining the order in which days are listed. Currently ignored.")
-  visible = models.BooleanField(help_text="Should this day be displayed in the official programme?")
-  isDefault = models.BooleanField(help_text="True if this is the default day for items. Set this for <em>exactly one</em> day.")
-  isUndefined = models.BooleanField(help_text="True if this day means 'to be decided'. Items on this day are considered unscheduled.")
+  visible = models.BooleanField(default=False,help_text="Should this day be displayed in the official programme?")
+  isDefault = models.BooleanField(default=False,help_text="True if this is the default day for items. Set this for <em>exactly one</em> day.")
+  isUndefined = models.BooleanField(default=False,help_text="True if this day means 'to be decided'. Items on this day are considered unscheduled.")
   objects = DefUndefManager()
 
   class Meta:
@@ -164,8 +164,8 @@ class SlotLength(models.Model):
                           help_text="The name of this slot, e.g. '1 hour'")
   length = models.IntegerField(default=60,
                                help_text="The duration of the slot, in minutes.")
-  isDefault = models.BooleanField(help_text="True if this is the default choice for an item. <em>Set this on exactly one slot</em>.")
-  isUndefined = models.BooleanField(help_text="True if this value means 'to be decided'. Set this on <em>exactly one</em> slot. Items with this length are considered problematic by checks.")
+  isDefault = models.BooleanField(default=False,help_text="True if this is the default choice for an item. <em>Set this on exactly one slot</em>.")
+  isUndefined = models.BooleanField(default=False,help_text="True if this value means 'to be decided'. Set this on <em>exactly one</em> slot. Items with this length are considered problematic by checks.")
   objects = DefUndefManager()
 
   class Meta:
@@ -190,8 +190,8 @@ class Slot(models.Model):
                                help_text="A label for the duration of the slot, e.g. 7-8pm")
   visible = models.BooleanField(default=True,
                                 help_text="True if the slot should be visible in the printed programme")
-  isDefault = models.BooleanField(help_text="True if this should be the default slot for an item. Set this on <em>exactly one</em> slot")
-  isUndefined = models.BooleanField(help_text="True if this value means 'to be decided.' Set this on <em>exactly one</em> slot. Items starting in this slot are considered unscheduled.")
+  isDefault = models.BooleanField(default=False,help_text="True if this should be the default slot for an item. Set this on <em>exactly one</em> slot")
+  isUndefined = models.BooleanField(default=False,help_text="True if this value means 'to be decided.' Set this on <em>exactly one</em> slot. Items starting in this slot are considered unscheduled.")
   objects = DefUndefManager()
 
   class Meta:
@@ -287,8 +287,8 @@ class EnumManager(DefUndefManager):
 class EnumTable(models.Model):
   "A generic class for named lists of choices."
   name = models.CharField(max_length=64, help_text="The name for this choice.")
-  isDefault = models.BooleanField(help_text="True if objects for this class should default to this value. Set this for <em>exactly one</em> value.")
-  isUndefined = models.BooleanField(help_text="True is this value means 'to be decided'. Set this for <em>exactly one</em> value.")
+  isDefault = models.BooleanField(default=False,help_text="True if objects for this class should default to this value. Set this for <em>exactly one</em> value.")
+  isUndefined = models.BooleanField(default=False,help_text="True is this value means 'to be decided'. Set this for <em>exactly one</em> value.")
   gridOrder = models.IntegerField(default=1,
                                   help_text="The choices for this class are displayed in ascending order of this field")
   description = models.TextField(blank=True,
@@ -546,7 +546,7 @@ class KitRequest(models.Model):
                            help_text="What kind of kit does this item need?")
   count = models.SmallIntegerField(default=1,
                                    help_text="How many instances of that kit does the item require?")
-  setupAssistance = models.BooleanField(help_text="Set this if the item's participants require Tech Crew to come in and help set up the kit")
+  setupAssistance = models.BooleanField(default=False,help_text="Set this if the item's participants require Tech Crew to come in and help set up the kit")
   notes = models.TextField(blank=True,
                            help_text="Any additional information required.")
   status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default,
@@ -925,9 +925,9 @@ class Room(models.Model):
                                  help_text="What you'll use this room for")
   visible = models.BooleanField(default=True,
                                 help_text="Should it appear on the printed programme?")
-  isDefault = models.BooleanField(help_text="True if this is where items go by default. Set this on <em>exactly one</em> room.")
-  isUndefined = models.BooleanField(help_text="True if this room means 'no room defined'. Items in this room will be considered unscheduled. Set this on <em>exactly one</em> room.")
-  canClash = models.BooleanField(help_text="True if multiple concurrent items in this room should be considered a problem.")
+  isDefault = models.BooleanField(default=False,help_text="True if this is where items go by default. Set this on <em>exactly one</em> room.")
+  isUndefined = models.BooleanField(default=False,help_text="True if this room means 'no room defined'. Items in this room will be considered unscheduled. Set this on <em>exactly one</em> room.")
+  canClash = models.BooleanField(default=False,help_text="True if multiple concurrent items in this room should be considered a problem.")
   disabledAccess = models.BooleanField(default=True,
                                        help_text="True if the room is wheelchair-accessible")
   gridOrder = models.IntegerField(default=50,
@@ -936,17 +936,17 @@ class Room(models.Model):
                                help_text="Pivate notes about the room. <em>Don't</em> put tech-related info here.")
   techNotes = models.TextField(blank=True,
                                help_text="Any additional tech-related information")
-  needsSound = models.BooleanField(help_text="True if items in this room will require amplification")
-  naturalLight = models.BooleanField(help_text="True if the room has its own natural light")
-  securable = models.BooleanField(help_text="True if the room can be securely locked, so that valuables can be left inside")
-  controlLightsInRoom = models.BooleanField(help_text="True if you can control the room's lighting from inside the room")
-  controlAirConInRoom = models.BooleanField(help_text="True if you can control the room's air conditioning from inside the room")
-  accessibleOnFlat = models.BooleanField(help_text="True if you can get to the room without stairs (for trolleys, etc)")
-  hasWifi = models.BooleanField(help_text="True if the room has a usable wifi signal")
-  hasCableRuns = models.BooleanField(help_text="True if the room has usable cable runs")
-  openableWindows = models.BooleanField(help_text="true if the room has windows which you can open")
-  closableCurtains = models.BooleanField(help_text="True if the room has curtains you can close")
-  inRadioRange = models.BooleanField(help_text="True if the radio net can reach people in the room")
+  needsSound = models.BooleanField(default=False,help_text="True if items in this room will require amplification")
+  naturalLight = models.BooleanField(default=False,help_text="True if the room has its own natural light")
+  securable = models.BooleanField(default=False,help_text="True if the room can be securely locked, so that valuables can be left inside")
+  controlLightsInRoom = models.BooleanField(default=False,help_text="True if you can control the room's lighting from inside the room")
+  controlAirConInRoom = models.BooleanField(default=False,help_text="True if you can control the room's air conditioning from inside the room")
+  accessibleOnFlat = models.BooleanField(default=False,help_text="True if you can get to the room without stairs (for trolleys, etc)")
+  hasWifi = models.BooleanField(default=False,help_text="True if the room has a usable wifi signal")
+  hasCableRuns = models.BooleanField(default=False,help_text="True if the room has usable cable runs")
+  openableWindows = models.BooleanField(default=False,help_text="true if the room has windows which you can open")
+  closableCurtains = models.BooleanField(default=False,help_text="True if the room has curtains you can close")
+  inRadioRange = models.BooleanField(default=False,help_text="True if the radio net can reach people in the room")
   kit = models.ManyToManyField(KitThing, through='KitRoomAssignment', null=True, blank=True,
                                help_text="Kit assigned to the room for a duration. May satisfy items' kit requests.")
   parent = models.ForeignKey('self', null=True, blank=True,
@@ -1510,7 +1510,7 @@ class PersonList(models.Model):
   """
   name = models.CharField(max_length=120,
                           help_text="Pick a meaningful name, including why you've saved this list")
-  auto = models.BooleanField(help_text="If true, this list will be deleted as soon as it's been used to send email")
+  auto = models.BooleanField(default=False,help_text="If true, this list will be deleted as soon as it's been used to send email")
   created = models.DateTimeField(auto_now_add=True,
                                  help_text="We note when a PersonList is created, so we can delete old ones.")
   people = models.ManyToManyField(Person, null=True, blank=True,
