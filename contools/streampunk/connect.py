@@ -1,7 +1,7 @@
 # Some support for connecting up items and people, after doing
 # an import.
 
-from streampunk.models import Item, Person, ItemPerson, Tag
+from .models import Item, Person, ItemPerson, Tag
 
 def get_person(first=None, middle=None, last=None):
   if first and middle and last:

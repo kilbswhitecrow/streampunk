@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2013 Stephen Kilbane
+# Copyright (C) 2013-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -17,12 +17,14 @@
 Tables for Streampunk, to support sortable displays of data.
 """
 
-import django_tables2 as tables
-from django_tables2 import A
-from models import Item, Person, Slot
 from django.core.urlresolvers import reverse
 from django.utils.safestring import mark_safe
 from django.utils.html import escape
+
+import django_tables2 as tables
+from django_tables2 import A
+
+from .models import Item, Person, Slot
 
 def select_attrs(tbl):
   "Set up the table with some attributes to use JQuery to toggle all the selection fields in in the table, if the header selection is clicked."

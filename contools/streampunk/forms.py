@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012 Stephen Kilbane
+# Copyright (C) 2012-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -22,9 +22,10 @@ from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
 from django.forms.models import BaseModelFormSet
 from django.forms.extras.widgets import Select
-from streampunk.models import ItemPerson, Item, Person, Tag, Room, Check, ConDay
-from streampunk.models import KitThing, KitBundle, KitRequest, PersonList
-from streampunk.models import KitRoomAssignment, KitItemAssignment, UserProfile
+
+from .models import ItemPerson, Item, Person, Tag, Room, Check, ConDay
+from .models import KitThing, KitBundle, KitRequest, PersonList
+from .models import KitRoomAssignment, KitItemAssignment, UserProfile
 
 class ItemPersonForm(ModelForm):
   fromPerson = forms.BooleanField(required=False, widget=forms.HiddenInput)

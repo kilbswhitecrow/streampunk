@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012-2013 Stephen Kilbane
+# Copyright (C) 2012-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -27,8 +27,8 @@ from django.db.models.signals import post_save
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 
-from streampunk.tabler import Rower
-from streampunk.exceptions import DeleteDefaultException, DeleteUndefException
+from .tabler import Rower
+from .exceptions import DeleteDefaultException, DeleteUndefException
 
 YesNo = (
   ( 'TBA', 'TBA'),

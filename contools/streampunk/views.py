@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012-2013 Stephen Kilbane
+# Copyright (C) 2012-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -28,25 +28,26 @@ from django.db.models import Count, Sum
 
 from django.shortcuts import render
 from django_tables2 import RequestConfig
-from streampunk.tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
-from streampunk.tables import TagTable, KitThingTable, GridTable, GenderTable
-from streampunk.tables import KitRequestTable, SlotTable
-from streampunk.tables import KitRoomAssignmentTable
-from streampunk.tables import KitItemAssignmentTable
-from streampunk.tables import ItemPersonTable, KitBundleTable
 
-from streampunk.models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
-from streampunk.models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
-from streampunk.models import UserProfile, ItemKind, RoomCapacity, Gender
-from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm
-from streampunk.forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
-from streampunk.forms import TagForm, RoomForm, CheckModelFormSet
-from streampunk.forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
-from streampunk.forms import AddBundleToRoomForm, AddBundleToItemForm
-from streampunk.forms import AddThingToRoomForm, AddThingToItemForm
-from streampunk.forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
-from streampunk.auth import add_con_groups
-from streampunk.tabler import Rower, Tabler, make_tabler
+from .tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
+from .tables import TagTable, KitThingTable, GridTable, GenderTable
+from .tables import KitRequestTable, SlotTable
+from .tables import KitRoomAssignmentTable
+from .tables import KitItemAssignmentTable
+from .tables import ItemPersonTable, KitBundleTable
+
+from .models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
+from .models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
+from .models import UserProfile, ItemKind, RoomCapacity, Gender
+from .forms import KitThingForm, KitBundleForm, KitRequestForm
+from .forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
+from .forms import TagForm, RoomForm, CheckModelFormSet
+from .forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
+from .forms import AddBundleToRoomForm, AddBundleToItemForm
+from .forms import AddThingToRoomForm, AddThingToItemForm
+from .forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
+from .auth import add_con_groups
+from .tabler import Rower, Tabler, make_tabler
 
 def show_request(request):
   if request.method == 'GET':

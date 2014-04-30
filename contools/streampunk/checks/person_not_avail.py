@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db.models import Count
-from streampunk.checks.base import CheckOutput
-from streampunk.models import Item, ItemPerson, Person, ConInfoBool
+from .base import CheckOutput
+from ..models import Item, ItemPerson, Person, ConInfoBool
 
 def run_check(check):
   """

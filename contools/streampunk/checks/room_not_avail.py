@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012 Stephen Kilbane
+# Copyright (C) 2012-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -14,8 +14,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from django.db.models import Count
-from streampunk.checks.base import CheckOutput
-from streampunk.models import Item, Room
+from .base import CheckOutput
+from ..models import Item, Room
 
 def run_check(check):
 

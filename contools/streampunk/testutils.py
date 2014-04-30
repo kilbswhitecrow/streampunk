@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2013 Stephen Kilbane
+# Copyright (C) 2013-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -15,11 +15,11 @@
 
 from django.core.urlresolvers import reverse
 
-from streampunk.models import PersonRole, PersonStatus
-from streampunk.models import Slot, SlotLength, Room, ItemKind, SeatingKind
-from streampunk.models import FrontLayoutKind, Revision, MediaStatus
-from streampunk.models import Gender, KitKind, KitRole, KitSource, KitDepartment
-from streampunk.models import KitBasis, KitStatus, Check
+from .models import PersonRole, PersonStatus
+from .models import Slot, SlotLength, Room, ItemKind, SeatingKind
+from .models import FrontLayoutKind, Revision, MediaStatus
+from .models import Gender, KitKind, KitRole, KitSource, KitDepartment
+from .models import KitBasis, KitStatus, Check
 
 def modeldict(i, conv):
   """

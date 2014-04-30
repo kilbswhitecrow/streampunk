@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2013 Stephen Kilbane
+# Copyright (C) 2013-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -24,27 +24,27 @@ from django.test.client import Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
-from streampunk.models import Grid, Gender, Slot, SlotLength, Room
-from streampunk.models import SlotLength, ConDay, ConInfoBool
-from streampunk.models import ItemKind, SeatingKind, FrontLayoutKind
-from streampunk.models import Revision, MediaStatus, ItemPerson, Tag
-from streampunk.models import PersonStatus, PersonRole, Person, Item
-from streampunk.models import KitThing, KitRequest, KitBundle
-from streampunk.models import KitKind, KitStatus, RoomCapacity
-from streampunk.models import KitRoomAssignment, KitItemAssignment
-from streampunk.exceptions import DeleteNeededObjectException
-from streampunk.testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
-from streampunk.testutils import default_person, default_item, default_itemperson
-from streampunk.testutils import default_kitthing, default_kitbundle, default_kitrequest
-from streampunk.testutils import item_lists_req, req_lists_item
-from streampunk.testutils import item_lists_tag, tag_lists_item
-from streampunk.testutils import person_lists_tags, item_lists_thing, thing_lists_item
-from streampunk.testutils import room_lists_item, room_lists_thing
-from streampunk.testutils import usage_lists_req_for_item, usage_lists_thing_for_item, usage_lists_bundle_for_item
-from streampunk.testutils import usage_lists_thing_for_room, usage_lists_bundle_for_room
-from streampunk.testutils import bundle_lists_thing, thing_lists_bundle
-from streampunk.testutils import bundle_lists_item, thing_lists_item, item_lists_bundle
-from streampunk.testutils import check_lists_item
+from .models import Grid, Gender, Slot, SlotLength, Room
+from .models import SlotLength, ConDay, ConInfoBool
+from .models import ItemKind, SeatingKind, FrontLayoutKind
+from .models import Revision, MediaStatus, ItemPerson, Tag
+from .models import PersonStatus, PersonRole, Person, Item
+from .models import KitThing, KitRequest, KitBundle
+from .models import KitKind, KitStatus, RoomCapacity
+from .models import KitRoomAssignment, KitItemAssignment
+from .exceptions import DeleteNeededObjectException
+from .testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
+from .testutils import default_person, default_item, default_itemperson
+from .testutils import default_kitthing, default_kitbundle, default_kitrequest
+from .testutils import item_lists_req, req_lists_item
+from .testutils import item_lists_tag, tag_lists_item
+from .testutils import person_lists_tags, item_lists_thing, thing_lists_item
+from .testutils import room_lists_item, room_lists_thing
+from .testutils import usage_lists_req_for_item, usage_lists_thing_for_item, usage_lists_bundle_for_item
+from .testutils import usage_lists_thing_for_room, usage_lists_bundle_for_room
+from .testutils import bundle_lists_thing, thing_lists_bundle
+from .testutils import bundle_lists_item, thing_lists_item, item_lists_bundle
+from .testutils import check_lists_item
 
 
 class StreampunkTest(TestCase):
