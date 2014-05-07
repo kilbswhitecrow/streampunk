@@ -280,9 +280,13 @@ class show_slot_detail(DetailView):
   def get_context_data(self, **kwargs):
     context = super(show_slot_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
-    context['items'] = Item.objects.filter(start = self.object).order_by('start')
+    context['items'] = self.object.items()
     context['itable'] = make_tabler(Item, ItemTable, request=self.request,
                                      qs=context['items'], prefix='it-', empty='No items',
+                                     extra_exclude=['edit', 'remove', 'start'])
+    context['items_starting'] = self.object.items_starting()
+    context['itable_starting'] = make_tabler(Item, ItemTable, request=self.request,
+                                     qs=context['items_starting'], prefix='its-', empty='No items',
                                      extra_exclude=['edit', 'remove', 'start'])
     return context
 

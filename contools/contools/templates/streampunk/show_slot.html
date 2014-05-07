@@ -24,6 +24,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block body_content %}
 <h2>{{ slot }}</h2>
 
-<h3>Items</h3>
+<h3>Items during this slot</h3>
 {% render_table itable %}
+
+<h3>Items starting during this slot</h3>
+{% render_table itable_starting %}
 {% endblock %}
