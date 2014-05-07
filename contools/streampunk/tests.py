@@ -2571,9 +2571,79 @@ class test_kit_availability(AuthTest):
 
 # =========================================================
 
+class test_slot_items(AuthTest):
+  "Test what appears in slot item methods."
+  fixtures = [ 'room', 'items', 'person' ]
+
+  def test_starting_direct(self):
+    """
+    Check that a slot knowns the difference between 'item occupies slot'
+    and 'item starts in slot'.
+    """
+    # Snarf the usual items
+    disco = self.get_disco()
+    cabaret = self.get_cabaret()
+    ceilidh = self.get_ceilidh()
+
+    friday09 = Slot.objects.get(startText='9pm', day__name='Friday')
+    friday10 = Slot.objects.get(startText='10pm', day__name='Friday')
+
+    self.assertEqual(friday09, cabaret.start)
+    self.assertEqual(friday10, disco.start)
+    self.assertEqual(friday10, ceilidh.start)
+
+    for i in [ disco, cabaret, ceilidh ]:
+      self.assertTrue(i in friday10.items())
+    for i in [ ceilidh, disco ]:
+      self.assertTrue(i in friday10.items_starting())
+      self.assertFalse(i in friday09.items_starting())
+      self.assertFalse(i in friday09.items())
+
+  def test_starting_indirect(self):
+    """
+    Look at the views for given slots, and check which items they display.
+    """
+    # Snarf the usual items
+    disco = self.get_disco()
+    cabaret = self.get_cabaret()
+    ceilidh = self.get_ceilidh()
+
+    friday09 = Slot.objects.get(startText='9pm', day__name='Friday')
+    friday10 = Slot.objects.get(startText='10pm', day__name='Friday')
+
+    self.assertEqual(friday09, cabaret.start)
+    self.assertEqual(friday10, disco.start)
+    self.assertEqual(friday10, ceilidh.start)
+
+    self.response = self.client.get(reverse('show_slot_detail', args=[friday09.id]))
+    self.status_okay()
+    self.has_row('itable', { "title": cabaret.title })
+    self.has_row('itable_starting', { "title": cabaret.title })
+    self.no_row('itable', { "title": disco.title })
+    self.no_row('itable_starting', { "title": disco.title })
+    self.no_row('itable', { "title": ceilidh.title })
+    self.no_row('itable_starting', { "title": ceilidh.title })
+
+    self.response = self.client.get(reverse('show_slot_detail', args=[friday10.id]))
+    self.status_okay()
+    self.has_row('itable', { "title": cabaret.title })
+    self.no_row('itable_starting', { "title": cabaret.title })
+    self.has_row('itable', { "title": disco.title })
+    self.has_row('itable_starting', { "title": disco.title })
+    self.has_row('itable', { "title": ceilidh.title })
+    self.has_row('itable_starting', { "title": ceilidh.title })
+
 class test_grids(AuthTest):
   "Direct test of what appears in grid cells."
   fixtures = [ 'room', 'items', 'person' ]
+
+  def test_list_grids(self):
+    self.response = self.client.get(reverse('list_grids'))
+    self.status_okay()
+    self.assertNotEqual(Grid.objects.count(), 0)
+    for g in Grid.objects.all():
+      self.has_row('gtable', { 'name': g.name })
+      self.has_link_to('show_grid', args=[int(g.id)])
 
   def test_items_in_cells(self):
     "Check the items() methods on slots and rooms."
