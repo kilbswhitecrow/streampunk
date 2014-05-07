@@ -32,10 +32,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </table>
 <p>
 {% render_table kind_table %}
-</p>
-<p>
 {% render_table gender_table %}
 </p>
+{% if perms.streampunk.read_private %}
+<p>
+{% render_table con_info %}
+</p>
+{% endif %}
 {% if perms.streampunk.edit_programme %}
 <p>
 <a href="{% url "new_itemperson" %}">Add a person to an item</a>.

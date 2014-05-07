@@ -4,8 +4,21 @@ T = [ x for x in S if x % 2 == 0 ]
 
 Revisit the two-scoops book:
 - Handle settings.py
-- Relative references.
-- Add the coverage frameworks.
+
+Look into the Tables2 pagination issue.
+	- We just hide the pagination controls in the template; we don't tell it not to paginate.
+	- We could set the paginate control to have count items per page.
+	- We could turn it back on, for large numbers of things...
+		Problem with that is, I'm not sure what it'll do to the PersonList selections.
+
+London
+------
+- Increase the coverage
+- Sending email starts at p364.
+- Test email. See p372 for local python server.
+- See p300 for email testing.
+- p842 for File Handling.
+- p180 for 3.3.4 File Uploads
 
 Testing
 -------

@@ -224,3 +224,9 @@ class GridTable(tables.Table):
   name = tables.LinkColumn('show_grid', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
+
+class ConInfoTable(tables.Table):
+  name = tables.Column()
+  val = tables.Column()
+  class Meta:
+    attrs = { "class": "paleblue" }

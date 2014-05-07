@@ -129,13 +129,13 @@ class ConInfoString(models.Model):
 class ConDayManager(DefUndefManager):
   "A manager with some convenience methods."
   def earliest_day(self):
-    return (self).objects.all().order_by('date')[0]
+    return self.exclude(isUndefined=True).earliest()
   def earliest_public_day(self):
-    return (self).objects.filter(visible=True).order_by('date')[0]
+    return self.filter(visible=True, isUndefined=False).earliest()
   def latest_day(self):
-    return (self).objects.all().order_by('-date')[0]
+    return self.exclude(isUndefined=True).latest()
   def latest_public_day(self):
-    return (self).objects.filter(visible=True).order_by('-date')[0]
+    return self.filter(visible=True, isUndefined=False).latest()
 
 class ConDay(models.Model):
   """
@@ -149,11 +149,12 @@ class ConDay(models.Model):
   visible = models.BooleanField(default=False,help_text="Should this day be displayed in the official programme?")
   isDefault = models.BooleanField(default=False,help_text="True if this is the default day for items. Set this for <em>exactly one</em> day.")
   isUndefined = models.BooleanField(default=False,help_text="True if this day means 'to be decided'. Items on this day are considered unscheduled.")
-  objects = DefUndefManager()
+  objects = ConDayManager()
 
   class Meta:
     # XXX - why are we not using order, here?
-    ordering = [ '-isDefault', 'date' ]
+    ordering = [ 'order' ]
+    get_latest_by = 'date'
 
   def __unicode__(self):
     return self.name

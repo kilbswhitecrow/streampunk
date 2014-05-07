@@ -25,7 +25,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 
 from .models import Grid, Gender, Slot, SlotLength, Room
-from .models import SlotLength, ConDay, ConInfoBool
+from .models import SlotLength, ConDay, ConInfoBool, ConInfoInt, ConInfoString
 from .models import ItemKind, SeatingKind, FrontLayoutKind
 from .models import Revision, MediaStatus, ItemPerson, Tag
 from .models import PersonStatus, PersonRole, Person, Item
@@ -167,8 +167,12 @@ class StreampunkTest(TestCase):
 
   def get_friday(self):
     return ConDay.objects.get(name='Friday')
+  def get_saturday(self):
+    return ConDay.objects.get(name='Saturday')
   def get_sunday(self):
     return ConDay.objects.get(name='Sunday')
+  def get_monday(self):
+    return ConDay.objects.get(name='Monday')
   def get_morning(self):
     friday = self.get_friday()
     return Slot.objects.get(day=friday, startText='10am')
@@ -2775,7 +2779,98 @@ class test_grids_public(NonauthTest):
     self.no_link_to('show_person_detail', args=[int(dawn.id)])
     self.no_link_to('show_person_detail', args=[int(giles.id)])
 
-    
+class test_coninfo(NonauthTest):
+  "Check the values for ConInfo"
+
+  def test_coninfobool(self):
+    "Check boolean-valued con settings"
+    self.assertTrue(ConInfoBool.objects.show_shortname())
+    self.assertFalse(ConInfoBool.objects.rooms_across_top())
+    self.assertTrue(ConInfoBool.objects.no_avail_means_always_avail())
+
+    show_short = ConInfoBool.objects.get(var='show_shortname')
+    self.assertTrue(show_short.val)
+    self.assertEqual(str(show_short), u'Show shortnames')
+
+  def test_coninfoint(self):
+    "Check integer-valued con settings"
+    self.assertEqual(ConInfoInt.objects.max_items_per_day(), 4)
+    self.assertEqual(ConInfoInt.objects.max_items_whole_con(), 12)
+    self.assertEqual(ConInfoInt.objects.max_consecutive_items(), 2)
+
+    max_day = ConInfoInt.objects.get(var='max_items_per_day')
+    self.assertEqual(max_day.val, 4)
+    self.assertEqual(str(max_day), u'Max items per day for a person')
+
+  def test_coninfostr(self):
+    "Check string-valued con settings"
+    self.assertEqual(ConInfoString.objects.con_name(), u'MyCon 2012')
+    self.assertEqual(ConInfoString.objects.email_from(), u'steve@whitecrow.demon.co.uk')
+
+    con_name = ConInfoString.objects.get(var='con_name')
+    self.assertEqual(con_name.val, u'MyCon 2012')
+    self.assertEqual(str(con_name), u'Convention name')
+
+class test_condays(NonauthTest):
+  "Check the manager for ConDays."
+
+  def test_when_all_public(self):
+    "Check the manager when there are no private days."
+
+    friday = self.get_friday()
+    monday = self.get_monday()
+    self.assertEqual(friday, ConDay.objects.earliest_day())
+    self.assertEqual(friday, ConDay.objects.earliest_public_day())
+    self.assertEqual(monday, ConDay.objects.latest_day())
+    self.assertEqual(monday, ConDay.objects.latest_public_day())
+
+  def test_when_some_private(self):
+    "Check the manager when there are some private days."
+
+    friday = self.get_friday()
+    saturday = self.get_saturday()
+    sunday = self.get_sunday()
+    monday = self.get_monday()
+
+    friday.visible = False
+    friday.save()
+    monday.visible = False
+    monday.save()
+
+    self.assertEqual(friday, ConDay.objects.earliest_day())
+    self.assertNotEqual(friday, ConDay.objects.earliest_public_day())
+    self.assertEqual(saturday, ConDay.objects.earliest_public_day())
+    self.assertEqual(monday, ConDay.objects.latest_day())
+    self.assertNotEqual(monday, ConDay.objects.latest_public_day())
+    self.assertEqual(sunday, ConDay.objects.latest_public_day())
+
+  def test_when_privacy_reversed(self):
+    "Check the manager when there are some private days in the middle."
+
+    friday = self.get_friday()
+    saturday = self.get_saturday()
+    sunday = self.get_sunday()
+    monday = self.get_monday()
+
+    saturday.visible = False
+    saturday.save()
+    sunday.visible = False
+    sunday.save()
+
+    self.assertEqual(friday, ConDay.objects.earliest_day())
+    self.assertEqual(friday, ConDay.objects.earliest_public_day())
+    self.assertEqual(monday, ConDay.objects.latest_day())
+    self.assertEqual(monday, ConDay.objects.latest_public_day())
+
+  def test_TBA(self):
+    "Check that the undefined value doesn't turn up for any of the other methods."
+
+    tba = ConDay.objects.find_undefined()
+    self.assertNotEqual(tba, ConDay.objects.earliest_day())
+    self.assertNotEqual(tba, ConDay.objects.earliest_public_day())
+    self.assertNotEqual(tba, ConDay.objects.latest_day())
+    self.assertNotEqual(tba, ConDay.objects.latest_public_day())
+
 # Tests required
 # Items
 # 	Satisfaction

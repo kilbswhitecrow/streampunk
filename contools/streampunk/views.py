@@ -31,14 +31,14 @@ from django_tables2 import RequestConfig
 
 from .tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
 from .tables import TagTable, KitThingTable, GridTable, GenderTable
-from .tables import KitRequestTable, SlotTable
+from .tables import KitRequestTable, SlotTable, ConInfoTable
 from .tables import KitRoomAssignmentTable
 from .tables import KitItemAssignmentTable
 from .tables import ItemPersonTable, KitBundleTable
 
 from .models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from .models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
-from .models import UserProfile, ItemKind, RoomCapacity, Gender
+from .models import UserProfile, ItemKind, RoomCapacity, Gender, ConInfoBool, ConInfoInt
 from .forms import KitThingForm, KitBundleForm, KitRequestForm
 from .forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from .forms import TagForm, RoomForm, CheckModelFormSet
@@ -219,6 +219,10 @@ def main_page(request):
   gender_table = make_tabler(Gender, GenderTable, request=request, qs=genders, prefix='gc-', empty='Nobody on items yet')
 
   con_name = ConInfoString.objects.con_name()
+
+  con_info = ConInfoTable(list(ConInfoBool.objects.all()) +
+                          list(ConInfoInt.objects.all()) +
+                          list(ConInfoString.objects.all()), prefix='ci-')
   return render_to_response('streampunk/main_page.html',
                             locals(),
                             context_instance=RequestContext(request))
