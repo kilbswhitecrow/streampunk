@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2013 Stephen Kilbane
+# Copyright (C) 2013-2014 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -59,19 +59,37 @@ class Rower:
 
 
 class Tabler:
+  "Class for generating Tables2 table instances, with some local customisation."
+  
   def __init__(self, tclass, rower, paginate=False, empty_text='(Nothing found)'):
+    """
+    Initial configuration of the table. tclass is a table. rower is a method on the model
+    class that will return rows for the table. empty_text tells us what we use if there's
+    nothing in the table. paginate is not currently used.
+    """
+
+    # Store each of the parameters for now.
     self.rower = rower
     self.tclass = tclass
     self.paginate = paginate
     self.empty_text = empty_text
 
   def table(self, qs, request=None, prefix=None, exclude=None):
-    template = 'streampunk/table.html'
+    """
+    Create the table instance using QuerySet qs for the table data. Request is the
+    client's request, if any. Prefix can be used to distinguish multiple tables on the
+    same page, if required. Exclude can be used to indicate columns that should not
+    appear, for this instance of the table.
+    """
+    min_for_count = 6
     data = [ self.rower.row(thing) for thing in qs ]
+    template = 'streampunk/table.html' if len(data) < min_for_count else None
     t = self.tclass(data, prefix=prefix, template=template, exclude=exclude, empty_text=self.empty_text)
     if request:
-      config = RequestConfig(request)
+      config = RequestConfig(request, paginate={'per_page': len(data)})
       config.configure(t)
+    else:
+      t.paginate(page=1, per_page=len(data))
     return t
 
 def make_tabler(mcls, tcls, request, qs, prefix=None, empty=None, extra_exclude=[]):
