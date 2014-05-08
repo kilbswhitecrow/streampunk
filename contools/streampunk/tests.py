@@ -2603,10 +2603,20 @@ class test_slot_items(AuthTest):
     """
     Look at the views for given slots, and check which items they display.
     """
+    # Grab a room
+    ops = self.get_ops()
+
     # Snarf the usual items
     disco = self.get_disco()
     cabaret = self.get_cabaret()
     ceilidh = self.get_ceilidh()
+
+    # Move one of them to a different room.
+    self.assertEqual(disco.room, cabaret.room)
+    self.assertEqual(ceilidh.room, cabaret.room)
+    self.assertNotEqual(disco.room, ops)
+    disco.room = ops
+    disco.save()
 
     friday09 = Slot.objects.get(startText='9pm', day__name='Friday')
     friday10 = Slot.objects.get(startText='10pm', day__name='Friday')
@@ -2614,6 +2624,14 @@ class test_slot_items(AuthTest):
     self.assertEqual(friday09, cabaret.start)
     self.assertEqual(friday10, disco.start)
     self.assertEqual(friday10, ceilidh.start)
+
+    # Check what appears in the items and items_starting lists for each slot.
+    # No room specified yet.
+    # We expect:
+    # 9pm: items: cabaret
+    # 9pm starting: cabaret
+    # 10pm: items: disco, cabaret, ceilidh
+    # 10pm: starting: disco, ceilidh
 
     self.response = self.client.get(reverse('show_slot_detail', args=[friday09.id]))
     self.status_okay()
@@ -2632,6 +2650,53 @@ class test_slot_items(AuthTest):
     self.has_row('itable_starting', { "title": disco.title })
     self.has_row('itable', { "title": ceilidh.title })
     self.has_row('itable_starting', { "title": ceilidh.title })
+
+    # Now be specific about the room, and check that we only see items that
+    # occur in that room. We don't have a page that shows this, so we have
+    # to check directly.
+
+    for i in [ disco, cabaret, ceilidh ]:
+      self.assertTrue(i in friday10.items())
+    for i in [ disco, ceilidh ]:
+      self.assertTrue(i in friday10.items_starting())
+      self.assertFalse(i in friday09.items_starting())
+      self.assertFalse(i in friday09.items())
+    self.assertTrue(cabaret in friday09.items())
+    self.assertTrue(cabaret in friday09.items_starting())
+
+    # We expect:
+    # 9pm main hall: items: cabaret
+    # 9pm main hall starting: cabaret
+    # 10pm main hall: items: cabaret, ceilidh
+    # 10pm main hall: starting: ceilidh
+
+    rm = cabaret.room
+    self.assertTrue(cabaret in friday09.items(rm))
+    self.assertTrue(cabaret in friday09.items_starting(rm))
+    for i in [ disco, ceilidh ]:
+      self.assertFalse(i in friday09.items_starting(rm))
+      self.assertFalse(i in friday09.items(rm))
+    for i in [ cabaret, ceilidh ]:
+      self.assertTrue(i in friday10.items(rm))
+    self.assertTrue(ceilidh in friday10.items_starting(rm))
+    self.assertFalse(cabaret in friday10.items_starting(rm))
+    self.assertFalse(disco in friday10.items_starting(rm))
+    self.assertFalse(disco in friday10.items(rm))
+
+    # We expect:
+    # 9pm ops: items: nothing
+    # 9pm ops starting: nothing
+    # 10pm ops: items: disco
+    # 10pm ops: starting: disco
+
+    for i in [ disco, cabaret, ceilidh ]:
+      self.assertFalse(i in friday09.items(ops))
+      self.assertFalse(i in friday09.items_starting(ops))
+    for i in [ cabaret, ceilidh ]:
+      self.assertFalse(i in friday10.items(ops))
+      self.assertFalse(i in friday10.items_starting(ops))
+    self.assertTrue(disco in friday10.items(ops))
+    self.assertTrue(disco in friday10.items_starting(ops))
 
 class test_grids(AuthTest):
   "Direct test of what appears in grid cells."
