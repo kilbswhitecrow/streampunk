@@ -1943,6 +1943,17 @@
       "isDefault": false, 
       "isUndefined": false
     }
+  },
+  {
+    "pk": 6, 
+    "model": "streampunk.checkresult", 
+    "fields": {
+      "gridOrder": 2, 
+      "description": "Something got deleted", 
+      "name": "TBA", 
+      "isDefault": false, 
+      "isUndefined": true
+    }
   }, 
   {
     "pk": 1, 

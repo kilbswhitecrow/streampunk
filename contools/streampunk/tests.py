@@ -29,10 +29,11 @@ from .models import SlotLength, ConDay, ConInfoBool, ConInfoInt, ConInfoString
 from .models import ItemKind, SeatingKind, FrontLayoutKind
 from .models import Revision, MediaStatus, ItemPerson, Tag
 from .models import PersonStatus, PersonRole, Person, Item
-from .models import KitThing, KitRequest, KitBundle
-from .models import KitKind, KitStatus, RoomCapacity
+from .models import KitThing, KitRequest, KitBundle, KitRole, KitDepartment
+from .models import KitKind, KitStatus, RoomCapacity, KitSource, KitBasis
 from .models import KitRoomAssignment, KitItemAssignment
-from .exceptions import DeleteNeededObjectException
+from .models import Check, CheckResult
+from .exceptions import DeleteNeededObjectException, DeleteUndefException, DeleteDefaultException
 from .testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
 from .testutils import default_person, default_item, default_itemperson
 from .testutils import default_kitthing, default_kitbundle, default_kitrequest
@@ -128,6 +129,8 @@ class StreampunkTest(TestCase):
     return Person.objects.get(firstName='Willow')
   def get_dawn(self):
     return Person.objects.get(firstName='Dawn')
+  def get_xander(self):
+    return Person.objects.get(firstName='Alexander')
 
   def get_ceilidh(self):
     return Item.objects.get(shortname='Ceilidh')
@@ -1278,7 +1281,7 @@ class test_delete_rooms(AuthTest):
 
 class test_delete_enums(AuthTest):
   "Deleting enumerations and other important things."
-  fixtures = [ 'room', 'items', 'kit' ]
+  fixtures = [ 'room', 'person', 'items', 'kit' ]
 
   def setUp(self):
     self.mkroot()
@@ -1288,6 +1291,24 @@ class test_delete_enums(AuthTest):
   def tearDown(self):
     self.client.logout()
     self.zaproot()
+
+  # Each enum type has a delete method, so that if something has value X,
+  # and you delete X from the enum, it correctly changes that something to
+  # use value Y for the enum, instead.
+
+  def poke_enum(self, all, should_change, change_from, change_to, matches):
+    for i in all:
+      if i in should_change:
+        self.assertTrue(matches(i, change_from))
+        self.assertFalse(matches(i, change_to))
+      else:
+        self.assertFalse(matches(i, change_from))
+    change_from.delete()
+    for i in all:
+      if i in should_change:
+        # Refetch the thing from the database
+        j = i.__class__.objects.get(id=i.id)
+        self.assertTrue(matches(j, change_to))
 
   def test_delete_needed_objects(self):
     "Test deleting things that should not be deleted."
@@ -1319,6 +1340,250 @@ class test_delete_enums(AuthTest):
     with self.assertRaises(DeleteNeededObjectException):
       ikdefault.delete()
     self.assertEqual(ItemKind.objects.filter(isDefault=True).count(), 1)
+
+  def test_delete_undef(self):
+    "move the undef flag to somewhere else, and then check which exceptions we get."
+
+    ikdefault = ItemKind.objects.find_default()
+    ikpanel = self.get_panel()
+    ikdefault.isDefault = False
+    ikdefault.save()
+    ikpanel.isDefault = True
+    ikpanel.save()
+    ikdefault = ItemKind.objects.find_default()
+    ikundef = ItemKind.objects.find_undefined()
+
+    self.assertNotEqual(ikdefault, ikundef)
+
+    # Now if we try to delete ikundef, we should get DeleteUndefException,
+    # because it's not the default
+
+    with self.assertRaises(DeleteUndefException):
+      ikundef.delete()
+
+  def test_delete_default(self):
+    "move the default flag to somewhere else, and then check which exceptions we get."
+
+    ikundef = ItemKind.objects.find_undefined()
+    ikpanel = self.get_panel()
+    ikundef.isUndefined = False
+    ikundef.save()
+    ikpanel.isUndefined = True
+    ikpanel.save()
+    ikdefault = ItemKind.objects.find_default()
+    ikundef = ItemKind.objects.find_undefined()
+
+    self.assertNotEqual(ikdefault, ikundef)
+
+    # Now if we try to delete ikdefault, we should get DeleteDefaultException,
+    # because it's not undefined.
+
+    with self.assertRaises(DeleteDefaultException):
+      ikdefault.delete()
+
+  def test_delete_methods_seating(self):
+    "Prod each enum type's delete() method."
+
+
+    # SeatingKind
+    # TBA: None
+    # Theatre: bid, closing, interview, auction, etc.
+    # Empty: ceilidh, disco
+    self.poke_enum(all=Item.objects.all(),
+                   should_change=Item.objects.filter(seating__name='Empty'),
+                   change_from=SeatingKind.objects.get(name='Empty'),
+                   change_to=SeatingKind.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.seating==val))
+
+    
+  def test_delete_methods_frontlayout(self):
+    # FrontLayoutKind
+    # TBA: nothing
+    # Panel: everything
+
+    # Since we've only got a single useful value, let's create another.
+    lecture = FrontLayoutKind(name='Lecture')
+    lecture.save()
+    # Let's make sure it's used.
+    should_change=Item.objects.filter(seating__name='Empty')
+    should_change.update(frontLayout=lecture)
+
+    # Then see what happens when we delete it.
+    self.poke_enum(all=Item.objects.all(),
+                   should_change=should_change,
+                   change_from=lecture,
+                   change_to=FrontLayoutKind.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.frontLayout==val))
+
+  def test_delete_methods_mediastatus(self):
+    # MediaStatus
+    # Choice of 4, everything TBA, so change some to one value,
+    # and others to another.
+    none_req=MediaStatus.objects.get(name='No media required')
+    recv=MediaStatus.objects.get(name='Media received by Tech')
+    should_change=Item.objects.filter(seating__name='Empty')
+    should_change.update(mediaStatus=none_req)
+    Item.objects.exclude(seating__name='Empty').update(mediaStatus=recv)
+    self.poke_enum(all=Item.objects.all(),
+                   should_change=should_change,
+                   change_from=none_req,
+                   change_to=MediaStatus.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.mediaStatus==val))
+
+  def test_delete_methods_itempeople(self):
+    # Make sure we have some people on items.
+    buffy = self.get_buffy()
+    dawn = self.get_dawn()
+    giles = self.get_giles()
+    xander = self.get_xander()
+    disco = self.get_disco()
+    bid = self.get_bidsession()
+
+    mod = PersonRole.objects.get(name='Moderator')
+    speaker = PersonRole.objects.get(name='Speaker')
+    panellist = self.get_panellist()
+
+    invited = PersonStatus.objects.get(name='Invited')
+    confirmed = PersonStatus.objects.get(name='Confirmed')
+
+    # We'll delete Moderator, leave Speaker untouched.
+    xanderbid = ItemPerson(item=bid, person=xander, role=mod, status=confirmed)
+    gilesbid = ItemPerson(item=bid, person=giles, role=mod, status=confirmed)
+
+    # We'll delete Proposed, and leave Confirmed untouched.
+    buffydisco = ItemPerson(item=disco, person=buffy, role=speaker, status=invited)
+    gilesdisco = ItemPerson(item=disco, person=giles, role=speaker, status=invited)
+    dawndisco = ItemPerson(item=disco, person=dawn, role=speaker, status=invited)
+
+    xanderbid.save()
+    gilesbid.save()
+    buffydisco.save()
+    gilesdisco.save()
+    dawndisco.save()
+
+    # PersonRole
+    # Choice of 4+, everything TBA
+
+    self.poke_enum(all=ItemPerson.objects.all(),
+                   should_change=[ gilesbid, xanderbid ],
+                   change_from=mod,
+                   change_to=PersonRole.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.role==val))
+
+    # PersonStatus
+    # Several choices, all TBA
+
+    self.poke_enum(all=ItemPerson.objects.all(),
+                   should_change=[ buffydisco, gilesdisco, dawndisco],
+                   change_from=invited,
+                   change_to=PersonStatus.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.status==val))
+
+  def test_delete_methods_gender(self):
+    # Gender
+    # Male, Female, TBA, split 50/50
+
+    self.poke_enum(all=Person.objects.all(),
+                   should_change=Person.objects.filter(gender__name='Male'),
+                   change_from=Gender.objects.get(name='Male'),
+                   change_to=Gender.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.gender==val))
+
+  def test_delete_methods_kitthings(self):
+    # KitKind
+    # Lots of choices, screens, projectors, mics
+    # Different ones used
+
+    self.poke_enum(all=KitThing.objects.all(),
+                   should_change=KitThing.objects.filter(kind__name='Projector'),
+                   change_from=KitKind.objects.get(name='Projector'),
+                   change_to=KitKind.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.kind==val))
+
+    # KitRole
+    # only TBA
+
+    # Create a couple of roles, and make sure they're used.
+    apple=KitRole(name='Apple')
+    pear=KitRole(name='Pear')
+    apple.save()
+    pear.save()
+
+    # We also need to create some kit sources
+    scotty=KitSource(name='Scotty')
+    brains=KitSource(name='Brains')
+    scotty.save()
+    brains.save()
+
+    mics = KitThing.objects.filter(kind__name='Microphone')
+    screens = KitThing.objects.filter(kind__name='Screen')
+    progops=KitDepartment.objects.get(name='Programme Ops')
+    green=KitDepartment.objects.get(name='Green Room')
+    borrow=KitBasis.objects.get(name='Borrow')
+    buy=KitBasis.objects.get(name='Buy')
+    purchase=KitStatus.objects.get(name='Awaiting purchase')
+    delivered=KitStatus.objects.get(name='Delivered')
+
+    mics.update(role=apple, department=progops, source=brains, basis=borrow, status=purchase)
+    screens.update(role=pear, department=green, source=scotty, basis=buy, status=delivered)
+
+    self.poke_enum(all=KitThing.objects.all(),
+                   should_change=mics,
+                   change_from=apple,
+                   change_to=KitRole.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.role==val))
+
+    # KitDepartment
+    # several choices
+    # Only one used, though
+
+    self.poke_enum(all=KitThing.objects.all(),
+                   should_change=mics,
+                   change_from=progops,
+                   change_to=KitDepartment.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.department==val))
+
+    # KitSource
+    # just TBA
+
+    self.poke_enum(all=KitThing.objects.all(),
+                   should_change=mics,
+                   change_from=brains,
+                   change_to=KitSource.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.source==val))
+
+    # KitBasis
+    # choice of four
+    # All TBA
+
+    self.poke_enum(all=KitThing.objects.all(),
+                   should_change=mics,
+                   change_from=borrow,
+                   change_to=KitBasis.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.basis==val))
+
+    # KitStatus
+    # choice of 4 +
+    # All TBA
+
+    self.poke_enum(all=KitThing.objects.all(),
+                   should_change=mics,
+                   change_from=purchase,
+                   change_to=KitStatus.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.status==val))
+
+  def test_delete_methods_checkresult(self):
+    # CheckResult
+    # Choice of several, no TBA
+    # All are used
+
+    roomlist=CheckResult.objects.get(name='Room List')
+
+    self.poke_enum(all=Check.objects.all(),
+                   should_change=Check.objects.filter(result=roomlist),
+                   change_from=roomlist,
+                   change_to=CheckResult.objects.find_undefined(),
+                   matches=(lambda thing, val: thing.result==val))
 
 # =========================================================
 

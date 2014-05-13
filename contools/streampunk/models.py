@@ -353,7 +353,7 @@ class PersonRole(EnumTable):
   a given Item
   """
   def delete(self):
-    self.item_set.all().update(role=self.delete_replacement())
+    self.itemperson_set.all().update(role=self.delete_replacement())
     return super(PersonRole, self).delete()
 
 
@@ -366,7 +366,7 @@ class PersonStatus(EnumTable):
     verbose_name = 'Person Status'
     verbose_name_plural = 'Person Statuses'
   def delete(self):
-    self.item_set.all().update(status=self.delete_replacement())
+    self.itemperson_set.all().update(status=self.delete_replacement())
     return super(PersonStatus, self).delete()
 
 
@@ -376,7 +376,7 @@ class Gender(EnumTable):
   a suitable balance on your programme.
   """
   def delete(self):
-    self.item_set.all().update(gender=self.delete_replacement())
+    self.person_set.all().update(gender=self.delete_replacement())
     return super(Gender, self).delete()
 
   @classmethod
@@ -443,35 +443,37 @@ class Tag(models.Model):
 class KitKind(EnumTable):
   "What kind of kit this is, e.g. DVD player, flip chart."
   def delete(self):
-    self.item_set.all().update(kind=self.delete_replacement())
+    rep=self.delete_replacement()
+    self.kitthing_set.all().update(kind=rep)
+    self.kitrequest_set.all().update(kind=rep)
     return super(KitKind, self).delete()
 
 
 class KitRole(EnumTable):
   "The purpose for this bit of kit, in the item, e.g. stage mic vs audience mic."
   def delete(self):
-    self.item_set.all().update(role=self.delete_replacement())
+    self.kitthing_set.all().update(role=self.delete_replacement())
     return super(KitRole, self).delete()
 
 
 class KitDepartment(EnumTable):
   "Which con dept is responsible for managing this bit of kit."
   def delete(self):
-    self.item_set.all().update(department=self.delete_replacement())
+    self.kitthing_set.all().update(department=self.delete_replacement())
     return super(KitDepartment, self).delete()
 
 
 class KitSource(EnumTable):
   "Where you're getting this bit of kit from."
   def delete(self):
-    self.item_set.all().update(source=self.delete_replacement())
+    self.kitthing_set.all().update(source=self.delete_replacement())
     return super(KitSource, self).delete()
 
 
 class KitBasis(EnumTable):
   "On what basis are you obtaining this bit of kit. Borrow, hire, buy, etc."
   def delete(self):
-    self.item_set.all().update(basis=self.delete_replacement())
+    self.kitthing_set.all().update(basis=self.delete_replacement())
     return super(KitBasis, self).delete()
 
 
@@ -485,7 +487,9 @@ class MediaStatus(EnumTable):
 class KitStatus(EnumTable):
   "What is the status of this bit of kit? Is it properly sorted?"
   def delete(self):
-    self.item_set.all().update(status=self.delete_replacement())
+    rep=self.delete_replacement()
+    self.kitthing_set.all().update(status=rep)
+    self.kitrequest_set.all().update(status=rep)
     return super(KitStatus, self).delete()
 
 class KitSatisfaction(object):
@@ -1525,8 +1529,8 @@ class PersonList(models.Model):
 class CheckResult(EnumTable):
   "Indicates what kind of result we get back from a particular check, so we know how to display it."
   def delete(self):
-    self.item_set.all().update(result=self.delete_replacement())
-    return super(ItemKind, self).delete()
+    self.check_set.all().update(result=self.delete_replacement())
+    return super(CheckResult, self).delete()
 
 
 class Check(models.Model):
