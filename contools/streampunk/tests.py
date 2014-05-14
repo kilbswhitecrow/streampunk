@@ -23,6 +23,7 @@ from django.test import TestCase
 from django.test.client import Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
+from django.utils.html import escape
 
 from .models import Grid, Gender, Slot, SlotLength, Room
 from .models import SlotLength, ConDay, ConInfoBool, ConInfoInt, ConInfoString
@@ -3270,6 +3271,46 @@ class test_condays(NonauthTest):
     self.assertNotEqual(tba, ConDay.objects.earliest_public_day())
     self.assertNotEqual(tba, ConDay.objects.latest_day())
     self.assertNotEqual(tba, ConDay.objects.latest_public_day())
+
+class test_xml(AuthTest):
+  "Pull the XML dump down, and see what's in there."
+
+  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_rooms(self):
+    "Check all the rooms are listed."
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for room in Room.objects.all():
+      self.assertTrue(room.name in self.response.content)
+
+  def test_people(self):
+    "Check all the people are listed."
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for person in Person.objects.all():
+      self.assertTrue(person.as_name() in self.response.content)
+      self.assertTrue(person.as_badge() in self.response.content)
+
+  def test_items(self):
+    "Check all the items are listed."
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for item in Item.objects.all():
+      self.assertTrue(escape(item.title) in self.response.content)
+      self.assertTrue(escape(item.shortname) in self.response.content)
 
 # Tests required
 # Items
