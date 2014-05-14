@@ -1002,8 +1002,8 @@ def xml_dump(request):
   return render_to_response(template,
                             { "rooms": rooms, "people": people, "items": allitems, "con_name": con_name },
                             context_instance=RequestContext(request),
-                            mimetype='application/xml')
+                            content_type='application/xml')
 
 def xsl_stylesheet(request, template):
-  return render_to_response(template, locals(), context_instance=RequestContext(request), mimetype='text/xsl')
+  return render_to_response(template, locals(), context_instance=RequestContext(request), content_type='text/xsl')
 
