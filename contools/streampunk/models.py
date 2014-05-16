@@ -1216,15 +1216,6 @@ class Person(models.Model):
     return len(self.scheduled_items())
 
   @classmethod
-  def list_sort_fields(cls):
-    return [
-      'lastName',
-      'middleName',
-      'firstName',
-      'badge'
-    ]
-
-  @classmethod
   def rower(cls, request):
     return Rower({ "pk":         "id",
                    "memnum":     "memnum",
@@ -1338,15 +1329,6 @@ class Item(models.Model):
     ordering = [ 'title', 'shortname' ]
     verbose_name = 'item'
     verbose_name_plural = 'items'
-
-  @classmethod
-  def list_sort_fields(cls):
-    return [
-      'start',
-      'room',
-      'shortname',
-      'title'
-    ]
 
   @classmethod
   def rower(cls, request):
