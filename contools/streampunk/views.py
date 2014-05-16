@@ -979,11 +979,11 @@ def xml_dump(request):
   con_name = ConInfoString.objects.con_name()
   if request.user.has_perm('progb2.read_private'):
     rooms = Room.objects.all()
-    allitems = Item.objects.all()
+    allitems = Item.scheduled.all()
     template = 'xml/streampunk.xml'
   else:
     rooms = Room.objects.filter(visible = True)
-    allitems = Item.objects.filter(visible = True)
+    allitems = Item.scheduled.filter(visible = True, room__visible = True)
     template = 'xml/streampunk_public.xml'
   people = Person.objects.all()
 
