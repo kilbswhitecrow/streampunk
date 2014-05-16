@@ -1,0 +1,1838 @@
+[
+{
+  "pk": 1, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Filk", 
+    "description": ""
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Fandom", 
+    "description": "Lots of navel-gazing"
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Science", 
+    "description": "Planets and stuff."
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Comics", 
+    "description": ""
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Books", 
+    "description": ""
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Telly", 
+    "description": ""
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Movies", 
+    "description": ""
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Politics", 
+    "description": ""
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Literary sf", 
+    "description": ""
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Fantasy", 
+    "description": ""
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Horror", 
+    "description": ""
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Kids", 
+    "description": ""
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Space", 
+    "description": ""
+  }
+},
+{
+  "pk": 14, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Space Opera", 
+    "description": ""
+  }
+},
+{
+  "pk": 15, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Conrunning", 
+    "description": ""
+  }
+},
+{
+  "pk": 16, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "First timers", 
+    "description": ""
+  }
+},
+{
+  "pk": 17, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Guest", 
+    "description": "For things where guests are involved."
+  }
+},
+{
+  "pk": 18, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Writing", 
+    "description": ""
+  }
+},
+{
+  "pk": 19, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Publishing", 
+    "description": ""
+  }
+},
+{
+  "pk": 20, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Editing", 
+    "description": ""
+  }
+},
+{
+  "pk": 21, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Art", 
+    "description": ""
+  }
+},
+{
+  "pk": 22, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Dr Who", 
+    "description": ""
+  }
+},
+{
+  "pk": 23, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Buffy", 
+    "description": ""
+  }
+},
+{
+  "pk": 24, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Battlestar Galactica", 
+    "description": ""
+  }
+},
+{
+  "pk": 25, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Babylon 5", 
+    "description": ""
+  }
+},
+{
+  "pk": 26, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Star Trek", 
+    "description": ""
+  }
+},
+{
+  "pk": 27, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Star Wars", 
+    "description": ""
+  }
+},
+{
+  "pk": 28, 
+  "model": "streampunk.tag", 
+  "fields": {
+    "visible": true, 
+    "icon": "", 
+    "name": "Torchwood", 
+    "description": ""
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Malcolm", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Reynolds", 
+    "tags": [
+      24, 
+      8, 
+      13, 
+      14, 
+      26, 
+      27
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 1, 
+    "badge": "Mal", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Jayne", 
+    "distEmail": "Yes", 
+    "middleName": "", 
+    "lastName": "Cobb", 
+    "tags": [
+      24, 
+      13, 
+      14, 
+      26, 
+      27
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 2, 
+    "badge": "", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Simon", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Tam", 
+    "tags": [
+      24, 
+      8, 
+      3, 
+      13, 
+      14, 
+      26, 
+      27
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 2, 
+    "badge": "", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "River", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Tam", 
+    "tags": [
+      24, 
+      3, 
+      13, 
+      14, 
+      26, 
+      27
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 3, 
+    "badge": "", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Deria", 
+    "distEmail": "Yes", 
+    "middleName": "", 
+    "lastName": "Book", 
+    "tags": [
+      24, 
+      17, 
+      8, 
+      13, 
+      14, 
+      26, 
+      27
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 2, 
+    "badge": "Shepherd Book", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Alexander", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Harris", 
+    "tags": [
+      23, 
+      4, 
+      2, 
+      26
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99, 
+      100
+    ], 
+    "gender": 2, 
+    "badge": "Xander", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Buffy", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Summers", 
+    "tags": [], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 1, 
+    "badge": "She who hangs out in graveyards", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Willow", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Rosenburg", 
+    "tags": [
+      10, 
+      3, 
+      28
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [
+      77, 
+      78, 
+      79, 
+      80, 
+      81, 
+      82, 
+      83, 
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99, 
+      100, 
+      101, 
+      102, 
+      103, 
+      104, 
+      105, 
+      106, 
+      107, 
+      108, 
+      109, 
+      110
+    ], 
+    "gender": 3, 
+    "badge": "", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Rubert", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Giles", 
+    "tags": [
+      21, 
+      5, 
+      15, 
+      1, 
+      9
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [
+      68, 
+      69, 
+      70, 
+      71, 
+      72, 
+      73, 
+      74, 
+      75, 
+      76, 
+      77, 
+      78, 
+      79, 
+      80, 
+      81, 
+      82, 
+      83, 
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99, 
+      100
+    ], 
+    "gender": 2, 
+    "badge": "Ripper", 
+    "email": "", 
+    "recordingOkay": "Yes"
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.person", 
+  "fields": {
+    "memnum": -1, 
+    "complete": "No", 
+    "firstName": "Dawn", 
+    "distEmail": "No", 
+    "middleName": "", 
+    "lastName": "Summers", 
+    "tags": [
+      16, 
+      6
+    ], 
+    "pubNotes": "", 
+    "contact": "", 
+    "badge_only": false, 
+    "privNotes": "", 
+    "availability": [], 
+    "gender": 3, 
+    "badge": "Dawnie", 
+    "email": "", 
+    "recordingOkay": "No"
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [
+      1, 
+      2, 
+      3
+    ], 
+    "title": "Opening Ceremony", 
+    "needsCleanUp": false, 
+    "start": 78, 
+    "shortname": "opening ceremony", 
+    "blurb": "", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      17
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Closing Ceremony", 
+    "needsCleanUp": false, 
+    "start": 75, 
+    "shortname": "closing ceremony", 
+    "blurb": "", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      17
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 21, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Bid Session", 
+    "needsCleanUp": false, 
+    "start": 74, 
+    "shortname": "bid session", 
+    "blurb": "Where the next Eastercon is decided.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      2
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 7, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Art Auction", 
+    "needsCleanUp": false, 
+    "start": 70, 
+    "shortname": "Art Auction", 
+    "blurb": "", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 7, 
+    "room": 3, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 24, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 10, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Masquerade and Cabaret", 
+    "needsCleanUp": false, 
+    "start": 79, 
+    "shortname": "Masquerade", 
+    "blurb": "A grand performance, showcasing the best in fannish skills.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 24, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 9, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Disco", 
+    "needsCleanUp": false, 
+    "start": 80, 
+    "shortname": "Disco", 
+    "blurb": "", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 24, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Is the new Dr Who better than the old one?", 
+    "needsCleanUp": false, 
+    "start": 75, 
+    "shortname": "Dr Who: old vs new", 
+    "blurb": "Which is better, in your humble opinion?", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      22
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 7, 
+    "room": 8, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Tolkien: All you need?", 
+    "needsCleanUp": false, 
+    "start": 72, 
+    "shortname": "Tolkien panel", 
+    "blurb": "Is Tolkien the last word in epic fantasy? Is it worth reading anything published more recently?", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      5, 
+      10
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 7, 
+    "room": 7, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 7, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Are all cons rubbish these days, or what?", 
+    "needsCleanUp": false, 
+    "start": 73, 
+    "shortname": "cons: old vs new", 
+    "blurb": "Watch the old guard complain about how things just aren't as good as they used to be, while the Youth Of Today relentlessly make the same mistakes as their precedecessors.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      2
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 7, 
+    "room": 8, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "Very bright lights on Book, please. Make him sweat! --Mal.", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Interview with Shepherd Book", 
+    "needsCleanUp": false, 
+    "start": 77, 
+    "shortname": "Book GOH", 
+    "blurb": "Mal asks Book about his previous life. Repeatedly. Should be a short interview...", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 4, 
+    "complete": "No", 
+    "tags": [
+      17
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 8, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": "Have some stewards on hand to hold Mal back if he gets too wound up."
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 6, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [
+      4, 
+      5
+    ], 
+    "title": "Jayne Cobb in Conversation", 
+    "needsCleanUp": false, 
+    "start": 71, 
+    "shortname": "Jayne GOH", 
+    "blurb": "The Hero of Canton waxes lyrical about anything that comes to mind. Ask interesting questions, or he'll kill you.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 8, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 8, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [
+      6, 
+      7
+    ], 
+    "title": "First Timers (Friday)", 
+    "needsCleanUp": false, 
+    "start": 77, 
+    "shortname": "First timers 1", 
+    "blurb": "Confused. Maybe this'll help.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      16
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 8, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 21, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 8, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "First Timers (Saturday)", 
+    "needsCleanUp": false, 
+    "start": 68, 
+    "shortname": "First timers 2", 
+    "blurb": "Another chance to find out what you should be doing.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [
+      16
+    ], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 8, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 21, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 14, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 8, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Stewards' Briefing (Friday)", 
+    "needsCleanUp": false, 
+    "start": 77, 
+    "shortname": "Stewards 1", 
+    "blurb": "Where the Gopher Mum hands out the assignments.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 8, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 21, 
+    "privNotes": "Actually, this starts half an hour later. INteresting."
+  }
+},
+{
+  "pk": 15, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 8, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Stewards' Briefing (Saturday)", 
+    "needsCleanUp": false, 
+    "start": 68, 
+    "shortname": "Stewards 2", 
+    "blurb": "Missed yesterday's briefing? Turn up today, and discover only rubbish slots are left.", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 8, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 21, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 16, 
+  "model": "streampunk.item", 
+  "fields": {
+    "seating": 9, 
+    "techNeeded": "TBA", 
+    "visible": true, 
+    "gophers": 0, 
+    "techNotes": "", 
+    "expAudience": 30, 
+    "allTechCrew": false, 
+    "frontLayout": 2, 
+    "kitRequests": [], 
+    "title": "Ceilidh", 
+    "needsCleanUp": false, 
+    "start": 80, 
+    "shortname": "Ceilidh", 
+    "blurb": "Try Scotland's full-contact martial art - set to music!", 
+    "revision": 1, 
+    "mediaStatus": 1, 
+    "stewards": 0, 
+    "complete": "No", 
+    "tags": [], 
+    "pubBring": "Kilt", 
+    "audienceMics": false, 
+    "projNeeded": "TBA", 
+    "needsReset": false, 
+    "kind": 12, 
+    "room": 5, 
+    "follows": null, 
+    "budget": 0, 
+    "length": 22, 
+    "privNotes": ""
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 6, 
+    "person": 8, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 6, 
+    "person": 11, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 6, 
+    "person": 5, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 8, 
+    "person": 10, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 5, 
+    "person": 10, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 4, 
+    "person": 10, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 4, 
+    "person": 2, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 16, 
+    "person": 4, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 16, 
+    "person": 3, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 1, 
+    "person": 6, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 1, 
+    "person": 3, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 2, 
+    "person": 3, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 14, 
+  "model": "streampunk.itemperson", 
+  "fields": {
+    "status": 4, 
+    "visible": true, 
+    "recordingOkay": "No", 
+    "item": 2, 
+    "person": 6, 
+    "role": 6, 
+    "distEmail": "No"
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 2, 
+    "name": "Main hall projector", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [], 
+    "source": 1, 
+    "cost": 100, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 100, 
+    "coordinator": "Lindsey", 
+    "description": ""
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 3, 
+    "name": "Main hall screen", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [], 
+    "source": 1, 
+    "cost": 70, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 70, 
+    "coordinator": "Lindsey", 
+    "description": ""
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 6, 
+    "status": 1, 
+    "kind": 5, 
+    "name": "Main hall stage microphone set", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [], 
+    "source": 1, 
+    "cost": 0, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 0, 
+    "coordinator": "Lindsey", 
+    "description": ""
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 2, 
+    "status": 1, 
+    "kind": 5, 
+    "name": "Main hall roving mics", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [], 
+    "source": 1, 
+    "cost": 100, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 50, 
+    "coordinator": "Lindsey", 
+    "description": ""
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 5, 
+    "status": 1, 
+    "kind": 5, 
+    "name": "Programme 1 microphone set", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [
+      101, 
+      102, 
+      103, 
+      104, 
+      105, 
+      106, 
+      107, 
+      108, 
+      109, 
+      110, 
+      111, 
+      112, 
+      113, 
+      114, 
+      115, 
+      116, 
+      117, 
+      118, 
+      119, 
+      120, 
+      121, 
+      122, 
+      123, 
+      124, 
+      125, 
+      126, 
+      127, 
+      128, 
+      129, 
+      130, 
+      131, 
+      132
+    ], 
+    "source": 1, 
+    "cost": 30, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 30, 
+    "coordinator": "Keith", 
+    "description": ""
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 2, 
+    "name": "Green room projector", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [
+      68, 
+      69, 
+      70, 
+      71, 
+      72, 
+      73, 
+      74, 
+      75, 
+      76, 
+      77, 
+      78, 
+      79, 
+      80, 
+      81, 
+      82, 
+      83, 
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99
+    ], 
+    "source": 1, 
+    "cost": 80, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 80, 
+    "coordinator": "Claire", 
+    "description": ""
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.kitthing", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 3, 
+    "name": "Green room screen", 
+    "basis": 1, 
+    "notes": "", 
+    "availability": [
+      68, 
+      69, 
+      70, 
+      71, 
+      72, 
+      73, 
+      74, 
+      75, 
+      76, 
+      77, 
+      78, 
+      79, 
+      80, 
+      81, 
+      82, 
+      83, 
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99
+    ], 
+    "source": 1, 
+    "cost": 50, 
+    "role": 1, 
+    "department": 2, 
+    "insurance": 20, 
+    "coordinator": "Claire", 
+    "description": ""
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitbundle", 
+  "fields": {
+    "status": 1, 
+    "things": [
+      1, 
+      2, 
+      3, 
+      4
+    ], 
+    "name": "Main hall kit"
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitbundle", 
+  "fields": {
+    "status": 1, 
+    "things": [
+      6, 
+      7
+    ], 
+    "name": "Green room kit"
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 3, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 2, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 4, 
+    "status": 1, 
+    "kind": 5, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 2, 
+    "status": 1, 
+    "kind": 5, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 6, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 3, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.kitrequest", 
+  "fields": {
+    "count": 1, 
+    "status": 1, 
+    "kind": 2, 
+    "setupAssistance": false, 
+    "notes": ""
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kititemassignment", 
+  "fields": {
+    "item": 12, 
+    "bundle": 2, 
+    "thing": 6
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kititemassignment", 
+  "fields": {
+    "item": 12, 
+    "bundle": 2, 
+    "thing": 7
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 7, 
+    "fromSlot": 85, 
+    "bundle": null, 
+    "thing": 5, 
+    "toSlot": 99
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 10, 
+    "fromSlot": 101, 
+    "bundle": 2, 
+    "thing": 6, 
+    "toSlot": 116
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 10, 
+    "fromSlot": 101, 
+    "bundle": 2, 
+    "thing": 7, 
+    "toSlot": 116
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 5, 
+    "fromSlot": 68, 
+    "bundle": 1, 
+    "thing": 1, 
+    "toSlot": 132
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 5, 
+    "fromSlot": 68, 
+    "bundle": 1, 
+    "thing": 2, 
+    "toSlot": 132
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 5, 
+    "fromSlot": 68, 
+    "bundle": 1, 
+    "thing": 3, 
+    "toSlot": 132
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.kitroomassignment", 
+  "fields": {
+    "toLength": 22, 
+    "room": 5, 
+    "fromSlot": 68, 
+    "bundle": 1, 
+    "thing": 4, 
+    "toSlot": 132
+  }
+}
+]

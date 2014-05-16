@@ -193,10 +193,11 @@ class Slot(models.Model):
                                 help_text="True if the slot should be visible in the printed programme")
   isDefault = models.BooleanField(default=False,help_text="True if this should be the default slot for an item. Set this on <em>exactly one</em> slot")
   isUndefined = models.BooleanField(default=False,help_text="True if this value means 'to be decided.' Set this on <em>exactly one</em> slot. Items starting in this slot are considered unscheduled.")
+  order = models.IntegerField(help_text="This is used for determining the order in which slots are listed.")
   objects = DefUndefManager()
 
   class Meta:
-    ordering = [ 'isDefault', 'day', 'start' ]
+    ordering = [ 'order' ]
 
   def __unicode__(self):
     return "%s %s" % (self.day, self.startText)
