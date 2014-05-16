@@ -1144,19 +1144,39 @@ class test_delete_rooms(AuthTest):
     self.assertEqual(mainhall.item_set.count(), 7)
     mh_item_ids = [ i.id for i in mainhall.item_set.all() ]
 
+    # Make the video room the default room
+    video.isDefault = True
+    video.save()
+    nowhere.isDefault = False
+    nowhere.save()
+
     # we can delete the Main Hall
     self.response = self.client.post(reverse('delete_room', args=[ mainhall.id ]), { }, follow=True)
     self.status_okay()
     self.assertFalse(Room.objects.filter(name='Main Hall').exists())
 
-    # But all those items should still exist, now in Nowhere
+    # But all those items should still exist, now in Nowhere, as it is
+    # the 'undefined' room.
     for i in mh_item_ids:
       self.assertTrue(Item.objects.filter(id=i, room=nowhere).exists())
 
-    # We should get an assertion if we try to delete nowhere, though.
-    with self.assertRaises(DeleteNeededObjectException):
+    # We should get an assertion if we try to delete nowhere, though, because
+    # it's the 'undefined' room.
+    with self.assertRaises(DeleteUndefException):
       self.client.post(reverse('delete_room', args=[ nowhere.id ]), { })
     self.assertTrue(Room.objects.filter(name='Nowhere').exists())
+
+    # Equally, we should get an assertion if we try to delete the video room,
+    # as it's currently the default room.
+    with self.assertRaises(DeleteDefaultException):
+      self.client.post(reverse('delete_room', args=[ video.id ]), { })
+    self.assertTrue(Room.objects.filter(name='Video').exists())
+
+    # Change Nowhere back to being the default room again.
+    video.isDefault = False
+    video.save()
+    nowhere.isDefault = True
+    nowhere.save()
 
     # We don't currently have a GUI for adding capacities, so that has
     # to be done through the Admin interface. Therefore, we'll just create
@@ -3272,6 +3292,57 @@ class test_condays(NonauthTest):
     self.assertNotEqual(tba, ConDay.objects.latest_day())
     self.assertNotEqual(tba, ConDay.objects.latest_public_day())
 
+class test_xml_public(NonauthTest):
+  "Pull the XML dump down, and see what's in there, but as a non-authenticated person."
+
+  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+
+  def setUp(self):
+    self.client = Client()
+
+  def test_rooms(self):
+    "Check all the visible rooms are listed."
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for room in Room.objects.filter(visible=True):
+      self.assertTrue(room.name in self.response.content)
+    for room in Room.objects.exclude(visible=True):
+      self.assertFalse(room.name in self.response.content)
+
+  def test_people(self):
+    "Check all the people are listed, by badge name."
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for person in Person.objects.all():
+      if person.as_name() != person.as_badge():
+        # If their name doesn't match their badge, we shouldn't see their name.
+        self.assertFalse(person.as_name() in self.response.content)
+      self.assertTrue(person.as_badge() in self.response.content)
+
+  def test_items(self):
+    "Check all the visible items are listed, if they're in a visible room."
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for item in Item.scheduled.filter(visible=True):
+      self.assertTrue(escape(item.title) in self.response.content)
+      self.assertTrue(escape(item.shortname) in self.response.content)
+    for item in Item.scheduled.exclude(visible=True):
+      # Checking item is omitted as item is not visible
+      self.assertFalse(escape(item.title) in self.response.content)
+      self.assertFalse(escape(item.shortname) in self.response.content)
+    for item in Item.scheduled.exclude(room__visible=True):
+      # Checking item is omitted as item's room is not visible
+      self.assertFalse(escape(item.title) in self.response.content)
+      self.assertFalse(escape(item.shortname) in self.response.content)
+    for item in Item.unscheduled.all():
+      # Checking item is omitted as item is not scheduled
+      self.assertFalse(escape(item.title) in self.response.content)
+      self.assertFalse(escape(item.shortname) in self.response.content)
+
+
 class test_xml(AuthTest):
   "Pull the XML dump down, and see what's in there."
 
@@ -3289,10 +3360,29 @@ class test_xml(AuthTest):
   def test_rooms(self):
     "Check all the rooms are listed."
 
+    # Include some room capacities, so that that gets exercised too.
+
+    empty = self.get_empty()
+    theatre = self.get_theatre()
+    mainhall = self.get_mainhall()
+    video = self.get_video()
+
+    empty_hall = RoomCapacity(layout = empty, count = 60)
+    empty_hall.save()
+    mainhall.capacities.add(empty_hall)
+    theatre_hall = RoomCapacity(layout = theatre, count = 50)
+    theatre_hall.save()
+    mainhall.capacities.add(theatre_hall)
+    empty_video = RoomCapacity(layout = empty, count = 42)
+    empty_video.save()
+    video.capacities.add(empty_video)
+
     self.response = self.client.get(reverse('xml_dump'))
     self.status_okay()
     for room in Room.objects.all():
       self.assertTrue(room.name in self.response.content)
+      for cap in room.capacities.all():
+        self.assertTrue(cap.as_xml() in self.response.content)
 
   def test_people(self):
     "Check all the people are listed."
@@ -3304,13 +3394,77 @@ class test_xml(AuthTest):
       self.assertTrue(person.as_badge() in self.response.content)
 
   def test_items(self):
-    "Check all the items are listed."
+    "Check the scheduled items are listed, and the unscheduled ones are not."
 
     self.response = self.client.get(reverse('xml_dump'))
     self.status_okay()
-    for item in Item.objects.all():
+    for item in Item.scheduled.all():
       self.assertTrue(escape(item.title) in self.response.content)
       self.assertTrue(escape(item.shortname) in self.response.content)
+    for item in Item.unscheduled.all():
+      self.assertFalse(escape(item.title) in self.response.content)
+      self.assertFalse(escape(item.shortname) in self.response.content)
+
+  def test_kit(self):
+    "Check that kit turns up in the XML dump."
+
+    # There aren't any kit requests or kit assignments at first,
+    # so no kit things should be appearing in the dump
+
+    self.assertEqual(KitRequest.objects.count(), 0)
+    self.assertEqual(KitItemAssignment.objects.count(), 0)
+    self.assertEqual(KitRoomAssignment.objects.count(), 0)
+
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for kt in KitThing.objects.all():
+      self.assertFalse(kt.as_xml() in self.response.content)
+
+    # Get the bits and pieces we need to create some requests and assignments.
+
+    disco = self.get_disco()
+    ceilidh = self.get_ceilidh()
+    greenroomscr = self.get_greenroomscr()
+    greenroomproj = self.get_greenroomproj()
+    mainhall = self.get_mainhall()
+    mainhallscr = self.get_mainhallscr()
+    mainhallproj = self.get_mainhallproj()
+    proj = self.get_proj()
+    scr = self.get_screen()
+
+    # Create the requests
+    disco_scr = KitRequest(kind = scr, count = 1)
+    disco_scr.save()
+    ceilidh_proj = KitRequest(kind = proj, count = 2)
+    ceilidh_proj.save()
+    disco.kitRequests.add(disco_scr)
+    ceilidh.kitRequests.add(ceilidh_proj)
+
+    # Create some assignments
+    disco_proj = KitItemAssignment(item = disco, thing = greenroomproj)
+    disco_proj.save()
+    ceilidh_scr = KitItemAssignment(item = ceilidh, thing = greenroomscr)
+    ceilidh_scr.save()
+    mainhall_screen = KitRoomAssignment(room=mainhall, thing=mainhallscr,
+                                        fromSlot=self.get_morning(), toSlot=self.get_evening(), toLength=self.get_hour())
+    mainhall_screen.save()
+    ceilidh_proj = KitRoomAssignment(room=mainhall, thing=mainhallproj,
+                                     fromSlot=ceilidh.start, toSlot=ceilidh.start, toLength=ceilidh.length)
+    ceilidh_proj.save()
+
+    assigned_things = [ greenroomproj, greenroomscr, mainhallscr, mainhallproj ]
+
+    # Now let's make sure those things appear in the XML dump.
+    self.response = self.client.get(reverse('xml_dump'))
+    self.status_okay()
+    for kt in KitThing.objects.all():
+      if kt in assigned_things:
+        self.assertTrue(kt.as_xml() in self.response.content)
+      else:
+        self.assertFalse(kt.as_xml() in self.response.content)
+    for kr in KitRequest.objects.all():
+      self.assertTrue(kr.as_xml() in self.response.content)
+
 
 # Tests required
 # Items
