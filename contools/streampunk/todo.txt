@@ -2,15 +2,50 @@ Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
-Revisit the two-scoops book:
+21 failures
+FAIL: test_rooms1 (streampunk.tests.Auth_lists)
+FAIL: test_rooms0 (streampunk.tests.nonauth_lists)
+FAIL: test_people_items (streampunk.tests.test_add_panellists)
+FAIL: test_person_tags (streampunk.tests.test_add_panellists)
+FAIL: test_person_tags (streampunk.tests.test_add_panellists)
+FAIL: test_items_kit (streampunk.tests.test_delete_items_with_stuff)
+FAIL: test_items_people_tags (streampunk.tests.test_delete_items_with_stuff)
+FAIL: test_delete_rooms_with_kit (streampunk.tests.test_delete_rooms)
+FAIL: test_delete_rooms_with_stuff (streampunk.tests.test_delete_rooms)
+FAIL: test_delete_tags_on_stuff (streampunk.tests.test_delete_tags)
+FAIL: test_edit_item_tags (streampunk.tests.test_edit_items)
+FAIL: test_edit_kit_requests (streampunk.tests.test_edit_items)
+FAIL: test_available_for_item (streampunk.tests.test_kit_availability)
+FAIL: test_kit_avail_for_room (streampunk.tests.test_kit_availability)
+FAIL: test_never_and_always (streampunk.tests.test_kit_availability)
+FAIL: test_never_and_always (streampunk.tests.test_person_availability)
+FAIL: test_available_for_item (streampunk.tests.test_room_availability)
+FAIL: test_item_not_satisfied (streampunk.tests.test_satisfaction)
+FAIL: test_kit (streampunk.tests.test_xml)
+
+
 - Handle settings.py
 
-Look into the Tables2 pagination issue.
-	- We just hide the pagination controls in the template; we don't tell it not to paginate.
-	- We could set the paginate control to have count items per page.
-	- We could turn it back on, for large numbers of things...
-		Problem with that is, I'm not sure what it'll do to the PersonList selections.
-
+Outstanding coverage:
+	- as_xml_public()
+	- Tags, in XML.
+	- Tags, read priv, but not edit_prog priv
+	- KitSatisfaction.missing_things()
+	- KitThings, KitRequests in public XML
+	- KitBundles in_use() w/o room assignment.
+	- __unicode__() and get_absolute_url() for KitRoomAssignment, KitItemAssignment
+	- KitItemAssignment.item_day()
+	- RoomCapacity __unicode__(), in XML.
+	- Room delete default, XML public, kit_room_assignments(), read priv w/o edit
+	- Person as_badge(), XML public, cleaned names from creation form.
+	- Person read priv, no edit
+	- Item read priv no edit, shortnames rather than titles
+	- Item cleaned names in form, XML public
+	- Item overlaps(), kit item/room assignments, day(), startText()
+	- ItemPerson as XML, read w/o edit, no_perms
+	- PersonList __unicode__(), get_absolute_url()
+	- Check __unicode__(), get_absolute_url()
+	- UserProfile __unicode__(), get_absolute_url()
 London
 ------
 - Increase the coverage

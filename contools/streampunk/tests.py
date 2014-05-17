@@ -600,7 +600,7 @@ class test_creation(AuthTest):
 
 class test_add_panellists(AuthTest):
   "Adding people to items."
-  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -818,7 +818,7 @@ class test_add_panellists(AuthTest):
 
 class test_delete_people(AuthTest):
   "Deleting people"
-  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -891,7 +891,7 @@ class test_delete_people(AuthTest):
 
 class test_delete_items_with_stuff(AuthTest):
   "Deleting items"
-  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -1036,7 +1036,7 @@ class test_delete_items_with_stuff(AuthTest):
 
 class test_delete_tags(AuthTest):
   "Deleting tags"
-  fixtures = [ 'room', 'person', 'items', 'tags' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -1108,7 +1108,7 @@ class test_delete_tags(AuthTest):
 
 class test_delete_rooms(AuthTest):
   "Deleting rooms"
-  fixtures = [ 'room', 'items', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -1302,7 +1302,7 @@ class test_delete_rooms(AuthTest):
 
 class test_delete_enums(AuthTest):
   "Deleting enumerations and other important things."
-  fixtures = [ 'room', 'person', 'items', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -1452,13 +1452,8 @@ class test_delete_enums(AuthTest):
                    matches=(lambda thing, val: thing.mediaStatus==val))
 
   def test_delete_methods_itempeople(self):
-    # Make sure we have some people on items.
-    buffy = self.get_buffy()
-    dawn = self.get_dawn()
-    giles = self.get_giles()
-    xander = self.get_xander()
     disco = self.get_disco()
-    bid = self.get_bidsession()
+    ceilidh = self.get_ceilidh()
 
     mod = PersonRole.objects.get(name='Moderator')
     speaker = PersonRole.objects.get(name='Speaker')
@@ -1467,26 +1462,25 @@ class test_delete_enums(AuthTest):
     invited = PersonStatus.objects.get(name='Invited')
     confirmed = PersonStatus.objects.get(name='Confirmed')
 
+    # Make sure we don't currently have any uses of these statuses
+    self.assertEqual(ItemPerson.objects.filter(status=invited).count(), 0)
+    self.assertEqual(ItemPerson.objects.filter(status=confirmed).count(), 0)
+    self.assertEqual(ItemPerson.objects.filter(role=mod).count(), 0)
+    self.assertEqual(ItemPerson.objects.filter(role=speaker).count(), 0)
+
     # We'll delete Moderator, leave Speaker untouched.
-    xanderbid = ItemPerson(item=bid, person=xander, role=mod, status=confirmed)
-    gilesbid = ItemPerson(item=bid, person=giles, role=mod, status=confirmed)
+    discopeeps = ItemPerson.objects.filter(item=disco)
+    discopeeps.update(role=mod, status=confirmed)
 
     # We'll delete Proposed, and leave Confirmed untouched.
-    buffydisco = ItemPerson(item=disco, person=buffy, role=speaker, status=invited)
-    gilesdisco = ItemPerson(item=disco, person=giles, role=speaker, status=invited)
-    dawndisco = ItemPerson(item=disco, person=dawn, role=speaker, status=invited)
-
-    xanderbid.save()
-    gilesbid.save()
-    buffydisco.save()
-    gilesdisco.save()
-    dawndisco.save()
+    ceilidhpeeps = ItemPerson.objects.filter(item=ceilidh)
+    ceilidhpeeps.update(role=speaker, status=invited)
 
     # PersonRole
     # Choice of 4+, everything TBA
 
     self.poke_enum(all=ItemPerson.objects.all(),
-                   should_change=[ gilesbid, xanderbid ],
+                   should_change=discopeeps,
                    change_from=mod,
                    change_to=PersonRole.objects.find_undefined(),
                    matches=(lambda thing, val: thing.role==val))
@@ -1495,7 +1489,7 @@ class test_delete_enums(AuthTest):
     # Several choices, all TBA
 
     self.poke_enum(all=ItemPerson.objects.all(),
-                   should_change=[ buffydisco, gilesdisco, dawndisco],
+                   should_change=ceilidhpeeps,
                    change_from=invited,
                    change_to=PersonStatus.objects.find_undefined(),
                    matches=(lambda thing, val: thing.status==val))
@@ -1610,7 +1604,7 @@ class test_delete_enums(AuthTest):
 
 class test_edit_items(AuthTest):
   "Editing aspects of an item."
-  fixtures = [ 'room', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
@@ -2098,7 +2092,7 @@ class test_edit_items(AuthTest):
 
 class test_item_assignment(AuthTest):
   "Direct test of kit things and kit item assignment."
-  fixtures = [ 'room', 'items', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def test_satisfaction_methods(self):
     # Create some kit requests for different numbers of projectors
@@ -2149,7 +2143,7 @@ class test_item_assignment(AuthTest):
 
 class test_room_assignment(AuthTest):
   "Direct test of kit things and kit room assignment."
-  fixtures = [ 'room', 'items', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def test_satisfaction_methods(self):
     # Create some kit requests for different numbers of projectors
@@ -2230,7 +2224,7 @@ class test_room_assignment(AuthTest):
 
 class test_satisfaction(AuthTest):
   "Satisfying Kit Requests."
-  fixtures = [ 'room', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   ItemsWithUnsatisfiedKitReqs = "Items with unsatisfied kit requests"
   KitClashes = "Kit clashes"
@@ -2457,7 +2451,7 @@ class test_satisfaction(AuthTest):
 
 class test_room_availability(AuthTest):
   "Direct test of room availability."
-  fixtures = [ 'room', 'items' ]
+  fixtures = [ 'demo_data' ]
 
   def test_never_and_always(self):
 
@@ -2577,7 +2571,7 @@ class test_room_availability(AuthTest):
 
 class test_person_availability(AuthTest):
   "Direct test of person availability."
-  fixtures = [ 'room', 'person', 'items' ]
+  fixtures = [ 'demo_data' ]
 
   def test_never_and_always(self):
 
@@ -2697,7 +2691,7 @@ class test_person_availability(AuthTest):
 
 class test_kit_availability(AuthTest):
   "Direct test of kit availability."
-  fixtures = [ 'room', 'items', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def test_never_and_always(self):
 
@@ -2859,7 +2853,7 @@ class test_kit_availability(AuthTest):
 
 class test_slot_items(AuthTest):
   "Test what appears in slot item methods."
-  fixtures = [ 'room', 'items', 'person' ]
+  fixtures = [ 'demo_data' ]
 
   def test_starting_direct(self):
     """
@@ -2986,7 +2980,7 @@ class test_slot_items(AuthTest):
 
 class test_grids(AuthTest):
   "Direct test of what appears in grid cells."
-  fixtures = [ 'room', 'items', 'person' ]
+  fixtures = [ 'demo_data' ]
 
   def test_list_grids(self):
     self.response = self.client.get(reverse('list_grids'))
@@ -3059,7 +3053,7 @@ class test_grids(AuthTest):
 
     disco = self.get_disco()
     cabaret = self.get_cabaret()
-    bidsession = self.get_bidsession()
+    ceilidh = self.get_bidsession()
 
     buffy = self.get_buffy()
     giles = self.get_giles()
@@ -3068,108 +3062,102 @@ class test_grids(AuthTest):
     # XXX There's a question of a bug here. If we make an item non-visible,
     # should that make us treat all the people as non-visible too, regardless
     # of how they've been added? Should we just make that a Check?
-    bidsession.visible = False
-    bidsession.save()
+    ceilidh.visible = False
+    ceilidh.save()
 
     self.assertTrue(disco.visible)
     self.assertTrue(cabaret.visible)
-    self.assertFalse(bidsession.visible)
+    self.assertFalse(ceilidh.visible)
 
     # Add each of the people to each of the items, but mix-and-match
     # who should be visible on each.
 
-    ip = ItemPerson(item=disco, person=buffy, visible=True)
-    ip.save()
+    # buffy and dawn are already on the disco, and visible
     ip = ItemPerson(item=cabaret, person=buffy, visible=True)
     ip.save()
-    ip = ItemPerson(item=bidsession, person=buffy, visible=True)
+    ip = ItemPerson(item=ceilidh, person=buffy, visible=True)
     ip.save()
+    # Giles is on the cabaret - make him invisible
+    ItemPerson.objects.filter(item=cabaret, person=giles).update(visible=False)
     ip = ItemPerson(item=disco, person=giles, visible=False)
     ip.save()
-    ip = ItemPerson(item=cabaret, person=giles, visible=False)
-    ip.save()
-    ip = ItemPerson(item=bidsession, person=giles, visible=False)
-    ip.save()
-    ip = ItemPerson(item=disco, person=dawn, visible=True)
+    ip = ItemPerson(item=ceilidh, person=giles, visible=False)
     ip.save()
     ip = ItemPerson(item=cabaret, person=dawn, visible=True)
     ip.save()
-    ip = ItemPerson(item=bidsession, person=dawn, visible=False)
+    ip = ItemPerson(item=ceilidh, person=dawn, visible=False)
     ip.save()
 
     # Everyone should all be returned by the people lists, because they don't filter.
 
     for p in [ buffy, giles, dawn ]:
-      for i in [ disco, cabaret, bidsession ]:
+      for i in [ disco, cabaret, ceilidh ]:
         self.assertTrue(p in i.people.all())
 
     # Buffy should also be in the public list for each item, but Giles should not be.
 
-    for i in [ disco, cabaret, bidsession ]:
+    for i in [ disco, cabaret, ceilidh ]:
       self.assertTrue(buffy in i.people_public())
       self.assertFalse(giles in i.people_public())
 
     # Dawn should be in the public list for disco and cabaret, but not the big session.
     self.assertTrue(dawn in disco.people_public())
     self.assertTrue(dawn in cabaret.people_public())
-    self.assertFalse(dawn in bidsession.people_public())
+    self.assertFalse(dawn in ceilidh.people_public())
 
 class test_grids_public(NonauthTest):
   "Test what the templates retrieve, for grids."
-  fixtures = [ 'room', 'items', 'person' ]
+  fixtures = [ 'demo_data' ]
 
   def test_people_on_items_in_cells(self):
     "Check that people are visible on items in cells (or not)."
 
     disco = self.get_disco()
     cabaret = self.get_cabaret()
-    bidsession = self.get_bidsession()
+    ceilidh = self.get_ceilidh()
 
     buffy = self.get_buffy()
     giles = self.get_giles()
     dawn = self.get_dawn()
 
-    bidsession.visible = False
-    bidsession.save()
+    ceilidh.visible = False
+    ceilidh.save()
 
     self.assertTrue(disco.visible)
     self.assertTrue(cabaret.visible)
-    self.assertFalse(bidsession.visible)
+    self.assertFalse(ceilidh.visible)
 
-    # Move each of these items to 10pm, on consecutive days
+    # Move each of these items to 11am, on consecutive days
 
-    disco.start = Slot.objects.get(startText='10pm', day__name='Friday')
+    disco.start = Slot.objects.get(startText='11am', day__name='Friday')
     disco.save()
-    cabaret.start = Slot.objects.get(startText='10pm', day__name='Saturday')
+    cabaret.start = Slot.objects.get(startText='11am', day__name='Saturday')
     cabaret.save()
-    bidsession.start = Slot.objects.get(startText='10pm', day__name='Sunday')
-    bidsession.save()
+    ceilidh.start = Slot.objects.get(startText='11am', day__name='Sunday')
+    ceilidh.save()
 
     # Add each of the people to each of the items, but mix-and-match
     # who should be visible on each.
 
-    ip = ItemPerson(item=disco, person=buffy, visible=True)
-    ip.save()
+    # Buffy and Dawn are already on the disco, and visible
     ip = ItemPerson(item=cabaret, person=buffy, visible=True)
     ip.save()
-    ip = ItemPerson(item=bidsession, person=buffy, visible=True)
+    ip = ItemPerson(item=ceilidh, person=buffy, visible=True)
     ip.save()
     ip = ItemPerson(item=disco, person=giles, visible=False)
     ip.save()
-    ip = ItemPerson(item=cabaret, person=giles, visible=False)
-    ip.save()
-    ip = ItemPerson(item=bidsession, person=giles, visible=False)
-    ip.save()
-    ip = ItemPerson(item=disco, person=dawn, visible=True)
+    # Giles is already on the cabaret, but visible - change that
+    ItemPerson.objects.filter(item=cabaret, person=giles).update(visible=False)
+    ip = ItemPerson(item=ceilidh, person=giles, visible=False)
     ip.save()
     ip = ItemPerson(item=cabaret, person=dawn, visible=True)
     ip.save()
-    ip = ItemPerson(item=bidsession, person=dawn, visible=False)
+    ip = ItemPerson(item=ceilidh, person=dawn, visible=False)
     ip.save()
 
     # Everyone but Giles should be visible, for the disco
 
-    grid = Grid.objects.get(name='Friday 10pm-2am')
+    grid = Grid.objects.get(name='Friday 10am-2pm')
     self.assertTrue(disco.start in grid.slots.all())
     self.response = self.client.get(reverse('show_grid', kwargs={ "gr": grid.id }))
     self.status_okay()
@@ -3180,7 +3168,7 @@ class test_grids_public(NonauthTest):
 
     # Buffy and Dawn are visible on the cabaret, but Giles is not.
 
-    grid = Grid.objects.get(name='Saturday 10pm-2am')
+    grid = Grid.objects.get(name='Saturday 10am-2pm')
     self.assertTrue(cabaret.start in grid.slots.all())
     self.response = self.client.get(reverse('show_grid', kwargs={ "gr": grid.id }))
     self.status_okay()
@@ -3191,11 +3179,11 @@ class test_grids_public(NonauthTest):
 
     # The bid session isn't visible, so we shouldn't see it, or anyone on it.
 
-    grid = Grid.objects.get(name='Sunday 10pm-2am')
-    self.assertTrue(bidsession.start in grid.slots.all())
+    grid = Grid.objects.get(name='Sunday 10am-2pm')
+    self.assertTrue(ceilidh.start in grid.slots.all())
     self.response = self.client.get(reverse('show_grid', kwargs={ "gr": grid.id }))
     self.status_okay()
-    self.no_link_to('show_item_detail', args=[int(bidsession.id)])
+    self.no_link_to('show_item_detail', args=[int(ceilidh.id)])
     self.no_link_to('show_person_detail', args=[int(buffy.id)])
     self.no_link_to('show_person_detail', args=[int(dawn.id)])
     self.no_link_to('show_person_detail', args=[int(giles.id)])
@@ -3295,7 +3283,7 @@ class test_condays(NonauthTest):
 class test_xml_public(NonauthTest):
   "Pull the XML dump down, and see what's in there, but as a non-authenticated person."
 
-  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.client = Client()
@@ -3346,7 +3334,7 @@ class test_xml_public(NonauthTest):
 class test_xml(AuthTest):
   "Pull the XML dump down, and see what's in there."
 
-  fixtures = [ 'room', 'person', 'items', 'tags', 'kit' ]
+  fixtures = [ 'demo_data' ]
 
   def setUp(self):
     self.mkroot()
