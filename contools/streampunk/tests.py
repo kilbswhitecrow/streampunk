@@ -309,7 +309,7 @@ class nonauth_lists(NonauthTest):
     self.has_column(t, 'name')
     self.has_column(t, 'gridOrder')
     self.has_column(t, 'description')
-    self.assertEqual(self.num_rows(t), 1)
+    self.assertEqual(self.num_rows(t), 7) # Everywhere, Ops, Video, Programme 1 & 2, Main and Second Hall.
     self.no_row(t, { 'name': 'Nowhere' })
     self.has_row(t, { 'name': 'Everywhere' })
     self.no_link_to('new_room')
@@ -403,7 +403,7 @@ class Auth_lists(AuthTest):
     self.has_column(t, 'visible')
     self.has_column(t, 'edit')
     self.has_column(t, 'remove')
-    self.assertEqual(self.num_rows(t), 2)
+    self.assertEqual(self.num_rows(t), 8) # Everywhere, Nowhere, Video, Ops, Main and Second Hall, Programme 1 & 2
     self.has_row(t, { 'name': 'Nowhere', 'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
     self.has_row(t, { 'name': 'Everywhere', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
     self.has_link_to('new_room')
@@ -612,34 +612,28 @@ class test_add_panellists(AuthTest):
     self.zaproot()
 
   def test_people_items(self):
-    buffy = self.get_buffy()
-    giles = self.get_giles()
-    ceilidh = self.get_ceilidh()
-    disco = self.get_disco()
+    buffy = self.get_buffy()		# Is on Disco
+    giles = self.get_giles()		# Is on Tolkien, Cabaret and Art auction
+    ceilidh = self.get_ceilidh()	# Has Jayne and Simon
+    disco = self.get_disco()		# Has Buffy,  River and Dawn
     panellist = PersonRole.objects.find_default()
     
     itable = 'item_people_table'  # people on the item
     ptable = 'person_items_table' # items person is on
 
-    # Add Buffy to an item
-
-    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
-      "item":    disco.id,
-      "person":  buffy.id,
-      "role":    panellist.id
-    }), follow=True)
-    self.status_okay()
-
+    # Buffy is on the disco, but nothing else
     self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": buffy.id }))
     self.status_okay()
     self.assertEqual(self.num_rows(ptable), 1)
     self.has_row(ptable, { "item": disco, "role": panellist })
 
+    # Disco has Buffy, River and Dawn.
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
     self.status_okay()
     self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
 
-    # Add Giles to an item
+    # Add Giles to the ceilidh, so it'll be Giles, Jayne and Simon
+    # And Giles will be on ceilidh, Tolkein, art auction and cabaret
 
     self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
       "item":    ceilidh.id,
@@ -656,7 +650,8 @@ class test_add_panellists(AuthTest):
     self.status_okay()
     self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
 
-    # Add Buffy to another item
+    # Add Buffy to the ceilidh, so that it'll have Jayne, Simon, Giles and Buffy,
+    # and buffy will be on ceilidh and disco
 
     self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
       "item":    ceilidh.id,
@@ -665,7 +660,8 @@ class test_add_panellists(AuthTest):
     }), follow=True)
     self.status_okay()
 
-    # Add Giles to another item
+    # Add Giles to disco, so that he's on disco, cabaret, ceilidh, tolkien, art auction
+    # and Disco will have buffy, giles, dawn, river.
 
     self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
       "item":    disco.id,
@@ -682,23 +678,23 @@ class test_add_panellists(AuthTest):
 
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": ceilidh.id }))
     self.status_okay()
-    self.assertEqual(self.num_rows(itable), 2)
+    self.assertEqual(self.num_rows(itable), 4) # giles, buffy, Jayne and Simon
     self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
     self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
 
     self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": giles.id }))
     self.status_okay()
-    self.assertEqual(self.num_rows(ptable), 2)
+    self.assertEqual(self.num_rows(ptable), 5) # disco, cabaret, ceilidh, tolkien, art auction
     self.has_row(ptable, { "item": disco, "role": panellist, "visible": True })
     self.has_row(ptable, { "item": ceilidh, "role": panellist, "visible": True })
 
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
     self.status_okay()
-    self.assertEqual(self.num_rows(itable), 2)
+    self.assertEqual(self.num_rows(itable), 4) # buffy, giles, dawn, river.
     self.has_row(itable, { "person": giles, "role": panellist, "visible": True })
     self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
 
-    # Add Giles to the same item
+    # Add Giles to the disco, which he's already on.
 
     self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
       "item":    disco.id,
@@ -720,7 +716,7 @@ class test_add_panellists(AuthTest):
     self.status_okay()
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
     self.status_okay()
-    self.assertEqual(self.num_rows(itable), 2)
+    self.assertEqual(self.num_rows(itable), 4) # buffy, giles, dawn, river.
     self.has_row(itable, { "person": buffy, "role": panellist, "visible": True })
     
     # But a POST should work.
@@ -730,7 +726,7 @@ class test_add_panellists(AuthTest):
     self.status_okay()
     self.response = self.client.get(reverse('show_item_detail', kwargs={ "pk": disco.id }))
     self.status_okay()
-    self.assertEqual(self.num_rows(itable), 1)
+    self.assertEqual(self.num_rows(itable), 3) # giles, dawn, river.
     self.no_row(itable, { "person": buffy, "role": panellist, "visible": True })
     self.response = self.client.get(reverse('show_person_detail', kwargs={ "pk": buffy.id }))
     self.status_okay()
@@ -763,6 +759,10 @@ class test_add_panellists(AuthTest):
     books = self.get_books()
     movies = self.get_movies()
 
+    # Clear out the tags on Giles
+    tags = giles.tags.all()
+    for t in tags:
+      giles.tags.remove(t)
     # No tags for anyone yet
     person_lists_tags(self, buffy, [])
     person_lists_tags(self, giles, [])
@@ -778,7 +778,7 @@ class test_add_panellists(AuthTest):
     }, follow=True)
     self.status_okay()
     person_lists_tags(self, buffy, newtags)
-    person_lists_tags(self, giles, [])
+    person_lists_tags(self, giles, [ ])
 
     # Again, but with only one new tag.
     # Looks like this particular test currently fails.
@@ -788,7 +788,7 @@ class test_add_panellists(AuthTest):
     }, follow=True)
     self.status_okay()
     person_lists_tags(self, buffy, newtags)
-    person_lists_tags(self, giles, [])
+    person_lists_tags(self, giles, [ ])
 
     # If we include tags twice, they should not get added twice.
     newtags = [ books, movies ]
@@ -1680,8 +1680,8 @@ class test_edit_items(AuthTest):
 
     # Check that there's no tags on the item yet
     self.assertEqual(disco.tags.count(), 0)
-    # Check that the tags aren't attached to any items
-    self.assertEqual(books.item_set.count(), 0)
+    # Check existing uses of the tags
+    self.assertEqual(books.item_set.count(), 1)   # For Tolkien
     self.assertEqual(movies.item_set.count(), 0)
 
     # Check that the item doesn't appear in a search on the tags
@@ -1703,7 +1703,7 @@ class test_edit_items(AuthTest):
     item_lists_tag(self, disco, books, True)
     item_lists_tag(self, disco, movies, False)
     self.assertEqual(disco.tags.count(), 1)
-    self.assertEqual(books.item_set.count(), 1)
+    self.assertEqual(books.item_set.count(), 2)
     self.assertEqual(movies.item_set.count(), 0)
 
     # Add movies, too.
@@ -1718,7 +1718,7 @@ class test_edit_items(AuthTest):
     item_lists_tag(self, disco, books, True)
     item_lists_tag(self, disco, movies, True)
     self.assertEqual(disco.tags.count(), 2)
-    self.assertEqual(books.item_set.count(), 1)
+    self.assertEqual(books.item_set.count(), 2)
     self.assertEqual(movies.item_set.count(), 1)
 
     # Edit to remove books, and leave movies there.
@@ -1733,7 +1733,7 @@ class test_edit_items(AuthTest):
     item_lists_tag(self, disco, books, False)
     item_lists_tag(self, disco, movies, True)
     self.assertEqual(disco.tags.count(), 1)
-    self.assertEqual(books.item_set.count(), 0)
+    self.assertEqual(books.item_set.count(), 1)
     self.assertEqual(movies.item_set.count(), 1)
 
     # Edit again, to have no tags.
@@ -1747,7 +1747,7 @@ class test_edit_items(AuthTest):
     item_lists_tag(self, disco, books, False)
     item_lists_tag(self, disco, movies, False)
     self.assertEqual(disco.tags.count(), 0)
-    self.assertEqual(books.item_set.count(), 0)
+    self.assertEqual(books.item_set.count(), 1)
     self.assertEqual(movies.item_set.count(), 0)
 
     # Edit to include books twice; check that we don't get two instances.
@@ -1768,8 +1768,9 @@ class test_edit_items(AuthTest):
 
     disco = self.get_disco()
 
-    # No kit requests yet.
-    self.assertEqual(KitRequest.objects.count(), 0)
+    # No kit requests on disco yet
+    self.assertEqual(disco.kitRequests.count(), 0)
+    prev_reqs = list(KitRequest.objects.all())
 
     self.response = self.client.post(reverse('add_kitrequest_to_item', args=[ disco.id ]), {
       "kind": KitKind.objects.find_default().id,
@@ -1779,10 +1780,12 @@ class test_edit_items(AuthTest):
     }, follow=True)
     self.status_okay()
     self.form_okay()
-    self.assertEqual(KitRequest.objects.count(), 1)
+    self.assertEqual(disco.kitRequests.count(), 1)
 
     # Let's see which one it is.
-    req = KitRequest.objects.all()[0]
+    for kr in kitRequest.objects.all():
+      if kr not in prev_reqs:
+        req = kr
     reqid = req.id
 
     # Make sure it's on the item, and vice versa
@@ -1814,7 +1817,7 @@ class test_edit_items(AuthTest):
     # delete it.
     self.response = self.client.post(reverse('delete_kitrequest', args=[ req.id ]), { }, follow=True)
     self.status_okay()
-    self.assertEqual(KitRequest.objects.count(), 0)
+    self.assertEqual(KitRequest.objects.count(), len(prev_reqs))
 
   def test_edit_kit_things(self):
     "Adding/removing/editing kit things on items and rooms."
@@ -2260,9 +2263,15 @@ class test_satisfaction(AuthTest):
     "Check that reqs on items are correctly not satisfied, when not fulfilled."
 
     disco = self.get_disco()
-    req = self.req_proj()
+
+    # Clear out any kit assignments from the item, and the item's room
     self.assertEqual(disco.kitRequests.count(), 0)
     self.assertEqual(disco.kit.count(), 0)
+    self.assertNotEqual(disco.room.kit.count(), 0)
+    KitRoomAssignment.objects.filter(room=disco.room).delete()
+    self.assertEqual(disco.room.kit.count(), 0)
+
+    req = self.req_proj()
     self.add_req_to_item(req, disco)
     self.assertEqual(disco.kitRequests.count(), 1)
     # convert our dict back into the proper request
@@ -2865,19 +2874,23 @@ class test_slot_items(AuthTest):
     cabaret = self.get_cabaret()
     ceilidh = self.get_ceilidh()
 
-    friday09 = Slot.objects.get(startText='9pm', day__name='Friday')
-    friday10 = Slot.objects.get(startText='10pm', day__name='Friday')
+    cabaret_slot = Slot.objects.get(startText='9pm', day__name='Friday')
+    disco_slot = Slot.objects.get(startText='10pm', day__name='Friday')
+    cabaret.start = cabaret_slot
+    cabaret.save()
+    disco.start = disco_slot
+    disco.save()
 
-    self.assertEqual(friday09, cabaret.start)
-    self.assertEqual(friday10, disco.start)
-    self.assertEqual(friday10, ceilidh.start)
+    self.assertEqual(cabaret_slot, cabaret.start)
+    self.assertEqual(disco_slot, disco.start)
+    self.assertEqual(disco_slot, ceilidh.start)
 
     for i in [ disco, cabaret, ceilidh ]:
-      self.assertTrue(i in friday10.items())
+      self.assertTrue(i in disco_slot.items())
     for i in [ ceilidh, disco ]:
-      self.assertTrue(i in friday10.items_starting())
-      self.assertFalse(i in friday09.items_starting())
-      self.assertFalse(i in friday09.items())
+      self.assertTrue(i in disco_slot.items_starting())
+      self.assertFalse(i in cabaret_slot.items_starting())
+      self.assertFalse(i in cabaret_slot.items())
 
   def test_starting_indirect(self):
     """
@@ -2898,12 +2911,14 @@ class test_slot_items(AuthTest):
     disco.room = ops
     disco.save()
 
-    friday09 = Slot.objects.get(startText='9pm', day__name='Friday')
-    friday10 = Slot.objects.get(startText='10pm', day__name='Friday')
+    cabaret_slot = Slot.objects.get(startText='9pm', day__name='Friday')
+    disco_slot = Slot.objects.get(startText='10pm', day__name='Friday')
 
-    self.assertEqual(friday09, cabaret.start)
-    self.assertEqual(friday10, disco.start)
-    self.assertEqual(friday10, ceilidh.start)
+    cabaret.start = cabaret_slot
+    cabaret.save()
+    disco.start = disco_slot
+    disco.save()
+
 
     # Check what appears in the items and items_starting lists for each slot.
     # No room specified yet.
@@ -2913,7 +2928,7 @@ class test_slot_items(AuthTest):
     # 10pm: items: disco, cabaret, ceilidh
     # 10pm: starting: disco, ceilidh
 
-    self.response = self.client.get(reverse('show_slot_detail', args=[friday09.id]))
+    self.response = self.client.get(reverse('show_slot_detail', args=[cabaret_slot.id]))
     self.status_okay()
     self.has_row('itable', { "title": cabaret.title })
     self.has_row('itable_starting', { "title": cabaret.title })
@@ -2922,7 +2937,7 @@ class test_slot_items(AuthTest):
     self.no_row('itable', { "title": ceilidh.title })
     self.no_row('itable_starting', { "title": ceilidh.title })
 
-    self.response = self.client.get(reverse('show_slot_detail', args=[friday10.id]))
+    self.response = self.client.get(reverse('show_slot_detail', args=[disco_slot.id]))
     self.status_okay()
     self.has_row('itable', { "title": cabaret.title })
     self.no_row('itable_starting', { "title": cabaret.title })
@@ -2936,13 +2951,13 @@ class test_slot_items(AuthTest):
     # to check directly.
 
     for i in [ disco, cabaret, ceilidh ]:
-      self.assertTrue(i in friday10.items())
+      self.assertTrue(i in disco_slot.items())
     for i in [ disco, ceilidh ]:
-      self.assertTrue(i in friday10.items_starting())
-      self.assertFalse(i in friday09.items_starting())
-      self.assertFalse(i in friday09.items())
-    self.assertTrue(cabaret in friday09.items())
-    self.assertTrue(cabaret in friday09.items_starting())
+      self.assertTrue(i in disco_slot.items_starting())
+      self.assertFalse(i in cabaret_slot.items_starting())
+      self.assertFalse(i in cabaret_slot.items())
+    self.assertTrue(cabaret in cabaret_slot.items())
+    self.assertTrue(cabaret in cabaret_slot.items_starting())
 
     # We expect:
     # 9pm main hall: items: cabaret
@@ -2951,17 +2966,17 @@ class test_slot_items(AuthTest):
     # 10pm main hall: starting: ceilidh
 
     rm = cabaret.room
-    self.assertTrue(cabaret in friday09.items(rm))
-    self.assertTrue(cabaret in friday09.items_starting(rm))
+    self.assertTrue(cabaret in cabaret_slot.items(rm))
+    self.assertTrue(cabaret in cabaret_slot.items_starting(rm))
     for i in [ disco, ceilidh ]:
-      self.assertFalse(i in friday09.items_starting(rm))
-      self.assertFalse(i in friday09.items(rm))
+      self.assertFalse(i in cabaret_slot.items_starting(rm))
+      self.assertFalse(i in cabaret_slot.items(rm))
     for i in [ cabaret, ceilidh ]:
-      self.assertTrue(i in friday10.items(rm))
-    self.assertTrue(ceilidh in friday10.items_starting(rm))
-    self.assertFalse(cabaret in friday10.items_starting(rm))
-    self.assertFalse(disco in friday10.items_starting(rm))
-    self.assertFalse(disco in friday10.items(rm))
+      self.assertTrue(i in disco_slot.items(rm))
+    self.assertTrue(ceilidh in disco_slot.items_starting(rm))
+    self.assertFalse(cabaret in disco_slot.items_starting(rm))
+    self.assertFalse(disco in disco_slot.items_starting(rm))
+    self.assertFalse(disco in disco_slot.items(rm))
 
     # We expect:
     # 9pm ops: items: nothing
@@ -2970,13 +2985,13 @@ class test_slot_items(AuthTest):
     # 10pm ops: starting: disco
 
     for i in [ disco, cabaret, ceilidh ]:
-      self.assertFalse(i in friday09.items(ops))
-      self.assertFalse(i in friday09.items_starting(ops))
+      self.assertFalse(i in cabaret_slot.items(ops))
+      self.assertFalse(i in cabaret_slot.items_starting(ops))
     for i in [ cabaret, ceilidh ]:
-      self.assertFalse(i in friday10.items(ops))
-      self.assertFalse(i in friday10.items_starting(ops))
-    self.assertTrue(disco in friday10.items(ops))
-    self.assertTrue(disco in friday10.items_starting(ops))
+      self.assertFalse(i in disco_slot.items(ops))
+      self.assertFalse(i in disco_slot.items_starting(ops))
+    self.assertTrue(disco in disco_slot.items(ops))
+    self.assertTrue(disco in disco_slot.items_starting(ops))
 
 class test_grids(AuthTest):
   "Direct test of what appears in grid cells."
@@ -3396,53 +3411,11 @@ class test_xml(AuthTest):
   def test_kit(self):
     "Check that kit turns up in the XML dump."
 
-    # There aren't any kit requests or kit assignments at first,
-    # so no kit things should be appearing in the dump
+    # Note which kit things are assigned to items or rooms
 
-    self.assertEqual(KitRequest.objects.count(), 0)
-    self.assertEqual(KitItemAssignment.objects.count(), 0)
-    self.assertEqual(KitRoomAssignment.objects.count(), 0)
-
-    self.response = self.client.get(reverse('xml_dump'))
-    self.status_okay()
-    for kt in KitThing.objects.all():
-      self.assertFalse(kt.as_xml() in self.response.content)
-
-    # Get the bits and pieces we need to create some requests and assignments.
-
-    disco = self.get_disco()
-    ceilidh = self.get_ceilidh()
-    greenroomscr = self.get_greenroomscr()
-    greenroomproj = self.get_greenroomproj()
-    mainhall = self.get_mainhall()
-    mainhallscr = self.get_mainhallscr()
-    mainhallproj = self.get_mainhallproj()
-    proj = self.get_proj()
-    scr = self.get_screen()
-
-    # Create the requests
-    disco_scr = KitRequest(kind = scr, count = 1)
-    disco_scr.save()
-    ceilidh_proj = KitRequest(kind = proj, count = 2)
-    ceilidh_proj.save()
-    disco.kitRequests.add(disco_scr)
-    ceilidh.kitRequests.add(ceilidh_proj)
-
-    # Create some assignments
-    disco_proj = KitItemAssignment(item = disco, thing = greenroomproj)
-    disco_proj.save()
-    ceilidh_scr = KitItemAssignment(item = ceilidh, thing = greenroomscr)
-    ceilidh_scr.save()
-    mainhall_screen = KitRoomAssignment(room=mainhall, thing=mainhallscr,
-                                        fromSlot=self.get_morning(), toSlot=self.get_evening(), toLength=self.get_hour())
-    mainhall_screen.save()
-    ceilidh_proj = KitRoomAssignment(room=mainhall, thing=mainhallproj,
-                                     fromSlot=ceilidh.start, toSlot=ceilidh.start, toLength=ceilidh.length)
-    ceilidh_proj.save()
-
-    assigned_things = [ greenroomproj, greenroomscr, mainhallscr, mainhallproj ]
-
-    # Now let's make sure those things appear in the XML dump.
+    assigned_to_items = [ kia.thing for kia in KitItemAssignment.objects.all() ]
+    assigned_to_rooms = [ kra.thing for kra in KitRoomAssignment.objects.all() ]
+    assigned_things = assigned_to_items + assigned_to_rooms
     self.response = self.client.get(reverse('xml_dump'))
     self.status_okay()
     for kt in KitThing.objects.all():
