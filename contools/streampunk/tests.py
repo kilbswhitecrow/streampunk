@@ -141,6 +141,8 @@ class StreampunkTest(TestCase):
     return Item.objects.get(shortname='Masquerade')
   def get_bidsession(self):
     return Item.objects.get(shortname='bid session')
+  def get_tolkien(self):
+    return Item.objects.get(shortname='Tolkien panel')
 
   def get_nowhere(self):
     return Room.objects.get(name='Nowhere')
@@ -314,7 +316,7 @@ class nonauth_lists(NonauthTest):
     self.has_column(t, 'name')
     self.has_column(t, 'gridOrder')
     self.has_column(t, 'description')
-    self.assertEqual(self.num_rows(t), 7) # Everywhere, Ops, Video, Programme 1 & 2, Main and Second Hall.
+    self.assertEqual(self.num_rows(t), 6) # Everywhere, Video, Programme 1 & 2, Main and Second Hall. Ops is not visible
     self.no_row(t, { 'name': 'Nowhere' })
     self.has_row(t, { 'name': 'Everywhere' })
     self.no_link_to('new_room')
@@ -497,9 +499,9 @@ class test_creation(AuthTest):
       self.has_link_to('new_room')
 
     t = 'rtable'
-    chkroom(self, 2)
+    chkroom(self, 8) # Main and second halls, Programme 1 & 2, video, ops, everywhere, nowhere
     self.response = self.client.post(reverse('new_room'), {
-      "name":        "Main Hall",
+      "name":        "Foyer",
       "isDefault":   False,
       "isUndefined": False,
       "canClash":    False,
@@ -507,20 +509,20 @@ class test_creation(AuthTest):
       "gridOrder":   10
     }, follow=True)
     self.status_okay()
-    chkroom(self, 3)
-    self.has_row(t, { 'name': 'Main Hall', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
+    chkroom(self, 9)
+    self.has_row(t, { 'name': 'Foyer', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
 
     self.response = self.client.post(reverse('new_room'), {
-      "name":        "Ops",
+      "name":        "Green Room",
       "isDefault":   False,
       "isUndefined": False,
       "canClash":    False,
       "gridOrder":   20
     }, follow=True)
     self.status_okay()
-    chkroom(self, 4)
-    self.has_row(t, { 'name': 'Main Hall', 'visible': True,  'edit': 'Edit', 'remove': 'Remove' })
-    self.has_row(t, { 'name': 'Ops',       'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
+    chkroom(self, 10)
+    self.has_row(t, { 'name': 'Foyer', 'visible': True,  'edit': 'Edit', 'remove': 'Remove' })
+    self.has_row(t, { 'name': 'Green Room',       'visible': False, 'edit': 'Edit', 'remove': 'Remove' })
 
   def test_mkitems(self):
     def chkitems(self, numrows):
@@ -913,7 +915,7 @@ class test_delete_items_with_stuff(AuthTest):
     buffy = self.get_buffy()
     willow = self.get_willow()
     dawn = self.get_disco()
-    disco = self.get_disco()
+    tolkien = self.get_tolkien()
     ceilidh = self.get_ceilidh()
     bid = self.get_bidsession()
     books = self.get_books()
@@ -933,37 +935,15 @@ class test_delete_items_with_stuff(AuthTest):
 
     # Check that it's okay to delete an item that has some tags
     # First, add a couple of tags.
-    delpath = reverse('delete_item', kwargs={'pk': disco.id})
-    self.response = self.client.post(reverse('edit_tags_for_item', args=[ disco.id ]), {
-      "tags": ( books.id, movies.id )
-    }, follow=True)
-    self.status_okay()
-    self.assertEqual(disco.tags.count(), 2)
-    # Now check that we can delete them.
+    self.assertEqual(tolkien.tags.count(), 2)
+    delpath = reverse('delete_item', kwargs={'pk': tolkien.id})
     self.response = self.client.post(delpath, { }, follow=True)
     self.status_okay()
-    self.assertFalse(Item.objects.filter(shortname='Disco').exists())
+    self.assertFalse(Item.objects.filter(shortname='Tolkien panel').exists())
 
     # Check that it's okay to delete an item that has people on it.
-    # First, add some people
 
     delpath = reverse('delete_item', kwargs={'pk': ceilidh.id})
-    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
-      "item":    ceilidh.id,
-      "person":  dawn.id,
-      "role":    panellist.id
-    }), follow=True)
-    self.status_okay()
-
-    self.response = self.client.post(reverse('new_itemperson'), default_itemperson({
-      "item":    ceilidh.id,
-      "person":  buffy.id,
-      "role":    panellist.id
-    }), follow=True)
-    self.status_okay()
-    self.assertEqual(ItemPerson.objects.filter(item=ceilidh).count(), 2)
-
-    # Now try deleting them.
     self.response = self.client.post(delpath, { }, follow=True)
     self.status_okay()
     self.assertFalse(Item.objects.filter(shortname='Ceilidh').exists())
@@ -975,6 +955,10 @@ class test_delete_items_with_stuff(AuthTest):
     mhproj = self.get_mainhallproj()
     mhscreen = self.get_mainhallscr()
     mhkit = self.get_mainhallkit()
+
+    # Clear out what's currently there
+    KitRequest.objects.all().delete()
+    KitItemAssignment.objects.all().delete()
 
     self.assertEqual(KitRequest.objects.count(), 0)
     self.assertEqual(KitItemAssignment.objects.count(), 0)
@@ -1054,36 +1038,24 @@ class test_delete_tags(AuthTest):
 
   def test_delete_tags_on_stuff(self):
     "Test deleting tags, on people and items."
-    buffy = self.get_buffy()
-    disco = self.get_disco()
-    books = self.get_books()
-    movies = self.get_movies()
-    comics = self.get_comics()
+    xander = self.get_xander()		# comics, buffy, fandom, star trek
+    tolkien = self.get_tolkien()	# books, fantasy
+    books = self.get_books()		# Giles, Tolkein
+    movies = self.get_movies()		# Nothing
+    comics = self.get_comics()		# Xander
 
-    # Add tag to an item
-    self.response = self.client.post(reverse('edit_tags_for_item', args=[ disco.id ]), {
-      "tags": ( books.id )
-    }, follow=True)
-    self.status_okay()
-    # Add tag to a person
-    self.response = self.client.post(reverse('edit_tags_for_person', args=[ buffy.id ]), {
-      "tags": ( movies.id )
-    }, follow=True)
-    self.status_okay()
-
-    # Establish that we've set things up properly.
     self.assertEqual(books.item_set.count(), 1)
-    self.assertEqual(books.person_set.count(), 0)
+    self.assertEqual(books.person_set.count(), 1)
     self.assertEqual(movies.item_set.count(), 0)
-    self.assertEqual(movies.person_set.count(), 1)
+    self.assertEqual(movies.person_set.count(), 0)
     self.assertEqual(comics.item_set.count(), 0)
-    self.assertEqual(comics.person_set.count(), 0)
-    self.assertTrue(buffy in movies.person_set.all())
-    self.assertTrue(disco in books.item_set.all())
-    self.assertEqual(buffy.tags.count(), 1)
-    self.assertEqual(disco.tags.count(), 1)
-    self.assertTrue(books in disco.tags.all())
-    self.assertTrue(movies in buffy.tags.all())
+    self.assertEqual(comics.person_set.count(), 1)
+    self.assertTrue(xander in comics.person_set.all())
+    self.assertTrue(tolkien in books.item_set.all())
+    self.assertEqual(xander.tags.count(), 4)
+    self.assertEqual(tolkien.tags.count(), 2)
+    self.assertTrue(books in tolkien.tags.all())
+    self.assertTrue(comics in xander.tags.all())
 
     # Deleting via GET shouldn't work.
     self.response = self.client.get(reverse('delete_tag', args=[ comics.id ]))
@@ -1106,8 +1078,8 @@ class test_delete_tags(AuthTest):
     self.assertFalse(Tag.objects.filter(name='Books').exists())
 
     # Which should leave the person and item tag-bereft.
-    self.assertEqual(buffy.tags.count(), 0)
-    self.assertEqual(disco.tags.count(), 0)
+    self.assertEqual(xander.tags.count(), 3)
+    self.assertEqual(tolkien.tags.count(), 1)
 
 # =========================================================
 
@@ -1183,32 +1155,13 @@ class test_delete_rooms(AuthTest):
     nowhere.isDefault = True
     nowhere.save()
 
-    # We don't currently have a GUI for adding capacities, so that has
-    # to be done through the Admin interface. Therefore, we'll just create
-    # some directly now.
-
-    theatre = self.get_theatre()
-    empty = self.get_empty()
-    cap1 = RoomCapacity(layout=theatre, count=60)
-    cap1.save()
-    cap2 = RoomCapacity(layout=empty, count=300)
-    cap2.save()
-
-    cap1id = cap1.id
-    cap2id = cap2.id
-
-    # check our counts: two capacity objects, none of which are
-    # attached to a room yet.
-    self.assertEqual(RoomCapacity.objects.count(), 2)
-    self.assertEqual(video.capacities.count(), 0)
-
-    # Attach cap1 to the Video room, but leave cap2 unattached.
-    video.capacities.add(cap1)
-    video.save()
-
+    # There is a capacity attached to the video room
     self.assertEqual(video.capacities.count(), 1)
-    self.assertEqual(cap1.room_set.count(), 1)
-    self.assertEqual(cap2.room_set.count(), 0)
+    cap1 = video.capacities.all()[0]
+    cap1id = cap1.id
+
+    # It's used by Programme 2, too.
+    self.assertEqual(cap1.room_set.count(), 2)
 
     # Delete the Video room.
     self.response = self.client.post(reverse('delete_room', args=[ video.id ]), { }, follow=True)
@@ -1216,17 +1169,11 @@ class test_delete_rooms(AuthTest):
 
     self.assertFalse(Room.objects.filter(name='Video').exists())
 
-    # Currently, we expect both capacity object to still exist, but
-    # we go back to cap1 no longer having a room attached.
-    self.assertEqual(RoomCapacity.objects.count(), 2)
+    # Currently, we expect the capacity object to still exist
 
     self.assertTrue(RoomCapacity.objects.filter(id=cap1id).exists())
     cap1 = RoomCapacity.objects.get(id=cap1id)
-    self.assertEqual(cap1.room_set.count(), 0)
-
-    self.assertTrue(RoomCapacity.objects.filter(id=cap2id).exists())
-    cap2 = RoomCapacity.objects.get(id=cap2id)
-    self.assertEqual(cap2.room_set.count(), 0)
+    self.assertEqual(cap1.room_set.count(), 1)  # Just Programme 2 now
 
   def test_delete_rooms_with_kit(self):
     "Test deleting rooms, with kit items and kit bundles."
@@ -1244,6 +1191,9 @@ class test_delete_rooms(AuthTest):
     morning = self.get_morning()
     evening = self.get_evening()
     hour = self.get_hour()
+
+    # Clear out the room assignments
+    KitRoomAssignment.objects.all().delete()
 
     # Nothing assigned to any rooms yet.
     self.assertEqual(KitRoomAssignment.objects.count(), 0)
@@ -1678,16 +1628,16 @@ class test_edit_items(AuthTest):
   def test_edit_item_tags(self):
     "Change the tags on an item."
 
-    disco = self.get_disco()
+    disco = self.get_disco()	# No tags
     editurl = reverse('edit_tags_for_item', args=[ disco.id ])
-    books = self.get_books()
-    movies = self.get_movies()
+    books = self.get_books()	# Has Tolkien, giles
+    movies = self.get_movies()	# Nothing
 
     # Check that there's no tags on the item yet
     self.assertEqual(disco.tags.count(), 0)
     # Check existing uses of the tags
     self.assertEqual(books.item_set.count(), 1)   # For Tolkien
-    self.assertEqual(movies.item_set.count(), 0)
+    self.assertEqual(movies.item_set.count(), 0)  # Nothing
 
     # Check that the item doesn't appear in a search on the tags
     tag_lists_item(self, books, disco, False)
@@ -1696,7 +1646,7 @@ class test_edit_items(AuthTest):
     item_lists_tag(self, disco, books, False)
     item_lists_tag(self, disco, movies, False)
 
-    # Add one of the tags to the item.
+    # Add one of the tags to the item. Books will list Tolkien, disco
     self.response = self.client.post(editurl, { "tags": [ books.id ] }, follow=True)
     self.status_okay()
     self.form_okay()
@@ -1707,11 +1657,11 @@ class test_edit_items(AuthTest):
     # And that the item lists only books
     item_lists_tag(self, disco, books, True)
     item_lists_tag(self, disco, movies, False)
-    self.assertEqual(disco.tags.count(), 1)
-    self.assertEqual(books.item_set.count(), 2)
-    self.assertEqual(movies.item_set.count(), 0)
+    self.assertEqual(disco.tags.count(), 1)		# Just books
+    self.assertEqual(books.item_set.count(), 2)		# disco and tolkien
+    self.assertEqual(movies.item_set.count(), 0)	# nothing
 
-    # Add movies, too.
+    # Add movies, too. So disco will will have books and movies
     self.response = self.client.post(editurl, { "tags": [ books.id, movies.id ] }, follow=True)
     self.status_okay()
     self.form_okay()
@@ -1722,9 +1672,9 @@ class test_edit_items(AuthTest):
     # And that the item lists only books
     item_lists_tag(self, disco, books, True)
     item_lists_tag(self, disco, movies, True)
-    self.assertEqual(disco.tags.count(), 2)
-    self.assertEqual(books.item_set.count(), 2)
-    self.assertEqual(movies.item_set.count(), 1)
+    self.assertEqual(disco.tags.count(), 2)		# books and movies
+    self.assertEqual(books.item_set.count(), 2)		# disco and tolkien
+    self.assertEqual(movies.item_set.count(), 1)	# disco
 
     # Edit to remove books, and leave movies there.
     self.response = self.client.post(editurl, { "tags": [ movies.id ] }, follow=True)
@@ -1737,9 +1687,9 @@ class test_edit_items(AuthTest):
     # And that the item lists only books
     item_lists_tag(self, disco, books, False)
     item_lists_tag(self, disco, movies, True)
-    self.assertEqual(disco.tags.count(), 1)
-    self.assertEqual(books.item_set.count(), 1)
-    self.assertEqual(movies.item_set.count(), 1)
+    self.assertEqual(disco.tags.count(), 1)		# movies
+    self.assertEqual(books.item_set.count(), 1)		# tolkien
+    self.assertEqual(movies.item_set.count(), 1)	# disco
 
     # Edit again, to have no tags.
     self.response = self.client.post(editurl, { }, follow=True)
@@ -1751,9 +1701,9 @@ class test_edit_items(AuthTest):
     # And that the item doesn't list the tags
     item_lists_tag(self, disco, books, False)
     item_lists_tag(self, disco, movies, False)
-    self.assertEqual(disco.tags.count(), 0)
-    self.assertEqual(books.item_set.count(), 1)
-    self.assertEqual(movies.item_set.count(), 0)
+    self.assertEqual(disco.tags.count(), 0)		# Nothing
+    self.assertEqual(books.item_set.count(), 1)		# tolkien
+    self.assertEqual(movies.item_set.count(), 0)	# nothing
 
     # Edit to include books twice; check that we don't get two instances.
     self.response = self.client.post(editurl, { "tags": [ books.id, books.id ] }, follow=True)
@@ -1764,9 +1714,9 @@ class test_edit_items(AuthTest):
     tag_lists_item(self, movies, disco, False)
     item_lists_tag(self, disco, books, True)
     item_lists_tag(self, disco, movies, False)
-    self.assertEqual(disco.tags.count(), 1)
-    self.assertEqual(books.item_set.count(), 1)
-    self.assertEqual(movies.item_set.count(), 0)
+    self.assertEqual(disco.tags.count(), 1)		# books
+    self.assertEqual(books.item_set.count(), 2)		# disco, tolkien
+    self.assertEqual(movies.item_set.count(), 0)	# nothing
 
   def test_edit_kit_requests(self):
     "Change kit requests on an item."
@@ -2775,6 +2725,8 @@ class test_kit_availability(AuthTest):
     # Get a thing and an item
     disco = self.get_disco()
     proj = self.get_greenroomproj()
+
+    self.zap_avail(proj)
 
     # No avail yet
     self.assertEqual(proj.availability.count(), 0)
