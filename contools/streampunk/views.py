@@ -38,7 +38,7 @@ from .tables import ItemPersonTable, KitBundleTable
 
 from .models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from .models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
-from .models import UserProfile, ItemKind, RoomCapacity, Gender, ConInfoBool, ConInfoInt
+from .models import UserProfile, ItemKind, RoomCapacity, Gender, ConInfoBool, ConInfoInt, KitSatisfaction
 from .forms import KitThingForm, KitBundleForm, KitRequestForm
 from .forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from .forms import TagForm, RoomForm, CheckModelFormSet
@@ -307,6 +307,7 @@ class show_item_detail(DetailView):
     context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
                                       qs=context['kititems'], prefix='kia-', empty='No kit assigned',
                                       extra_exclude=['item', 'room', 'day', 'time'])
+    context['missing_things'] = KitSatisfaction(self.object).missing_things()
     return context
 
 class show_person_detail(DetailView):

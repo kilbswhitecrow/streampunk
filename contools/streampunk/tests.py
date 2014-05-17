@@ -32,7 +32,7 @@ from .models import Revision, MediaStatus, ItemPerson, Tag
 from .models import PersonStatus, PersonRole, Person, Item
 from .models import KitThing, KitRequest, KitBundle, KitRole, KitDepartment
 from .models import KitKind, KitStatus, RoomCapacity, KitSource, KitBasis
-from .models import KitRoomAssignment, KitItemAssignment
+from .models import KitRoomAssignment, KitItemAssignment, KitSatisfaction
 from .models import Check, CheckResult
 from .exceptions import DeleteNeededObjectException, DeleteUndefException, DeleteDefaultException
 from .testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
@@ -2238,6 +2238,12 @@ class test_satisfaction(AuthTest):
     # Check directly
     self.assertFalse(disco.satisfies_kit_requests())
     self.assertTrue(disco.has_unsatisfied_kit_requests())
+    ks = KitSatisfaction(disco)
+    self.assertFalse(ks.satisfied)
+    missing = ks.missing_things()
+    self.assertEqual(len(missing), 1)
+    self.assertEqual(missing[0][0], self.get_proj())
+    self.assertEqual(missing[0][1], 1)
 
     # Check indirectly
     check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)

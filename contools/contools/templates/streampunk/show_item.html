@@ -70,6 +70,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <p>
 All requests satisfied: {{ item.satisfies_kit_requests_yesno }}.
 </p>
+<p>
+Missing Kit: <br />
+<table border>
+{% for missing in missing_things %}
+<tr>
+  {% for cell in missing %}
+  <td>{{ cell }}</td>
+  {% endfor %}
+</tr>
+{% empty %}
+<tr><td>Nothing - all satisfied</td></tr>
+{% endfor %}
+</table>
+</p>
 <h3>Kit Assigned to This Item</h3>
 <p>
 {% render_table kiatable %}
