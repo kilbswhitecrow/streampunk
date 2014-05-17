@@ -539,7 +539,7 @@ class KitSatisfaction(object):
        self.missingMap[thing] = count
 
   def missing_things(self):
-    "Return a list of (KitKind, count) pairs of things we stil need for this item"
+    "Return a list of (KitKind, count) pairs of things we still need for this item"
     return [ (kind, self.missingMap[kind.id]) for kind in KitKind.objects.filter(id__in=self.missingMap.keys()) ]
 
 class KitRequest(models.Model):
