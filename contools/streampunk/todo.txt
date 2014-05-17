@@ -2,28 +2,6 @@ Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
-21 failures
-FAIL: test_rooms1 (streampunk.tests.Auth_lists)
-FAIL: test_rooms0 (streampunk.tests.nonauth_lists)
-FAIL: test_people_items (streampunk.tests.test_add_panellists)
-FAIL: test_person_tags (streampunk.tests.test_add_panellists)
-FAIL: test_person_tags (streampunk.tests.test_add_panellists)
-FAIL: test_items_kit (streampunk.tests.test_delete_items_with_stuff)
-FAIL: test_items_people_tags (streampunk.tests.test_delete_items_with_stuff)
-FAIL: test_delete_rooms_with_kit (streampunk.tests.test_delete_rooms)
-FAIL: test_delete_rooms_with_stuff (streampunk.tests.test_delete_rooms)
-FAIL: test_delete_tags_on_stuff (streampunk.tests.test_delete_tags)
-FAIL: test_edit_item_tags (streampunk.tests.test_edit_items)
-FAIL: test_edit_kit_requests (streampunk.tests.test_edit_items)
-FAIL: test_available_for_item (streampunk.tests.test_kit_availability)
-FAIL: test_kit_avail_for_room (streampunk.tests.test_kit_availability)
-FAIL: test_never_and_always (streampunk.tests.test_kit_availability)
-FAIL: test_never_and_always (streampunk.tests.test_person_availability)
-FAIL: test_available_for_item (streampunk.tests.test_room_availability)
-FAIL: test_item_not_satisfied (streampunk.tests.test_satisfaction)
-FAIL: test_kit (streampunk.tests.test_xml)
-
-
 - Handle settings.py
 
 Outstanding coverage:

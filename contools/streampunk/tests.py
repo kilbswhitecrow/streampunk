@@ -203,6 +203,11 @@ class StreampunkTest(TestCase):
   def get_empty(self):
     return SeatingKind.objects.get(name='Empty')
 
+  def zap_avail(self, thing):
+    av = list(thing.availability.all())
+    for a in av:
+      thing.availability.remove(a)
+
 class NonauthTest(StreampunkTest):
 
   def banner(self):
@@ -1783,7 +1788,7 @@ class test_edit_items(AuthTest):
     self.assertEqual(disco.kitRequests.count(), 1)
 
     # Let's see which one it is.
-    for kr in kitRequest.objects.all():
+    for kr in KitRequest.objects.all():
       if kr not in prev_reqs:
         req = kr
     reqid = req.id
@@ -2523,6 +2528,8 @@ class test_room_availability(AuthTest):
     disco = self.get_disco()
     room = disco.room
 
+    self.zap_avail(room)
+
     # No avail yet
     self.assertEqual(room.availability.count(), 0)
 
@@ -2587,6 +2594,9 @@ class test_person_availability(AuthTest):
     # Get some people to play with
     buffy = self.get_buffy()
     giles = self.get_giles()
+
+    self.zap_avail(buffy)
+    self.zap_avail(giles)
 
     # Neither should have any availability yet
     self.assertEqual(buffy.availability.count(), 0)
@@ -2708,6 +2718,9 @@ class test_kit_availability(AuthTest):
     proj = self.get_greenroomproj()
     screen = self.get_greenroomscr()
 
+    self.zap_avail(proj)
+    self.zap_avail(screen)
+
     # Neither should have any availability yet
     self.assertEqual(proj.availability.count(), 0)
     self.assertEqual(screen.availability.count(), 0)
@@ -2822,6 +2835,10 @@ class test_kit_availability(AuthTest):
     disco = self.get_disco()
     ops = self.get_ops()
     proj = self.get_greenroomproj()
+
+    # Clean out the availability on each
+    self.zap_avail(ops)
+    self.zap_avail(proj)
 
     self.assertEqual(ops.availability.count(), 0)
     self.assertEqual(proj.availability.count(), 0)
