@@ -5,7 +5,7 @@ T = [ x for x in S if x % 2 == 0 ]
 - Handle settings.py
 - BUG: Cannot click on user link when logged in - profile problem.
 - BUG: Cannot fetch UserProfile page (same problem)
-- BUG: No page for listing personlists.
+- BUG: Personlists are shown in http://localhost/streampunk/streampunk/peoplelists/, but we go to something else.
 
 Outstanding coverage:
 	- Tags, read priv, but not edit_prog priv

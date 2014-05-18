@@ -1834,5 +1834,37 @@
     "thing": 4, 
     "toSlot": 132
   }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.personlist", 
+  "fields": {
+    "auto": false, 
+    "people": [
+      6, 
+      3, 
+      2, 
+      5, 
+      4
+    ], 
+    "name": "Serenity Crew", 
+    "created": "2014-05-18T09:43:05Z"
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.personlist", 
+  "fields": {
+    "auto": false, 
+    "people": [
+      10, 
+      7, 
+      9, 
+      8, 
+      11
+    ], 
+    "name": "Scoobie Gang", 
+    "created": "2014-05-18T09:43:35Z"
+  }
 }
 ]

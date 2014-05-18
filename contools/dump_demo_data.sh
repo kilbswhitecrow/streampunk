@@ -8,5 +8,6 @@ python manage.py dumpdata --indent=2 \
   streampunk.kitrequest \
   streampunk.kititemassignment \
   streampunk.kitroomassignment \
+  streampunk.personlist \
 
 
