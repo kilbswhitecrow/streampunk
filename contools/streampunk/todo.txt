@@ -3,6 +3,9 @@ S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
 - Handle settings.py
+- BUG: Cannot click on user link when logged in - profile problem.
+- BUG: Cannot fetch UserProfile page (same problem)
+- BUG: No page for listing personlists.
 
 Outstanding coverage:
 	- Tags, read priv, but not edit_prog priv

@@ -30,6 +30,7 @@ from .models import SlotLength, ConDay, ConInfoBool, ConInfoInt, ConInfoString
 from .models import ItemKind, SeatingKind, FrontLayoutKind
 from .models import Revision, MediaStatus, ItemPerson, Tag
 from .models import PersonStatus, PersonRole, Person, Item
+from .models import PersonList, UserProfile
 from .models import KitThing, KitRequest, KitBundle, KitRole, KitDepartment
 from .models import KitKind, KitStatus, RoomCapacity, KitSource, KitBasis
 from .models import KitRoomAssignment, KitItemAssignment, KitSatisfaction
@@ -3401,6 +3402,38 @@ class test_xml(AuthTest):
     for kr in KitRequest.objects.all():
       self.assertTrue(kr.as_xml() in self.response.content)
 
+class test_unicode_and_urls(AuthTest):
+  "Prod the unicode/get-abs-url methods of classes where that's not normally exercised."
+
+  fixtures = [ 'demo_data' ]
+  clslist = [ KitItemAssignment, KitRoomAssignment, Check, PersonList, UserProfile ]
+  fetchable = [ KitItemAssignment, KitRoomAssignment, Check, PersonList ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_unicode(self):
+    for cls in self.clslist:
+      for obj in cls.objects.all():
+        self.assertEqual(str(obj), obj.__unicode__())
+  def test_url(self):
+    for cls in self.clslist:
+      for obj in cls.objects.all():
+        self.assertTrue(obj.get_absolute_url())
+  def test_fetchable(self):
+    for cls in self.clslist:
+      if cls in self.fetchable:
+        for obj in cls.objects.all():
+          self.response = self.client.get(obj.get_absolute_url())
+          self.status_okay()
+      else:
+        print "Skipping fetching class %s\n" % ( cls )
 
 # Tests required
 # Items
