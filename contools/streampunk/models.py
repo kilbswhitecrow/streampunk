@@ -862,10 +862,8 @@ class KitItemAssignment(models.Model):
   def get_absolute_url(self):
     return reverse('show_kititemassignment_detail', kwargs={"pk": self.id})
 
-  def item_day(self):
-    return self.item.start.day
   def item_start(self):
-    return self.item.start.startText
+    return self.item.start
   def item_room(self):
     return self.item.room
 
@@ -876,8 +874,7 @@ class KitItemAssignment(models.Model):
                    "bundle": "bundle",
                    "item":   "item",
                    "room":   "item_room",
-                   "day":    "item_day",
-                   "time":   "item_start",
+                   "start":  "item_start",
                    "remove": "Remove" })
 
   @classmethod

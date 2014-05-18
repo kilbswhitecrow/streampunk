@@ -99,7 +99,7 @@ class RoomTable(tables.Table):
     attrs = { "class": "paleblue" }
 
 class ItemTable(tables.Table):
-  start = tables.Column(order_by=[A('start.start')])
+  start = tables.Column(order_by=[A('start.order')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')], order_by=[A('room.name')])
   title = tables.LinkColumn('show_item_detail', args=[A('pk')])
   shortname = tables.Column()
@@ -171,7 +171,7 @@ class KitItemAssignmentTable(tables.Table):
   item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
   bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
-  time = tables.Column()
+  start = tables.Column(order_by=[A('item.start.order')])
   remove = RemoveColumn('delete_kititemassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
