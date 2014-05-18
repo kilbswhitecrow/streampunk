@@ -2064,6 +2064,8 @@ class test_item_assignment(AuthTest):
     disco.kitRequests.add(krproj2)
     disco.kitRequests.add(krproj4)
   
+    self.assertEqual(len(disco.kit_item_assignments()), 0)
+
     # Create kit things for projectors with the same counts.
     ktproj2 = KitThing(name='Proj2', kind=self.get_proj(), count=2, coordinator='Bob')
     ktproj2.save()
@@ -2076,12 +2078,14 @@ class test_item_assignment(AuthTest):
     # Assign the smaller request to an item.
     kiaproj2 = KitItemAssignment(item=disco, thing=ktproj2)
     kiaproj2.save()
+    self.assertTrue(kiaproj2 in disco.kit_item_assignments())
     self.assertTrue(disco.has_unsatisfied_kit_requests())
     self.assertFalse(disco.satisfies_kit_requests())
 
     # Assign the larger request to an item as well. Should now be enough.
     kiaproj4 = KitItemAssignment(item=disco, thing=ktproj4)
     kiaproj4.save()
+    self.assertTrue(kiaproj4 in disco.kit_item_assignments())
     self.assertFalse(disco.has_unsatisfied_kit_requests())
     self.assertTrue(disco.satisfies_kit_requests())
   
@@ -2126,7 +2130,7 @@ class test_room_assignment(AuthTest):
     kraproj2 = KitRoomAssignment(room=disco.room, thing=ktproj2,
                                  fromSlot=disco.start, toSlot=disco.start, toLength=disco.length)
     kraproj2.save()
-
+    self.assertTrue(kraproj2 in disco.kit_room_assignments())
   
     # Basic checks of the comparison logic.
     # Starts-before also includes "at the same time"
@@ -2152,6 +2156,8 @@ class test_room_assignment(AuthTest):
     kraproj4 = KitRoomAssignment(room=disco.room, thing=ktproj4,
                                  fromSlot=disco.start, toSlot=disco.start, toLength=disco.length)
     kraproj4.save()
+    self.assertTrue(kraproj2 in disco.kit_room_assignments())
+    self.assertTrue(kraproj4 in disco.kit_room_assignments())
 
     # Basic checks of the comparison logic.
     # Starts-before also includes "at the same time"
@@ -2178,6 +2184,52 @@ class test_room_assignment(AuthTest):
     # We now expect to satisfy the item's requests.
     self.assertTrue(disco.satisfies_kit_requests())
     self.assertFalse(disco.has_unsatisfied_kit_requests())
+
+# =========================================================
+
+class test_overlaps(AuthTest):
+  "Check whether things overlap properly."
+  fixtures = [ 'demo_data' ]
+
+  def test_item_overlaps(self):
+    disco = self.get_disco()		# two-hour slot
+    ceilidh = self.get_ceilidh()	# one-hour slot
+
+    # grab a couple of adjacent slots
+    friday9pm = Slot.objects.get(startText='9pm', day__name='Friday')
+    friday10pm = Slot.objects.get(startText='10pm', day__name='Friday')
+
+    # These don't overlap each other, yet.
+    self.assertFalse(disco.overlaps(ceilidh))
+    self.assertFalse(ceilidh.overlaps(disco))
+    # and nothing should overlap itself.
+    self.assertFalse(disco.overlaps(disco))
+    self.assertFalse(ceilidh.overlaps(ceilidh))
+
+    # Move them both to the same slot. They should overlap.
+    disco.start = friday9pm
+    disco.save()
+    ceilidh.start = friday9pm
+    ceilidh.save()
+
+    self.assertTrue(disco.overlaps(ceilidh))
+    self.assertTrue(ceilidh.overlaps(disco))
+
+    # Move the disco to the later slot.
+    disco.start = friday10pm
+    disco.save()
+
+    # should no longer overlap, because the shorter item is first.
+    self.assertFalse(disco.overlaps(ceilidh))
+    self.assertFalse(ceilidh.overlaps(disco))
+     
+    # Swap them around. They should now overlap, because the two-hour item is first.
+    disco.start = friday9pm
+    disco.save()
+    ceilidh.start = friday10pm
+    ceilidh.save()
+    self.assertTrue(disco.overlaps(ceilidh))
+    self.assertTrue(ceilidh.overlaps(disco))
 
 # =========================================================
 
@@ -3406,7 +3458,8 @@ class test_unicode_and_urls(AuthTest):
   "Prod the unicode/get-abs-url methods of classes where that's not normally exercised."
 
   fixtures = [ 'demo_data' ]
-  clslist = [ KitItemAssignment, KitRoomAssignment, Check, PersonList, UserProfile ]
+  unicodes = [ KitItemAssignment, KitRoomAssignment, Check, PersonList, UserProfile, RoomCapacity ]
+  xxx_urls = [ KitItemAssignment, KitRoomAssignment, Check, PersonList, UserProfile ]
   fetchable = [ KitItemAssignment, KitRoomAssignment, Check, PersonList ]
 
   def setUp(self):
@@ -3419,21 +3472,18 @@ class test_unicode_and_urls(AuthTest):
     self.zaproot()
 
   def test_unicode(self):
-    for cls in self.clslist:
+    for cls in self.unicodes:
       for obj in cls.objects.all():
         self.assertEqual(str(obj), obj.__unicode__())
   def test_url(self):
-    for cls in self.clslist:
+    for cls in self.xxx_urls:
       for obj in cls.objects.all():
         self.assertTrue(obj.get_absolute_url())
   def test_fetchable(self):
-    for cls in self.clslist:
-      if cls in self.fetchable:
-        for obj in cls.objects.all():
-          self.response = self.client.get(obj.get_absolute_url())
-          self.status_okay()
-      else:
-        print "Skipping fetching class %s\n" % ( cls )
+    for cls in self.fetchable:
+      for obj in cls.objects.all():
+        self.response = self.client.get(obj.get_absolute_url())
+        self.status_okay()
 
 # Tests required
 # Items
