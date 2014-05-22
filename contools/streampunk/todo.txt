@@ -6,18 +6,28 @@ T = [ x for x in S if x % 2 == 0 ]
 - BUG: Cannot click on user link when logged in - profile problem.
 - BUG: Cannot fetch UserProfile page (same problem)
 - BUG: Personlists are shown in http://localhost/streampunk/streampunk/peoplelists/, but we go to something else.
+- BUG: Cannot remove a Bundle from a room. Eak.
+- BUG: When a person appears on an item, they're displayed with full combined name, when badge_only is specified.
+       (Tag listing and grid appears okay, though.) This is because it's in a Tables2 table, rather than being
+       selected according to the view. I either need to change the unicode() method, or provide different tables.
 
 Outstanding coverage:
 	- Tags, read priv, but not edit_prog priv
 	- KitBundles in_use() w/o room assignment.
-	- RoomCapacity __unicode__()
-	- Room kit_room_assignments(), read priv w/o edit
+	- Room read priv w/o edit
 	- Person as_badge(), cleaned names from creation form.
 	- Person read priv, no edit
 	- Item read priv no edit, shortnames rather than titles
-	- Item cleaned names in form, XML public
-	- Item overlaps(), kit item/room assignments, day(), startText()
+	- Item cleaned names in form
+	- Item day(), startText()
 	- ItemPerson edit, no_perms
+
+	+ Remove title from item, display
+	+ Remove Bundle from a room.
+	+ List people w/o auth
+	+ New Item
+	+ New Person
+	+ New non-edit a/c. View Tag, Item, Room, Person
 London
 ------
 - Increase the coverage

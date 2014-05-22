@@ -3485,6 +3485,51 @@ class test_unicode_and_urls(AuthTest):
         self.response = self.client.get(obj.get_absolute_url())
         self.status_okay()
 
+class test_shortnames(AuthTest):
+  "Check how we render shortnames"
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_items_wo_title(self):
+    disco = self.get_disco()
+    ceilidh = self.get_ceilidh()
+    disco.title = ""
+    disco.save()
+    ceilidh.save()
+
+    for i in Item.objects.all():
+      self.assertEqual(str(i), i.__unicode__())
+    self.response = self.client.get(reverse('list_items'))
+    self.status_okay()
+
+class test_person_as_badge(NonauthTest):
+  "Test that we see the name rendered as a badge."
+
+  fixtures = [ 'demo_data' ]
+
+  def test_name_as_badge(self):
+    self.response = self.client.get(reverse('list_people'))
+    self.status_okay()
+    t = 'ptable'
+    self.has_column(t, 'name')
+    self.has_column(t, 'badge')
+    for p in Person.objects.all():
+      self.has_row(t, { 'badge': p.badge } )
+      if p.badge_only:
+        self.has_row(t, { 'name': p.as_badge() } )
+        self.no_row(t, { 'name': p.as_name() } )
+      else:
+        self.has_row(t, { 'name': p.as_name() } )
+
 # Tests required
 # Items
 # 	Satisfaction

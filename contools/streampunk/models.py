@@ -1408,11 +1408,6 @@ class Item(models.Model):
   def has_unsatisfied_kit_requests(self):
     return not self.satisfies_kit_requests()
 
-  def day(self):
-    return self.start.day
-  def startText(self):
-    return self.start.startText
-
   def itempeople(self):
     "Give access to the ItemPerson objects, rather than the Person objects that people gives."
     return ItemPerson.objects.filter(item = self)
@@ -1456,6 +1451,9 @@ class ItemPerson(models.Model):
   def get_absolute_url(self):
     return reverse('show_itemperson_detail', kwargs={"pk": self.id})
 
+  def as_badge(self):
+    return self.person.as_badge()
+
   def as_xml_public(self):
     return render_to_string('xml/itemperson_public.xml', { "ip": self } )
   def as_xml(self):
@@ -1466,6 +1464,7 @@ class ItemPerson(models.Model):
     return Rower({ "pk":            "id",
                    "item":          "item",
                    "person":        "person",
+                   "badge":         "as_badge",
                    "role":          "role",
                    "status":        "status",
                    "visible":       "visible",

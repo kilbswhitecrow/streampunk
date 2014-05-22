@@ -291,12 +291,14 @@ class show_item_detail(DetailView):
       qs = ItemPerson.objects.filter(item=self.object)
       context['item_people'] = qs
       tagqs = self.object.tags.all()
+      ip_exclude = ['item']
     else:
       qs = ItemPerson.objects.filter(item=self.object, visible=True)
       context['item_people'] = qs
       tagqs = self.object.tags.filter(visible=True)
+      ip_exclude = ['item', 'person']
     context['item_people_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
-                                               prefix='ipt-', empty=empty, extra_exclude=['item'])
+                                               prefix='ipt-', empty=empty, extra_exclude=ip_exclude)
     context['tagtable'] = make_tabler(Tag, TagTable, request=self.request, qs=tagqs, prefix='tag-', empty='No tags',
                                       extra_exclude=['description', 'visible', 'edit', 'remove'])
     context['kitrequests'] = self.object.kitRequests.all()
