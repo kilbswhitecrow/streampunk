@@ -443,7 +443,7 @@
     ], 
     "pubNotes": "", 
     "contact": "", 
-    "badge_only": false, 
+    "badge_only": true, 
     "privNotes": "", 
     "availability": [
       87, 
@@ -568,7 +568,7 @@
     ], 
     "pubNotes": "", 
     "contact": "", 
-    "badge_only": false, 
+    "badge_only": true, 
     "privNotes": "", 
     "availability": [
       68, 
@@ -626,7 +626,7 @@
     ], 
     "pubNotes": "", 
     "contact": "", 
-    "badge_only": false, 
+    "badge_only": true, 
     "privNotes": "", 
     "availability": [], 
     "gender": 3, 
