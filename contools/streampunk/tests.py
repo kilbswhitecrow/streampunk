@@ -24,6 +24,7 @@ from django.test.client import Client
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils.html import escape
+from django.core.exceptions import ValidationError
 
 from .models import Grid, Gender, Slot, SlotLength, Room
 from .models import SlotLength, ConDay, ConInfoBool, ConInfoInt, ConInfoString
@@ -161,6 +162,8 @@ class StreampunkTest(TestCase):
   def get_screen(self):
     return KitKind.objects.get(name='Screen')
 
+  def get_greenroomkit(self):
+    return KitBundle.objects.get(name='Green room kit')
   def get_greenroomproj(self):
     return KitThing.objects.get(name='Green room projector')
   def get_greenroomscr(self):
@@ -482,6 +485,62 @@ class test_creation(AuthTest):
     chkpeople(self, 2)
     self.has_row(t, { 'firstName': 'Rupert', 'lastName': 'Giles', 'edit': 'Edit', 'remove': 'Remove' })
     self.has_row(t, { 'firstName': 'Buffy', 'lastName': 'Summers', 'edit': 'Edit', 'remove': 'Remove' })
+
+    # Check things get cleaned.
+    # XXX - This doesn't get cleaned. I don't see how the cleaning works with
+    # the test client.
+    # self.response = self.client.post(reverse('new_person'), default_person({
+    #   "firstName":      "River ",
+    #   "middleName":     " Psycho ",
+    #   "lastName":       " Tam",
+    #   "badge":          "\tNutter"
+    # }), follow=True)
+    # self.status_okay()
+    # chkpeople(self, 3)
+    # self.has_row(t, { 'firstName': 'Rupert', 'lastName': 'Giles', 'edit': 'Edit', 'remove': 'Remove' })
+    # self.has_row(t, { 'firstName': 'Buffy', 'lastName': 'Summers', 'edit': 'Edit', 'remove': 'Remove' })
+    # self.has_row(t, { 'firstName': 'River', 'lastName': 'Tam', 'middleName': 'Psycho', 'badge': 'Nutter' })
+
+    # Check we can create a user with only one of the three names defined.
+    self.response = self.client.post(reverse('new_person'), default_person({
+      "firstName":      "foo",
+      "middleName":     "",
+      "lastName":       ""
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_person'), default_person({
+      "firstName":      "",
+      "middleName":     "bar",
+      "lastName":       ""
+    }), follow=True)
+    self.status_okay()
+
+    self.response = self.client.post(reverse('new_person'), default_person({
+      "firstName":      "",
+      "middleName":     "",
+      "lastName":       "baz"
+    }), follow=True)
+    self.status_okay()
+
+    # Check that we object if none of the names is defined.
+    # XXX - This is not raising a ValidationError. Why not?
+    # with self.assertRaises(ValidationError):
+    #   self.response = self.client.post(reverse('new_person'), default_person({
+    #     "firstName":      "",
+    #     "middleName":     "",
+    #     "lastName":       ""
+    #   }), follow=True)
+
+    # Check we complain if we say yes to badge-only, but don't set a badge.
+    # XXX - This is not raising a ValidationError. Why not?
+    # with self.assertRaises(ValidationError):
+    #   self.response = self.client.post(reverse('new_person'), default_person({
+    #     "firstName":      "Simon",
+    #     "lastName":       "Tam",
+    #     "badge":          "",
+    #     "badge_only":     False
+    #   }), follow=True)
 
   def test_mkrooms(self):
     def chkroom(self, numrows):
@@ -2184,6 +2243,37 @@ class test_room_assignment(AuthTest):
     # We now expect to satisfy the item's requests.
     self.assertTrue(disco.satisfies_kit_requests())
     self.assertFalse(disco.has_unsatisfied_kit_requests())
+
+  def test_kit_bundle_in_use(self):
+    "Check that a kit bundle is in use if it's on an item or in a room."
+    green = self.get_greenroomkit()
+    main = self.get_mainhallkit()
+
+    # Green's already used by an item and by a room.
+    self.assertTrue(green.in_use())
+    self.assertTrue(green.item_count() > 0)
+    self.assertTrue(green.room_count() > 0)
+
+    # Main's used by a room, but not by an item.
+    self.assertTrue(main.in_use())
+    self.assertTrue(main.item_count() == 0)
+    self.assertTrue(main.room_count() > 0)
+
+    # Stop Green being used by a room, so it's only used by an item.
+    KitRoomAssignment.objects.filter(bundle=green).delete()
+    green = self.get_greenroomkit()
+    self.assertTrue(green.item_count() > 0)
+    self.assertTrue(green.room_count() == 0)
+    self.assertTrue(green.in_use())
+
+    # Stop Green being used by an item, too. That should make it
+    # no longer in use.
+    KitItemAssignment.objects.filter(bundle=green).delete()
+    green = self.get_greenroomkit()
+    self.assertTrue(green.item_count() == 0)
+    self.assertTrue(green.room_count() == 0)
+    self.assertFalse(green.in_use())
+
 
 # =========================================================
 
