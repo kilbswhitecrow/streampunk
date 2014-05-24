@@ -3530,6 +3530,20 @@ class test_person_as_badge(NonauthTest):
       else:
         self.has_row(t, { 'name': p.as_name() } )
 
+  def test_itempeople_as_badge(self):
+    "Check that names are hidden, when displayed on items."
+
+    dawn = self.get_dawn()
+    disco = self.get_disco()
+    self.assertTrue(dawn.badge_only)
+    self.assertTrue(dawn in disco.people.all())
+    self.response = self.client.get(reverse('show_item_detail', args=[int(disco.id)]))
+    self.status_okay()
+    t = 'item_people_table'
+    self.has_column(t, 'badge')
+    self.no_column(t, 'name')
+    self.has_row(t, { 'badge': dawn.as_badge() } )
+
 # Tests required
 # Items
 # 	Satisfaction
