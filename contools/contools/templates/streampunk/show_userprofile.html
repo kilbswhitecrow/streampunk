@@ -29,7 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 </table>
 
-<p><a href="/accounts/change_profile/">Edit your profile</a>.</p>
+<p><a href="{% url "editprofile" %}">Edit your profile</a>.</p>
 
-<p><a href="/accounts/change_password/">Change your password</a>.</p>
+<p><a href="{% url "password_change" %}">Change your password</a>.</p>
 {% endblock %}
