@@ -24,5 +24,7 @@ python manage.py dumpdata --indent=2 \
   streampunk.coninfostring  \
   streampunk.room  \
   streampunk.roomcapacity  \
-
+  auth.user \
+  auth.permission \
+  auth.group \
 
