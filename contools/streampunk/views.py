@@ -149,7 +149,7 @@ def static_page(request, template):
 
 @login_required
 def edit_user_profile(request):
-  userprofile = request.user.get_profile()
+  userprofile = request.user.userprofile
   if request.method == 'POST':
     if request.user.has_perm('streampunk.read_private'):
       form = UserProfileFullForm(request.POST, instance=userprofile)
@@ -175,7 +175,7 @@ def edit_user_profile(request):
 
 @login_required
 def show_profile_detail(request):
-  userprofile = request.user.get_profile()
+  userprofile = request.user.userprofile
   return render_to_response('streampunk/show_userprofile.html',
                             locals(),
                             context_instance=RequestContext(request))

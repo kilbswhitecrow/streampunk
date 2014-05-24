@@ -3,13 +3,8 @@ S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
 - Handle settings.py
-- BUG: Cannot click on user link when logged in - profile problem.
-- BUG: Cannot fetch UserProfile page (same problem)
 - BUG: Personlists are shown in http://localhost/streampunk/streampunk/peoplelists/, but we go to something else.
 - BUG: Cannot remove a Bundle from a room. Eak.
-- BUG: When a person appears on an item, they're displayed with full combined name, when badge_only is specified.
-       (Tag listing and grid appears okay, though.) This is because it's in a Tables2 table, rather than being
-       selected according to the view. I either need to change the unicode() method, or provide different tables.
 
 Outstanding coverage:
 	- Tags, read priv, but not edit_prog priv
