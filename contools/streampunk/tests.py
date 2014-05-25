@@ -69,6 +69,9 @@ class StreampunkTest(TestCase):
     link = '<a href="%s' % reverse(path, args=args)
     self.assertFalse(link in self.response.content)
 
+  def yesno_link_to(self, yesno, path, args=None):
+    return self.has_link_to(path, args) if yesno else self.no_link_to(path, args)
+
   def form_error(self):
     self.assertTrue('errorlist' in self.response.content)
 
@@ -82,6 +85,9 @@ class StreampunkTest(TestCase):
   def no_column(self, table, column):
     t = self.response.context[table]
     self.assertFalse(column in t.columns.names())
+
+  def yesno_column(self, yesno, table, column):
+    return self.has_column(table, column) if yesno else self.no_column(table, column)
 
   def num_rows(self, table):
     t = self.response.context[table]
@@ -124,6 +130,9 @@ class StreampunkTest(TestCase):
   def no_row(self, table, rec):
     self.assertFalse(self.row_match(table, rec))
 
+  def yesno_row(self, yesno, table, rec):
+    return self.has_row(table, rec) if yesno else self.no_row(table, rec)
+
   def get_buffy(self):
     return Person.objects.get(firstName='Buffy')
   def get_giles(self):
@@ -145,6 +154,8 @@ class StreampunkTest(TestCase):
     return Item.objects.get(shortname='bid session')
   def get_tolkien(self):
     return Item.objects.get(shortname='Tolkien panel')
+  def get_openingceremony(self):
+    return Item.objects.get(shortname='opening ceremony')
 
   def get_nowhere(self):
     return Room.objects.get(name='Nowhere')
@@ -249,10 +260,13 @@ class AuthTest(StreampunkTest):
     self.has_link_to('list_kitthings')
     self.has_link_to('kit_usage')
     self.has_link_to('list_checks')
-    # To Add
-    # kit thing/bundle to room/item
-    # admin
-    # Profile
+    # XXX This still isn't working, and I can't tell why.
+    # self.has_link_to('admin:index')
+    self.has_link_to('userprofile')
+    self.has_link_to('add_kitthing_to_item')
+    self.has_link_to('add_kitthing_to_room')
+    self.has_link_to('add_kitbundle_to_item')
+    self.has_link_to('add_kitbundle_to_room')
 
   def mkroot(self):
     user = User.objects.create_user(username='congod', password='xxx')
@@ -3633,6 +3647,328 @@ class test_person_as_badge(NonauthTest):
     self.has_column(t, 'badge')
     self.no_column(t, 'name')
     self.has_row(t, { 'badge': dawn.as_badge() } )
+
+# -----------------------------------------------------------------------------------
+
+class PermTest(AuthTest):
+  "For tests relating to permissions and groups."
+
+  def can_read_private(self, yesno):
+    "yesno says whether we're expected to be able to read private data."
+
+    self.assertEqual(yesno, self.rootuser.has_perm('streampunk.read_private'))
+    self.response = self.client.get(reverse('list_people'))
+    self.status_okay()
+    t = 'ptable'
+    self.has_row(t, { 'badge': 'The Key' })
+    self.yesno_column(yesno, t, 'firstName')
+    disco = self.get_disco()
+    self.response = self.client.get(reverse('show_item_detail', args=[int(disco.id)]))
+    self.status_okay()
+    self.yesno_column(yesno, 'item_people_table', 'name')
+
+  def can_edit_programme(self, yesno):
+    "Edit programme means: add/change/delete items, people"
+    self.assertEqual(yesno, self.rootuser.has_perm('streampunk.edit_programme'))
+
+    # Main page: menu items for adding people and items
+
+    self.response = self.client.get(reverse('main_page'))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'new_person')
+    self.yesno_link_to(yesno, 'new_item')
+
+    # People list: links to delete or edit.
+    self.response = self.client.get(reverse('list_people'))
+    self.status_okay()
+    t = 'ptable'
+    self.no_column(yesno, t, 'edit')
+    self.no_column(yesno, t, 'remove')
+
+    # show person - link to edit, add to an item, remove from an item or edit the item-person.
+    # We don't test edit tags here - that's a separate permission.
+    giles = self.get_giles()
+    self.response  = self.client.get(reverse('show_person_detail', args=[int(giles.id)]))
+    self.status_okay()
+    t = 'person_items_table'
+    self.yesno_link_to(yesno, 'edit_person', args=[int(giles.id)])
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+    self.yesno_link_to(yesno, 'new_itemperson')
+    self.yesno_link_to(yesno, 'edit_tags_for_person', args=[int(giles.id)])
+
+    # Show item: edit item, add person to item, edit/remove the itemperson
+    # We don't test edit tags here - that's a separate permission.
+    # There should be full add/edit/remove for kit requests, but we ignore
+    # other kit operations, as they fall under edit_kit.
+    opening = self.get_openingceremony()
+    self.response  = self.client.get(reverse('show_item_detail', args=[int(opening.id)]))
+    self.status_okay()
+    t = 'item_people_table'
+    self.yesno_link_to(yesno, 'edit_item', args=[int(opening.id)])
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+    self.yesno_link_to(yesno, 'new_itemperson')
+    self.yesno_link_to(yesno, 'edit_tags_for_item', args=[int(opening.id)])
+
+    t = 'krtable'
+    self.yesno_link_to(yesno, 'add_kitrequest_to_item', args=[int(opening.id)])
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+
+    # A grid page should show the fill-slot links in each cell.
+    # We're going to assume it's the unsched version that's wanted.
+    for grid in opening.start.grid_set.all():
+      self.response = self.client.get(reverse('show_grid', args=[int(grid.id)]))
+      self.status_okay()
+      self.yesno_link_to(yesno, 'fill_slot_unsched', kwargs={ 'r': int(opening.room.id), 's': int(slot.id) })
+
+  def can_edit_kit(self, yesno):
+    "Edit kit means: create/edit/del kit things and bundles, assign to/del from items and rooms."
+    self.assertEqual(yesno, self.rootuser.has_perm('streampunk.edit_kit'))
+
+    # Main page links for adding kit things, bundles. Also for adding to item or room.
+    self.response = self.client.get(reverse('main_page'))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'new_kitthing')
+    self.yesno_link_to(yesno, 'new_kitbundle')
+    self.yesno_link_to(yesno, 'add_kitthing_to_room')
+    self.yesno_link_to(yesno, 'add_kitthing_to_item')
+    self.yesno_link_to(yesno, 'add_kitbundle_to_room')
+    self.yesno_link_to(yesno, 'add_kitbundle_to_item')
+
+    # Show item has add kit thing to item, add kit bundle to item, edit or delete any existing assignments.
+    qs = KitItemAssignment.objects.all()
+    self.assertTrue(qs.count() > 0)
+    kia = qs[0]
+    self.response =  self.client.get(reverse('show_item_detail', args=[int(kia.item.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'add_kitthing_to_item')
+    self.yesno_link_to(yesno, 'add_kitbundle_to_item')
+    t = 'kiatable'
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+    
+    # Show room has add kit thing to item, add kit bundle to room, edit or delete any existing assignments.
+    # (XXX does/should edit room limit access to the kit-related attributes?)
+    room = self.get_mainhall()
+    self.response =  self.client.get(reverse('show_room_detail', args=[int(room.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'add_kitthing_to_room')
+    self.yesno_link_to(yesno, 'add_kitbundle_to_room')
+    t = 'kratable'
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+    
+    # list kit things/bundles shows edit/remove links, iff not in use.
+    self.response = self.client.get(reverse('list_kitthings'))
+    self.status_okay()
+    t = 'kttable'
+    self.yesno_column(yesno, t, 'edit')
+    self.response = self.client.get(reverse('list_kitbundles'))
+    self.status_okay()
+    t = 'kbtable'
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+
+
+    # show kit thing/bundle shows edit, and add to item/room.
+    greenroomscr = self.get_greenroomscr()
+    self.response = self.client.get(reverse('show_kitthing_detail', args=[int(greenroomscr.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'edit_kitthing', args=[int(greenroomscr.id)])
+    self.yesno_link_to(yesno, 'add_kitthing_to_item')
+    self.yesno_link_to(yesno, 'add_kitthing_to_room')
+    greenroomkit = self.get_greenroomkit()
+    self.response = self.client.get(reverse('show_kitbundle_detail', args=[int(greenroomkit.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'edit_kitbundle', args=[int(greenroomkit.id)])
+    self.yesno_link_to(yesno, 'add_kitbundle_to_item')
+    self.yesno_link_to(yesno, 'add_kitbundle_to_room')
+
+  def can_config_db(self, yesno):
+    "Config DB is the ability to add rooms, grids, slots, etc."
+    self.assertEqual(yesno, self.rootuser.has_perm('streampunk.config_db'))
+
+    # We consider addign a new room to be something special.
+    self.response = self.client.get(reverse('main_page'))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'new_room')
+
+    # And all the other DB config stuff is done through the Admin interface,
+    # So access to that interface should be controlled.
+    self.yesno_link_to(yesno, 'admin:index')
+
+  def can_edit_tags(self, yesno):
+    "Edit tags: allows ability to create/delete/add/remove tags for items, people."
+    self.assertEqual(yesno, self.rootuser.has_perm('streampunk.edit_tags'))
+
+    # The banner has adding a new tag, and adding tags to stuff
+    self.response = self.client.get(reverse('main_page'))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'new_tag')
+    self.yesno_link_to(yesno, 'add_tags')
+
+    # The tag list has edit/remove options
+    self.response = self.client.get(reverse('list_tags'))
+    self.status_okay()
+    t = 'ttable'
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
+
+    # The show tag page has an edit option, and a list of uses, with remove options.
+    comics = self.get_comics()
+    self.response = self.client.get(reverse('show_tag_detail', args=[int(comics.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'edit_tag', args=[int(comics.id)])
+    self.yesno_column(yesno, 'pttable', 'remove')
+
+    books = self.get_books()
+    self.response = self.client.get(reverse('show_tag_detail', args=[int(books.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'edit_tag', args=[int(books.id)])
+    self.yesno_column(yesno, 'ittable', 'remove')
+
+    # show person/item has a list of tags, with NO edit/remove options, and an edit tags for person/item option.
+    giles = self.get_giles()
+    self.response = self.client.get(reverse('show_person_detail', args=[int(giles.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'edit_tags_for_person', args=[int(giles.id)])
+    bidsession = self.get_bidsession()
+    self.response = self.client.get(reverse('show_item_detail', args=[int(bidsession.id)]))
+    self.status_okay()
+    self.yesno_link_to(yesno, 'edit_tags_for_item', args=[int(bidsession.id)])
+
+class test_concom(PermTest):
+  "Check whether the concom users can do the right things."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='fury', password='yyy')
+    self.rootuser = User.objects.get(username='fury')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def test_yesno(self):
+    "Check whether the yesno tests give the right results"
+    self.can_read_private(True)
+    self.can_edit_programme(True)
+    self.can_edit_kit(True)
+    self.can_config_db(False)
+    self.can_edit_tags(True)
+
+
+class test_constaff(PermTest):
+  "Check whether the constaff users can do the right things."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='phil', password='yyy')
+    self.rootuser = User.objects.get(username='phil')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def test_yesno(self):
+    "Check whether the yesno tests give the right results"
+    self.can_read_private(True)
+    self.can_edit_programme(False)
+    self.can_edit_kit(False)
+    self.can_config_db(False)
+    self.can_edit_tags(False)
+
+
+class test_participant(PermTest):
+  "Check whether the participant users can do the right things."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='mel', password='yyy')
+    self.rootuser = User.objects.get(username='mel')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def test_yesno(self):
+    "Check whether the yesno tests give the right results"
+    self.can_read_private(False)
+    self.can_edit_programme(False)
+    self.can_edit_kit(False)
+    self.can_config_db(False)
+    self.can_edit_tags(False)
+
+
+class test_progops(PermTest):
+  "Check whether the progops users can do the right things."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='grant', password='yyy')
+    self.rootuser = User.objects.get(username='grant')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def test_yesno(self):
+    "Check whether the yesno tests give the right results"
+    self.can_read_private(True)
+    self.can_edit_programme(True)
+    self.can_edit_kit(False)
+    self.can_config_db(False)
+    self.can_edit_tags(True)
+
+
+class test_streampunkadmin(PermTest):
+  "Check whether the streampunkadmin users can do the right things."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='fitz', password='yyy')
+    self.rootuser = User.objects.get(username='fitz')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def test_yesno(self):
+    "Check whether the yesno tests give the right results"
+    self.can_read_private(True)
+    self.can_edit_programme(True)
+    self.can_edit_kit(True)
+    self.can_config_db(True)
+    self.can_edit_tags(True)
+
+
+class test_tech(PermTest):
+  "Check whether the tech users can do the right things."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='sky', password='yyy')
+    self.rootuser = User.objects.get(username='sky')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def test_yesno(self):
+    "Check whether the yesno tests give the right results"
+    self.can_read_private(True)
+    self.can_edit_programme(False)
+    self.can_edit_kit(True)
+    self.can_config_db(False)
+    self.can_edit_tags(True)
 
 # Tests required
 # Items
