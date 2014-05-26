@@ -427,8 +427,8 @@ class Tag(models.Model):
                    "remove":      "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
-    if request.user.has_perm('progb2.read_private'):
-      if request.user.has_perm('progb2.edit_programme'):
+    if request.user.has_perm('streampunk.read_private'):
+      if request.user.has_perm('streampunk.edit_programme'):
         return None
       else:
         return ['edit', 'remove']
@@ -699,7 +699,7 @@ class KitThing(models.Model):
                    "remove": "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
-    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
+    return None if request.user.has_perm('streampunk.edit_kit') else ['remove']
 
 class KitBundle(models.Model):
   """
@@ -759,7 +759,7 @@ class KitBundle(models.Model):
                    "remove":   "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
-    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
+    return None if request.user.has_perm('streampunk.edit_kit') else ['remove']
 
 class KitRoomAssignment(models.Model):
   """
@@ -842,7 +842,7 @@ class KitRoomAssignment(models.Model):
                    "remove":   "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
-    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
+    return None if request.user.has_perm('streampunk.edit_kit') else ['remove']
 
   
 class KitItemAssignment(models.Model):
@@ -879,7 +879,7 @@ class KitItemAssignment(models.Model):
 
   @classmethod
   def tabler_exclude(cls, request):
-    return None if request.user.has_perm('progb2.edit_tech') else ['remove']
+    return None if request.user.has_perm('streampunk.edit_kit') else ['remove']
 
 class RoomCapacity(models.Model):
   """
@@ -1057,8 +1057,8 @@ class Room(models.Model):
                     "remove":              "Remove" })
   @classmethod
   def tabler_exclude(cls, request):
-    if request.user.has_perm('progb2.read_private'):
-      if request.user.has_perm('progb2.edit_room'):
+    if request.user.has_perm('streampunk.read_private'):
+      if request.user.has_perm('streampunk.edit_room'):
         return None
       else:
         return ['edit', 'remove']
@@ -1230,8 +1230,8 @@ class Person(models.Model):
 
   @classmethod
   def tabler_exclude(cls, request):
-    if request.user.has_perm('progb2.read_private'):
-      if request.user.has_perm('progb2.edit_private'):
+    if request.user.has_perm('streampunk.read_private'):
+      if request.user.has_perm('streampunk.edit_private'):
         return ['name']
       else:
         return ['edit', 'name']
@@ -1342,8 +1342,8 @@ class Item(models.Model):
  
   @classmethod
   def tabler_exclude(cls, request):
-    if request.user.has_perm('progb2.read_private'):
-      if request.user.has_perm('progb2.edit_programme'):
+    if request.user.has_perm('streampunk.read_private'):
+      if request.user.has_perm('streampunk.edit_programme'):
         return None
       else:
         return ['edit', 'remove', 'satisfies_kit_requests']
@@ -1478,8 +1478,8 @@ class ItemPerson(models.Model):
     no_perms = ['select', 'edit', 'remove', 'status', 'visible', 'distEmail', 'recordingOkay']
     if not request:
       return no_perms
-    if request.user.has_perm('progb2.read_private'):
-      if request.user.has_perm('progb2.edit_programme'):
+    if request.user.has_perm('streampunk.read_private'):
+      if request.user.has_perm('streampunk.edit_programme'):
         return []
       else:
         return ['select', 'edit', 'remove']

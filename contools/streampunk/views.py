@@ -127,7 +127,7 @@ class AllView(ListView):
 
 class VisibleView(AllView):
   def get_queryset(self):
-    if self.request.user.has_perm('progb2.read_private'):
+    if self.request.user.has_perm('streampunk.read_private'):
       return self.model.objects.all()
     else:
       return self.model.objects.filter(visible = True)
@@ -251,7 +251,7 @@ def show_grid(request, gr):
   gid = int(gr)
   grid = Grid.objects.get(id = gid)
   slots = grid.slots.all()
-  if request.user.has_perm('progb2.read_private'):
+  if request.user.has_perm('streampunk.read_private'):
     rooms = Room.objects.all();
   else:
     rooms = Room.objects.filter(visible=True);
@@ -287,7 +287,7 @@ class show_item_detail(DetailView):
     empty= 'Nobody on this item yet'
     context = super(show_item_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
-    if self.request.user.has_perm('progb2.read_private'):
+    if self.request.user.has_perm('streampunk.read_private'):
       qs = ItemPerson.objects.filter(item=self.object)
       context['item_people'] = qs
       tagqs = self.object.tags.all()
@@ -321,7 +321,7 @@ class show_person_detail(DetailView):
     empty= 'Not on any items yet'
     context = super(show_person_detail, self).get_context_data(**kwargs)
     context['request'] = self.request
-    if self.request.user.has_perm('progb2.read_private'):
+    if self.request.user.has_perm('streampunk.read_private'):
       context['person_name'] = "%s" % self.object
       tagqs = self.object.tags.all()
       qs = ItemPerson.objects.filter(person=self.object)
@@ -911,7 +911,7 @@ def list_people(request):
 
 
 def list_items_filtered(request, extra_exclude):
-  if request.user.has_perm('progb2.read_private'):
+  if request.user.has_perm('streampunk.read_private'):
     qs = Item.objects.all()
   else:
     qs = Item.objects.filter(visible = True)
@@ -938,7 +938,7 @@ def list_kitrequests(request):
 
 
 def list_tags(request):
-  if request.user.has_perm('progb2.read_private'):
+  if request.user.has_perm('streampunk.read_private'):
     qs = Tag.objects.all()
   else:
     qs = Tag.objects.filter(visible = True)
@@ -953,7 +953,7 @@ def list_kitbundles(request):
                                                              "verbose_name": 'kit bundle' })
 
 def list_rooms_filtered(request, extra_exclude):
-  if request.user.has_perm('progb2.read_private'):
+  if request.user.has_perm('streampunk.read_private'):
     qs = Room.objects.all()
   else:
     qs = Room.objects.filter(visible = True)
@@ -980,7 +980,7 @@ def list_rooms_tech(request):
 
 def xml_dump(request):
   con_name = ConInfoString.objects.con_name()
-  if request.user.has_perm('progb2.read_private'):
+  if request.user.has_perm('streampunk.read_private'):
     rooms = Room.objects.all()
     allitems = Item.scheduled.all()
     template = 'xml/streampunk.xml'
