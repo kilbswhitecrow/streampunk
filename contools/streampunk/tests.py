@@ -3682,8 +3682,8 @@ class PermTest(AuthTest):
     self.response = self.client.get(reverse('list_people'))
     self.status_okay()
     t = 'ptable'
-    self.no_column(yesno, t, 'edit')
-    self.no_column(yesno, t, 'remove')
+    self.yesno_column(yesno, t, 'edit')
+    self.yesno_column(yesno, t, 'remove')
 
     # show person - link to edit, add to an item, remove from an item or edit the item-person.
     # We don't test edit tags here - that's a separate permission.
