@@ -88,9 +88,11 @@ Missing Kit: <br />
 <p>
 {% render_table kiatable %}
 </p>
-{% if perms.streampunk.edit_kit %}
+{% if perms.streampunk.edit_programme %}
 <p>
 <a href="{% url "add_kitrequest_to_item" pk=item.id %}">Add Kit request to '{{ item }}'</a></p>
+{% endif %}
+{% if perms.streampunk.edit_kit %}
 <p>
 <a href="{% url "add_kitbundle_to_item" %}?item={{ item.id }}">Add Kit bundle to '{{ item }}'</a></p>
 <p>
@@ -106,7 +108,7 @@ Missing Kit: <br />
   </div>
 {% endif %}
 
-{% if perms.streampunk.edit_programme or perms.streampunk.edit_private %}
+{% if perms.streampunk.edit_programme %}
 <p> <a href="{% url "edit_item" pk=item.id %}">Edit item</a>.</p>
 {% endif %}
 

@@ -3665,7 +3665,7 @@ class PermTest(AuthTest):
     disco = self.get_disco()
     self.response = self.client.get(reverse('show_item_detail', args=[int(disco.id)]))
     self.status_okay()
-    self.yesno_column(yesno, 'item_people_table', 'name')
+    self.yesno_column(yesno, 'item_people_table', 'person')
 
   def can_edit_programme(self, yesno):
     "Edit programme means: add/change/delete items, people"
@@ -3695,7 +3695,6 @@ class PermTest(AuthTest):
     self.yesno_column(yesno, t, 'edit')
     self.yesno_column(yesno, t, 'remove')
     self.yesno_link_to(yesno, 'new_itemperson')
-    self.yesno_link_to(yesno, 'edit_tags_for_person', args=[int(giles.id)])
 
     # Show item: edit item, add person to item, edit/remove the itemperson
     # We don't test edit tags here - that's a separate permission.
@@ -3709,7 +3708,6 @@ class PermTest(AuthTest):
     self.yesno_column(yesno, t, 'edit')
     self.yesno_column(yesno, t, 'remove')
     self.yesno_link_to(yesno, 'new_itemperson')
-    self.yesno_link_to(yesno, 'edit_tags_for_item', args=[int(opening.id)])
 
     t = 'krtable'
     self.yesno_link_to(yesno, 'add_kitrequest_to_item', args=[int(opening.id)])
@@ -3721,7 +3719,7 @@ class PermTest(AuthTest):
     for grid in opening.start.grid_set.all():
       self.response = self.client.get(reverse('show_grid', args=[int(grid.id)]))
       self.status_okay()
-      self.yesno_link_to(yesno, 'fill_slot_unsched', kwargs={ 'r': int(opening.room.id), 's': int(slot.id) })
+      self.yesno_link_to(yesno, 'fill_slot_unsched', args=[ int(opening.room.id), int(opening.start.id) ])
 
   def can_edit_kit(self, yesno):
     "Edit kit means: create/edit/del kit things and bundles, assign to/del from items and rooms."
@@ -3746,7 +3744,7 @@ class PermTest(AuthTest):
     self.yesno_link_to(yesno, 'add_kitthing_to_item')
     self.yesno_link_to(yesno, 'add_kitbundle_to_item')
     t = 'kiatable'
-    self.yesno_column(yesno, t, 'edit')
+    # KitItemTable has a remove column, but not an edit column.
     self.yesno_column(yesno, t, 'remove')
     
     # Show room has add kit thing to item, add kit bundle to room, edit or delete any existing assignments.
@@ -3757,7 +3755,7 @@ class PermTest(AuthTest):
     self.yesno_link_to(yesno, 'add_kitthing_to_room')
     self.yesno_link_to(yesno, 'add_kitbundle_to_room')
     t = 'kratable'
-    self.yesno_column(yesno, t, 'edit')
+    # KitRoomTable has a remove column, but not an edit column.
     self.yesno_column(yesno, t, 'remove')
     
     # list kit things/bundles shows edit/remove links, iff not in use.
@@ -3768,7 +3766,7 @@ class PermTest(AuthTest):
     self.response = self.client.get(reverse('list_kitbundles'))
     self.status_okay()
     t = 'kbtable'
-    self.yesno_column(yesno, t, 'edit')
+    # No Edit column in the KitBundleTable.
     self.yesno_column(yesno, t, 'remove')
 
 

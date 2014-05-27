@@ -54,7 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 </table>
 
-{% if perms.streampunk.edit_programme or perms.streampunk.edit_private %}
+{% if perms.streampunk.edit_programme %}
 <p><a href="{% url "edit_person" pk=person.id %}">Edit person</a>.</p>
 {% endif %}
 
@@ -66,7 +66,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <td>{{ itemperson.item|linky|safe }}</td>
   <td>{{ itemperson.role }}</td>
   <td>{{ itemperson.status }}</td>
-{% if perms.progdg2.edit_programme %}
+{% if perms.streampunk.edit_programme %}
   <td><a href="{% url "delete_itemperson" pk=itemperson.id %}">Remove</a></td>
 {% endif %}
 </tr>
@@ -80,7 +80,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% render_table person_items_table %}
 </p>
 
-{% if perms.progdg2.edit_programme %}
+{% if perms.streampunk.edit_programme %}
 <p><a href="{% url "new_itemperson" %}?person={{ person.id }}">Add {{ person }} to an item</a>.</p>
 {% if person.email %}
 <p><a href="{% url "email_person" pk=person.id %}">Email {{ person }}</a>.</p>

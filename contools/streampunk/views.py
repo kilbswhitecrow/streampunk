@@ -297,6 +297,10 @@ class show_item_detail(DetailView):
       context['item_people'] = qs
       tagqs = self.object.tags.filter(visible=True)
       ip_exclude = ['item', 'person']
+    if self.request.user.has_perm('streampunk.edit_programme'):
+      krexclude = []
+    else:
+      krexclude = ['edit', 'remove']
     context['item_people_table'] = make_tabler(ItemPerson, ItemPersonTable, request=self.request, qs=qs,
                                                prefix='ipt-', empty=empty, extra_exclude=ip_exclude)
     context['tagtable'] = make_tabler(Tag, TagTable, request=self.request, qs=tagqs, prefix='tag-', empty='No tags',
@@ -304,7 +308,7 @@ class show_item_detail(DetailView):
     context['kitrequests'] = self.object.kitRequests.all()
     context['krtable'] = make_tabler(KitRequest, KitRequestTable, request=self.request, qs=context['kitrequests'],
                                      prefix='kr-', empty='No kit requests yet',
-                                     extra_exclude=['item', 'room', 'day', 'start', 'status', 'notes', 'setup'])
+                                     extra_exclude=['item', 'room', 'day', 'start', 'status', 'notes', 'setup'] + krexclude)
     context['kititems'] = KitItemAssignment.objects.filter(item=self.object)
     context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
                                       qs=context['kititems'], prefix='kia-', empty='No kit assigned',
@@ -905,7 +909,9 @@ def kit_usage(request):
                             context_instance=RequestContext(request))
 
 def list_people(request):
-  table = make_tabler(Person, PersonTable, request=request, qs=Person.objects.all(), prefix='p-', empty='No people')
+  extra_exclude = [] if request.user.has_perm('streampunk.edit_programme') else [ 'edit', 'remove' ]
+  table = make_tabler(Person, PersonTable, request=request, qs=Person.objects.all(), prefix='p-',
+                      empty='No people', extra_exclude=extra_exclude)
   return render(request, "streampunk/list_people.html", { "ptable": table,
                                                           "verbose_name": 'person' })
 
