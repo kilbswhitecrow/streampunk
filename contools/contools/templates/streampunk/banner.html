@@ -44,14 +44,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {% endif %}
     </li>
   <li class="streampunk_menu_mainitems"><a href="{% url "list_rooms" %}">Rooms</a>
-    {% if perms.streampunk.edit_rooms %}
       <ul class="streampunk_menu_subuls">
        <li><a href="{% url "list_rooms" %}">List Rooms</a></li>
+    {% if perms.streampunk.edit_programme %}
        <li><a href="{% url "list_rooms_prog" %}">List Rooms - Prog</a></li>
-       <li><a href="{% url "list_rooms_tech" %}">List Rooms - Tech</a></li>
-       <li><a href="{% url "new_room" %}">New Room</a></li>
-      </ul>
     {% endif %}
+    {% if perms.streampunk.edit_kit %}
+       <li><a href="{% url "list_rooms_tech" %}">List Rooms - Tech</a></li>
+    {% endif %}
+    {% if perms.streampunk.config_db %}
+       <li><a href="{% url "new_room" %}">New Room</a></li>
+    {% endif %}
+      </ul>
     </li>
   <li class="streampunk_menu_mainitems"><a href="{% url "list_tags" %}">Tags</a>
     {% if perms.streampunk.edit_tags %}
@@ -97,7 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </li>
   <li class="streampunk_menu_mainitems"><a href="{% url "list_checks" %}">Checks</a></li>
 {% endif %}
-{% if user.is_staff %}
+{% if perms.streampunk.config_db %}
   <li class="streampunk_menu_mainitems"><a href="{% url "admin:index" %}">Admin</a></li> 
 {% endif %}
   <li class="streampunk_menu_mainitems">
