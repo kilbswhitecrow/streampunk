@@ -6,16 +6,20 @@ T = [ x for x in S if x % 2 == 0 ]
 - BUG: Personlists are shown in http://localhost/streampunk/streampunk/peoplelists/, but we go to something else.
 - BUG: Cannot remove a Bundle from a room. Eak.
 
+Let's add some users, with group membership, and password yyy:
+
+	concom		fury	Nick Fury
+	constaff	phil	Phil Coulson
+	participant	mel	Melinda May
+	progops		grant	Grant Ward
+	streampunkadmin	fitz	Fitz Simmons
+	tech		sky	Sky
+
 Outstanding coverage:
-	- Tags, read priv, but not edit_prog priv
-	- KitBundles in_use() w/o room assignment.
-	- Room read priv w/o edit
 	- Person as_badge(), cleaned names from creation form.
-	- Person read priv, no edit
-	- Item read priv no edit, shortnames rather than titles
+	- Item read priv no edit
 	- Item cleaned names in form
-	- Item day(), startText()
-	- ItemPerson edit, no_perms
+	- ItemPerson no_perms
 
 	+ Remove title from item, display
 	+ Remove Bundle from a room.
