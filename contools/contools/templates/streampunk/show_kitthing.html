@@ -34,16 +34,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><th>Coordinator</th><td>{{ kitthing.coordinator }}</td></tr>
 </table>
 
+{% if perms.streampunk.edit_kit %}
 <p><a href="{% url "edit_kitthing" pk=kitthing.id %}">Edit this thing</a>.</p>
+{% endif %}
 
 {% include "streampunk/list_kitbundles.html" %}
 {% include "streampunk/list_kititemassignments.html" %}
 {% include "streampunk/list_kitroomassignments.html" %}
 {% include "streampunk/list_avail.html" %}
+{% if perms.streampunk.edit_kit %}
 <p>
 <a href="{% url "add_kitthing_to_room" %}?thing={{ kitthing.id }}">Allocate {{ kitthing }} to a room</a>.
 </p>
 <p>
 <a href="{% url "add_kitthing_to_item" %}?thing={{ kitthing.id }}">Allocate {{ kitthing }} to an item</a>.
 </p>
+{% endif %}
 {% endblock %}

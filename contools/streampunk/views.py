@@ -353,13 +353,18 @@ class show_tag_detail(DetailView):
 
   def get_context_data(self, **kwargs):
     context = super(show_tag_detail, self).get_context_data(**kwargs)
+    # These tables' edit/remove links apply to the person/item, not to
+    # the association with the tag, so never show them in this view -
+    # otherwise, users will delete people/items thinking they're just
+    # removing a tag.
+    extra_exclude = [ 'edit', 'remove' ]
     context['request'] = self.request
     context['ittable'] = make_tabler(Item, ItemTable, request=self.request,
                                      qs=self.object.item_set.all(), prefix='it-', empty='No items',
-                                     extra_exclude=['edit', 'remove'])
+                                     extra_exclude=extra_exclude)
     context['pttable'] = make_tabler(Person, PersonTable, request=self.request,
                                      qs=self.object.person_set.all(), prefix='pt-', empty='No people',
-                                     extra_exclude=['edit'])
+                                     extra_exclude=extra_exclude)
     return context
 
 
@@ -932,7 +937,9 @@ def list_items_tech(request):
   return list_items_filtered(request, [ ])
 
 def list_kitthings(request):
-  table = make_tabler(KitThing, KitThingTable, request=request, qs=KitThing.objects.all(), prefix='kt-', empty='No kit things')
+  extra_exclude = [ ] if request.user.has_perm('streampunk.edit_kit') else [ 'edit', 'remove' ]
+  table = make_tabler(KitThing, KitThingTable, request=request, qs=KitThing.objects.all(), prefix='kt-',
+                      empty='No kit things', extra_exclude=extra_exclude)
   return render(request, "streampunk/kitthing_list.html", { "kttable": table,
                                                             "verbose_name": 'kit thing' })
 
@@ -953,8 +960,9 @@ def list_tags(request):
                                                         "verbose_name": 'tag' })
 
 def list_kitbundles(request):
+  extra_exclude = [ ] if request.user.has_perm('streampunk.edit_kit') else [ 'edit', 'remove' ]
   table = make_tabler(KitBundle, KitBundleTable, request=request,
-                      qs=KitBundle.objects.all(), prefix='kb-', empty='No kit bundles')
+                      qs=KitBundle.objects.all(), prefix='kb-', empty='No kit bundles', extra_exclude=extra_exclude)
   return render(request, "streampunk/kitbundle_list.html", { "kbtable": table,
                                                              "verbose_name": 'kit bundle' })
 

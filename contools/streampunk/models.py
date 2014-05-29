@@ -428,7 +428,7 @@ class Tag(models.Model):
   @classmethod
   def tabler_exclude(cls, request):
     if request.user.has_perm('streampunk.read_private'):
-      if request.user.has_perm('streampunk.edit_programme'):
+      if request.user.has_perm('streampunk.edit_tags'):
         return None
       else:
         return ['edit', 'remove']

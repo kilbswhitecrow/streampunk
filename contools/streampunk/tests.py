@@ -3780,9 +3780,23 @@ class PermTest(AuthTest):
     greenroomkit = self.get_greenroomkit()
     self.response = self.client.get(reverse('show_kitbundle_detail', args=[int(greenroomkit.id)]))
     self.status_okay()
-    self.yesno_link_to(yesno, 'edit_kitbundle', args=[int(greenroomkit.id)])
     self.yesno_link_to(yesno, 'add_kitbundle_to_item')
     self.yesno_link_to(yesno, 'add_kitbundle_to_room')
+    # The bundle's in use at this point, so we disallow the general editing of
+    # bundles, even if we have edit_kit.
+    if yesno:
+      self.assertTrue('This bundle is in use' in self.response.content)
+    else:
+      self.yesno_link_to(yesno, 'edit_kitbundle', args=[int(greenroomkit.id)])
+    # Now zap the use of the bundle - it should become editable, but only if we
+    # have that permission.
+    KitItemAssignment.objects.filter(bundle=greenroomkit).delete()
+    KitRoomAssignment.objects.filter(bundle=greenroomkit).delete()
+    self.response = self.client.get(reverse('show_kitbundle_detail', args=[int(greenroomkit.id)]))
+    self.status_okay()
+    self.assertFalse('This bundle is in use' in self.response.content)
+    self.yesno_link_to(yesno, 'edit_kitbundle', args=[int(greenroomkit.id)])
+
 
   def can_config_db(self, yesno):
     "Config DB is the ability to add rooms, grids, slots, etc."
@@ -3819,13 +3833,18 @@ class PermTest(AuthTest):
     self.response = self.client.get(reverse('show_tag_detail', args=[int(comics.id)]))
     self.status_okay()
     self.yesno_link_to(yesno, 'edit_tag', args=[int(comics.id)])
-    self.yesno_column(yesno, 'pttable', 'remove')
+    # The table should never show edit/remove links, though - they change
+    # the person, not the tag association.
+    self.no_column('pttable', 'edit')
+    self.no_column('pttable', 'remove')
 
     books = self.get_books()
     self.response = self.client.get(reverse('show_tag_detail', args=[int(books.id)]))
     self.status_okay()
     self.yesno_link_to(yesno, 'edit_tag', args=[int(books.id)])
-    self.yesno_column(yesno, 'ittable', 'remove')
+    # Again, no edit/remove column should appear here, regardless of perms.
+    self.no_column('ittable', 'edit')
+    self.no_column('ittable', 'remove')
 
     # show person/item has a list of tags, with NO edit/remove options, and an edit tags for person/item option.
     giles = self.get_giles()
@@ -3854,9 +3873,9 @@ class test_concom(PermTest):
     "Check whether the yesno tests give the right results"
     self.can_read_private(True)
     self.can_edit_programme(True)
-    self.can_edit_kit(True)
     self.can_config_db(False)
     self.can_edit_tags(True)
+    self.can_edit_kit(True)
 
 
 class test_constaff(PermTest):
@@ -3876,9 +3895,9 @@ class test_constaff(PermTest):
     "Check whether the yesno tests give the right results"
     self.can_read_private(True)
     self.can_edit_programme(False)
-    self.can_edit_kit(False)
     self.can_config_db(False)
     self.can_edit_tags(False)
+    self.can_edit_kit(False)
 
 
 class test_participant(PermTest):
@@ -3898,9 +3917,9 @@ class test_participant(PermTest):
     "Check whether the yesno tests give the right results"
     self.can_read_private(False)
     self.can_edit_programme(False)
-    self.can_edit_kit(False)
     self.can_config_db(False)
     self.can_edit_tags(False)
+    self.can_edit_kit(False)
 
 
 class test_progops(PermTest):
@@ -3920,9 +3939,9 @@ class test_progops(PermTest):
     "Check whether the yesno tests give the right results"
     self.can_read_private(True)
     self.can_edit_programme(True)
-    self.can_edit_kit(False)
     self.can_config_db(False)
     self.can_edit_tags(True)
+    self.can_edit_kit(False)
 
 
 class test_streampunkadmin(PermTest):
@@ -3942,9 +3961,9 @@ class test_streampunkadmin(PermTest):
     "Check whether the yesno tests give the right results"
     self.can_read_private(True)
     self.can_edit_programme(True)
-    self.can_edit_kit(True)
     self.can_config_db(True)
     self.can_edit_tags(True)
+    self.can_edit_kit(True)
 
 
 class test_tech(PermTest):
@@ -3964,9 +3983,9 @@ class test_tech(PermTest):
     "Check whether the yesno tests give the right results"
     self.can_read_private(True)
     self.can_edit_programme(False)
-    self.can_edit_kit(True)
     self.can_config_db(False)
     self.can_edit_tags(True)
+    self.can_edit_kit(True)
 
 # Tests required
 # Items
