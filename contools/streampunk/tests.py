@@ -3802,7 +3802,7 @@ class PermTest(AuthTest):
     "Config DB is the ability to add rooms, grids, slots, etc."
     self.assertEqual(yesno, self.rootuser.has_perm('streampunk.config_db'))
 
-    # We consider addign a new room to be something special.
+    # We consider adding a new room to be something special.
     self.response = self.client.get(reverse('main_page'))
     self.status_okay()
     self.yesno_link_to(yesno, 'new_room')
