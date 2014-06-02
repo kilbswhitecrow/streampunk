@@ -1157,30 +1157,6 @@ class Person(models.Model):
   def as_xml(self):
     return render_to_string('xml/person.xml', { "p": self } )
 
-  def clean_firstName(self):
-    "Strip whitespace from the field"
-    return self.cleaned_data['firstName'].strip()
-
-  def clean_middleName(self):
-    "Strip whitespace from the field"
-    return self.cleaned_data['middleName'].strip()
-
-  def clean_lastName(self):
-    "Strip whitespace from the field"
-    return self.cleaned_data['lastName'].strip()
-
-  def clean_badge(self):
-    "Strip whitespace from the field"
-    return self.cleaned_data['badge'].strip()
-
-  def clean(self):
-    "Ensure that at least one of firstName, MiddleName and lastName is set."
-    from django.core.exceptions import ValidationError
-    if not (self.firstName + self.middleName + self.lastName):
-      raise ValidationError('At least one of first/middle/last name must be set')
-    if self.badge_only and not self.badge:
-      raise ValidationError('Cannot set badge_only if badge is not set')
-
   def always_available(self):
     """
     Return true if there are no slots where the person is not available.
@@ -1362,20 +1338,6 @@ class Item(models.Model):
     return render_to_string('xml/item_public.xml', { "i": self } )
   def as_xml(self):
     return render_to_string('xml/item.xml', { "i": self } )
-
-  def clean_title(self):
-    "Strip whitespace from the field"
-    return self.cleaned_data['title'].strip()
-
-  def clean_shortname(self):
-    "Strip whitespace from the field"
-    return self.cleaned_data['shortname'].strip()
-
-  def clean(self):
-    "Ensure that at least one of shortname and title is set."
-    from django.core.exceptions import ValidationError
-    if not (self.shortname + self.title):
-      raise ValidationError('At least one of title/shortname must be set')
 
   def slots(self):
     "Return a queryset of the slots this item occupies"

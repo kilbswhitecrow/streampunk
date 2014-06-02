@@ -16,17 +16,43 @@ Let's add some users, with group membership, and password yyy:
 	tech		sky	Sky
 
 Outstanding coverage:
-	- Person as_badge(), cleaned names from creation form.
-	- Item read priv no edit
-	- Item cleaned names in form
-	- ItemPerson no_perms
-
-	+ Remove title from item, display
-	+ Remove Bundle from a room.
-	+ List people w/o auth
-	+ New Item
-	+ New Person
-	+ New non-edit a/c. View Tag, Item, Room, Person
+	show_request - just delete
+	get_initial_data_from_request
+		add_kitbundle/thing_to_item/room
+	NewView.get_initial(), majority of content
+		which is similar in concept to get_initial_data_from_request()
+	NewView.get_success_url()
+	AllView.get_context_data()
+	VisibleView.get_query_set()
+	static_page()	- just delete?
+	User Profiles
+		edit
+		show
+	is_from_item()	- just delete
+	is_from_person()	- gosh, nasty hack.
+	add_person_to_item()
+	Email
+		mkemail()
+		email_person()
+		emailed_person()
+		send_mail_to_personlist()
+		email_personlist()
+		email_item_with_personlist()
+		emailed_item()
+	edit_tags_for_item() - the GET path
+	add_tags()
+	add_kitrequest_to_room() - the GET path
+	fill_slots
+		fill_slot_gen()
+		fill_slot_sched()
+		fill_slot_unsched()
+	make_personlist()
+	make_con_groups()
+	list_items_tech()
+	list_kitrequests()
+	list_rooms_prog()
+	list_rooms_tech()
+	xsl_stylesheet()
 London
 ------
 - Increase the coverage
@@ -42,14 +68,8 @@ XXX Have added the checkbox for badge_only, for Steve R, but now I realise that 
 to provide a view of the whole person-list with that as a check-box, for ease of entering
 a lot of such changes.
 
-- Spotted the fixture-loading for individual tests, so using that.
 - Can't really see a way to test the grids with Django, since Django doesn't generate them as
 part of the ORM - it's all in the templates.
-- Disturbed to notice that the clean() method for people:
-	(a) is in the model Person, rather than in the ModelForm PersonForm.
-	(b) doesn't return cleaned data (presumably because it's in the model).
-- Added a constraint to ItemPerson to prevent the same person being added to the same item twice,
-  and added a test for that.
 
 Checks need short names for internal testing. Well, we don't *need* them, but it makes it
 easier to find a Check in the db.

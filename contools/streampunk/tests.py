@@ -36,6 +36,7 @@ from .models import KitThing, KitRequest, KitBundle, KitRole, KitDepartment
 from .models import KitKind, KitStatus, RoomCapacity, KitSource, KitBasis
 from .models import KitRoomAssignment, KitItemAssignment, KitSatisfaction
 from .models import Check, CheckResult
+from .forms import PersonForm
 from .exceptions import DeleteNeededObjectException, DeleteUndefException, DeleteDefaultException
 from .testutils import itemdict, persondict, kitreqdict, kitthingdict, kitbundledict
 from .testutils import default_person, default_item, default_itemperson
@@ -500,20 +501,25 @@ class test_creation(AuthTest):
     self.has_row(t, { 'firstName': 'Rupert', 'lastName': 'Giles', 'edit': 'Edit', 'remove': 'Remove' })
     self.has_row(t, { 'firstName': 'Buffy', 'lastName': 'Summers', 'edit': 'Edit', 'remove': 'Remove' })
 
-    # Check things get cleaned.
-    # XXX - This doesn't get cleaned. I don't see how the cleaning works with
-    # the test client.
-    # self.response = self.client.post(reverse('new_person'), default_person({
-    #   "firstName":      "River ",
-    #   "middleName":     " Psycho ",
-    #   "lastName":       " Tam",
-    #   "badge":          "\tNutter"
-    # }), follow=True)
-    # self.status_okay()
-    # chkpeople(self, 3)
-    # self.has_row(t, { 'firstName': 'Rupert', 'lastName': 'Giles', 'edit': 'Edit', 'remove': 'Remove' })
-    # self.has_row(t, { 'firstName': 'Buffy', 'lastName': 'Summers', 'edit': 'Edit', 'remove': 'Remove' })
-    # self.has_row(t, { 'firstName': 'River', 'lastName': 'Tam', 'middleName': 'Psycho', 'badge': 'Nutter' })
+    # Check cleaning methods. This needs to be done directly, it seems.
+
+    river_form = PersonForm({
+      "firstName":         "  River",
+      "middleName":        "\tAssassin ",
+      "lastName":          "Tam     ",
+      "badge":             "  Death Machine ",
+      "email":             "river@bluesun.com",
+      "memnum":            666,
+      "gender":            Gender.objects.find_default().id,
+      "complete":          "No",
+      "distEmail":         "No",
+      "recordingOkay":     "No"
+    })
+    self.assertTrue(river_form.is_valid())
+    self.assertEqual(river_form.cleaned_data['firstName'], "River")
+    self.assertEqual(river_form.cleaned_data['middleName'], "Assassin")
+    self.assertEqual(river_form.cleaned_data['lastName'], "Tam")
+    self.assertEqual(river_form.cleaned_data['badge'], "Death Machine")
 
     # Check we can create a user with only one of the three names defined.
     self.response = self.client.post(reverse('new_person'), default_person({

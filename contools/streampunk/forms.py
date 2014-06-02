@@ -22,6 +22,7 @@ from django import forms
 from django.forms import ModelForm, BooleanField, HiddenInput
 from django.forms.models import BaseModelFormSet
 from django.forms.extras.widgets import Select
+from django.core.exceptions import ValidationError
 
 from .models import ItemPerson, Item, Person, Tag, Room, Check, ConDay
 from .models import KitThing, KitBundle, KitRequest, PersonList
@@ -51,9 +52,50 @@ class ItemForm(ModelForm):
     model = Item
     exclude = [ 'people', 'kit' ]
 
+  def clean_title(self):
+    "Strip whitespace from the field"
+    return self.cleaned_data['title'].strip()
+
+  def clean_shortname(self):
+    "Strip whitespace from the field"
+    return self.cleaned_data['shortname'].strip()
+
+  def clean(self):
+    "Ensure that at least one of shortname and title is set."
+    cleaned_data = super(ItemForm, self).clean()
+    if not (cleaned_data['shortname'] + cleaned_data['title']):
+      raise ValidationError('At least one of title/shortname must be set')
+    return cleaned_data
+
+
 class PersonForm(ModelForm):
   class Meta:
     model = Person
+  def clean_firstName(self):
+    "Strip whitespace from the field"
+    return self.cleaned_data['firstName'].strip()
+
+  def clean_middleName(self):
+    "Strip whitespace from the field"
+    return self.cleaned_data['middleName'].strip()
+
+  def clean_lastName(self):
+    "Strip whitespace from the field"
+    return self.cleaned_data['lastName'].strip()
+
+  def clean_badge(self):
+    "Strip whitespace from the field"
+    return self.cleaned_data['badge'].strip()
+
+  def clean(self):
+    "Ensure that at least one of firstName, MiddleName and lastName is set."
+    cleaned_data = super(PersonForm, self).clean()
+    if not (cleaned_data['firstName'] + cleaned_data['middleName'] + cleaned_data['lastName']):
+      raise ValidationError('At least one of first/middle/last name must be set')
+    if cleaned_data['badge_only'] and not cleaned_data['badge']:
+      raise ValidationError('Cannot set badge_only if badge is not set')
+    return cleaned_data
+
 
 class TagForm(ModelForm):
   class Meta:
