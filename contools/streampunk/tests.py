@@ -25,6 +25,7 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils.html import escape
 from django.core.exceptions import ValidationError
+from django.core import mail
 
 from .models import Grid, Gender, Slot, SlotLength, Room
 from .models import SlotLength, ConDay, ConInfoBool, ConInfoInt, ConInfoString
@@ -272,6 +273,7 @@ class AuthTest(StreampunkTest):
   def mkroot(self):
     user = User.objects.create_user(username='congod', password='xxx')
     user.is_superuser = True
+    user.email = 'steve@whitecrow.demon.co.uk'
     user.save()
     self.rootuser = user
 
@@ -3992,6 +3994,201 @@ class test_tech(PermTest):
     self.can_config_db(False)
     self.can_edit_tags(True)
     self.can_edit_kit(True)
+
+# ----------------------------------------------------------------------
+
+class EmailTest(AuthTest):
+  "Class to help out with testing the email functionality."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+    # Make sure that each of the people have an email address
+    peeps = { 'buffy@sunnydale.edu': { 
+                 "method": self.get_buffy,
+                 "contact": "Surburbs, Sunnydale",
+               },
+              'giles@britishmuseum.gov.uk': { 
+                 "method": self.get_giles,
+                 "contact": "British Museum, London",
+               },
+              'xander@basement.com': { 
+                 "method": self.get_xander,
+                 "contact": "Mom's basement, Sunnydale",
+               },
+              'willow@witchy.net': { 
+                 "method": self.get_willow,
+                 "contact": "With Amber",
+               },
+             }
+    for addr in peeps.keys():
+      peep = peeps[addr]
+      meth = peep["method"]
+      p = meth()
+      p.email = addr
+      p.contact = peep["contact"]
+      p.save()
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def clear_outbox(self):
+    mail.outbox = []
+
+  def find_email(self, to, subj):
+    "Look for the indicated message in the outbox."
+    for msg in mail.outbox:
+      if (subj == msg.subject) and (to in msg.to):
+        return msg
+    return None
+
+  def email_match(self, msg, body):
+    "Confirm that the body text appears in the body of the message."
+    self.assertTrue(escape(body) in msg.body)
+
+  def no_email_match(self, msg, body):
+    "Confirm that the body text does not appear in the body of the message."
+    self.assertFalse(escape(body) in msg.body)
+
+  def yesno_items_included(self, yesno, msg, person):
+    "Confirm that the item titles appear in the message, iff yesno is True."
+    for ip in ItemPerson.objects.filter(person=person):
+      self.yesno_email_match(yesno, msg, ip.item.title)
+
+  def items_included(self, msg, person):
+    return self.yesno_items_included(True, msg, person)
+
+  def no_items_included(self, msg, person):
+    return self.yesno_items_included(False, msg, person)
+
+  def yesno_avail_included(self, yesno, msg, person):
+    "Check that availability is included in the msg iff yesno is True."
+    # Get all the slots for which the person is available
+    slots = person.availability.all()
+    # Get all the starting slots of items the person is on
+    starts = [ i.start for i in person.item_set.all() ]
+    if yesno:
+      for slot in Slot.objects.all():
+        self.yesno_email_match(slot in slots, msg, str(slot))
+    else:
+      for slot in Slot.objects.all():
+        # Exclude the starting slots for items, because that text
+        # will appear in the message if we've included items.
+        if slot not in starts:
+          self.no_email_match(msg, str(slot))
+
+  def avail_included(self, msg, person):
+    self.yesno_avail_included(True, msg, person)
+
+  def no_avail_included(self, msg, person):
+    self.yesno_avail_included(False, msg, person)
+
+  def yesno_email_match(self, yesno, msg, body):
+    "Confirm that the body text appears in the msg, iff yesno is true."
+    if yesno:
+      self.assertTrue(escape(body) in msg.body)
+    else:
+      self.assertFalse(escape(body) in msg.body)
+
+  def subj(self):
+    "A default subject"
+    return "On the Fallability of Humanity"
+
+  def body(self):
+    "A default body"
+    return """
+           This is the default body of text.
+           It's not very exciting. But such is life.
+
+           We have linebreaks, too. And cookies.
+
+           Yours,
+
+           Colonel Witherington-Smythe (retired)
+           """
+
+class test_email_person(EmailTest):
+  "Check the permutations of email_person() view."
+
+  def test_get_form(self):
+    "Check it's okay to get a form for a person."
+    giles = self.get_giles()
+    self.assertTrue(giles.email)
+    self.response = self.client.get(reverse('email_person', args=[int(giles.id)]))
+    self.status_okay()
+    self.form_okay()
+
+  def test_post_message_and_subject(self):
+    "Check we can email a normal message, without extras."
+    giles = self.get_giles()
+    self.response = self.client.post(reverse('email_person', args=[int(giles.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    msg = self.find_email(giles.email, self.subj())
+    self.email_match(msg, self.body())
+    self.no_items_included(msg, giles)
+    self.no_avail_included(msg, giles)
+    self.no_email_match(msg, giles.contact)
+
+  def test_post_message_and_subject_and_items(self):
+    "Check we can email a normal message, with item listings."
+    giles = self.get_giles()
+    self.response = self.client.post(reverse('email_person', args=[int(giles.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeItems": True,
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    msg = self.find_email(giles.email, self.subj())
+    self.email_match(msg, self.body())
+    self.items_included(msg, giles)
+    self.no_avail_included(msg, giles)
+    self.no_email_match(msg, giles.contact)
+
+  def test_post_message_and_subject_and_avail(self):
+    "Check we can email a normal message, with availability."
+    giles = self.get_giles()
+    self.response = self.client.post(reverse('email_person', args=[int(giles.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeAvail": True,
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    msg = self.find_email(giles.email, self.subj())
+    self.email_match(msg, self.body())
+    slots = giles.availability.all()
+    self.avail_included(msg, giles)
+    self.no_items_included(msg, giles)
+    self.no_email_match(msg, giles.contact)
+
+  def test_post_message_and_subject_and_contact(self):
+    "Check we can email a normal message, with contact details."
+    giles = self.get_giles()
+    self.response = self.client.post(reverse('email_person', args=[int(giles.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeContact": True,
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    msg = self.find_email(giles.email, self.subj())
+    self.email_match(msg, self.body())
+    self.no_avail_included(msg, giles)
+    self.no_items_included(msg, giles)
+    self.email_match(msg, giles.contact)
 
 # Tests required
 # Items
