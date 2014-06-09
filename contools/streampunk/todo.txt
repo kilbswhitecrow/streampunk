@@ -3,7 +3,12 @@ S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
 - Handle settings.py
-- BUG: Personlists are shown in http://localhost/streampunk/streampunk/peoplelists/, but we go to something else.
+- BUG: PersonList creation fails after saving the PersonList, attempting to list them. I think
+       this is down to the url() for new_personlist having a hard-coded success_url of
+       '/streampunk/peoplelists/', instead of coming from reverse('list_peoplelists').
+	- reverse_lazy() <-- this seems to work
+	- get_success_url() (which NewView already has)
+	- success_url defaults to get_absolute_url() for the model in question.
 - BUG: Cannot remove a Bundle from a room. Eak.
 
 Let's add some users, with group membership, and password yyy:

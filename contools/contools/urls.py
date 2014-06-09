@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012-2013 Stephen Kilbane
+# Copyright (C) 2012-2014 Stephen Kilbane
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -18,6 +18,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib.auth.views import login, logout, logout_then_login, password_change, password_change_done, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import permission_required, login_required
+from django.core.urlresolvers import reverse_lazy
 
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment, Check
@@ -226,7 +227,7 @@ urlpatterns = patterns('',
     url(r'^streampunk/new_personlist/$', permission_required('streampunk.send_item_email')(NewView.as_view(
           template_name = 'streampunk/edit_personlist.html',
           model = PersonList,
-          success_url = '/streampunk/peoplelists/',
+          success_url = reverse_lazy('list_peoplelists'),
           form_class=PersonListForm)), name='new_personlist'),
 
     url(r'^streampunk/mail_person/(?P<pk>\d+)/$', email_person, name='email_person'),
