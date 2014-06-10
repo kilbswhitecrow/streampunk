@@ -167,6 +167,8 @@ urlpatterns = patterns('',
           model=Person)), name='delete_person'),
     url(r'^streampunk/delete_tag/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=Tag)), name='delete_tag'),
+    url(r'^streampunk/delete_personlist/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=PersonList)), name='delete_personlist'),
 
     url(r'^streampunk/edit_item/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(EditView.as_view(
           model = Item,

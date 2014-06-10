@@ -122,7 +122,7 @@ class AllView(ListView):
     context['request'] = self.request
     context['verbose_name'] = self.model._meta.verbose_name
     context['verbose_name_plural'] = self.model._meta.verbose_name_plural
-    context['new_url'] = r'/streampunk/new_%s/' % ( self.model.__name__.lower() )
+    context['new_url'] = reverse('new_%s' % ( self.model.__name__.lower() ))
     return context
 
 class VisibleView(AllView):

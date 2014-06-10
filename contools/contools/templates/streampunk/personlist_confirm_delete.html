@@ -1,7 +1,7 @@
 {% extends "streampunk/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -16,30 +16,24 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% load streampunk_filters %}
-{% block title %}{{ personlist }} {% endblock %}
+{% block title %}{{ form_title }} {% endblock %}
 <p>
 {% block body_content %}
 <table border="1">
-  <tr><th>Name</th><td>{{ personlist|linky|safe }}</td></tr>
-  <tr><th>Automatic?</th><td>{{ personlist.auto }}</td></tr>
-  <tr><th>Created</th><td>{{ personlist.created }}</td></tr>
-</table>
-</p>
-<p>
-<table border="1">
-{% for person in personlist.people.all %}
-<tr><td>{{ person|linky|safe }}</td></tr>
-{% empty %}
-<tr><td>No-one in this list</td></tr>
-{% endfor %}
+<tr>
+  <td>{{ object }}</td>
+</tr>
 </table>
 </p>
 {% if perms.streampunk.edit_programme %}
-<p><a href="{% url "edit_personlist" pk=personlist.id %}">Edit PersonList</a>.</p>
-<p><a href="{% url "delete_personlist" pk=personlist.id %}">Delete this PersonList</a>.</p>
-{% endif %}
-
-{% if perms.streampunk.send_mass_email %}
-<p><a href="{% url "email_personlist" pk=personlist.id %}">Send email to the people on this list</a>.</p>
+    <form action="" method="post">
+    {% csrf_token %}
+    <input type="hidden"
+           name="after"
+           value="{% url "list_peoplelists" %}" />
+    <input type="submit"
+           value="Remove PersonList {{ object }}"
+           name="DeleteAndShowItem" />
+    </form>
 {% endif %}
 {% endblock %}
