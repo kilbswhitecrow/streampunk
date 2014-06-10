@@ -4067,19 +4067,42 @@ class EmailTest(AuthTest):
 
   def yesno_avail_included(self, yesno, msg, person):
     "Check that availability is included in the msg iff yesno is True."
-    # Get all the slots for which the person is available
-    slots = person.availability.all()
-    # Get all the starting slots of items the person is on
-    starts = [ i.start for i in person.item_set.all() ]
+    # Need to be careful what we check - a slot's text can appear in
+    # a message because we've included the availability or because we've
+    # included items, and it's the start time. So separate out the two
+    # categories, because we don't know, here, whether items are included.
+
+    avail_slots = set(list(person.availability.all()))
+    start_slots = set([ i.start for i in person.item_set.all() ])
+    every_slot = set(list(Slot.objects.all()))
+    overlap_slots = avail_slots & start_slots
+    both_slots = avail_slots | start_slots
+    avail_only_slots = avail_slots - start_slots
+    neither_slots = every_slot - both_slots
+
+    self.assertTrue(len(avail_only_slots) > 0)
+    self.assertTrue(len(neither_slots) > 0)
+    self.assertTrue(len(overlap_slots) > 0)
+    # if yesno:
+    #   All the slots in avail_only_slots should be there, because
+    #   avails are included.
+    # else:
+    #   None of the slots in avail_only_slots should be there, because
+    #   avails are not included.
+    for slot in avail_only_slots:
+      self.yesno_email_match(yesno, msg, str(slot))
+
+    # Slots that are neither avail nor item starts definitely
+    # should not be there, regardless of whether we've included
+    # items or availability.
+    for slot in neither_slots:
+      self.no_email_match(msg, str(slot))
+
+    # Slots in the overlap might be there for item inclusion, but
+    # definitely should be there if we've included the availability.
     if yesno:
-      for slot in Slot.objects.all():
-        self.yesno_email_match(slot in slots, msg, str(slot))
-    else:
-      for slot in Slot.objects.all():
-        # Exclude the starting slots for items, because that text
-        # will appear in the message if we've included items.
-        if slot not in starts:
-          self.no_email_match(msg, str(slot))
+      for slot in overlap_slots:
+        self.email_match(msg, str(slot))
 
   def avail_included(self, msg, person):
     self.yesno_avail_included(True, msg, person)
@@ -4190,6 +4213,60 @@ class test_email_person(EmailTest):
     self.no_items_included(msg, giles)
     self.email_match(msg, giles.contact)
 
+  def test_post_message_with_everything(self):
+    "Check we can email a normal message, with all the extras."
+    giles = self.get_giles()
+    self.response = self.client.post(reverse('email_person', args=[int(giles.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeContact": True,
+      "includeAvail": True,
+      "includeItems": True,
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    msg = self.find_email(giles.email, self.subj())
+    self.email_match(msg, self.body())
+    self.avail_included(msg, giles)
+    self.items_included(msg, giles)
+    self.email_match(msg, giles.contact)
+
+class not_test_personlist(AuthTest):
+  "Check list creation, display and deletion."
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_creation(self):
+    "Check we can create a personlist."
+    # Creating a personlist has the following steps:
+    # 1. A page displays a PersonTable, with a form to create some/all of the list.
+    # 2. The form is posted, which displays the make_personlist page. That asks for
+    #    a name, and whether to automatically delete as well. It also allows you to
+    #    change the people in the list.
+    # 3. That form is submitted. We go to http://localhost/streampunk/peoplelists/
+    # 4. We *should* see some useful page, but instead we get a 404 error. We should be
+    #    going to http://localhost/streampunk/streampunk/peoplelists/, which has the url
+    #    name of list_peoplelists, so I guess we're not reversing that.
+    self.assertEqual(PersonList.objects.count(), 2)
+    self.assertTrue(PersonList.objects.filter(name='Scoobie Gang').exists())
+    self.assertTrue(PersonList.objects.filter(name='Serenity Crew').exists())
+    self.response = self.client.post(reverse('make_personlist'), {
+      "save_all": True,
+      "allpeople": [ int(p.id) for p in Person.objects.all() ]
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+  
 # Tests required
 # Items
 # 	Satisfaction
