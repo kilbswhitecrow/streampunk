@@ -4232,7 +4232,7 @@ class test_email_person(EmailTest):
     self.items_included(msg, giles)
     self.email_match(msg, giles.contact)
 
-class not_test_personlist(AuthTest):
+class test_personlist(AuthTest):
   "Check list creation, display and deletion."
   fixtures = [ 'demo_data' ]
 
@@ -4253,18 +4253,35 @@ class not_test_personlist(AuthTest):
     #    a name, and whether to automatically delete as well. It also allows you to
     #    change the people in the list.
     # 3. That form is submitted. We go to http://localhost/streampunk/peoplelists/
-    # 4. We *should* see some useful page, but instead we get a 404 error. We should be
-    #    going to http://localhost/streampunk/streampunk/peoplelists/, which has the url
-    #    name of list_peoplelists, so I guess we're not reversing that.
     self.assertEqual(PersonList.objects.count(), 2)
     self.assertTrue(PersonList.objects.filter(name='Scoobie Gang').exists())
     self.assertTrue(PersonList.objects.filter(name='Serenity Crew').exists())
+    allpeeps = [ int(p.id) for p in Person.objects.all() ]
+
+    # Post to make_person
     self.response = self.client.post(reverse('make_personlist'), {
       "save_all": True,
-      "allpeople": [ int(p.id) for p in Person.objects.all() ]
+      "allpeople": allpeeps,
     }, follow=True)
     self.status_okay()
     self.form_okay()
+    # Get back the edit form
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/edit_personlist.html')
+
+    # Post to the edit form. We use new_personlist here, because it hasn't been
+    # created yet.
+    self.response = self.client.post(reverse('new_personlist'), {
+      "name": "Everybody",
+      "auto": False,
+      "people": allpeeps,
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Get back the list of lists
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/object_list.html')
+    self.assertEqual(PersonList.objects.count(), 3)
+    self.assertTrue(PersonList.objects.filter(name='Everybody').exists())
 
   
 # Tests required
