@@ -4283,7 +4283,62 @@ class test_personlist(AuthTest):
     self.assertEqual(PersonList.objects.count(), 3)
     self.assertTrue(PersonList.objects.filter(name='Everybody').exists())
 
+  def test_deletion(self):
+    "Check that we can delete a personlist."
+    self.assertEqual(PersonList.objects.count(), 2)
+    self.assertTrue(PersonList.objects.filter(name='Scoobie Gang').exists())
+    self.assertTrue(PersonList.objects.filter(name='Serenity Crew').exists())
+    scoobies = PersonList.objects.get(name='Scoobie Gang')
+
+    self.response = self.client.post(reverse('delete_personlist', args=[int(scoobies.id)]), follow=True)
+    self.status_okay()
+    self.assertEqual(PersonList.objects.count(), 1)
+    self.assertFalse(PersonList.objects.filter(name='Scoobie Gang').exists())
+    self.assertTrue(PersonList.objects.filter(name='Serenity Crew').exists())
+
+  def test_editing(self):
+    "Check we can edit the members of a personlist."
+
+    # Fetch the Scoobie Gang, and take a look at its contents.
+    buffy = self.get_buffy()
+    dawn = self.get_dawn()
+    scoobies = PersonList.objects.get(name='Scoobie Gang')
+    self.assertTrue(buffy in scoobies.people.all())
+    self.assertTrue(dawn in scoobies.people.all())
+    self.assertEqual(scoobies.people.count(), 5)
+
+    # Display the personlist, and check that too.
+
+    self.response = self.client.get(reverse('show_personlist_detail', args=[int(scoobies.id)]))
+    self.status_okay()
+    self.assertTrue(buffy.badge in self.response.content)
+    self.assertTrue(dawn.badge in self.response.content)
+
+    # Get an editing form
+
+    self.response = self.client.get(reverse('edit_personlist', args=[int(scoobies.id)]))
+    self.status_okay()
+    self.form_okay()
   
+    # Submit an edited form. We want the list to contain everyone other than Buffy.
+    others = scoobies.people.exclude(id=buffy.id)
+    self.assertEqual(others.count(), 4)
+
+    self.response = self.client.post(reverse('edit_personlist', args=[int(scoobies.id)]), {
+      "name": scoobies.name,
+      "auto": scoobies.auto,
+      "created": scoobies.created,
+      "people": [ int(p.id) for p in others ]
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Refetch the list. Check that it's changed.
+    scoobies = PersonList.objects.get(name='Scoobie Gang')
+    self.assertEqual(scoobies.people.count(), 4)
+    self.assertFalse(buffy in scoobies.people.all())
+    self.assertTrue(dawn in scoobies.people.all())
+
 # Tests required
 # Items
 # 	Satisfaction
