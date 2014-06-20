@@ -49,18 +49,19 @@ from .forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullFo
 from .auth import add_con_groups
 from .tabler import Rower, Tabler, make_tabler
 
-def show_request(request):
-  if request.method == 'GET':
-    d = request.GET.copy()
-  else:
-    d = request.POST.copy()
-  for t in d.lists():
-    k, l = t
-    for v in l:
-      print u"Got '%s' = '%s'\n" % (k, v)
-  return render_to_response('streampunk/show_request.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+# Some diagnostic code for debugging.
+# def show_request(request):
+#   if request.method == 'GET':
+#     d = request.GET.copy()
+#   else:
+#     d = request.POST.copy()
+#   for t in d.lists():
+#     k, l = t
+#     for v in l:
+#       print u"Got '%s' = '%s'\n" % (k, v)
+#   return render_to_response('streampunk/show_request.html',
+#                             locals(),
+#                             context_instance=RequestContext(request))
 
 def get_initial_data_from_request(request, models):
   """
