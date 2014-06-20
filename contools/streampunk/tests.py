@@ -4339,6 +4339,120 @@ class test_personlist(AuthTest):
     self.assertFalse(buffy in scoobies.people.all())
     self.assertTrue(dawn in scoobies.people.all())
 
+class test_email_personlist(EmailTest):
+  "Check we can send email to personlists."
+
+  fixtures = [ 'demo_data' ]
+
+  def test_email_existing_list(self):
+    "Check we can send email to a list that already exists"
+
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    xander = self.get_xander()
+    willow = self.get_willow()
+    dawn = self.get_dawn()
+    scoobies = PersonList.objects.get(name='Scoobie Gang')
+
+    scoobie_peeps = scoobies.people.all()
+    for p in [ buffy, giles, xander, willow, dawn ]:
+      self.assertTrue(p in scoobie_peeps)
+
+    # Get a form for sending to the list
+    self.response = self.client.get(reverse('email_personlist', args=[int(scoobies.id)]))
+    self.status_okay()
+    self.form_okay()
+    self.assertFalse('Something broke' in self.response.content)
+
+    # Send a email message that goes to each person in the list that
+    # has an email address - that should be everyone other than Dawn.
+    # Do this by submitting a form.
+    self.response = self.client.post(reverse('email_personlist', args=[int(scoobies.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeItems": False,
+      "includeContact": False,
+      "includeAvail": False
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Confirm that the personlist still exists
+    self.assertTrue(PersonList.objects.filter(name='Scoobie Gang').exists())
+
+    # Check that we've sent the correct number of messages
+    self.assertEqual(len(mail.outbox), 4)
+    for p in [ buffy, giles, xander, willow ]:
+      msg = self.find_email(p.email, self.subj())
+      self.assertTrue(msg)
+      self.email_match(msg, self.body())
+      self.no_items_included(msg, p)
+      self.no_email_match(msg, p.contact)
+
+    # Clear the outbox
+    mail.outbox = []
+
+    # Mail again, but this time include the items and contact
+    self.response = self.client.post(reverse('email_personlist', args=[int(scoobies.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeItems": True,
+      "includeContact": True,
+      "includeAvail": False
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Check that we've sent the correct number of messages
+    self.assertEqual(len(mail.outbox), 4)
+    for p in [ buffy, giles, xander, willow ]:
+      msg = self.find_email(p.email, self.subj())
+      self.assertTrue(msg)
+      self.email_match(msg, self.body())
+      self.items_included(msg, p)
+      self.email_match(msg, p.contact)
+
+
+  def test_delete_after_sending(self):
+    "Check the list gets deleted after sending if auto."
+
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    xander = self.get_xander()
+    willow = self.get_willow()
+    scoobies = PersonList.objects.get(name='Scoobie Gang')
+
+    # Mark it for auto-deletion
+    scoobies.auto = True
+    scoobies.save()
+
+    scoobie_peeps = scoobies.people.all()
+    for p in [ buffy, giles, xander, willow ]:
+      self.assertTrue(p in scoobie_peeps)
+
+    # Send a email message that goes to each person in the list that
+    # has an email address - that should be everyone other than Dawn.
+    # Do this by submitting a form.
+    self.response = self.client.post(reverse('email_personlist', args=[int(scoobies.id)]), {
+      "subject": self.subj(),
+      "message": self.body(),
+      "includeItems": False,
+      "includeContact": False,
+      "includeAvail": False
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Confirm that the personlist no longer exists
+    self.assertFalse(PersonList.objects.filter(name='Scoobie Gang').exists())
+
+    # Check that we've sent the correct number of messages
+    self.assertEqual(len(mail.outbox), 4)
+    for p in [ buffy, giles, xander, willow ]:
+      msg = self.find_email(p.email, self.subj())
+      self.assertTrue(msg)
+
+    
 # Tests required
 # Items
 # 	Satisfaction
@@ -4386,25 +4500,4 @@ class test_personlist(AuthTest):
 # 		Correct item kind distro
 # 	XML Dump
 # 
-# 	Email
-# 		For: main person listing, person on item, person with tag
-# 			Select all people, when blank
-# 			Select all people, when some selected
-# 			Deselect all people, when all selected
-# 			Deselect all people, when some selected
-# 			Save as list, with default name
-# 			Save as list, with new name.
-# 			Save as list, edited.
-# 			Email people
-# 				With default subject
-# 				With new subject
-# 				With message, plain text
-# 				With message, formatting
-# 				Without items
-# 				With items
-# 				With items, when person is not on any.
-# 				With contact details
-# 				Without contact details
-# 				With availability
-# 				Without availability
 # 404 templates
