@@ -436,6 +436,28 @@ class Auth_lists(AuthTest):
     self.has_row(t, { 'name': 'Everywhere', 'visible': True, 'edit': 'Edit', 'remove': 'Remove' })
     self.has_link_to('new_room')
 
+  def test_room_listings(self):
+    "Check the different types of listing."
+
+    t = 'rtable'
+    # Basic listing
+    self.response = self.client.get(reverse('list_rooms'))
+    self.status_okay()
+    self.no_column(t, 'needsSound')
+    self.no_column(t, 'privNotes')
+
+    # Programme team listing
+    self.response = self.client.get(reverse('list_rooms_prog'))
+    self.status_okay()
+    self.no_column(t, 'needsSound')
+    self.has_column(t, 'privNotes')
+
+    # Tech crew listing
+    self.response = self.client.get(reverse('list_rooms_tech'))
+    self.status_okay()
+    self.has_column(t, 'needsSound')
+    self.has_column(t, 'privNotes')
+
   def test_tags1(self):
     "No tags yet, but there should be a table"
     t = 'ttable'
