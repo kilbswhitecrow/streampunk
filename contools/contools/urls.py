@@ -38,7 +38,7 @@ from streampunk.views import show_room_detail, show_item_detail, show_person_det
 from streampunk.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
 from streampunk.views import show_kitroomassignment_detail
 from streampunk.views import show_kititemassignment_detail
-from streampunk.views import show_personlist_detail, show_request, make_personlist, make_con_groups
+from streampunk.views import show_personlist_detail, make_personlist, make_con_groups
 from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_items_tech, list_tags, list_kitthings, list_kitrequests
 from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
@@ -61,7 +61,6 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    url(r'^streampunk/show_request/$', show_request),
     url(r'^streampunk/main/$', main_page, name='main_page'),
     url(r'^streampunk/about/$', static_page, { 'template': 'streampunk/about.html' }, name='about'),
     url(r'^streampunk/legal/$', static_page, { 'template': 'streampunk/legal.html' }, name='legal'),
