@@ -4474,7 +4474,87 @@ class test_email_personlist(EmailTest):
       msg = self.find_email(p.email, self.subj())
       self.assertTrue(msg)
 
+class test_email_item(EmailTest):
+  "check that we can email the people on an item."
+
+  # When we show an item, we have personlist creation options
+  # which also have an item ID attached, which changes the form
+  # presented when the personlist creation is submitted.
+
+  def test_make_personlist_with_iid(self):
+    "Submit a personlist, with an item id."
+
+    listname = 'Mail Disco Peeps'
+    disco = self.get_disco()
+    buffy = self.get_buffy()
+    peeps = disco.people.all()
+    self.response = self.client.post(reverse('make_personlist'), {
+      "email_select": True,
+      "listname": listname,
+      "itemid": int(disco.id),
+      "select": [ int(p.id) for p in peeps ]
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    # When submitted, the presence of the iid should have caused a redirect to
+    # mail_item_with_personlist, so we'll get back the form to fill in.
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/mail_personlist.html')
+
+    # There should now be a personlist for the item.
+    plist = PersonList.objects.get(name=listname)
+    # And it should have auto set, so that it's deleted regardless of the success/cancel button used.
+    self.assertTrue(plist.auto)
     
+    # so now we can send email to the people on that item using that personlist.
+    # invoke mail_item_with_personlist again, directly this time, so we know that happened.
+    mail_item_url = reverse('mail_item_with_personlist', args=[int(disco.id), int(plist.id)])
+    self.response = self.client.get(mail_item_url)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/mail_personlist.html')
+
+    # Invoke again, posting this time, but via the cancel button. It should take us back to the item,
+    # and it should delete the list..
+    self.response = self.client.post(mail_item_url, { "cancel": True }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/show_item.html')
+    self.assertEqual(PersonList.objects.filter(name=listname).count(), 0)
+    # No email should have been sent
+    self.assertEqual(len(mail.outbox), 0)
+
+    # Create the list again...
+    self.response = self.client.post(reverse('make_personlist'), {
+      "email_select": True,
+      "listname": listname,
+      "itemid": int(disco.id),
+      "select": [ int(p.id) for p in peeps ]
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # that'll create the list anew, with a new id.
+    plist = PersonList.objects.get(name=listname)
+    mail_item_url = reverse('mail_item_with_personlist', args=[int(disco.id), int(plist.id)])
+
+    # now post to it again, but this time via the submit button. The list should still be deleted,
+    # but email should get sent.
+
+    self.response = self.client.post(mail_item_url, {
+      "subject": self.subj(),
+      "message": self.body()
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    # Of the people in the list, only Buffy has an email address
+    self.assertEqual(len(mail.outbox), 1)
+    msg = self.find_email(buffy.email, self.subj())
+    self.email_match(msg, self.body())
+
+    # and the list should be gone again
+    self.assertEqual(PersonList.objects.filter(name=listname).count(), 0)
+
 # Tests required
 # Items
 # 	Satisfaction

@@ -15,7 +15,6 @@ Let's add some users, with group membership, and password yyy:
 	tech		sky	Sky
 
 Outstanding coverage:
-	show_request - just delete
 	get_initial_data_from_request
 		add_kitbundle/thing_to_item/room
 	NewView.get_initial(), majority of content
@@ -49,8 +48,6 @@ Outstanding coverage:
 	make_con_groups()
 	list_items_tech()
 	list_kitrequests()
-	list_rooms_prog()
-	list_rooms_tech()
 	xsl_stylesheet()
 London
 ------
