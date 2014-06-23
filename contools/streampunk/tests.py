@@ -4125,7 +4125,7 @@ class test_profiles(PermTest):
   def tearDown(self):
     self.client.logout()
 
-  def view_profile(self):
+  def test_view_profile(self):
     "Can we see what's on our profile?"
 
     self.response = self.client.get(reverse('userprofile'))
@@ -4133,9 +4133,9 @@ class test_profiles(PermTest):
     self.has_link_to('editprofile')
     self.has_link_to('password_change')
 
-  def edit_profile(self):
+  def test_edit_profile(self):
     "Can we change the user profile?"
-    profile = self.rootuser.profile
+    profile = self.rootuser.userprofile
 
     # show_shortname defaults to True. Make sure it is.
     self.assertTrue(profile.show_shortname)

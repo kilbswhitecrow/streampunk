@@ -15,10 +15,7 @@ Let's add some users, with group membership, and password yyy:
 	tech		sky	Sky
 
 Outstanding coverage:
-	get_initial_data_from_request
-		add_kitbundle/thing_to_item/room
 	NewView.get_initial(), majority of content
-		which is similar in concept to get_initial_data_from_request()
 	NewView.get_success_url()
 	AllView.get_context_data()
 	VisibleView.get_query_set()
@@ -26,29 +23,20 @@ Outstanding coverage:
 	User Profiles
 		edit
 		show
-	is_from_item()	- just delete
-	is_from_person()	- gosh, nasty hack.
-	add_person_to_item()
 	Email
-		mkemail()
-		email_person()
-		emailed_person()
 		send_mail_to_personlist()
-		email_personlist()
-		email_item_with_personlist()
-		emailed_item()
+			some cases
 	edit_tags_for_item() - the GET path
 	add_tags()
-	add_kitrequest_to_room() - the GET path
+	delete_kitbundle_from_item/room()
 	fill_slots
 		fill_slot_gen()
 		fill_slot_sched()
 		fill_slot_unsched()
 	make_personlist()
+		Delete the some_peopel/all_people paths, I think.
 	make_con_groups()
-	list_items_tech()
-	list_kitrequests()
-	xsl_stylesheet()
+
 London
 ------
 - Increase the coverage
