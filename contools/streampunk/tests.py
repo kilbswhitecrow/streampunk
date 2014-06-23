@@ -705,6 +705,35 @@ class test_creation(AuthTest):
     self.status_okay()
 
 
+class test_item_listings(AuthTest):
+  "Check the right columns appear in the types of listings."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_items_normal(self):
+    self.response = self.client.get(reverse('list_items'))
+    t = 'itable'
+    self.has_column(t, 'room')
+    self.has_column(t, 'title')
+    self.no_column(t, 'projNeeded')
+    self.no_column(t, 'satisfies_kit_requests')
+
+  def test_items_tech(self):
+    self.response = self.client.get(reverse('list_items_tech'))
+    t = 'itable'
+    self.has_column(t, 'room')
+    self.has_column(t, 'title')
+    self.has_column(t, 'projNeeded')
+    self.has_column(t, 'satisfies_kit_requests')
 
 # =========================================================
 
@@ -2604,6 +2633,70 @@ class test_satisfaction(AuthTest):
 
     # Check indirectly
     check_lists_item(self, self.ItemsWithUnsatisfiedKitReqs, disco, True)
+
+class test_kitreq_listings(AuthTest):
+  "Check the listing of kit requests"
+
+  def test_list_kit_reqs(self):
+    "Fetch the kit requests."
+
+    kitreqs = KitRequest.objects.all()
+    self.response = self.client.get(reverse('list_kitrequests'))
+    self.assertEqual(self.num_rows('krtable'), kitreqs.count())
+    for kr in kitreqs:
+      self.has_link_to(kr.get_absolute_url())
+
+class test_kit_add(AuthTest):
+  "Fetch the forms wherein we add kit to stuff."
+
+  fixtures = [ 'demo_data' ]
+
+  def test_fetch_kr_to_item(self):
+    disco = self.get_disco()
+    self.response = self.client.get(reverse('add_kitrequest_to_item', args=[int(disco.id)]))
+    self.status_okay()
+    self.form_okay()
+
+  def test_fetch_kb_to_item(self):
+    disco = self.get_disco()
+    greenroomkit = self.get_greenroomkit()
+    self.response = self.client.get(reverse('add_kitbundle_to_item') , { "item": int(disco.id)})
+    self.status_okay()
+    self.form_okay()
+    self.response = self.client.get(reverse('add_kitbundle_to_item') , { "bundle": int(greenroomkit.id)})
+    self.status_okay()
+    self.form_okay()
+
+  def test_fetch_kb_to_room(self):
+    video = self.get_video()
+    greenroomkit = self.get_greenroomkit()
+    self.response = self.client.get(reverse('add_kitbundle_to_room'), { "room": int(video.id)})
+    self.status_okay()
+    self.form_okay()
+    self.response = self.client.get(reverse('add_kitbundle_to_room') , { "bundle": int(greenroomkit.id)})
+    self.status_okay()
+    self.form_okay()
+
+  def test_fetch_kt_to_item(self):
+    disco = self.get_disco()
+    greenroomscr = self.get_greenroomscr()
+    self.response = self.client.get(reverse('add_kitthing_to_item') , { "item": int(disco.id)})
+    self.status_okay()
+    self.form_okay()
+    self.response = self.client.get(reverse('add_kitthing_to_item') , { "thing": int(greenroomscr.id)})
+    self.status_okay()
+    self.form_okay()
+
+  def test_fetch_kt_to_room(self):
+    video = self.get_video()
+    greenroomscr = self.get_greenroomscr()
+    self.response = self.client.get(reverse('add_kitthing_to_room'), { "room": int(video.id)})
+    self.status_okay()
+    self.form_okay()
+    self.response = self.client.get(reverse('add_kitthing_to_room') , { "thing": int(greenroomscr.id)})
+    self.status_okay()
+    self.form_okay()
+
 # =========================================================
 
 class test_room_availability(AuthTest):
@@ -4554,6 +4647,14 @@ class test_email_item(EmailTest):
 
     # and the list should be gone again
     self.assertEqual(PersonList.objects.filter(name=listname).count(), 0)
+class test_styles(StreampunkTest):
+  "Check the stylesheet retrieval."
+
+  def test_xsl(self):
+    "Pull down the XSL page."
+    self.response = self.client.get(reverse('xml_xsl'))
+    self.status_okay()
+
 
 # Tests required
 # Items
