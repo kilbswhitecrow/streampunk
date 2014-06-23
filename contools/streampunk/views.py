@@ -477,36 +477,37 @@ class show_personlist_detail(DetailView):
 
 
 
-def is_from_item(request):
-  referer = request.META['HTTP_REFERER']
-  return referer.find('/item/') >= 0
-
-def is_from_person(request):
-  referer = request.META['HTTP_REFERER']
-  return referer.find('/person/') >= 0
-
-def add_person_to_item(request, p=None, i=None):
-  if request.method == 'POST':
-    form = ItemPersonForm(request.POST)
-    if form.is_valid():
-      # Do stuff here
-      item = form.cleaned_data['item']
-      person = form.cleaned_data['person']
-      role = form.cleaned_data['role']
-      status = form.cleaned_data['status']
-      vis = form.cleaned_data['visible']
-      distEmail = form.cleaned_data['distEmail']
-      itemPerson = ItemPerson(item=item, person=person, role=role, status=status, visible=vis, distEmail=distEmail)
-      itemPerson.save()
-      if form.cleaned_data['fromPerson']:
-        return HttpResponseRedirect(reverse('show_person_detail', args=(int(person.id),)))
-      else:
-        return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
-  else:
-    form = ItemPersonForm( initial = { 'item' : i, 'person' : p, 'fromPerson' : is_from_person(request) })
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+# All this is dead code, I think.
+# def is_from_item(request):
+#   referer = request.META['HTTP_REFERER']
+#   return referer.find('/item/') >= 0
+# 
+# def is_from_person(request):
+#   referer = request.META['HTTP_REFERER']
+#   return referer.find('/person/') >= 0
+# 
+# def add_person_to_item(request, p=None, i=None):
+#   if request.method == 'POST':
+#     form = ItemPersonForm(request.POST)
+#     if form.is_valid():
+#       # Do stuff here
+#       item = form.cleaned_data['item']
+#       person = form.cleaned_data['person']
+#       role = form.cleaned_data['role']
+#       status = form.cleaned_data['status']
+#       vis = form.cleaned_data['visible']
+#       distEmail = form.cleaned_data['distEmail']
+#       itemPerson = ItemPerson(item=item, person=person, role=role, status=status, visible=vis, distEmail=distEmail)
+#       itemPerson.save()
+#       if form.cleaned_data['fromPerson']:
+#         return HttpResponseRedirect(reverse('show_person_detail', args=(int(person.id),)))
+#       else:
+#         return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
+#   else:
+#     form = ItemPersonForm( initial = { 'item' : i, 'person' : p, 'fromPerson' : is_from_person(request) })
+#   return render_to_response('streampunk/editform.html',
+#                             locals(),
+#                             context_instance=RequestContext(request))
 
 def mkemail(request, dirvars, subject, person):
   context = RequestContext(request)
