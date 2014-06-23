@@ -4112,6 +4112,58 @@ class test_tech(PermTest):
 
 # ----------------------------------------------------------------------
 
+class test_profiles(PermTest):
+  "Check whether the user profiles work."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='sky', password='yyy')
+    self.rootuser = User.objects.get(username='sky')
+
+  def tearDown(self):
+    self.client.logout()
+
+  def view_profile(self):
+    "Can we see what's on our profile?"
+
+    self.response = self.client.get(reverse('userprofile'))
+    self.status_okay()
+    self.has_link_to('editprofile')
+    self.has_link_to('password_change')
+
+  def edit_profile(self):
+    "Can we change the user profile?"
+    profile = self.rootuser.profile
+
+    # show_shortname defaults to True. Make sure it is.
+    self.assertTrue(profile.show_shortname)
+
+    # Make sure we can fetch the form.
+    self.response = self.client.get(reverse('editprofile'))
+    self.status_okay()
+    self.form_okay()
+
+    # Post back, changing the show_shortname setting to False.
+    self.response = self.client.post(reverse('editprofile'), {
+      "show_shortname": False,
+      "show_tags": True,
+      "show_people": True,
+      "show_kitthings": True,
+      "show_kitbundles": True,
+      "show_kitrequests": True,
+      "rooms_across_top": True,
+      "name_order": "Last"
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    # Refetch the profile, and make sure it has changed.
+    profile = UserProfile.objects.get(id=profile.id)
+    self.assertFalse(profile.show_shortname)
+  
+# ----------------------------------------------------------------------
+
 class EmailTest(AuthTest):
   "Class to help out with testing the email functionality."
 
@@ -4647,6 +4699,7 @@ class test_email_item(EmailTest):
 
     # and the list should be gone again
     self.assertEqual(PersonList.objects.filter(name=listname).count(), 0)
+
 class test_styles(StreampunkTest):
   "Check the stylesheet retrieval."
 
@@ -4654,6 +4707,29 @@ class test_styles(StreampunkTest):
     "Pull down the XSL page."
     self.response = self.client.get(reverse('xml_xsl'))
     self.status_okay()
+
+class test_static_pages(StreampunkTest):
+  "Check we retrieve static pages correctly."
+
+  def test_about_etc(self):
+    "Check About, Legal."
+
+    self.response = self.client.get(reverse('about'))
+    self.status_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/about.html')
+    self.response = self.client.get(reverse('legal'))
+    self.status_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/legal.html')
+
+  def test_help(self):
+    "Check Help pages."
+
+    self.response = self.client.get(reverse('help_intro'))
+    self.status_okay()
+    self.assertTemplateUsed(response=self.response, template_name='help/help.html')
+    self.response = self.client.get(reverse('help_grids'))
+    self.status_okay()
+    self.assertTemplateUsed(response=self.response, template_name='help/grids.html')
 
 
 # Tests required

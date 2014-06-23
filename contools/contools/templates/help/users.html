@@ -1,7 +1,7 @@
 {% extends "help/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -23,7 +23,7 @@ Streampunk has support for Users and Groups. The intent is that there will
 be several levels of user:
 <ul>
 <li> Superusers - full access to everything </li>
-<li> Admins - full readn and write access. Can user the <a href="{% url help_admin %}">Admin GUI</a>.</li>
+<li> Admins - full readn and write access. Can user the <a href="{% url "help_admin" %}">Admin GUI</a>.</li>
 <li> Con committee, dept heads - can read and write everything through the normal pages.</li>
 <li> Con staff - can read everything, but not change it.</li>
 <li> Members - can read public things, but not private. Can't change anything. Can send email to programme participants.</li>
@@ -49,7 +49,7 @@ If you log in as your superuser account, then all the private data and edit link
 get all permissions, automatically.
 </p>
 <p>
-At this point, you should click on <a href="{% url make_con_groups %}">Set up all the group permissions</a> on the <a href="{% url main_page %}">Main page</a>. This will install a bunch of additional permissions that Streampunk uses:
+At this point, you should click on <a href="{% url "make_con_groups" %}">Set up all the group permissions</a> on the <a href="{% url "main_page" %}">Main page</a>. This will install a bunch of additional permissions that Streampunk uses:
 <ul>
 <li> Read_public </li>
 <li> Read_private</li>
@@ -62,7 +62,7 @@ display information, or whether to allow the current user to edit the data.
 </p>
 <p>
 Once these permissions are set up, when you create new users through the
-<a href="{% url help_admin %}">Admin GUI</a>, you can allocate appropriate permissions to them.
+<a href="{% url "help_admin" %}">Admin GUI</a>, you can allocate appropriate permissions to them.
 You can also set up groups (con staff, programme staff, tech crew, etc.) and allocate the
 permissions to them, instead, which will make it easier when you create new users.</p>
 {% endblock %}

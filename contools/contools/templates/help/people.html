@@ -1,7 +1,7 @@
 {% extends "help/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -144,18 +144,18 @@ The details get updated, and you back to the Person page again.
 
 <h3>People and Availability</h3>
 <p>
-This works just like it does for Rooms, so <a href="{% url help_rooms %}">see the
+This works just like it does for Rooms, so <a href="{% url "help_rooms" %}">see the
 Rooms help</a> for more info.
 </p>
 
 <h3>People and programme items</H3>
 <p>
-This will be covered in <a href="{% url help_items %}">the Items Help page</a>.
+This will be covered in <a href="{% url "help_items" %}">the Items Help page</a>.
 </p>
 
 <h3>People and tags</h3>
 <p>
-This will be covered in <a href="{% url help_tags %}">the Tags Help page</a>.
+This will be covered in <a href="{% url "help_tags" %}">the Tags Help page</a>.
 </p>
 
 {% endblock %}

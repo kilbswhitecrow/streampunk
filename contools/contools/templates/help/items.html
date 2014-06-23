@@ -1,7 +1,7 @@
 {% extends "help/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -41,7 +41,7 @@ In addition to those attributes, there are also several optional attributes:
 <ul>
 <li>People - who's associated with this time, and in what capacity?</li>
 <li>Tech - what tech items does the item need? There are <em>many</em> attributes
-related to Tech and other Kit - see <a href="{% url help_kit %}">Kit</a> for
+related to Tech and other Kit - see <a href="{% url "help_kit" %}">Kit</a> for
 more details.</li>
 <li>Tags - arbitrary categorisation.</li>
 <li>Sequencing - indications that two items must be consecutive.</li>
@@ -88,7 +88,7 @@ So, to create a new item:
 <p>
 This gets you to "Adding a new item" page. Here you can fill in the basic information about
 the item. Many fields have default values, but exactly what those defaults are is dependent
-on the local con configuration - see <a href={% url help_basic_concepts %}">Basic Concepts</a>.
+on the local con configuration - see <a href={% url "help_basic_concepts" %}">Basic Concepts</a>.
 </p>
 <p>
 Note that, at this point, you don't get to assign anybody to the item.
@@ -120,7 +120,7 @@ page, which we'll come to in a bit.
 <h3>Moving items</h3>
 <p>
 The easiest way to place an item
-into a room at a given day and time is to use the <a href="{% url help_grids %}">programme grid</a>;
+into a room at a given day and time is to use the <a href="{% url "help_grids" %}">programme grid</a>;
 you can click on the "Fill slot" link for a given programme grid slot, and then select the
 item to put there.
 </p>
@@ -139,7 +139,7 @@ item.
 </p>
 <h3>Adding people to an item</h3>
 First thing to note is that you can't add a <em>new</em> person - one not already in the
-database - to an item. You have to create the person first - see the <a href="{% url help_people %}">People</a>
+database - to an item. You have to create the person first - see the <a href="{% url "help_people" %}">People</a>
 page for that.
 </p>
 <p>
@@ -174,11 +174,11 @@ the person or the item. <em>BUG: THIS IS MISSING NOW. </em></li>
 <h3>Adding kit to an item</h3>
 <p>
 Items may need equipment, such as projectors, amplication, scoreboards, etc. This is
-handled through <a href="{% url help_kit %}">Kit</a>.
+handled through <a href="{% url "help_kit" %}">Kit</a>.
 </p>
 
 <h3>Adding tags to an item</h3>
-Adding <a href="{% url help_tags %}">tags</a> to an item (or, for that matter, to people) is
+Adding <a href="{% url "help_tags" %}">tags</a> to an item (or, for that matter, to people) is
 simple: from the item's page, click on the "Edit tags for [ITEM]" link, and you'll be
 taken to a page that allows you to modify the list of tags that are associated with
 this item. Removing ags is done in the same way.
@@ -190,7 +190,7 @@ Sequencing constraints indicate that programme item X must be immediately follow
 by programme item Y, in the same room. This is used for things like setup and
 tear-down. If you make these constraints, and then move one of the items, the other
 item won't <em>automatically</em> be moved as well, but you will be able to identify
-the constraint no longer applies, by running one of the <a href="{% url help_checks %}">checks</a>.
+the constraint no longer applies, by running one of the <a href="{% url "help_checks" %}">checks</a>.
 </p>
 
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends "help/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -68,7 +68,7 @@ Hire are the defaults.</li>
 <li>Cost - If this is costing the con some money, record it here, to help with your
 <li>Insurance - if this thing should be covered in the con's insurance, value it here.</li>
 budgeting.</li>
-<li>Availability - as with <a href="{% url help_rooms %}">Rooms</a> and <a href="{% url help_people %}">People</a>, you can record when the thing is available to the con, so that you don't
+<li>Availability - as with <a href="{% url "help_rooms" %}">Rooms</a> and <a href="{% url "help_people" %}">People</a>, you can record when the thing is available to the con, so that you don't
 schedule its use outside of that period (or periods).</li>
 </ul>
 <p>
@@ -126,7 +126,7 @@ kit requests can be satisfied by any things that are assigned to the room
 at that time.
 </p>
 <p>
-Streampunk can run <a href="{% url help_checks %}">checks</a> to tell you
+Streampunk can run <a href="{% url "help_checks" %}">checks</a> to tell you
 when an item has kit requests that are currently not satisfied either directly
 or by kit assigned to the item's room.
 </p>

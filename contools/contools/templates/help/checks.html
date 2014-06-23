@@ -1,7 +1,7 @@
 {% extends "help/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -23,7 +23,7 @@ There aren't many checks built into the database at present. More will
 be added over time.
 </p>
 <p>
-As explained in <a href="{% url help_basic_concepts %}">Basic Concepts</a>,
+As explained in <a href="{% url "help_basic_concepts" %}">Basic Concepts</a>,
 the database doesn't continually check that the programme is consistent.
 Instead, it expects that you'll make a whole bunch of changes, and then
 ask whether all looks okay once you're complete.
