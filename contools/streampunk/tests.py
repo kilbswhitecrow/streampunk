@@ -4731,6 +4731,186 @@ class test_static_pages(StreampunkTest):
     self.status_okay()
     self.assertTemplateUsed(response=self.response, template_name='help/grids.html')
 
+# ---------------------------------------------------------------------------------
+
+class test_add_tags(AuthTest):
+  "Check that we can add a bunch of tags to a bunch of things."
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+
+  def test_add_tags(self):
+    "Adding many tags at once."
+
+    writing = Tag.objects.get(name='Writing')
+    kids = Tag.objects.get(name='Kids')
+    horror = Tag.objects.get(name='Horror')
+    tags = [ writing, kids, horror ]
+
+    buffy = self.get_buffy()
+    giles = self.get_giles()
+    dawn = self.get_dawn()
+    peeps = [ buffy, giles, dawn ]
+
+    disco = self.get_disco()
+    ceilidh = self.get_ceilidh()
+    cabaret = self.get_cabaret()
+    items = [ disco, ceilidh, cabaret ]
+
+    # None of these tags should be attached to any of those items, nor
+    # any of those people.
+
+    for tag in tags:
+      for peep in peeps:
+        self.assertFalse(tag in peep.tags.all())
+      for item in items:
+        self.assertFalse(tag in item.tags.all())
+
+    # Check we can get the form okay.
+
+    url = reverse('add_tags')
+    self.response = self.client.get(url)
+    self.status_okay()
+    self.form_okay()
+
+    # Check that it's okay to post to it without selecting anything.
+
+    self.response = self.client.post(url, { }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # Check that we can post with all the tags, people and items.
+
+    self.response = self.client.post(url, {
+      "tags": [ int(t.id) for t in tags ],
+      "items": [ int(i.id) for i in items ],
+      "people": [ int(p.id) for p in peeps ]
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+
+    # And now the tags should be on those people and items
+
+    for tag in tags:
+      for peep in peeps:
+        self.assertTrue(tag in peep.tags.all())
+      for item in items:
+        self.assertTrue(tag in item.tags.all())
+
+
+# ---------------------------------------------------------------------------------
+
+class test_fill_slot(AuthTest):
+  "Check 'Fill Slot' functionality."
+
+  fixtures = [ 'demo_data' ]
+
+  def setUp(self):
+    self.mkroot()
+    self.client = Client()
+    self.logged_in_okay = self.client.login(username='congod', password='xxx')
+
+  def tearDown(self):
+    self.client.logout()
+    self.zaproot()
+
+  def test_grid_has_links(self):
+    "Check the links are there"
+
+    disco = self.get_disco()
+    mainhall = self.get_mainhall()
+    slot = disco.start
+    grid = slot.grid_set.first()
+    self.assertEqual(mainhall, disco.room)
+    # The disco should be the only item in this slot, and especially in this room.
+    self.assertEqual(len(slot.items()), 1)
+    self.assertEqual(len(slot.items(room=mainhall)), 1)
+
+    # Fetch the page for the grid
+    self.response = self.client.get(reverse('show_grid', args=[int(grid.id)]))
+    self.status_okay()
+    rooms = Room.objects.filter(visible=True)
+    slots = grid.slots.all()
+    for r in rooms:
+      for s in slots:
+        self.has_link_to('fill_slot_unsched', args=[int(r.id), int(s.id)])
+
+  def test_get_form(self):
+    "Fetch the Fill Slot form."
+
+    disco = self.get_disco()
+    room = disco.room
+    slot = disco.start
+    args=[int(room.id), int(slot.id)]
+    self.response = self.client.get(reverse('fill_slot_unsched', args=args))
+    self.status_okay()
+    self.form_okay()
+
+    # We've fetched the unscheduled version. Check that there's a link to the scheduled version.
+    self.has_link_to('fill_slot_sched', args=args)
+
+    # Because this is the unscheduled version, there should not be a mention of the Disco anywhere
+    # on the page, because that's scheduled.
+    self.assertFalse('Disco' in self.response.content)
+
+    # Fetch the sched version of the form
+    self.response = self.client.get(reverse('fill_slot_sched', args=args))
+    self.status_okay()
+    self.form_okay()
+
+    # This version should have a link back to the unsched version
+    self.has_link_to('fill_slot_unsched', args=args)
+
+    # And it must have a mention of the Disco, because this page should be including all items.
+    self.assertTrue('Disco' in self.response.content)
+
+  def test_post_form(self):
+    "Check that we can move items here, by posting to this form."
+
+    bidsession = self.get_bidsession()
+    disco = self.get_disco()
+    room = disco.room
+    slot = disco.start
+    self.assertNotEqual(slot, bidsession.start)
+    self.assertNotEqual(room, bidsession.room)
+
+    self.response = self.client.post(reverse('fill_slot_sched', args=[int(room.id), int(slot.id)]), {
+      "item": int(bidsession.id)
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/show_grid.html')
+
+    # The Bid Session and the Disco should now both start in the same slot/room.
+    bidsession = self.get_bidsession()
+    self.assertEqual(bidsession.room, disco.room)
+    self.assertEqual(bidsession.start, disco.start)
+
+    # Now let's do the same thing, but using the unsched version of the URL.
+    auction = Item.objects.get(title='Art Auction')
+    self.assertNotEqual(slot, auction.start)
+    self.assertNotEqual(room, auction.room)
+
+    self.response = self.client.post(reverse('fill_slot_unsched', args=[int(room.id), int(slot.id)]), {
+      "item": int(auction.id)
+    }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/show_grid.html')
+
+    # The Bid Session and the Disco should now both start in the same slot/room.
+    auction = Item.objects.get(title='Art Auction')
+    self.assertEqual(auction.room, disco.room)
+    self.assertEqual(auction.start, disco.start)
+
 
 # Tests required
 # Items

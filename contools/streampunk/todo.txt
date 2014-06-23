@@ -27,14 +27,9 @@ Outstanding coverage:
 		send_mail_to_personlist()
 			some cases
 	edit_tags_for_item() - the GET path
-	add_tags()
 	delete_kitbundle_from_item/room()
-	fill_slots
-		fill_slot_gen()
-		fill_slot_sched()
-		fill_slot_unsched()
 	make_personlist()
-		Delete the some_peopel/all_people paths, I think.
+		Delete the some_people/all_people paths, I think.
 	make_con_groups()
 
 London
