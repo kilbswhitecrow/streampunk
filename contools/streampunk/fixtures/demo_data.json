@@ -1753,77 +1753,41 @@
   "pk": 1, 
   "model": "streampunk.kitroomassignment", 
   "fields": {
-    "toLength": 22, 
-    "room": 7, 
-    "fromSlot": 85, 
     "thing": 5, 
+    "toLength": 22, 
+    "fromSlot": 85, 
+    "room": 7, 
     "toSlot": 99
   }
 },
 {
-  "pk": 3, 
-  "model": "streampunk.kitroomassignment", 
+  "pk": 1, 
+  "model": "streampunk.bundleroomassignment", 
   "fields": {
+    "toSlot": 116, 
     "toLength": 22, 
-    "room": 10, 
+    "fromSlot": 68, 
+    "room": 5, 
+    "bundle": 1
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.bundleroomassignment", 
+  "fields": {
+    "toSlot": 116, 
+    "toLength": 22, 
     "fromSlot": 101, 
-    "thing": 6, 
-    "toSlot": 116
-  }
-},
-{
-  "pk": 4, 
-  "model": "streampunk.kitroomassignment", 
-  "fields": {
-    "toLength": 22, 
     "room": 10, 
-    "fromSlot": 101, 
-    "thing": 7, 
-    "toSlot": 116
+    "bundle": 2
   }
 },
 {
-  "pk": 5, 
-  "model": "streampunk.kitroomassignment", 
+  "pk": 1, 
+  "model": "streampunk.bundleitemassignment", 
   "fields": {
-    "toLength": 22, 
-    "room": 5, 
-    "fromSlot": 68, 
-    "thing": 1, 
-    "toSlot": 132
-  }
-},
-{
-  "pk": 6, 
-  "model": "streampunk.kitroomassignment", 
-  "fields": {
-    "toLength": 22, 
-    "room": 5, 
-    "fromSlot": 68, 
-    "thing": 2, 
-    "toSlot": 132
-  }
-},
-{
-  "pk": 7, 
-  "model": "streampunk.kitroomassignment", 
-  "fields": {
-    "toLength": 22, 
-    "room": 5, 
-    "fromSlot": 68, 
-    "thing": 3, 
-    "toSlot": 132
-  }
-},
-{
-  "pk": 8, 
-  "model": "streampunk.kitroomassignment", 
-  "fields": {
-    "toLength": 22, 
-    "room": 5, 
-    "fromSlot": 68, 
-    "thing": 4, 
-    "toSlot": 132
+    "item": 12, 
+    "bundle": 2
   }
 },
 {

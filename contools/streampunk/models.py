@@ -516,7 +516,7 @@ class KitSatisfaction(object):
    item_things = [ (kia.thing.kind.id, kia.thing.count) for kia in KitItemAssignment.objects.filter(item=self.item) ]
    self.itemMap = self.count_things( item_bundles + item_things )
    # What the room provides
-   room_bundles = [ (thing.id, thing.count) for bra in BundleRoomAssignment.objects.filter(room=self.item.room) if bra.covers(self.item) for thing in bra.things_all() ]
+   room_bundles = [ (thing.id, thing.count) for bra in BundleRoomAssignment.objects.filter(room=self.item.room) if bra.covers(self.item) for thing in bra.bundle.things_all() ]
    room_things = [ (kra.thing.kind.id, kra.thing.count) for kra in KitRoomAssignment.objects.filter(room=self.item.room) if kra.covers(self.item) ]
    self.roomMap = self.count_things(room_bundles + room_things)
    # Total of the two

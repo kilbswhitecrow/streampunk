@@ -1093,9 +1093,13 @@ class test_delete_items_with_stuff(AuthTest):
     # Clear out what's currently there
     KitRequest.objects.all().delete()
     KitItemAssignment.objects.all().delete()
+    BundleItemAssignment.objects.all().delete()
 
     self.assertEqual(KitRequest.objects.count(), 0)
     self.assertEqual(KitItemAssignment.objects.count(), 0)
+    self.assertEqual(BundleItemAssignment.objects.count(), 0)
+
+    # reqs: 0. kia: 0. bia: 0.
 
     # Add a kit request to some items
     self.response = self.client.post(reverse('add_kitrequest_to_item', args=[ disco.id ]), {
@@ -1107,6 +1111,8 @@ class test_delete_items_with_stuff(AuthTest):
     self.status_okay()
     self.assertEqual(KitRequest.objects.count(), 1)
 
+    # reqs: 1. kia: 0. bia: 0.
+
     self.response = self.client.post(reverse('add_kitrequest_to_item', args=[ ceilidh.id ]), {
       "kind": KitKind.objects.find_default().id,
       "count": 1,
@@ -1116,6 +1122,8 @@ class test_delete_items_with_stuff(AuthTest):
     self.status_okay()
     self.assertEqual(KitRequest.objects.count(), 2)
 
+    # reqs: 2. kia: 0. bia: 0.
+
     # Add KitThings to an item
     self.response = self.client.post(reverse('add_kitthing_to_item'), {
       "item": ceilidh.id,
@@ -1124,12 +1132,16 @@ class test_delete_items_with_stuff(AuthTest):
     self.status_okay()
     self.assertEqual(KitItemAssignment.objects.count(), 1)
 
+    # reqs: 2. kia: 1. bia: 0.
+
     self.response = self.client.post(reverse('add_kitbundle_to_item'), {
       "item": bid.id,
       "bundle": mhkit.id
     }, follow=True)
     self.status_okay()
-    self.assertEqual(KitItemAssignment.objects.count(), 1+mhkit.things.count())
+    self.assertEqual(BundleItemAssignment.objects.count(), 1)
+
+    # reqs: 2. kia: 1. bia: 1.
 
     # Check that we can delete those items now.
     delpath = reverse('delete_item', kwargs={'pk': disco.id})
@@ -1139,6 +1151,8 @@ class test_delete_items_with_stuff(AuthTest):
     # The request should be gone now.
     self.assertEqual(KitRequest.objects.count(), 1)
 
+    # reqs: 1. kia: 1. bia: 1.
+
     delpath = reverse('delete_item', kwargs={'pk': ceilidh.id})
     self.response = self.client.post(delpath, { }, follow=True)
     self.status_okay()
@@ -1146,7 +1160,10 @@ class test_delete_items_with_stuff(AuthTest):
     # The other request should be gone now.
     self.assertEqual(KitRequest.objects.count(), 0)
     # The KitItemAssignment should have gone now.
-    self.assertEqual(KitItemAssignment.objects.count(), mhkit.things.count())
+    self.assertEqual(KitItemAssignment.objects.count(), 0)
+    self.assertEqual(BundleItemAssignment.objects.count(), 1)
+
+    # reqs: 0. kia: 0. bia: 1.
 
     delpath = reverse('delete_item', kwargs={'pk': bid.id})
     self.response = self.client.post(delpath, { }, follow=True)
@@ -1154,6 +1171,7 @@ class test_delete_items_with_stuff(AuthTest):
     self.assertFalse(Item.objects.filter(shortname='bid session').exists())
     # All assignments should be gone now.
     self.assertEqual(KitItemAssignment.objects.count(), 0)
+    self.assertEqual(BundleItemAssignment.objects.count(), 0)
 
 # =========================================================
 
@@ -1328,9 +1346,11 @@ class test_delete_rooms(AuthTest):
 
     # Clear out the room assignments
     KitRoomAssignment.objects.all().delete()
+    BundleRoomAssignment.objects.all().delete()
 
     # Nothing assigned to any rooms yet.
     self.assertEqual(KitRoomAssignment.objects.count(), 0)
+    self.assertEqual(BundleRoomAssignment.objects.count(), 0)
 
     # Add the green room kit to Ops
     for kt in [ greenproj, greenscr ]:
@@ -1355,10 +1375,9 @@ class test_delete_rooms(AuthTest):
       "toLength": hour.id
      }, follow=True)
     self.status_okay()
-    self.assertEqual(KitRoomAssignment.objects.count(), mhcount+2)
-    for kt in mainhallkit.things.all():
-      self.assertEqual(kt.room_set.count(), 1)
-    self.assertEqual(KitRoomAssignment.objects.filter(bundle=mainhallkit).count(), mhcount)
+    self.assertEqual(BundleRoomAssignment.objects.count(), 1)
+    self.assertEqual(mainhallkit.room_set.count(), 1)
+    self.assertEqual(BundleRoomAssignment.objects.filter(bundle=mainhallkit).count(), 1)
 
     # Now delete the main hall.
     self.response = self.client.post(reverse('delete_room', args=[ mainhall.id ]), {}, follow=True)
@@ -1367,9 +1386,10 @@ class test_delete_rooms(AuthTest):
     # The room should have gone.
     self.assertFalse(Room.objects.filter(name='Main Hall').exists())
  
-    # The KitRoomAssignments for the main hall should have gone.
+    # The BundleRoomAssignments for the main hall should have gone.
     self.assertEqual(KitRoomAssignment.objects.count(), 2)
-    self.assertEqual(KitRoomAssignment.objects.filter(bundle=mainhallkit).count(), 0)
+    self.assertEqual(BundleRoomAssignment.objects.count(), 0)
+    self.assertEqual(BundleRoomAssignment.objects.filter(bundle=mainhallkit).count(), 0)
     self.assertEqual(KitRoomAssignment.objects.filter(room=ops).count(), 2)
  
     # but the bundle should stil be there.
@@ -2334,7 +2354,7 @@ class test_room_assignment(AuthTest):
     self.assertTrue(main.room_count() > 0)
 
     # Stop Green being used by a room, so it's only used by an item.
-    KitRoomAssignment.objects.filter(bundle=green).delete()
+    BundleRoomAssignment.objects.filter(bundle=green).delete()
     green = self.get_greenroomkit()
     self.assertTrue(green.item_count() > 0)
     self.assertTrue(green.room_count() == 0)
@@ -2342,7 +2362,7 @@ class test_room_assignment(AuthTest):
 
     # Stop Green being used by an item, too. That should make it
     # no longer in use.
-    KitItemAssignment.objects.filter(bundle=green).delete()
+    BundleItemAssignment.objects.filter(bundle=green).delete()
     green = self.get_greenroomkit()
     self.assertTrue(green.item_count() == 0)
     self.assertTrue(green.room_count() == 0)
@@ -2439,9 +2459,10 @@ class test_satisfaction(AuthTest):
     # Clear out any kit assignments from the item, and the item's room
     self.assertEqual(disco.kitRequests.count(), 0)
     self.assertEqual(disco.kit.count(), 0)
-    self.assertNotEqual(disco.room.kit.count(), 0)
-    KitRoomAssignment.objects.filter(room=disco.room).delete()
     self.assertEqual(disco.room.kit.count(), 0)
+    self.assertNotEqual(disco.room.bundles.count(), 0)
+    BundleRoomAssignment.objects.filter(room=disco.room).delete()
+    self.assertEqual(disco.room.bundles.count(), 0)
 
     req = self.req_proj()
     self.add_req_to_item(req, disco)
@@ -3670,7 +3691,11 @@ class test_xml(AuthTest):
     # Note which kit things are assigned to items or rooms
 
     assigned_to_items = [ kia.thing for kia in KitItemAssignment.objects.all() ]
+    for bia in BundleItemAssignment.objects.all():
+      assigned_to_items += bia.bundle.things_all()
     assigned_to_rooms = [ kra.thing for kra in KitRoomAssignment.objects.all() ]
+    for bra in BundleRoomAssignment.objects.all():
+      assigned_to_items += bra.bundle.things_all()
     assigned_things = assigned_to_items + assigned_to_rooms
     self.response = self.client.get(reverse('xml_dump'))
     self.status_okay()
