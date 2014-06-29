@@ -3,55 +3,28 @@ S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
 
 - Handle settings.py
-- BUG: Cannot remove a Bundle from a room. Eak.
 
-Let's add some users, with group membership, and password yyy:
-
-	concom		fury	Nick Fury
-	constaff	phil	Phil Coulson
-	participant	mel	Melinda May
-	progops		grant	Grant Ward
-	streampunkadmin	fitz	Fitz Simmons
-	tech		sky	Sky
-
-Outstanding coverage:
-	NewView.get_initial(), majority of content
-	NewView.get_success_url()
-	AllView.get_context_data()
-	VisibleView.get_query_set()
-	static_page()	- just delete?
-	User Profiles
-		edit
-		show
-	Email
-		send_mail_to_personlist()
-			some cases
-	edit_tags_for_item() - the GET path
-	delete_kitbundle_from_item/room()
-	make_personlist()
-		Delete the some_people/all_people paths, I think.
-	make_con_groups()
+Bundle changes
+--------------
+I need to be able to delete bundles from items and rooms. The way to do this
+properly is to be able to add bundles to items and rooms directly, and not
+allow an item to be added individually if it's part of a bundle. This implies
+quite a lot of changes, though:
+	NOTE: This means KitItemAssignment no longer offers any benefit; we could do
+	without the "through" now, I think.
+	- NOT DONE YET: need to create an abstract class to contain all the methods, or there
+- NOT NEEDED: change show_kitthing_detail()
+- NOT NEEDED: change template for list_kitbundles()
+- NEEDS EXTENDING: change the xml templates for kitthings, kitbundles, rooms and items
+- change the demo_data
 
 London
 ------
-- Increase the coverage
 - Sending email starts at p364.
 - Test email. See p372 for local python server.
 - See p300 for email testing.
 - p842 for File Handling.
 - p180 for 3.3.4 File Uploads
-
-Testing
--------
-XXX Have added the checkbox for badge_only, for Steve R, but now I realise that I also need
-to provide a view of the whole person-list with that as a check-box, for ease of entering
-a lot of such changes.
-
-- Can't really see a way to test the grids with Django, since Django doesn't generate them as
-part of the ORM - it's all in the templates.
-
-Checks need short names for internal testing. Well, we don't *need* them, but it makes it
-easier to find a Check in the db.
 
 Comments from Simon's LJ
 ------------------------
@@ -113,20 +86,11 @@ change the possible time slots.
 do that as two separate forms within the page, with two submits.
 - I should present fill slot, swap item, etc. via a pop-up menu similar to the banner.
 
-Table2 Issues
--------------
-- Although I'm hiding the pagination outputs, the Tables are still being
-created with a paginator, and so not all the tags are appearing in the
-list. Need to turn this off somehow.
-
 Other Things
 ------------
 - I18N
                - Of  application
                - Of DB content
-- use url in templates
-	- Done, except for /admin/
-
 - Grid:
 	- Include kit in the grids.
 

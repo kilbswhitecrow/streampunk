@@ -512,9 +512,13 @@ class KitSatisfaction(object):
    # What the item wants
    self.requestMap = self.count_things([ (r.kind.id, r.count) for r in self.item.kitRequests.all() ])
    # What the item provides
-   self.itemMap = self.count_things([ (kia.thing.kind.id, kia.thing.count) for kia in KitItemAssignment.objects.filter(item=self.item) ])
+   item_bundles = [ (thing.id, thing.count) for bundle in self.item.bundles.all() for thing in bundle.things_all() ]
+   item_things = [ (kia.thing.kind.id, kia.thing.count) for kia in KitItemAssignment.objects.filter(item=self.item) ]
+   self.itemMap = self.count_things( item_bundles + item_things )
    # What the room provides
-   self.roomMap = self.count_things([ (kra.thing.kind.id, kra.thing.count) for kra in KitRoomAssignment.objects.filter(room=self.item.room) if kra.covers(self.item) ])
+   room_bundles = [ (thing.id, thing.count) for bra in BundleRoomAssignment.objects.filter(room=self.item.room) if bra.covers(self.item) for thing in bra.things_all() ]
+   room_things = [ (kra.thing.kind.id, kra.thing.count) for kra in KitRoomAssignment.objects.filter(room=self.item.room) if kra.covers(self.item) ]
+   self.roomMap = self.count_things(room_bundles + room_things)
    # Total of the two
    self.totalMap = self.count_things(self.itemMap.items() + self.roomMap.items())
 
@@ -726,10 +730,10 @@ class KitBundle(models.Model):
      return self.things.all()
   def rooms_unique(self):
     "Provide a set of the rooms using this bundle (so each room appears once)"
-    return set([ kra.room for kra in KitRoomAssignment.objects.order_by('room').filter(bundle=self) ])
+    return set([ kra.room for kra in BundleRoomAssignment.objects.order_by('room').filter(bundle=self) ])
   def items_unique(self):
     "Provide a set of the items using this bundle (so each items appears once)"
-    return set([ kia.item for kia in KitItemAssignment.objects.order_by('item').filter(bundle=self) ])
+    return set([ kia.item for kia in BundleItemAssignment.objects.order_by('item').filter(bundle=self) ])
 
   def room_count(self):
     return len(self.rooms_unique())
@@ -763,7 +767,7 @@ class KitBundle(models.Model):
 
 class KitRoomAssignment(models.Model):
   """
-  You can assign kit to rooms, either thing-by-thing, or as part of a bundle.
+  You can assign kit to rooms.
   The assignment is for a period, so you might have a screen in one room for one day,
   and then in another room for the following day. Kit assigned to a room can satisfy
   kit requests for items that take place in that room.
@@ -771,9 +775,7 @@ class KitRoomAssignment(models.Model):
   room = models.ForeignKey('Room',
                            help_text="The room to which you're assigning the kit")
   thing = models.ForeignKey(KitThing,
-                            help_text="If you're assigning a single kit thing, choose it here.")
-  bundle = models.ForeignKey(KitBundle, null=True, blank=True,
-                             help_text="the bundle which assigned this thing to the room, if part of a bundle assignment.")
+                            help_text="The kit you're assigning to this room.")
   fromSlot = models.ForeignKey(Slot, related_name='kitroomfrom_set',
                                help_text="The slot at which the assignment starts. The kit thing can satisfy requests that need the kit in this slot")
   toSlot = models.ForeignKey(Slot, related_name='kitroomto_set',
@@ -835,7 +837,6 @@ class KitRoomAssignment(models.Model):
   def rower(cls, request):
     return Rower({ "pk":       "id",
                    "thing":    "thing",
-                   "bundle":   "bundle",
                    "room":     "room",
                    "fromSlot": "fromSlot",
                    "toSlot":   "toSlot",
@@ -847,15 +848,13 @@ class KitRoomAssignment(models.Model):
   
 class KitItemAssignment(models.Model):
   """
-  A kit item assignment assigns a kit thing directly to an item, either directly or as part
-  of a bundle. The assignment can then satisfy kit requests of the item.
+  A kit item assignment assigns a kit thing directly to an item.
+  The assignment can then satisfy kit requests of the item.
   """
   item = models.ForeignKey('Item',
                            help_text="The item we're assigning the thing to")
   thing = models.ForeignKey(KitThing,
                             help_text="The thing assigned to the item")
-  bundle = models.ForeignKey(KitBundle, null=True, blank=True,
-                             help_text="The bundle, if this assignment is part of a bundle.")
 
   def __unicode__(self):
     return u"%s to %s" % (self.thing, self.item)
@@ -871,6 +870,120 @@ class KitItemAssignment(models.Model):
   def rower(cls, request):
     return Rower({ "pk":     "id",
                    "thing":  "thing",
+                   "item":   "item",
+                   "room":   "item_room",
+                   "start":  "item_start",
+                   "remove": "Remove" })
+
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None if request.user.has_perm('streampunk.edit_kit') else ['remove']
+
+
+class BundleRoomAssignment(models.Model):
+  """
+  You can assign kit bundles to rooms.
+  The assignment is for a period, so you might have the bundle in one room for one day,
+  and then in another room for the following day. Bundles assigned to a room can satisfy
+  kit requests for items that take place in that room.
+  """
+  room = models.ForeignKey('Room',
+                           help_text="The room to which you're assigning the bundle")
+  bundle = models.ForeignKey(KitBundle,
+                            help_text="The bundle you're assigning to this room.")
+  fromSlot = models.ForeignKey(Slot, related_name='bundleroomfrom_set',
+                               help_text="The slot at which the assignment starts. The bundle can satisfy requests that need the kit in this slot")
+  toSlot = models.ForeignKey(Slot, related_name='bundleroomto_set',
+                             help_text="The last slot for this assignment. The assignment can satisfy items that are in this slot.")
+  toLength = models.ForeignKey(SlotLength,
+                               help_text="The length of the final slot assignment. At the end of this length, the assignment ends.")
+
+  def __unicode__(self):
+    return u"%s in %s" % (self.bundle, self.room)
+  def get_absolute_url(self):
+    return reverse('show_bundleroomassignment_detail', kwargs={"pk": self.id})
+
+  def starts_before_slot(self, slot, mins):
+    """
+    Return true if this assignment begins before (or at the same time as) this many minutes
+    past the given slot.
+    """
+    return (   self.fromSlot.day.date < slot.day.date
+            or (    self.fromSlot.day.date == slot.day.date 
+                and self.fromSlot.start <= slot.start))
+
+  def finishes_after_slot(self, slot, mins):
+    """
+    Returns true if the assignment lasts until at least the end of this day/slot.
+    """
+    return (   slot.day.date < self.toSlot.day.date
+            or (    slot.day.date == self.toSlot.day.date
+                and (slot.start + mins) <= (self.toSlot.start + self.toLength.length)))
+
+
+  def starts_before(self, item):
+    "True if the assignment starts before the item does."
+    return self.starts_before_slot(item.start, 0)
+
+  def finishes_after(self, item):
+    "True if the assignment finishes after the item does"
+    return self.finishes_after_slot(item.start, item.length.length)
+
+  def covers(self, item):
+    "True if the assignment entirely encompasses the period for the item."
+    r = self.starts_before(item) and self.finishes_after(item)
+    return r
+
+  def overlaps(self, item):
+    "True if any part of the assignment is concurrent with any part of the item."
+    return (    self.starts_before_slot(item.start, item.length.length)
+            and self.finishes_after_slot(item.start, item.length.length))
+
+  def overlaps_room_assignment(self, other):
+    "True if any part of the assignment is concurrent with the other assignment."
+    return (    self.starts_before_slot(other.toSlot, 0)
+            and self.finishes_after_slot(other.fromSlot, 0))
+
+  def slots(self):
+    "Return a queryset of the slots this assignment occupies"
+    return Slot.objects.filter(day=self.fromSlot.day, start__gte=self.fromSlot.start, start__lt=self.toSlot.start+self.toLength.length)
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":       "id",
+                   "bundle":   "bundle",
+                   "room":     "room",
+                   "fromSlot": "fromSlot",
+                   "toSlot":   "toSlot",
+                   "remove":   "Remove" })
+  @classmethod
+  def tabler_exclude(cls, request):
+    return None if request.user.has_perm('streampunk.edit_kit') else ['remove']
+
+  
+class BundleItemAssignment(models.Model):
+  """
+  A bundle item assignment assigns a kit bundle directly to an item.
+  The assignment can then satisfy kit requests of the item.
+  """
+  item = models.ForeignKey('Item',
+                           help_text="The item we're assigning the thing to")
+  bundle = models.ForeignKey(KitBundle,
+                            help_text="The bundle assigned to the item")
+
+  def __unicode__(self):
+    return u"%s to %s" % (self.bundle, self.item)
+  def get_absolute_url(self):
+    return reverse('show_bundleitemassignment_detail', kwargs={"pk": self.id})
+
+  def item_start(self):
+    return self.item.start
+  def item_room(self):
+    return self.item.room
+
+  @classmethod
+  def rower(cls, request):
+    return Rower({ "pk":     "id",
                    "bundle": "bundle",
                    "item":   "item",
                    "room":   "item_room",
@@ -952,6 +1065,8 @@ class Room(models.Model):
   inRadioRange = models.BooleanField(default=False,help_text="True if the radio net can reach people in the room")
   kit = models.ManyToManyField(KitThing, through='KitRoomAssignment', null=True, blank=True,
                                help_text="Kit assigned to the room for a duration. May satisfy items' kit requests.")
+  bundles = models.ManyToManyField(KitBundle, through='BundleRoomAssignment', null=True, blank=True,
+                                   help_text="Kit Bundles assigned to this room, to satisfy requests. <em>Only Tech should fill this in.</em>")
   parent = models.ForeignKey('self', null=True, blank=True,
                              help_text="If this room is really part of a larger, subdividable room, set this field to the parent room")
   capacities = models.ManyToManyField(RoomCapacity, null=True, blank=True,
@@ -1283,6 +1398,8 @@ class Item(models.Model):
                                        help_text="Kit requested by this item. <em>Only Tech should fill this in.</em>")
   kit = models.ManyToManyField(KitThing, through='KitItemAssignment', null=True, blank=True,
                                help_text="Kit allocated to this item, to satisfy requests. <em>Only Tech should fill this in.</em>")
+  bundles = models.ManyToManyField(KitBundle, through='BundleItemAssignment', null=True, blank=True,
+                                   help_text="Kit Bundles assigned to this item, to satisfy requests. <em>Only Tech should fill this in.</em>")
   audienceMics = models.BooleanField(default=False,
                                      help_text="True if the item probably needs roving microphones for questions from audience.")
   allTechCrew = models.BooleanField(default=False,

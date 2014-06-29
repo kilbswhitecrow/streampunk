@@ -22,20 +22,23 @@ from django.core.urlresolvers import reverse_lazy
 
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment, Check
+from streampunk.models import BundleRoomAssignment, BundleItemAssignment
 
 from streampunk.forms import ItemForm, PersonForm, TagForm, RoomForm, ItemPersonForm
 from streampunk.forms import KitThingForm, KitBundleForm, KitRequestForm, PersonListForm
-from streampunk.forms import DeleteItemPersonForm, KitRoomAssignmentForm
+from streampunk.forms import DeleteItemPersonForm, KitRoomAssignmentForm, BundleRoomAssignmentForm
+from streampunk.forms import KitItemAssignmentForm, BundleItemAssignmentForm
 
 from streampunk.views import main_page, static_page, list_grids, EditView, NewView, AllView, AfterDeleteView, VisibleView
 from streampunk.views import show_grid, show_slot_detail, email_person, emailed_person, emailed_item, email_item_with_personlist, email_personlist
 from streampunk.views import edit_tags_for_item, edit_tags_for_person
 from streampunk.views import add_tags, fill_slot_unsched, fill_slot_sched, list_checks
 from streampunk.views import add_kitbundle_to_room, add_kitbundle_to_item
-from streampunk.views import delete_kitbundle_from_room, delete_kitbundle_from_item
 from streampunk.views import add_kitthing_to_room, add_kitthing_to_item, add_kitrequest_to_item, kit_usage
 from streampunk.views import show_room_detail, show_item_detail, show_person_detail, show_tag_detail
 from streampunk.views import show_kitrequest_detail, show_kitbundle_detail, show_kitthing_detail, show_itemperson_detail
+from streampunk.views import show_bundleroomassignment_detail
+from streampunk.views import show_bundleitemassignment_detail
 from streampunk.views import show_kitroomassignment_detail
 from streampunk.views import show_kititemassignment_detail
 from streampunk.views import show_personlist_detail, make_personlist, make_con_groups
@@ -126,6 +129,8 @@ urlpatterns = patterns('',
     url(r'^streampunk/kitbundle/(?P<pk>\d+)/$', show_kitbundle_detail.as_view(), name='show_kitbundle_detail'),
     url(r'^streampunk/kitthing/(?P<pk>\d+)/$', show_kitthing_detail.as_view(), name='show_kitthing_detail'),
     url(r'^streampunk/kitrequest/(?P<pk>\d+)/$', show_kitrequest_detail.as_view(), name='show_kitrequest_detail'),
+    url(r'^streampunk/bundleroomassignment/(?P<pk>\d+)/$', show_bundleroomassignment_detail.as_view(), name='show_bundleroomassignment_detail'),
+    url(r'^streampunk/bundleitemassignment/(?P<pk>\d+)/$', show_bundleitemassignment_detail.as_view(), name='show_bundleitemassignment_detail'),
     url(r'^streampunk/kitroomassignment/(?P<pk>\d+)/$', show_kitroomassignment_detail.as_view(), name='show_kitroomassignment_detail'),
     url(r'^streampunk/kititemassignment/(?P<pk>\d+)/$', show_kititemassignment_detail.as_view(), name='show_kititemassignment_detail'),
     url(r'^streampunk/itemperson/(?P<pk>\d+)/$', show_itemperson_detail.as_view(), name='show_itemperson_detail'),
@@ -143,11 +148,13 @@ urlpatterns = patterns('',
     url(r'^streampunk/add_kitthing_to_item/$', add_kitthing_to_item, name='add_kitthing_to_item'),
     url(r'^streampunk/add_kitrequest_to_item/(?P<pk>\d+)/$', add_kitrequest_to_item, name='add_kitrequest_to_item'),
 
-    url(r'^streampunk/delete_kitbundle/(?P<kb>\d+)/from_room/(?P<room>\d+)/$', delete_kitbundle_from_room, name='delete_kitbundle_from_room'),
-    url(r'^streampunk/delete_kitbundle/(?P<kb>\d+)/from_item/(?P<item>\d+)/$', delete_kitbundle_from_item, name='delete_kitbundle_from_item'),
 
     url(r'^streampunk/delete_itemperson/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=ItemPerson)), name='delete_itemperson'),
+    url(r'^streampunk/delete_bundleroomassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=BundleRoomAssignment)), name='delete_bundleroomassignment'),
+    url(r'^streampunk/delete_bundleitemassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
+          model=BundleItemAssignment)), name='delete_bundleitemassignment'),
     url(r'^streampunk/delete_kitroomassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
           model=KitRoomAssignment)), name='delete_kitroomassignment'),
     url(r'^streampunk/delete_kititemassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_programme')(AfterDeleteView.as_view(
@@ -190,6 +197,9 @@ urlpatterns = patterns('',
     url(r'^streampunk/edit_kitrequest/(?P<pk>\d+)/$', permission_required('streampunk.edit_kit')(EditView.as_view(
           model = KitRequest,
           form_class=KitRequestForm)), name='edit_kitrequest'),
+    url(r'^streampunk/edit_bundleroomassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_kit')(EditView.as_view(
+          model = BundleRoomAssignment,
+          form_class=BundleRoomAssignmentForm)), name='edit_bundleroomassignment'),
     url(r'^streampunk/edit_kitroomassignment/(?P<pk>\d+)/$', permission_required('streampunk.edit_kit')(EditView.as_view(
           model = KitRoomAssignment,
           form_class=KitRoomAssignmentForm)), name='edit_kitroomassignment'),

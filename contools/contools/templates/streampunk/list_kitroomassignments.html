@@ -1,6 +1,6 @@
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012-2013 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -21,31 +21,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endblock %}
 <h2>Kit Room Assignments</h2>
 {% render_table kratable %}
-{% comment %}
-<table border="1">
-<tr>
-  <th>Kit</th>
-  <th>Room</th>
-  <th>Bundle</th>
-  <th>From</th>
-  <th>To</th>
-  <th>Remove</th>
-</tr>
-{% for kt in kitrooms %}
-<tr>
-  <td>{{ kt.thing.name }}</td>
-  <td>{{ kt.room }}</td>
-  <td>{{ kt.bundle }}</td>
-  <td>{{ kt.fromDay }} {{ kt.fromSlot }}</td>
-  <td>{{ kt.toDay }} {{ kt.toSlot }}</td>
-{% if kt.bundle %}
-  <td><a href="{% url "delete_kitbundle_from_room" kb=kt.bundle.id room=kt.room.id %}">Remove Bundle</a></td>
-{% else %}
-  <td><a href="{% url "delete_kitroomassignment" pk=kt.id %}">Remove Thing</a></td>
-{% endif %}
-</tr>
-{% empty %}
-<tr><td colspan="6">Not assigned to rooms</td></tr>
-{% endfor %}
-</table>
-{% endcomment %}

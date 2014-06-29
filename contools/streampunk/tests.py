@@ -36,6 +36,7 @@ from .models import PersonList, UserProfile
 from .models import KitThing, KitRequest, KitBundle, KitRole, KitDepartment
 from .models import KitKind, KitStatus, RoomCapacity, KitSource, KitBasis
 from .models import KitRoomAssignment, KitItemAssignment, KitSatisfaction
+from .models import BundleItemAssignment, BundleRoomAssignment
 from .models import Check, CheckResult
 from .forms import PersonForm
 from .exceptions import DeleteNeededObjectException, DeleteUndefException, DeleteDefaultException
@@ -3913,8 +3914,8 @@ class PermTest(AuthTest):
       self.yesno_link_to(yesno, 'edit_kitbundle', args=[int(greenroomkit.id)])
     # Now zap the use of the bundle - it should become editable, but only if we
     # have that permission.
-    KitItemAssignment.objects.filter(bundle=greenroomkit).delete()
-    KitRoomAssignment.objects.filter(bundle=greenroomkit).delete()
+    BundleItemAssignment.objects.filter(bundle=greenroomkit).delete()
+    BundleRoomAssignment.objects.filter(bundle=greenroomkit).delete()
     self.response = self.client.get(reverse('show_kitbundle_detail', args=[int(greenroomkit.id)]))
     self.status_okay()
     self.assertFalse('This bundle is in use' in self.response.content)

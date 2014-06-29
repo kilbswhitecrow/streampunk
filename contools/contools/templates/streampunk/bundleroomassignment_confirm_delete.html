@@ -1,7 +1,7 @@
 {% extends "streampunk/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012-2014 Stephen Kilbane
+Copyright (C) 2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -21,8 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block body_content %}
 <table border="1">
 <tr>
-  <td>{{ object.item }}</td>
-  <td>{{ object.thing }}</td>
+  <td>{{ object.room }}</td>
+  <td>{{ object.bundle }}</td>
+  <td>{{ object.fromDay }}</td>
+  <td>{{ object.fromSlot }}</td>
+  <td>{{ object.toDay }}</td>
+  <td>{{ object.toSlot }}</td>
+  <td>{{ object.toLength }}</td>
 </tr>
 </table>
 </p>
@@ -30,10 +35,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% csrf_token %}
 <input type="hidden"
        name="after"
-       value="{{ object.item.get_absolute_url }}" />
+       value="{{ object.room.get_absolute_url }}" />
 <input type="submit"
-       value="Remove and return to {{ object.item }}"
-       name="DeleteAndShowItem" />
+       value="Remove and return to {{ object.room }}"
+       name="DeleteAndShowRoom" />
 </form>
 <form action="" method="post">
 {% csrf_token %}

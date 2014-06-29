@@ -47,6 +47,11 @@
   {% for kt in i.kit.all %}
   {{ kt.as_xml }}
   {% endfor %}
+  {% for b in i.bundles.all %}
+    {% for kt in b.things_all %}
+      {{ kt.as_xml }}
+    {% endfor %}
+  {% endfor %}
   </kitthings>
 
 </item>

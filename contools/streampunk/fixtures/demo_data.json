@@ -1738,7 +1738,6 @@
   "model": "streampunk.kititemassignment", 
   "fields": {
     "item": 12, 
-    "bundle": 2, 
     "thing": 6
   }
 },
@@ -1747,7 +1746,6 @@
   "model": "streampunk.kititemassignment", 
   "fields": {
     "item": 12, 
-    "bundle": 2, 
     "thing": 7
   }
 },
@@ -1758,7 +1756,6 @@
     "toLength": 22, 
     "room": 7, 
     "fromSlot": 85, 
-    "bundle": null, 
     "thing": 5, 
     "toSlot": 99
   }
@@ -1770,7 +1767,6 @@
     "toLength": 22, 
     "room": 10, 
     "fromSlot": 101, 
-    "bundle": 2, 
     "thing": 6, 
     "toSlot": 116
   }
@@ -1782,7 +1778,6 @@
     "toLength": 22, 
     "room": 10, 
     "fromSlot": 101, 
-    "bundle": 2, 
     "thing": 7, 
     "toSlot": 116
   }
@@ -1794,7 +1789,6 @@
     "toLength": 22, 
     "room": 5, 
     "fromSlot": 68, 
-    "bundle": 1, 
     "thing": 1, 
     "toSlot": 132
   }
@@ -1806,7 +1800,6 @@
     "toLength": 22, 
     "room": 5, 
     "fromSlot": 68, 
-    "bundle": 1, 
     "thing": 2, 
     "toSlot": 132
   }
@@ -1818,7 +1811,6 @@
     "toLength": 22, 
     "room": 5, 
     "fromSlot": 68, 
-    "bundle": 1, 
     "thing": 3, 
     "toSlot": 132
   }
@@ -1830,7 +1822,6 @@
     "toLength": 22, 
     "room": 5, 
     "fromSlot": 68, 
-    "bundle": 1, 
     "thing": 4, 
     "toSlot": 132
   }

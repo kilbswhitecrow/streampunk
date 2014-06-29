@@ -213,9 +213,9 @@ def item_lists_bundle(self, item, bundle, yesno):
 
   self.response = self.client.get(reverse('show_item_detail', args=[ item.id ]))
   if yesno:
-    self.has_row('kiatable', { "bundle": bundle.name })
+    self.has_row('biatable', { "bundle": bundle.name })
   else:
-    self.no_row('kiatable', { "bundle": bundle.name })
+    self.no_row('biatable', { "bundle": bundle.name })
 
 def req_lists_item(self, req, item, yesno):
   "Check whether the kit request lists use by the item."
@@ -240,9 +240,9 @@ def bundle_lists_item(self, bundle, item, yesno):
 
   self.response = self.client.get(reverse('show_kitbundle_detail', args=[ bundle.id ]))
   if yesno:
-    self.has_row('kiatable', { "item": item.title })
+    self.has_row('biatable', { "item": item.title })
   else:
-    self.no_row('kiatable', { "item": item.title })
+    self.no_row('biatable', { "item": item.title })
 
 def usage_lists_req_for_item(self, req, item, yesno):
   "Check whether the kit-usage page lists the req being used by the item."
@@ -264,9 +264,9 @@ def usage_lists_bundle_for_item(self, bundle, item, yesno):
   "Check whether the kit-usage page lists the bundle being used by the item."
   self.response = self.client.get(reverse('kit_usage'))
   if yesno:
-    self.has_row('kiatable', { "bundle": bundle.name, "item": item.title, "room": item.room.name })
+    self.has_row('biatable', { "bundle": bundle.name, "item": item.title, "room": item.room.name })
   else:
-    self.no_row('kiatable', { "bundle": bundle.name, "item": item.title, "room": item.room.name })
+    self.no_row('biatable', { "bundle": bundle.name, "item": item.title, "room": item.room.name })
 
 def usage_lists_thing_for_room(self, thing, room, yesno):
   "Check whether the kit-usage page lists the thing being assigned to the room."
@@ -280,9 +280,9 @@ def usage_lists_bundle_for_room(self, bundle, room, yesno):
   "Check whether the kit-usage page lists the bundle being assigned to the room."
   self.response = self.client.get(reverse('kit_usage'))
   if yesno:
-    self.has_row('kratable', { "bundle": bundle.name, "room": room.name })
+    self.has_row('bratable', { "bundle": bundle.name, "room": room.name })
   else:
-    self.no_row('kratable', { "bundle": bundle.name, "room": room.name })
+    self.no_row('bratable', { "bundle": bundle.name, "room": room.name })
 
 def bundle_lists_thing(self, bundle, thing, yesno):
   "Check whether the detail page for the bundle lists the thing."

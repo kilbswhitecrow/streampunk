@@ -34,17 +34,20 @@ from .tables import TagTable, KitThingTable, GridTable, GenderTable
 from .tables import KitRequestTable, SlotTable, ConInfoTable
 from .tables import KitRoomAssignmentTable
 from .tables import KitItemAssignmentTable
+from .tables import BundleRoomAssignmentTable
+from .tables import BundleItemAssignmentTable
 from .tables import ItemPersonTable, KitBundleTable
 
 from .models import Item, Person, Room, Tag, ItemPerson, Grid, Slot, ConDay, ConInfoString, Check
 from .models import KitThing, KitBundle, KitItemAssignment, KitRoomAssignment, KitRequest, PersonList
 from .models import UserProfile, ItemKind, RoomCapacity, Gender, ConInfoBool, ConInfoInt, KitSatisfaction
+from .models import BundleRoomAssignment, BundleItemAssignment
 from .forms import KitThingForm, KitBundleForm, KitRequestForm
 from .forms import ItemPersonForm, ItemTagForm, PersonTagForm, ItemForm, PersonForm
 from .forms import TagForm, RoomForm, CheckModelFormSet
 from .forms import AddMultipleTagsForm, FillSlotUnschedForm, FillSlotSchedForm
-from .forms import AddBundleToRoomForm, AddBundleToItemForm
-from .forms import AddThingToRoomForm, AddThingToItemForm
+from .forms import BundleItemAssignmentForm, BundleRoomAssignmentForm
+from .forms import KitItemAssignmentForm, KitRoomAssignmentForm
 from .forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
 from .auth import add_con_groups
 from .tabler import Rower, Tabler, make_tabler
@@ -244,6 +247,10 @@ class show_room_detail(DetailView):
     context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
                                       qs=context['kitrooms'], prefix='kra-', empty='No kit assigned',
                                       extra_exclude=['item', 'day', 'time'])
+    context['bundlerooms'] = BundleRoomAssignment.objects.filter(room=self.object)
+    context['bratable'] = make_tabler(BundleRoomAssignment, BundleRoomAssignmentTable, request=self.request,
+                                      qs=context['bundlerooms'], prefix='bra-', empty='No bundles assigned',
+                                      extra_exclude=['item', 'day', 'time'])
     context['rctable'] = make_tabler(RoomCapacity, RoomCapacityTable, request=self.request,
                                      qs=context['room'].capacities.all(), prefix='rc-', empty='No capacities defined')
     return context
@@ -313,6 +320,10 @@ class show_item_detail(DetailView):
     context['kititems'] = KitItemAssignment.objects.filter(item=self.object)
     context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
                                       qs=context['kititems'], prefix='kia-', empty='No kit assigned',
+                                      extra_exclude=['item', 'room', 'day', 'time'])
+    context['bundleitems'] = BundleItemAssignment.objects.filter(item=self.object)
+    context['biatable'] = make_tabler(BundleItemAssignment, BundleItemAssignmentTable, request=self.request,
+                                      qs=context['bundleitems'], prefix='bia-', empty='No bundles assigned',
                                       extra_exclude=['item', 'room', 'day', 'time'])
     context['missing_things'] = KitSatisfaction(self.object).missing_things()
     return context
@@ -407,13 +418,13 @@ class show_kitbundle_detail(DetailView):
     context['kitthings'] = self.object.things.all()
     context['kttable'] = make_tabler(KitThing, KitThingTable, request=self.request,
                                      qs=context['kitthings'], prefix='kt-', empty='No kit things')
-    context['kititems'] = KitItemAssignment.objects.filter(bundle = self.object)
-    context['kiatable'] = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=self.request,
-                                      qs=context['kititems'], prefix='kia-', empty='Not assigned to items',
+    context['bundleitems'] = BundleItemAssignment.objects.filter(bundle = self.object)
+    context['biatable'] = make_tabler(BundleItemAssignment, BundleItemAssignmentTable, request=self.request,
+                                      qs=context['bundleitems'], prefix='bia-', empty='Not assigned to items',
                                       extra_exclude=['bundle'])
-    context['kitrooms'] = KitRoomAssignment.objects.filter(bundle = self.object)
-    context['kratable'] = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=self.request,
-                                      qs=context['kitrooms'], prefix='kra-', empty='Not assigned to rooms',
+    context['bundlerooms'] = BundleRoomAssignment.objects.filter(bundle = self.object)
+    context['bratable'] = make_tabler(BundleRoomAssignment, BundleRoomAssignmentTable, request=self.request,
+                                      qs=context['bundlerooms'], prefix='bra-', empty='Not assigned to rooms',
                                       extra_exclude=['thing', 'bundle'])
     return context
 
@@ -431,6 +442,26 @@ class show_kitrequest_detail(DetailView):
     context['itable'] = make_tabler(KitRequest, KitRequestTable, request=self.request,
                                     qs=[ context['kitrequest'] ], prefix='ki-', empty='No kit requests',
                                     extra_exclude=['name', 'kind', 'count', 'status', 'setup', 'notes'])
+    return context
+
+class show_bundleroomassignment_detail(DetailView):
+  context_object_name = 'bundleroomassignment'
+  model = BundleRoomAssignment
+  template_name = 'streampunk/show_bundleroomassignment.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_bundleroomassignment_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
+    return context
+
+class show_bundleitemassignment_detail(DetailView):
+  context_object_name = 'bundleitemassignment'
+  model = BundleItemAssignment
+  template_name = 'streampunk/show_bundleitemassignment.html'
+
+  def get_context_data(self, **kwargs):
+    context = super(show_bundleitemassignment_detail, self).get_context_data(**kwargs)
+    context['request'] = self.request
     return context
 
 class show_kitroomassignment_detail(DetailView):
@@ -689,65 +720,44 @@ def add_tags(request):
 
 def add_kitbundle_to_room(request):
   if request.method == 'POST':
-    form = AddBundleToRoomForm(request.POST)
+    form = BundleRoomAssignmentForm(request.POST)
     if form.is_valid():
       bundle = form.cleaned_data['bundle']
       room = form.cleaned_data['room']
       fromSlot = form.cleaned_data['fromSlot']
       toSlot = form.cleaned_data['toSlot']
       toLength = form.cleaned_data['toLength']
-      things = bundle.things.all()
-      for thing in things:
-        kras = KitRoomAssignment(thing=thing, bundle=bundle, room=room,
-                                 fromSlot=fromSlot, toSlot=toSlot, toLength=toLength)
-        kras.save()
+      bra = BundleRoomAssignment(bundle=bundle, room=room, fromSlot=fromSlot, toSlot=toSlot, toLength=toLength)
+      bra.save()
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:
     data = get_initial_data_from_request(request, { 'room': Room, 'bundle': KitBundle })
-    form = AddBundleToRoomForm(initial = data)
+    form = BundleRoomAssignmentForm(initial = data)
   form_title = u'Add Kit Bundle to Room'
   return render_to_response('streampunk/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
-def delete_kitbundle_from_room(request, kb, room):
-  kbid = int(kb)
-  rid = int(room)
-  kitb = KitBundle.objects.get(id = kbid)
-  rm = Room.objects.get(id = rid)
-  KitRoomAssignment.objects.filter(bundle=kitb, room=rm).delete()
-  return HttpResponseRedirect(reverse('show_room_detail', args=(rid,)))
-
 def add_kitbundle_to_item(request):
   if request.method == 'POST':
-    form = AddBundleToItemForm(request.POST)
+    form = BundleItemAssignmentForm(request.POST)
     if form.is_valid():
       bundle = form.cleaned_data['bundle']
       item = form.cleaned_data['item']
-      things = bundle.things.all()
-      for thing in things:
-        kras = KitItemAssignment(thing=thing, bundle=bundle, item=item)
-        kras.save()
+      bra = BundleItemAssignment(bundle=bundle, item=item)
+      bra.save()
       return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
     data = get_initial_data_from_request(request, { 'item': Item, 'bundle': KitBundle })
-    form = AddBundleToItemForm(initial = data)
+    form = BundleItemAssignmentForm(initial = data)
   form_title = u'Add Kit Bundle to Item'
   return render_to_response('streampunk/editform.html',
                             locals(),
                             context_instance=RequestContext(request))
 
-def delete_kitbundle_from_item(request, kb, item):
-  kbid = int(kb)
-  iid = int(item)
-  kitb = KitBundle.objects.get(id = kbid)
-  i = Item.objects.get(id = iid)
-  KitItemAssignment.objects.filter(bundle=kitb, item=i).delete()
-  return HttpResponseRedirect(reverse('show_item_detail', args=(iid,)))
-
 def add_kitthing_to_room(request):
   if request.method == 'POST':
-    form = AddThingToRoomForm(request.POST)
+    form = KitRoomAssignmentForm(request.POST)
     if form.is_valid():
       thing = form.cleaned_data['thing']
       room = form.cleaned_data['room']
@@ -759,7 +769,7 @@ def add_kitthing_to_room(request):
       return HttpResponseRedirect(reverse('show_room_detail', args=(int(room.id),)))
   else:
     data = get_initial_data_from_request(request, { 'room': Room, 'thing': KitThing })
-    form = AddThingToRoomForm(initial = data)
+    form = KitRoomAssignmentForm(initial = data)
   form_title = u'Add Kit Thing to Room'
   return render_to_response('streampunk/editform.html',
                             locals(),
@@ -767,7 +777,7 @@ def add_kitthing_to_room(request):
 
 def add_kitthing_to_item(request):
   if request.method == 'POST':
-    form = AddThingToItemForm(request.POST)
+    form = KitItemAssignmentForm(request.POST)
     if form.is_valid():
       thing = form.cleaned_data['thing']
       item = form.cleaned_data['item']
@@ -776,7 +786,7 @@ def add_kitthing_to_item(request):
       return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
   else:
     data = get_initial_data_from_request(request, { 'item': Item, 'thing': KitThing })
-    form = AddThingToItemForm(initial = data)
+    form = KitItemAssignmentForm(initial = data)
   form_title = u'Add Kit Thing to Item'
   return render_to_response('streampunk/editform.html',
                             locals(),
@@ -904,6 +914,10 @@ def make_con_groups(request):
                             context_instance=RequestContext(request))
 
 def kit_usage(request):
+  bratable = make_tabler(BundleRoomAssignment, BundleRoomAssignmentTable, request=request,
+                      qs=BundleRoomAssignment.objects.all(), prefix='bra-', empty='No bundle room assignments')
+  biatable = make_tabler(BundleItemAssignment, BundleItemAssignmentTable, request=request,
+                      qs=BundleItemAssignment.objects.all(), prefix='bia-', empty='No bundle item assignments')
   kratable = make_tabler(KitRoomAssignment, KitRoomAssignmentTable, request=request,
                       qs=KitRoomAssignment.objects.all(), prefix='kra-', empty='No kit room assignments')
   kiatable = make_tabler(KitItemAssignment, KitItemAssignmentTable, request=request,

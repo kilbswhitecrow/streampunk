@@ -88,6 +88,9 @@ Missing Kit: <br />
 <p>
 {% render_table kiatable %}
 </p>
+<p>
+{% render_table biatable %}
+</p>
 {% if perms.streampunk.edit_programme %}
 <p>
 <a href="{% url "add_kitrequest_to_item" pk=item.id %}">Add Kit request to '{{ item }}'</a></p>

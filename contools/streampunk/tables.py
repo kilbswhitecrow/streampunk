@@ -159,7 +159,6 @@ class KitRequestTable(tables.Table):
 class KitRoomAssignmentTable(tables.Table):
   thing = tables.LinkColumn('show_kitthing_detail', args=[A('thing.id')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
-  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
   fromSlot = tables.Column()
   toSlot = tables.Column()
   remove = RemoveColumn('delete_kitroomassignment', args=[A('pk')])
@@ -169,10 +168,27 @@ class KitRoomAssignmentTable(tables.Table):
 class KitItemAssignmentTable(tables.Table):
   thing = tables.LinkColumn('show_kitthing_detail', args=[A('thing.id')])
   item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
-  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
   room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
   start = tables.Column(order_by=[A('item.start.order')])
   remove = RemoveColumn('delete_kititemassignment', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue" }
+
+class BundleRoomAssignmentTable(tables.Table):
+  room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
+  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
+  fromSlot = tables.Column()
+  toSlot = tables.Column()
+  remove = RemoveColumn('delete_bundleroomassignment', args=[A('pk')])
+  class Meta:
+    attrs = { "class": "paleblue" }
+
+class BundleItemAssignmentTable(tables.Table):
+  item = tables.LinkColumn('show_item_detail', args=[A('item.id')])
+  bundle = tables.LinkColumn('show_kitbundle_detail', args=[A('bundle.id')])
+  room = tables.LinkColumn('show_room_detail', args=[A('room.id')])
+  start = tables.Column(order_by=[A('item.start.order')])
+  remove = RemoveColumn('delete_bundleitemassignment', args=[A('pk')])
   class Meta:
     attrs = { "class": "paleblue" }
 

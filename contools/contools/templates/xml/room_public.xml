@@ -32,5 +32,10 @@
     {% for kt in r.kit.all %}
       {{ kt.as_xml_public }}
     {% endfor %}
+    {% for b in r.bundles.all %}
+      {% for kt in b.things_all %}
+        {{ kt.as_xml_public }}
+      {% endfor %}
+    {% endfor %}
   </kitthings>
 </room>

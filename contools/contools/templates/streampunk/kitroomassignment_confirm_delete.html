@@ -1,7 +1,7 @@
 {% extends "streampunk/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012-2013 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -31,13 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </tr>
 </table>
 </p>
-{% if object.bundle %}
-<p>
-Sorry, this Kit Thing cannot be removed from the room by itself,
-as it is assigned as part of Kit Bundle
-<a href="{{ object.bundle.get_absolute_url }}">{{ object.bundle }}</a>.
-</p>
-{% else %}
 <form action="" method="post">
 {% csrf_token %}
 <input type="hidden"
@@ -56,5 +49,4 @@ as it is assigned as part of Kit Bundle
        value="Remove and display kit usage"
        name="DeleteAndShowUsage" />
 </form>
-{% endif %}
 {% endblock %}

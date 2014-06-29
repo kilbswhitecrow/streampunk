@@ -1,6 +1,6 @@
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012-2013 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -24,48 +24,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 <h2>Kit Requests</h2>
 {% render_table krtable %}
-{% comment %}
-<table border>
-{% if item %}
-    <tr>
-      <th>Request</th>
-      <th>Satisfied by?</th>
-      <th>Delete?</th>
-    </tr>
-  {% for req in kitrequests %}
-    <tr>
-    <td>{{ req|linky|safe }}</td>
-    <td>{{ req.is_satisfied_by_first }}</td>
-    <td><a href="{% url "delete_kitrequest" pk=req.id %}">Delete</a></td>
-    </tr>
-  {% empty %}
-    <tr><td colspan="3">No kit requests yet</td></tr>
-  {% endfor %}
-{% else %}
-  <tr>
-    <th>Request</th>
-    <th>Item</th>
-    <th>Room</th>
-    <th>Day</th>
-    <th>Start</th>
-    <th>Satisfied by?</th>
-  </tr>
-  {% for req in kitrequests %}
-    {% for item in req.item_set.all %}
-      <tr><td>{{ req|linky|safe }}</td>
-          <td>{{ item|linky|safe }}</td>
-          <td>{{ item.room|linky|safe}}</td>
-          <td>{{ item.day }}</td>
-          <td>{{ item.start }}</td>
-          <td>{{ req.is_satisfied_by_first }}</td>
-     </tr>
-    {% empty %}
-      <tr><td colspan="6">{{ req|linky|safe }}</td><td colspan="4">Not assigned to any items</td></tr>
-    {% endfor %}
-  {% empty %}
-    <tr><td>No kit requests yet</td></tr>
-  {% endfor %}
-{% endif %}
-</table>
-{% endcomment %}
 {% endif %}

@@ -27,6 +27,7 @@ from django.core.exceptions import ValidationError
 from .models import ItemPerson, Item, Person, Tag, Room, Check, ConDay
 from .models import KitThing, KitBundle, KitRequest, PersonList
 from .models import KitRoomAssignment, KitItemAssignment, UserProfile
+from .models import BundleRoomAssignment, BundleItemAssignment
 
 class ItemPersonForm(ModelForm):
   fromPerson = forms.BooleanField(required=False, widget=forms.HiddenInput)
@@ -50,7 +51,7 @@ class ItemTagForm(ModelForm):
 class ItemForm(ModelForm):
   class Meta:
     model = Item
-    exclude = [ 'people', 'kit' ]
+    exclude = [ 'people', 'kit', 'bundles' ]
 
   def clean_title(self):
     "Strip whitespace from the field"
@@ -104,7 +105,7 @@ class TagForm(ModelForm):
 class RoomForm(ModelForm):
   class Meta:
     model = Room
-    exclude = [ 'kit', ]
+    exclude = [ 'kit', 'bundles', ]
 
 class KitThingForm(ModelForm):
   class Meta:
@@ -122,25 +123,17 @@ class KitRoomAssignmentForm(ModelForm):
   class Meta:
     model = KitRoomAssignment
 
-class AddBundleToRoomForm(ModelForm):
-  class Meta:
-    model = KitRoomAssignment
-    exclude = [ 'thing', ]
-
-class AddBundleToItemForm(ModelForm):
+class KitItemAssignmentForm(ModelForm):
   class Meta:
     model = KitItemAssignment
-    exclude = [ 'thing', ]
 
-class AddThingToRoomForm(ModelForm):
+class BundleRoomAssignmentForm(ModelForm):
   class Meta:
-    model = KitRoomAssignment
-    exclude = [ 'bundle', ]
+    model = BundleRoomAssignment
 
-class AddThingToItemForm(ModelForm):
+class BundleItemAssignmentForm(ModelForm):
   class Meta:
-    model = KitItemAssignment
-    exclude = [ 'bundle', ]
+    model = BundleItemAssignment
 
 class PersonTagForm(ModelForm):
   """
