@@ -80,9 +80,18 @@ are scheduled to take place in that room.
 </p>
 <h3>Availability</h3>
 <p>
-The room's availability information is listed, if any has been assigned.
+The room's availability information is listed, if any has been assigned. Availability is
+expressed in terms of slots. It's considered an error if an item is scheduled to occur
+during a slot which does not appear in the room's availability (and this is one of the
+checks that Streampunk can do for you).
 </p>
-<h3>Kit Things</h3>
+<h3>Tech</h3>
+<p>
+The Tech information for the room is usually hidden, by default. Click on the link to expand.
+</p>
+<p>
+There's a bunch of settings for each room that are mainly of interest to Tech, which is why they're hidden.
+</p>
 <p>
 If any kit has been assigned to the room, either individually or as
 part of a kit bundle (see <a href="{% url "help_kit" %}">Kit</a> for more details),

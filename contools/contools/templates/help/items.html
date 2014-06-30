@@ -24,16 +24,16 @@ They have the following attributes, among a bunch of others:
 <ul>
 <li>Shortname - a simple mnemonic to make it easy to identify the items.</li>
 <li>Title - the longer name that appears on the final programme grid.</li>
-<li>Blurb - An optional paragraph of text that explains what the item's about</li>
-<li>Day - which day the item occurs on.</li>
-<li>Start time - the slot, during the day, in which the item starts.</li>
+<li>Blurb - An optional paragraph of text that explains what the item's about. This is intended for the printed programme.</li>
+<li>Slot - the day and time at which the item starts.</li>
 <li>Length - how long the item runs for.</li>
 <li>Kind - is it a panel, quiz, talk, workshop, etc.</li>
+<li>Room - where the item will take place.</li>
 <li>Visible - should it appear in the programme grids</li>
 <li>Expected audience - how many people do you think will turn up?</li>
 <li>Gophers - how any gophers does the item need?</li>
-<li>Seating - the layout style: theatre, cabaret, etc.</li>
-<li>Room - where the item will take place.</li>
+<li>Seating - the layout style of the room: theatre, cabaret, etc.</li>
+<li>Front layout - the layout style at the front of the room - desk with chairs, etc.</li>
 </ul>
 
 <p>
@@ -72,7 +72,8 @@ You can see that the titles can be quite unwieldy, and painful to find in a long
 are you really going to remember that, in a sorted list, the "teen shows" item begins with "B"?
 Plus, the long titles make the grids hard to read. I recommend having the titles for the final
 programme booklet, but working exclusively with the short names. However, the use of shortnames
-is optional - it's a con-wide preference whether to display them.
+is optional - it's a con-wide preference whether to display them. (It's the "show shortnames"
+variable that appears on the main page.)
 </p>
 
 <h3>Creating items</h3>
@@ -81,10 +82,7 @@ over time you'll associate people with them, in varying degrees of certainty, an
 drop them into the grid, somewhere. But initially, you won't know when they'll actually be taking
 place.
 <p>
-So, to create a new item:
-<ol>
-<li>Follow the "Items" link on the top banner, then click on "Add new item"</li>
-</ol>
+So, to create a new item follow the "Items" link on the top banner, then click on "New item".
 <p>
 This gets you to "Adding a new item" page. Here you can fill in the basic information about
 the item. Many fields have default values, but exactly what those defaults are is dependent
@@ -97,20 +95,18 @@ Note that, at this point, you don't get to assign anybody to the item.
 <h3>Listing items</h3>
 You'll see lists of items appearing in quite a few places:
 <ul>
-The programme grids display items that are within their rooms/time lists, of course.
-Going to a page for a person or a tag or a tech item will show all the programme items
-associated with that particular thing.
-The various checks generally list items.
+<li>The programme grids display items that are within their rooms/time lists, of course.</li>
+<li>Going to a page for a person or a tag or a tech item will show all the programme items
+associated with that particular thing.</li>
+<li>The various checks generally list items.</li>
 </ul>
 </p>
 <p>
 And, of course, you can ask for item lists directly:
 <ol>
 <li>Follow the "Items" link on the top banner</li>
+<li>Choose different representations of the Items list, from "Items" link on the top banner.</li>
 </ol>
-</p>
-<p>
-Right now, this list isn't sorted, which is silly - it really should be.
 </p>
 <p>
 The entries in the list are all links; clicking on one will take you to the "Edit item"
@@ -134,7 +130,7 @@ When you click on an item's link, you're taken to a page which displays all the 
 about that item. There's a link for editing the item's details, too.
 </p>
 <p>
-This page also allows you to change the people, tech, tags and sequencing associated with the
+This page also allows you to change the people, kit, tags and sequencing associated with the
 item.
 </p>
 <h3>Adding people to an item</h3>
@@ -152,6 +148,8 @@ with "Proposed" (you've thought of that person), "Invited" (you've asked them), 
 "Confirmed" (they've agreed).</li>
 <li>Visible - Not everyone gets listed in the programme grid. The Masquerade might list the
 MC, for example, but not the stage manager and gophers.</li>
+<li>DistEmail - are they happy with the other people on the item getting their email address?</li>
+<li>RecordingOkay - Are they happy with being recorded for this item?</li>
 </ul>
 <p>
 When you click on "Add", then you can look at the item again, or add another person.
@@ -168,7 +166,7 @@ broken).</li>
 <li>Edit - allows you to change change all the aspects of the item/person link. This is
 basically like adding a new person, overwriting the old one, except that all the settings
 default to what they are now. You can change the status, the role, the visibility - even
-the person or the item. <em>BUG: THIS IS MISSING NOW. </em></li>
+the person or the item.</li>
 </ul>
 <p>
 <h3>Adding kit to an item</h3>
@@ -181,7 +179,7 @@ handled through <a href="{% url "help_kit" %}">Kit</a>.
 Adding <a href="{% url "help_tags" %}">tags</a> to an item (or, for that matter, to people) is
 simple: from the item's page, click on the "Edit tags for [ITEM]" link, and you'll be
 taken to a page that allows you to modify the list of tags that are associated with
-this item. Removing ags is done in the same way.
+this item. Removing tags is done in the same way.
 </p>
 
 <h3>Sequencing</h3>
@@ -189,7 +187,7 @@ this item. Removing ags is done in the same way.
 Sequencing constraints indicate that programme item X must be immediately followed
 by programme item Y, in the same room. This is used for things like setup and
 tear-down. If you make these constraints, and then move one of the items, the other
-item won't <em>automatically</em> be moved as well, but you will be able to identify
+item won't <em>automatically</em> be moved as well, but you will be able to identify that
 the constraint no longer applies, by running one of the <a href="{% url "help_checks" %}">checks</a>.
 </p>
 

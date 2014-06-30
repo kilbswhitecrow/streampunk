@@ -23,7 +23,7 @@ Streampunk has support for Users and Groups. The intent is that there will
 be several levels of user:
 <ul>
 <li> Superusers - full access to everything </li>
-<li> Admins - full readn and write access. Can user the <a href="{% url "help_admin" %}">Admin GUI</a>.</li>
+<li> Admins - full read and write access. Can use the <a href="{% url "help_admin" %}">Admin GUI</a>.</li>
 <li> Con committee, dept heads - can read and write everything through the normal pages.</li>
 <li> Con staff - can read everything, but not change it.</li>
 <li> Members - can read public things, but not private. Can't change anything. Can send email to programme participants.</li>
@@ -31,7 +31,7 @@ be several levels of user:
 </ul>
 </p>
 <p>
-So, long-term, there's potential for running your Streampunk server as a pubicly-accessible
+So, long-term, there's potential for running your Streampunk server as a publicly-accessible
 site, where each member of the con has been allocated their own User account which allows
 them to send emails to each other, and people who have not yet signed up for the con can
 still read the programme info that's visible. But all that's in the future.
@@ -49,7 +49,8 @@ If you log in as your superuser account, then all the private data and edit link
 get all permissions, automatically.
 </p>
 <p>
-At this point, you should click on <a href="{% url "make_con_groups" %}">Set up all the group permissions</a> on the <a href="{% url "main_page" %}">Main page</a>. This will install a bunch of additional permissions that Streampunk uses:
+At this point, you should click on <a href="{% url "make_con_groups" %}">Set up all the group permissions</a> on the <a href="{% url "main_page" %}">Main page</a>. (Note: if you've also installed the demo data that comes with Streampunk, then
+this has already been done for you.) This will install a bunch of additional permissions that Streampunk uses:
 <ul>
 <li> Read_public </li>
 <li> Read_private</li>

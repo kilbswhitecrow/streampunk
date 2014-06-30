@@ -1,7 +1,7 @@
 {% extends "help/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -46,13 +46,17 @@ want, down to the resolution of a minute. Typically, slots would be on the hour,
 half-hour, or every 90 minutes, as fits your programme.</p>
 
 <p>
-There's a day for each day of the con, and each of those days has 
-the same layout of slots.</p>
+Slots have a <em>day</em> and a <em>time</em>. You don't need to have the slots be
+at regular intervals, or be the same layout each day (this is a change from ProgDB),
+but your slots do apply across your programme: you can't, say, have a fantasy stream
+with 30min slots and a sf stream with 60min slots. You can, however, define a schedule
+that uses 30min slots, but only use every other one in your sf stream.
+</p>
 
 <p>
-There are also pre-configured item durations, e.g. half an hour, one hour,
-two hours or three hours. Note that these are the <em>pre-configured</em> choices - if you
-need a greater variety, or longer or shorter items, that can be done.
+There are also item durations, e.g. half an hour, one hour, ninety minutes. If you
+are sane, you will select your slots and item durations so that the separation between
+your slots is the smallest item duration you define.
 </p>
 
 <p>
@@ -94,7 +98,8 @@ and so on. If an item needs some kit, such as a screen and a projector, you asso
 until these requests have been satisfied". Kit <em>things</em> are the actual physical pieces of
 equipment; you can assign them directly to items, in which case they can satisfy the item's
 requests, or you can assign them to rooms, in which case they can satisfy the requests of
-any items that take place in that room.
+any items that take place in that room. Kit <em>bundles</em> are collections of kit things,
+that you can assign <em>en mass</em>, to make the admin easier.
 </p>
 
 
@@ -133,7 +138,7 @@ time you make a little change.)
 
 <h3>Enum tables and values</h3>
 <p>
-Streampunk has a lot of list of values for different things:
+Streampunk has many lists of values for different things:
 room layout, person roles, media status, etc. Each of these things
 is just a list of values, with names associated with them, and you
 can have as many different values for each thing as you'd like. So,
@@ -161,7 +166,7 @@ is "To be decided", but the default value is "Panel".
 <p>
 The idea here is that you can choose whether, for your con, a particular
 field should default to the most likely useful value, or whether it
-should default to an undefined value, thereby requiring you to explcitly
+should default to an undefined value, thereby requiring you to explicitly
 choose it rather than just blithely accepting the default.
 </p>
 <p>
