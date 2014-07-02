@@ -540,10 +540,15 @@ class show_personlist_detail(DetailView):
 #                             locals(),
 #                             context_instance=RequestContext(request))
 
-def mkemail(request, dirvars, subject, person):
+def mkemail(request, dirvars, subject, person, file):
   context = RequestContext(request)
   txt = render_to_string('streampunk/email.txt', dirvars, context_instance=context)
-  msg = EmailMultiAlternatives(subject, txt, request.user.email, [ person.email ] )
+  if file:
+    attachments = [ (file.name, file.read(), file.content_type) ]
+  else:
+    attachments = None
+  msg = EmailMultiAlternatives(subject=subject, body=txt, from_email=request.user.email, 
+                               to=[ person.email ], attachments = attachments )
   html = render_to_string('streampunk/email.html', dirvars, context_instance=context)
   msg.attach_alternative(html, "text/html")
   return msg
@@ -551,7 +556,7 @@ def mkemail(request, dirvars, subject, person):
 @permission_required('streampunk.send_direct_email')
 def email_person(request, pk):
   if request.method == 'POST':
-    form = EmailForm(request.POST)
+    form = EmailForm(request.POST, request.FILES)
     if form.is_valid():
       pid = int(pk)
       person = Person.objects.get(id = pid)
@@ -562,12 +567,13 @@ def email_person(request, pk):
         incItems = form.cleaned_data['includeItems']
         incContact = form.cleaned_data['includeContact']
         incAvail = form.cleaned_data['includeAvail']
+        file = request.FILES.get('file')
         if incItems:
           itemspeople = ItemPerson.objects.filter(person = person)
         if incAvail:
           avail = person.availability.all()
           noAvailMsg = u"We have no information about your availablity over the convention."
-        msg = mkemail(request, locals(), subject, person)
+        msg = mkemail(request, locals(), subject, person, file)
         msg.send()
       return HttpResponseRedirect(reverse('emailed_person', args=(int(person.id),)))
   else:
@@ -601,7 +607,7 @@ def send_mail_to_personlist(request, personlist, subject=None, success_url=None,
         # discard this personlist
         personlist.delete()
       return HttpResponseRedirect(cancel_url)
-    form = EmailForm(request.POST)
+    form = EmailForm(request.POST, request.FILES)
     if form.is_valid():
       if people:
         con_name = ConInfoString.objects.con_name()
@@ -610,13 +616,14 @@ def send_mail_to_personlist(request, personlist, subject=None, success_url=None,
         incItems = form.cleaned_data['includeItems']
         incContact = form.cleaned_data['includeContact']
         incAvail = form.cleaned_data['includeAvail']
+        file = request.FILES.get('file')
         for person in people:
           if incItems:
             itemspeople = ItemPerson.objects.filter(person = person)
           if incAvail:
             avail = person.availability.all()
             noAvailMsg = u"We have no information about your availablity over the convention."
-          msg = mkemail(request, locals(), subject, person)
+          msg = mkemail(request, locals(), subject, person, file)
           msg.send()
       if personlist.auto == True:
         personlist.delete()

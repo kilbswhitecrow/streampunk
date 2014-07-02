@@ -4310,6 +4310,18 @@ class EmailTest(AuthTest):
     else:
       self.assertFalse(escape(body) in msg.body)
 
+  def has_attachment(self, msg):
+    self.assertEqual(len(msg.attachments), 1)
+
+  def no_attachment(self, msg):
+    self.assertEqual(len(msg.attachments), 0)
+
+  def attachment_matches(self, msg, filename, content, content_type):
+    a = msg.attachments[0]
+    self.assertEqual(a[0], filename)
+    self.assertEqual(a[1], content)
+    self.assertEqual(a[2], content_type)
+
   def subj(self):
     "A default subject"
     return "On the Fallability of Humanity"
@@ -4350,6 +4362,7 @@ class test_email_person(EmailTest):
     self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
     msg = self.find_email(giles.email, self.subj())
     self.email_match(msg, self.body())
+    self.no_attachment(msg)
     self.no_items_included(msg, giles)
     self.no_avail_included(msg, giles)
     self.no_email_match(msg, giles.contact)
@@ -4367,6 +4380,7 @@ class test_email_person(EmailTest):
     self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
     msg = self.find_email(giles.email, self.subj())
     self.email_match(msg, self.body())
+    self.no_attachment(msg)
     self.items_included(msg, giles)
     self.no_avail_included(msg, giles)
     self.no_email_match(msg, giles.contact)
@@ -4384,6 +4398,7 @@ class test_email_person(EmailTest):
     self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
     msg = self.find_email(giles.email, self.subj())
     self.email_match(msg, self.body())
+    self.no_attachment(msg)
     slots = giles.availability.all()
     self.avail_included(msg, giles)
     self.no_items_included(msg, giles)
@@ -4402,6 +4417,7 @@ class test_email_person(EmailTest):
     self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
     msg = self.find_email(giles.email, self.subj())
     self.email_match(msg, self.body())
+    self.no_attachment(msg)
     self.no_avail_included(msg, giles)
     self.no_items_included(msg, giles)
     self.email_match(msg, giles.contact)
@@ -4421,9 +4437,36 @@ class test_email_person(EmailTest):
     self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
     msg = self.find_email(giles.email, self.subj())
     self.email_match(msg, self.body())
+    self.no_attachment(msg)
     self.avail_included(msg, giles)
     self.items_included(msg, giles)
     self.email_match(msg, giles.contact)
+
+  def test_post_message_with_attachment(self):
+    "Check we can email a file attachment."
+    giles = self.get_giles()
+    # I'm really not sure what file we can use that'll always be available...
+    srcfile = '/usr/share/misc/ascii'
+    srcname = 'ascii'
+    srctype = u'application/octet-stream'
+    with open(srcfile) as fp:
+      self.response = self.client.post(reverse('email_person', args=[int(giles.id)]), {
+        "subject": self.subj(),
+        "message": self.body(),
+        "file": fp
+      }, follow=True)
+    self.status_okay()
+    self.form_okay()
+    self.assertTemplateUsed(response=self.response, template_name='streampunk/emailed.html')
+    msg = self.find_email(giles.email, self.subj())
+    self.email_match(msg, self.body())
+    self.has_attachment(msg)
+    with open(srcfile) as fp:
+      content = fp.read()
+      self.attachment_matches(msg, srcname, content, srctype)
+    self.no_items_included(msg, giles)
+    self.no_avail_included(msg, giles)
+    self.no_email_match(msg, giles.contact)
 
 class test_personlist(AuthTest):
   "Check list creation, display and deletion."

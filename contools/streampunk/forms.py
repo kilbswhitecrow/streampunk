@@ -175,6 +175,7 @@ class EmailForm(forms.Form):
   includeItems = forms.BooleanField(label = u'Include items?', required=False)
   includeContact = forms.BooleanField(label = u"Include person's contact details?", required=False)
   includeAvail = forms.BooleanField(label = u'Include availability?', required=False)
+  file = forms.FileField(label = u'Optional file to attach', required=False)
 
 class PersonListForm(ModelForm):
   class Meta:

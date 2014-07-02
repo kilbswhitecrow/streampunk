@@ -1,7 +1,7 @@
 {% extends "streampunk/base.html" %}
 {% comment %}
 This file is part of Streampunk, a Django application for convention programmes
-Copyright (C) 2012 Stephen Kilbane
+Copyright (C) 2012-2014 Stephen Kilbane
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as
 published by the Free Software Foundation, either version 3 of the
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}Mailing people from {{ item }} {% endblock %}
 {% block body_content %}
 <p>Emailing people on {{ item }}</p>
-<form action="" method="post">
+<form action="" method="post" enctype="multipart/form-data">
 <input type="hidden" name="itemid" value="{{item.id}}" />
 <input type="hidden" name="after" value="item" />
 {% csrf_token %}
