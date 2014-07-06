@@ -21,6 +21,7 @@ from .models import FrontLayoutKind, KitKind, KitRole, KitDepartment, KitSource,
 from .models import MediaStatus, KitRequest, KitThing, KitBundle, KitRoomAssignment, KitItemAssignment
 from .models import PersonList
 from .models import ConInfoInt, ConInfoString, ConInfoBool, UserProfile
+from .models import ChangeLog
 
 admin.site.register(SlotLength)
 admin.site.register(Slot)
@@ -58,3 +59,4 @@ admin.site.register(ConInfoString)
 admin.site.register(ConInfoBool)
 admin.site.register(PersonList)
 admin.site.register(UserProfile)
+admin.site.register(ChangeLog)

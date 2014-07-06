@@ -4,6 +4,60 @@ T = [ x for x in S if x % 2 == 0 ]
 
 - Handle settings.py
 
+Revision Changes
+----------------
+- Override save() and delete() (p87)
+- Compare previous item and old item?
+- Subclass, along with orig_id and change_stamp, and log to a different table?
+- Have relevant sub-fields in another class, and just copy those?
+- Create a log class which has appropriate, overloaded fields, indcating model, etc?
+
+I can, indeed, record things using the save() and delete() methods, though I'll have to be
+careful whether the Log version contains the previous version or the current one.
+I need to experiment with middleware for recording the current user, because that's a pain.
+I may have to record it on every model as a modified-by field, and then copy that.
+
+Alternative approach: just printf'ing text into the log explaining what changed.
+Model
+id
+added/deleted/edited/changed
+old val
+new val
+
+We should also not be offering to edit revision, on an item. It should always be the most recent.
+Want to record, at a minimum:
+	- Who made the change, and when.
+	- Item added or deleted
+	- Item changed:
+		Slot
+		Room
+		Title
+		Length
+		Visibility
+		Any of the Tech Fields
+		Gophers
+		Stewards
+		Budget
+	- ItemPerson added or deleted
+	- ItemPerson changed:
+		Item
+		Person
+		Visibility
+	- KitRequest added or deleted
+	- KitRequest changed:
+		Anything, really.
+	- Person
+		Membership number
+		
+
+
+PDF output
+----------
+- starts at p509
+
+There are KitRequests on the Item edit form? That's wrong. They should
+be excluded from the model form.
+
 Bundle changes
 --------------
 I need to be able to delete bundles from items and rooms. The way to do this
@@ -17,14 +71,6 @@ quite a lot of changes, though:
 - NOT NEEDED: change template for list_kitbundles()
 - NEEDS EXTENDING: change the xml templates for kitthings, kitbundles, rooms and items
 - change the demo_data
-
-London
-------
-- Sending email starts at p364.
-- Test email. See p372 for local python server.
-- See p300 for email testing.
-- p842 for File Handling.
-- p180 for 3.3.4 File Uploads
 
 Comments from Simon's LJ
 ------------------------
@@ -66,21 +112,12 @@ Kit, Generally
 - object_list.html is not currently used, I believe, so should be okay to remove that. Maybe.
 - We should have different Forms for editing rooms, based on the view of the person editing.
 
-- Show Room issues
-	- Kit Things don't show things in terms of bundles, just lists the Thing assignments.
-
-(We remove people from an item, using delete_itemperson, which is AfterDeleteView(model=ItemPerson);
-that's a normal DeleteView, but goes to the URL in 'after', if successful. Most of the work is done
-by the implicit template of itemperson_confirm_delete.html. We can use that for deleting a single
-Thing assignment, but that won't help for deleting all the things in a bundle.)
-
 Grid Issues
 -----------
 - As well as having different schedules for different days, we should also be
 able to have different schedules for different rooms. That would make the
 options for moving an item interesting, though, because selecting a room would
 change the possible time slots.
-- Doesn't currently display items that start before the grid does.
 - Doesn't list the grids in (day x time) table.
 - Fill-slot doesn't list scheduled/unscheduled items. Should just
 do that as two separate forms within the page, with two submits.
@@ -107,7 +144,6 @@ Other Things
 	If I meant "use Django's static pages", then this is in place as part of move to WSGI
 	If I meant "Generating static pages offline", then not done yet.
 - Distribution mechanism (not just pushed up to github).
-- Email attachments
 - Item Moves. Add when we need that.
 - Revisions
 	Hide from edit field, default to latest.

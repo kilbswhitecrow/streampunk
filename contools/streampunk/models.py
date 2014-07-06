@@ -36,6 +36,75 @@ YesNo = (
   ( 'No', 'No'),
 )
 
+item_log_map = { 
+  'iadded':       { 'text': 'Item added', 'fields': [ ], },
+  'ideleted':     { 'text': 'Item deleted', 'fields': [ ], },
+  'ititle':       { 'text': 'Item title', 'fields': [ 'title', ], },
+  'ishort':       { 'text': 'Item short name', 'fields': [ 'shortname', ], },
+  'istart':       { 'text': 'Item start day/time', 'fields': [ 'start', ], },
+  'ilength':      { 'text': 'Item length', 'fields': [ 'length', ], },
+  'iroom':        { 'text': 'Item room', 'fields': [ 'room', ], },
+  'ivisible':     { 'text': 'Item visibility', 'fields': [ 'visible', ], },
+  'igophers':     { 'text': 'Item gopher count', 'fields': [ 'gophers', ], },
+  'istewards':    { 'text': 'Item steward count', 'fields': [ 'stewards', ], },
+  'ibudget':      { 'text': 'Item budget', 'fields': [ 'budget', ], },
+  'itech':        { 'text': 'Item tech', 'fields': [ 'projNeeded', 'techNeeded', 'techNotes', 'audienceMics', 'allTechCrew',
+                                                     'needsReset', 'needsCleanUp', 'mediaStatus' ], },
+}
+
+itemperson_log_map = {
+  'ipadded':      { 'text': 'Person added to item', 'fields': [ ], },
+  'ipdeleted':    { 'text': 'Person removed from item', 'fields': [ ], },
+  'ipitem':       { 'text': 'Person move to another item', 'fields': [ 'item', ], },
+  'ipperson':     { 'text': 'Person replaced on item', 'fields': [ 'person', ], },
+  'ipvisible':    { 'text': 'Person visibility on item', 'fields': [ 'visible', ], },
+}
+
+kitrequest_log_map = {
+  'kradded':      { 'text': 'Kit request added', 'fields': [ ], },
+  'krdeleted':    { 'text': 'Kit request deleted', 'fields': [ ], },
+  'krchanged':    { 'text': 'Kit request edited', 'fields': [ 'kind', 'count', 'setupAssistance', 'notes', 'status', ], },
+}
+
+person_log_map = {
+  'padded':       { 'text': 'Person added', 'fields': [ ], },
+  'pdeleted':     { 'text': 'Person deleted', 'fields': [ ], },
+  'pmem':         { 'text': 'Person membership no', 'fields': [ 'memnum', ], },
+  'pemail':       { 'text': 'Person email changed', 'fields': [ 'email', ], },
+  'pbadge_only':  { 'text': 'Person badge-only changed', 'fields': [ 'badge_only', ], },
+  'pprivNotes':   { 'text': 'Person privNotes changed', 'fields': [ 'privNotes', ], },
+}
+
+log_map = dict(item_log_map.items() + itemperson_log_map.items() + kitrequest_log_map.items() + person_log_map.items())
+log_fields = [ (k, log_map[k]['text']) for k in log_map.keys() ]
+
+# Generic function for comparing old and new instances of a model object, and
+# emitting log entries if there are differences. We rely on a "fields" dict
+# param which has the following form:
+#  log_key: { 'fields': [ obj_attr, ... ], 'text': 'Readable description' }
+# For each obj_attr, we compare old_obj.obj_attr and new_obj.obj_attr, and
+# if there's a difference, then we write a log entry of the form
+# log_key, old_val, new_val
+# We also handle creation of new instances of the object. In this case,
+# old_obj will be None, so we use model.added_field() to obtain the log_key
+# to use.
+
+def model_cmp(old_obj, new_obj, fields):
+  "Compare old and new instrances of a model object, and log the differences."
+  if old_obj is None:
+    # Newly-created object
+    log = ChangeLog(log_id=int(new_obj.id), field=new_obj.added_field(), new_val = str(new_obj))
+    log.save()
+  else:
+    for log_key in fields.keys():
+      for field in fields[log_key]['fields']:
+        old_val = getattr(old_obj, field)
+        new_val = getattr(new_obj, field)
+        if old_val != new_val:
+          log = ChangeLog(log_id=int(old_obj.id), field=log_key, old_val=str(old_val), new_val=str(new_val))
+          log.save()
+  
+
 class DefUndefManager(models.Manager):
   """
   A manager that has extra methods for finding the default/undefined
@@ -611,6 +680,23 @@ class KitRequest(models.Model):
   @classmethod
   def tabler_exclude(cls, request):
     return None
+  def added_field(self):
+    return 'kradded'
+  def deleted_field(self):
+    return 'krdeleted'
+  def log_map(self):
+    return kitrequest_log_map
+
+  def save(self, *args, **kwargs):
+    prev = KitRequest.objects.get(id = self.id) if self.id is not None else None
+    super(KitRequest, self).save(*args, **kwargs)
+    model_cmp(prev, self, self.log_map())
+
+  def delete(self):
+    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=str(self))
+    log.save()
+    return super(KitRequest, self).delete()
+
 
 class KitThing(models.Model):
   """
@@ -1329,6 +1415,23 @@ class Person(models.Model):
     else:
       return ['edit', 'memnum', 'firstName', 'middleName', 'lastName', 'email', 'badge_only' ]
  
+  def added_field(self):
+    return 'padded'
+  def deleted_field(self):
+    return 'pdeleted'
+  def log_map(self):
+    return person_log_map
+
+  def save(self, *args, **kwargs):
+    prev = Person.objects.get(id = self.id) if self.id is not None else None
+    super(Person, self).save(*args, **kwargs)
+    model_cmp(prev, self, self.log_map())
+
+  def delete(self):
+    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=str(self))
+    log.save()
+    return super(Person, self).delete()
+
 
 class ScheduledManager(models.Manager):
   "A manager for returning only items that have been scheduled. Useful for checking for problems."
@@ -1345,6 +1448,17 @@ class UnscheduledManager(models.Manager):
     undef_len = SlotLength.objects.find_undefined()
     undef_room = Room.objects.find_undefined()
     return super(UnscheduledManager, self).get_query_set().filter(Q(start=undef_slot) | Q(length=undef_len) | Q(room=undef_room))
+
+class ChangeLog(models.Model):
+  "Record the changes to certain parts of the database."
+  log_id = models.IntegerField()
+  stamp = models.DateTimeField(auto_now_add=True)
+  field = models.CharField(max_length=32, choices=log_fields)
+  old_val = models.CharField(max_length=256, blank=True)
+  new_val = models.CharField(max_length=256, blank=True)
+
+  def __unicode__(self):
+    return "ChangeLog<%d:%s: '%s' -> '%s'>" % (self.log_id, log_map[self.field]['text'], self.old_val, self.new_val)
 
 class Item(models.Model):
   "An Item is a single scheduled item in the programme."
@@ -1443,6 +1557,25 @@ class Item(models.Model):
     else:
       return ['edit', 'remove', 'shortname', 'satisfies_kit_requests' ]
 
+  def added_field(self):
+    return 'iadded'
+  def deleted_field(self):
+    return 'ideleted'
+  def log_map(self):
+    return item_log_map
+
+  def save(self, *args, **kwargs):
+    prev = Item.objects.get(id = self.id) if self.id is not None else None
+    super(Item, self).save(*args, **kwargs)
+    model_cmp(prev, self, self.log_map())
+
+  def delete(self):
+    "Don't leave KitRequests lying around if this item gets deleted."
+    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=self.title)
+    log.save()
+    self.kitRequests.all().delete()
+    return super(Item, self).delete()
+
   def __unicode__(self):
     if self.title:
       return self.title
@@ -1494,11 +1627,6 @@ class Item(models.Model):
   def people_public(self):
     "Return all the people who are publicly visible on this item."
     return [ ip.person for ip in self.itempeople() if ip.visible ]
-
-  def delete(self):
-    "Don't leave KitRequests lying around if this item gets deleted."
-    self.kitRequests.all().delete()
-    return super(Item, self).delete()
 
 
 class ItemPerson(models.Model):
@@ -1564,6 +1692,23 @@ class ItemPerson(models.Model):
         return ['select', 'edit', 'remove']
     else:
       return no_perms
+  def added_field(self):
+    return 'ipadded'
+  def deleted_field(self):
+    return 'ipdeleted'
+  def log_map(self):
+    return itemperson_log_map
+
+  def save(self, *args, **kwargs):
+    prev = ItemPerson.objects.get(id = self.id) if self.id is not None else None
+    super(ItemPerson, self).save(*args, **kwargs)
+    model_cmp(prev, self, self.log_map())
+
+  def delete(self):
+    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=str(self))
+    log.save()
+    return super(ItemPerson, self).delete()
+
 
 class PersonList(models.Model):
   """
