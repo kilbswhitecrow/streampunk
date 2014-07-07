@@ -27,6 +27,7 @@ from django.db.models.signals import post_save
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse
 
+from .currentusermiddleware import get_current_username
 from .tabler import Rower
 from .exceptions import DeleteDefaultException, DeleteUndefException
 
@@ -93,7 +94,7 @@ def model_cmp(old_obj, new_obj, fields):
   "Compare old and new instrances of a model object, and log the differences."
   if old_obj is None:
     # Newly-created object
-    log = ChangeLog(log_id=int(new_obj.id), field=new_obj.added_field(), new_val = str(new_obj))
+    log = ChangeLog(log_id=int(new_obj.id), username=get_current_username(), field=new_obj.added_field(), new_val = str(new_obj))
     log.save()
   else:
     for log_key in fields.keys():
@@ -101,7 +102,7 @@ def model_cmp(old_obj, new_obj, fields):
         old_val = getattr(old_obj, field)
         new_val = getattr(new_obj, field)
         if old_val != new_val:
-          log = ChangeLog(log_id=int(old_obj.id), field=log_key, old_val=str(old_val), new_val=str(new_val))
+          log = ChangeLog(log_id=int(old_obj.id), username=get_current_username(), field=log_key, old_val=str(old_val), new_val=str(new_val))
           log.save()
   
 
@@ -693,7 +694,7 @@ class KitRequest(models.Model):
     model_cmp(prev, self, self.log_map())
 
   def delete(self):
-    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=str(self))
+    log = ChangeLog(log_id=int(self.id), username=get_current_username(), field=self.deleted_field(), old_val=str(self))
     log.save()
     return super(KitRequest, self).delete()
 
@@ -1428,7 +1429,7 @@ class Person(models.Model):
     model_cmp(prev, self, self.log_map())
 
   def delete(self):
-    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=str(self))
+    log = ChangeLog(log_id=int(self.id), username=get_current_username(), field=self.deleted_field(), old_val=str(self))
     log.save()
     return super(Person, self).delete()
 
@@ -1451,6 +1452,7 @@ class UnscheduledManager(models.Manager):
 
 class ChangeLog(models.Model):
   "Record the changes to certain parts of the database."
+  username = models.CharField(max_length=32, blank=True)
   log_id = models.IntegerField()
   stamp = models.DateTimeField(auto_now_add=True)
   field = models.CharField(max_length=32, choices=log_fields)
@@ -1458,7 +1460,7 @@ class ChangeLog(models.Model):
   new_val = models.CharField(max_length=256, blank=True)
 
   def __unicode__(self):
-    return "ChangeLog<%d:%s: '%s' -> '%s'>" % (self.log_id, log_map[self.field]['text'], self.old_val, self.new_val)
+    return "ChangeLog<%s:%s:%d:%s: '%s' -> '%s'>" % (self.stamp, self.username, self.log_id, log_map[self.field]['text'], self.old_val, self.new_val)
 
 class Item(models.Model):
   "An Item is a single scheduled item in the programme."
@@ -1571,7 +1573,7 @@ class Item(models.Model):
 
   def delete(self):
     "Don't leave KitRequests lying around if this item gets deleted."
-    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=self.title)
+    log = ChangeLog(log_id=int(self.id), username=get_current_username(), field=self.deleted_field(), old_val=self.title)
     log.save()
     self.kitRequests.all().delete()
     return super(Item, self).delete()
@@ -1705,7 +1707,7 @@ class ItemPerson(models.Model):
     model_cmp(prev, self, self.log_map())
 
   def delete(self):
-    log = ChangeLog(log_id=int(self.id), field=self.deleted_field(), old_val=str(self))
+    log = ChangeLog(log_id=int(self.id), username=get_current_username(), field=self.deleted_field(), old_val=str(self))
     log.save()
     return super(ItemPerson, self).delete()
 
