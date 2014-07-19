@@ -3507,6 +3507,8 @@ class test_coninfo(NonauthTest):
     "Check string-valued con settings"
     self.assertEqual(ConInfoString.objects.con_name(), u'MyCon 2012')
     self.assertEqual(ConInfoString.objects.email_from(), u'steve@whitecrow.demon.co.uk')
+    self.assertEqual(ConInfoString.objects.con_logo_image_file(), u'/Users/steve/sites/olympus/logobanner.jpg')
+    self.assertEqual(ConInfoString.objects.con_logo_image_url_name(), u'logo_image')
 
     con_name = ConInfoString.objects.get(var='con_name')
     self.assertEqual(con_name.val, u'MyCon 2012')

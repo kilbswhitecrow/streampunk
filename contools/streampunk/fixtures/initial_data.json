@@ -2265,6 +2265,24 @@
 },
 {
   "pk": 3, 
+  "model": "streampunk.coninfostring", 
+  "fields": {
+    "var": "con_logo_image_file", 
+    "name": "Con Logo Image File", 
+    "val": "/Users/steve/sites/olympus/logobanner.jpg"
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.coninfostring", 
+  "fields": {
+    "var": "con_logo_image_url_name", 
+    "name": "Con Logo Image URL Name", 
+    "val": "logo_image"
+  }
+},
+{
+  "pk": 3, 
   "model": "streampunk.room", 
   "fields": {
     "disabledAccess": true, 
@@ -3988,6 +4006,87 @@
     "codename": "edit_tags", 
     "name": "Can tag items/people and edit tags", 
     "content_type": 43
+  }
+},
+{
+  "pk": 144, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_programme", 
+    "name": "Can edit programme data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 145, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_kit", 
+    "name": "Can edit kit-related data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 146, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_direct_email", 
+    "name": "Can send email to individuals", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 147, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_item_email", 
+    "name": "Can send email to everyone on an item", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 148, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_mass_email", 
+    "name": "Can send email to everyone", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 149, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "import_data", 
+    "name": "Can import data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 150, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "export_data", 
+    "name": "Can export data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 151, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_room", 
+    "name": "Can edit room info", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 152, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_tags", 
+    "name": "Can tag items/people and edit tags", 
+    "content_type": 46
   }
 },
 {

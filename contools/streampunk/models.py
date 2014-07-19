@@ -179,6 +179,10 @@ class ConInfoStringManager(models.Manager):
     return self.get(var='con_name').val
   def email_from(self):
     return self.get(var='email_from').val
+  def con_logo_image_file(self):
+    return self.get(var='con_logo_image_file').val
+  def con_logo_image_url_name(self):
+    return self.get(var='con_logo_image_url_name').val
 
 class ConInfoString(models.Model):
   """
