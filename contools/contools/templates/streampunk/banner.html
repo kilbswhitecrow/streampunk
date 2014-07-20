@@ -42,6 +42,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
        <li><a href="{% url "list_items" %}">List Items</a></li>
        <li><a href="{% url "list_items_tech" %}">List Items - Tech</a></li>
        <li><a href="{% url "new_item" %}">New Item</a></li>
+    {% if perms.streampunk.read_private %}
+       <li><a href="{% url "name_cards" %}">Name Cards</a></li>
+       <li><a href="{% url "drinks_forms" %}">Drinks Forms</a></li>
+    {% endif %}
       </ul>
     {% endif %}
     </li>
@@ -56,6 +60,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {% endif %}
     {% if perms.streampunk.config_db %}
        <li><a href="{% url "new_room" %}">New Room</a></li>
+    {% endif %}
+    {% if perms.streampunk.read_private %}
+       <li><a href="{% url "door_listings" %}">Door Listings</a></li>
     {% endif %}
       </ul>
     </li>

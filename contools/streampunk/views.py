@@ -28,6 +28,7 @@ from django.db.models import Count, Sum
 
 from django.shortcuts import render
 from django_tables2 import RequestConfig
+from reportlab.pdfgen import canvas
 
 from .tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
 from .tables import TagTable, KitThingTable, GridTable, GenderTable
@@ -51,6 +52,7 @@ from .forms import KitItemAssignmentForm, KitRoomAssignmentForm
 from .forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullForm
 from .auth import add_con_groups
 from .tabler import Rower, Tabler, make_tabler
+from .pdf import StreampunkPdf
 
 # Some diagnostic code for debugging.
 # def show_request(request):
@@ -1034,4 +1036,83 @@ def xml_dump(request):
 
 def xsl_stylesheet(request, template):
   return render_to_response(template, locals(), context_instance=RequestContext(request), content_type='text/xsl')
+
+# ----------------------------------------------------------------------------
+# PDF output
+# ----------------------------------------------------------------------------
+
+def pdf_response(filename):
+  "Create a response object to which we will write the PDF."
+  response = HttpResponse(content_type='application/pdf')
+  response['Content-Disposition'] = 'attachement; filename="%s"' % ( filename )
+  logo = ConInfoString.objects.con_logo_image_file()
+  return StreampunkPdf(response, logo)
+
+def emit_namecards(items):
+  "Emit namecards for the selected items."
+  pdf = pdf_response("namecards.pdf")
+  pdf.begin_namecards()
+  for item in items:
+    for ip in ItemPerson.objects.filter(item=item):
+      pdf.namecard(slot=item.start.startText, room=item.room.name, title=item.title,
+                   name=ip.person.as_badge(), is_mod=ip.role.is_moderator())
+  pdf.end_namecards()
+  return pdf.response
+
+def name_cards_for_item(request, pk):
+  "Emit name cards for all the people on this item."
+  return emit_namecards(items=Item.objects.filter(id=int(pk)))
+
+def name_cards(request):
+  "Emit name cards for all people on all items."
+  return emit_namecards(items=Item.scheduled.filter(visible=True))
+
+# ----------------------------------------------------------------------------
+
+def emit_drinks_forms(items):
+  "Emit drinks forms for the selected items."
+  pdf = pdf_response("drinks.pdf")
+  pdf.begin_drinks_forms()
+  for item in items:
+    people = [ ( ip.person.as_badge(), ip.role.is_moderator() ) for ip in ItemPerson.objects.filter(item=item) ]
+    pdf.drinksform(slot=item.start.startText, room=item.room.name, title=item.title, people=people)
+  pdf.end_drinks_forms()
+  return pdf.response
+
+def drinks_form_for_item(request, pk):
+  "Emit the drinks form for this item."
+  return emit_drinks_forms(items=Item.objects.filter(id=int(pk)))
+
+def drinks_forms(request):
+  "Emit drinks forms for all items."
+  return emit_drinks_forms(items=Item.scheduled.filter(visible=True))
+
+# ----------------------------------------------------------------------------
+
+def emit_door_listings(rooms, days):
+  "Emit door listings for the given rooms and days."
+  pdf = pdf_response("doors.pdf")
+  pdf.begin_door_listings()
+  for day in days:
+    for room in rooms:
+      items = [ (i.title, i.start.startText) for i in Item.objects.filter(room=room, visible=True, start__day=day) ]
+      pdf.door_listing(day.name, room.name, items)
+  pdf.end_door_listings()
+  return pdf.response
+  
+def door_listing_for_room_and_day(request, rpk, dpk):
+  "Emit the door listing for a given room, on a given day."
+  return emit_door_listings(rooms=Room.objects.filter(id=int(rpk)), days=ConDay.objects.filter(id=int(dpk)))
+
+def door_listings_for_room(request, pk):
+  "Emit the door listings for a given room, for all days."
+  return emit_door_listings(rooms=Room.objects.filter(id=int(pk)), days=ConDay.objects.filter(visible=True))
+
+def door_listings_for_day(request, pk):
+  "Emit the door listings for all rooms, for a given day."
+  return emit_door_listings(rooms=Room.objects.filter(visible=True), days=ConDay.objects.filter(id=int(pk)))
+
+def door_listings(request):
+  "Emit all door listings, for all rooms, for all days."
+  return emit_door_listings(rooms=Room.objects.filter(visible=True), days=ConDay.objects.filter(visible=True))
 

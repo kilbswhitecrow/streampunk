@@ -131,6 +131,12 @@ Missing Kit: <br />
 {% if perms.streampunk.edit_programme %}
 <p><a href="{% url "new_itemperson" %}?item={{ item.id }}">Add someone to {{ item }}</a>.</p>
 {% endif %}
+{% if perms.streampunk.read_private %}
+<p>
+<a href="{% url "name_cards_for_item" pk=item.id %}">Name cards for {{ item }}</a>.
+<a href="{% url "drinks_form_for_item" pk=item.id %}">Drinks form for {{ item }}</a>.
+</p>
+{% endif %}
 
 
 <h2>Tags</h2>

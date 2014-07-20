@@ -431,6 +431,9 @@ class PersonRole(EnumTable):
     self.itemperson_set.all().update(role=self.delete_replacement())
     return super(PersonRole, self).delete()
 
+  def is_moderator(self):
+    return self.name == "Moderator"
+
 
 class PersonStatus(EnumTable):
   """

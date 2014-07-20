@@ -53,7 +53,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </p>
 <h2>Items</h2>
 {% render_table ritable %}
-
+{% if perms.streampunk.read_private %}
+<p>
+<a href="{% url "door_listings_for_room" pk=room.id %}">Door Listings</a>
+</p>
+{% endif %}
 
 {% if perms.streampunk.read_private or perms.streampunk.edit_tech %}
   <div id="TechVisible">

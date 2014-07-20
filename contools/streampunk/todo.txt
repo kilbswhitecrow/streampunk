@@ -7,9 +7,40 @@ T = [ x for x in S if x % 2 == 0 ]
 PDF output
 ----------
 - starts at p509
+- Have installed rev 2.4 of reportlab, because that works with Python 2.6, while the
+  most recent version (3.1.8) requires python 2.7+ Looks like I could go up as far as 2.7.
+	PHP used:
+		GetStringWidth		stringWidth
+		AddPage			showPage
+		SetFont			setFont
+		SetFontSize		done as part of setFont
+		SetXY			draw methods take x,y params, so is this irrelevant?
+		Cell			use rect or grid? drawCenteredString or drawString? setLineWidth?
+		Image			drawImage
+		Ln			use the textLine(s) method(s) from textobjects.
+
+Should install PIL too.
 
 There are KitRequests on the Item edit form? That's wrong. They should
 be excluded from the model form.
+
+Badge-only
+----------
+Create a page of formsets to edit all the badge-only flags, and other booleans too.
+Would be similar to the checks page.
+Also make use of the personlist javascript code to make sure that we have toggle-all
+functionality for this page, and the checks page.
+
+ItemPerson
+----------
+- We should have a "drink" flag, to indicate whether the person should get a drink.
+That's better than checking for "wants to be here" Role explicitly.
+- We should also have a "card" flag, to indicate whether the person gets a name card.
+- Similarly, an "optional" flag, so that if there's a clash, it's not so big a deal.
+
+Item Rotation
+-------------
+Just checkboxes, and rotate? How to know the order?
 
 Bundle changes
 --------------
