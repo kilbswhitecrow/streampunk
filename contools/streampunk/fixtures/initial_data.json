@@ -1512,9 +1512,12 @@
   "fields": {
     "gridOrder": 10, 
     "description": "On a panel, but not running it", 
-    "name": "Panellist", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
     "isDefault": true, 
-    "isUndefined": false
+    "name": "Panellist"
   }
 },
 {
@@ -1523,9 +1526,12 @@
   "fields": {
     "gridOrder": 20, 
     "description": "Running a panel", 
-    "name": "Moderator", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
     "isDefault": false, 
-    "isUndefined": false
+    "name": "Moderator"
   }
 },
 {
@@ -1534,9 +1540,12 @@
   "fields": {
     "gridOrder": 30, 
     "description": "Presenting a talk or lecture", 
-    "name": "Speaker", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
     "isDefault": false, 
-    "isUndefined": false
+    "name": "Speaker"
   }
 },
 {
@@ -1545,9 +1554,12 @@
   "fields": {
     "gridOrder": 40, 
     "description": "Interviewing a guest", 
-    "name": "Interviewer", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
     "isDefault": false, 
-    "isUndefined": false
+    "name": "Interviewer"
   }
 },
 {
@@ -1556,9 +1568,12 @@
   "fields": {
     "gridOrder": 50, 
     "description": "Being interviewed", 
-    "name": "Interviewee", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
     "isDefault": false, 
-    "isUndefined": false
+    "name": "Interviewee"
   }
 },
 {
@@ -1567,9 +1582,40 @@
   "fields": {
     "gridOrder": 0, 
     "description": "", 
-    "name": "TBA", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": true, 
     "isDefault": false, 
-    "isUndefined": true
+    "name": "TBA"
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 70, 
+    "description": "Person would like to attend the item, but is not participating. Would prefer that they're not scheduled against this item, but if they are, so be it.", 
+    "drink": false, 
+    "canClash": false, 
+    "namecard": false, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "Wants to be here"
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 60, 
+    "description": "Panellist, but optional - it's okay if they can't make it because they're scheduled on another item.", 
+    "drink": true, 
+    "canClash": false, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "OptionalPanellist"
   }
 },
 {

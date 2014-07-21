@@ -427,6 +427,12 @@ class PersonRole(EnumTable):
   A PersonRole defines the person's job, for
   a given Item
   """
+  drink = models.BooleanField(default=True,
+                              help_text="True if the person should appear on the drinks form for the item.")
+  namecard = models.BooleanField(default=True,
+                                 help_text="True if the person needs a name card for the item.")
+  canClash = models.BooleanField(default=True,
+                                 help_text="True if it should be considered a problem if this person is committed elsewhere.")
   def delete(self):
     self.itemperson_set.all().update(role=self.delete_replacement())
     return super(PersonRole, self).delete()

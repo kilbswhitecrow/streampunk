@@ -28,12 +28,12 @@ Would be similar to the checks page.
 Also make use of the personlist javascript code to make sure that we have toggle-all
 functionality for this page, and the checks page.
 
-ItemPerson
+PersonRole
 ----------
-- We should have a "drink" flag, to indicate whether the person should get a drink.
-That's better than checking for "wants to be here" Role explicitly.
-- We should also have a "card" flag, to indicate whether the person gets a name card.
-- Similarly, an "optional" flag, so that if there's a clash, it's not so big a deal.
+I have added the following:
+- A "drink" flag, to indicate whether the person should get a drink.
+- A "card" flag, to indicate whether the person gets a name card.
+- An "optional" flag, so that if there's a clash, it's not so big a deal.
 
 Item Rotation
 -------------
@@ -84,7 +84,6 @@ Next up
 - Uh, default count on a kit thing should be 1, surely? Ditto a request?
 - Revise the Slot structure *again*.
 - Fix "fill slot" logic.
-- Revisions
 
 Kit, Generally
 --------------
@@ -117,18 +116,11 @@ Other Things
 	missing that at present, so clicking on the username in
 	the banner causes an exception.
 - AJAX
-- PDF generation
-               - Door listings
-               - Name cards
-               - Drinks forms
 - Static pages
 	If I meant "use Django's static pages", then this is in place as part of move to WSGI
 	If I meant "Generating static pages offline", then not done yet.
 - Distribution mechanism (not just pushed up to github).
 - Item Moves. Add when we need that.
-- Revisions
-	Hide from edit field, default to latest.
-	Need to model personel changes, too.
 - User creation
 	When we create a user, we should trigger the password-reset
 	functionality, so that they get an email telling them about

@@ -26,7 +26,7 @@ def run_check(check):
   # Only interested in scheduled items that actually have people on them.
   items = Item.scheduled.all().annotate(num_people=Count('people')).filter(num_people__gt=0)
   for itemx in items:
-    peoplex = itemx.people.all()
+    peoplex = [ ip.person for ip in ItemPerson.objects.filter(item=itemx, role__canClash=True) ]
     for person in peoplex:
       if not person.available_for(itemx):
         things.append((itemx, person))
