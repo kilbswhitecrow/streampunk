@@ -6,23 +6,23 @@ T = [ x for x in S if x % 2 == 0 ]
 
 PDF output
 ----------
-- starts at p509
-- Have installed rev 2.4 of reportlab, because that works with Python 2.6, while the
-  most recent version (3.1.8) requires python 2.7+ Looks like I could go up as far as 2.7.
-	PHP used:
-		GetStringWidth		stringWidth
-		AddPage			showPage
-		SetFont			setFont
-		SetFontSize		done as part of setFont
-		SetXY			draw methods take x,y params, so is this irrelevant?
-		Cell			use rect or grid? drawCenteredString or drawString? setLineWidth?
-		Image			drawImage
-		Ln			use the textLine(s) method(s) from textobjects.
+I now have:
+- Drinks Forms (all, item)
+- Name Cards (all, item)
+- Door Listings (all, room, day, room+day)
+The day and room+day settings aren't used for Door Listings yet - there isn't
+an obvious place to put a link.
 
-Should install PIL too.
+I should adapt the door listings so that they decide their start-text column
+width based on the widest start text.
+
+I should also add a back-of-badge listing.
 
 There are KitRequests on the Item edit form? That's wrong. They should
 be excluded from the model form.
+
+I don't have any useful way of regression-testing these, or making sure
+I have coverage.
 
 Badge-only
 ----------
