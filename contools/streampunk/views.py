@@ -1075,7 +1075,7 @@ def emit_drinks_forms(items):
   pdf.begin_drinks_forms()
   for item in items:
     people = [ ( ip.person.as_badge(), ip.role.is_moderator() ) for ip in ItemPerson.objects.filter(item=item) ]
-    pdf.drinksform(slot=item.start.startText, room=item.room.name, title=item.title, people=people)
+    pdf.drinksform(slot=str(item.start), room=item.room.name, title=item.title, people=people)
   pdf.end_drinks_forms()
   return pdf.response
 

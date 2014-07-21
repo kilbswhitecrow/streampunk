@@ -13,9 +13,6 @@ I now have:
 The day and room+day settings aren't used for Door Listings yet - there isn't
 an obvious place to put a link.
 
-I should adapt the door listings so that they decide their start-text column
-width based on the widest start text.
-
 I should also add a back-of-badge listing.
 
 There are KitRequests on the Item edit form? That's wrong. They should
