@@ -1523,7 +1523,7 @@ class Item(models.Model):
                                 help_text="Assign any tags you think are relevant to this item.")
   people = models.ManyToManyField(Person, through='ItemPerson', null=True, blank=True,
                                   help_text="The people participating in this item")
-  kitRequests = models.ManyToManyField(KitRequest, null=True, blank=True,
+  kitRequests = models.ManyToManyField(KitRequest, null=True, blank=True, editable=False,
                                        help_text="Kit requested by this item. <em>Only Tech should fill this in.</em>")
   kit = models.ManyToManyField(KitThing, through='KitItemAssignment', null=True, blank=True,
                                help_text="Kit allocated to this item, to satisfy requests. <em>Only Tech should fill this in.</em>")

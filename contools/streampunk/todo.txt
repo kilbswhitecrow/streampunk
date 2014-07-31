@@ -4,6 +4,13 @@ T = [ x for x in S if x % 2 == 0 ]
 
 - Handle settings.py
 
+Checks
+------
+I should overhaul the entire Checks system, because I don't think there's
+any benefit of having them in the database and imported and exec'd, which
+is nasty, as opposed to being hardcoded into the system. It's not like
+someone can add them via the admin.
+
 PDF output
 ----------
 I now have:
@@ -14,9 +21,6 @@ The day and room+day settings aren't used for Door Listings yet - there isn't
 an obvious place to put a link.
 
 I should also add a back-of-badge listing.
-
-There are KitRequests on the Item edit form? That's wrong. They should
-be excluded from the model form.
 
 I don't have any useful way of regression-testing these, or making sure
 I have coverage.
@@ -34,6 +38,8 @@ I have added the following:
 - A "drink" flag, to indicate whether the person should get a drink.
 - A "card" flag, to indicate whether the person gets a name card.
 - An "optional" flag, so that if there's a clash, it's not so big a deal.
+Now need to add some checks to verify that such Roles get discarded properly
+in the clashes.
 
 Item Rotation
 -------------
