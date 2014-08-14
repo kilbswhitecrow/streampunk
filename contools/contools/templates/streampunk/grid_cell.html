@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   {% ifequal i.room r %}
     {{ i|linky|safe }}
     <br/>
-    {% for p in i.people.all %}
-        <span class="personname">{{ p|linky|safe }}<br/></span>
+    {% for ip in i.itempeople %}
+        <span class="{{ ip.personclass }}">{{ ip.person|linky|safe }}<br/></span>
     {% endfor %}
   {% endifequal %}
 {% endfor %}

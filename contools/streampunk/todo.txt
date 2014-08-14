@@ -44,6 +44,7 @@ in the clashes.
 Item Rotation
 -------------
 Just checkboxes, and rotate? How to know the order?
+Either formsets, or links with JavaScript to populate other fields in a form.
 
 Bundle changes
 --------------
@@ -100,22 +101,15 @@ Kit, Generally
 
 Grid Issues
 -----------
-- As well as having different schedules for different days, we should also be
-able to have different schedules for different rooms. That would make the
-options for moving an item interesting, though, because selecting a room would
-change the possible time slots.
 - Doesn't list the grids in (day x time) table.
-- Fill-slot doesn't list scheduled/unscheduled items. Should just
-do that as two separate forms within the page, with two submits.
 - I should present fill slot, swap item, etc. via a pop-up menu similar to the banner.
+- Grid should include kit and bundles.
 
 Other Things
 ------------
 - I18N
                - Of  application
                - Of DB content
-- Grid:
-	- Include kit in the grids.
 
 - Make use of User Profile/Overall con preferences in grid display.
 	And include the ability to edit the profile - seems we're
@@ -126,7 +120,6 @@ Other Things
 	If I meant "use Django's static pages", then this is in place as part of move to WSGI
 	If I meant "Generating static pages offline", then not done yet.
 - Distribution mechanism (not just pushed up to github).
-- Item Moves. Add when we need that.
 - User creation
 	When we create a user, we should trigger the password-reset
 	functionality, so that they get an email telling them about

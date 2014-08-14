@@ -1724,6 +1724,9 @@ class ItemPerson(models.Model):
     log.save()
     return super(ItemPerson, self).delete()
 
+  def personclass(self):
+    return "personname" if self.visible else "personnamehidden"
+
 
 class PersonList(models.Model):
   """

@@ -1,3 +1,7 @@
 #RoomBySlot {
   display: none
 }
+
+.personnamehidden a {
+  font-style: italic;
+}
