@@ -39,6 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endif %}
 </td></tr>
 <tr><th>Badge</th><td>{{ person.badge }}</td></tr>
+<tr><th>URL</th><td>{{ person.url }}</td></tr>
+<tr><th>Image</th><td>{{ person.headshot }}</td></tr>
+<tr><th>Facebook</th><td>{{ person.facebook }}</td></tr>
+<tr><th>Twitter</th><td>{{ person.twitter }}</td></tr>
 {% if perms.streampunk.read_private %}
 <tr><th>Badge only?</th><td>{{ person.badge_only }}</td></th>
 {% endif %}

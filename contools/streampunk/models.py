@@ -1299,6 +1299,14 @@ class Person(models.Model):
                                    help_text="If you set this to true, only the badge name will be visible in the public versions of the programme.")
   email = models.EmailField(blank=True,
                             help_text="<em>Just</em> the email address")
+  headshot = models.URLField(blank=True,
+                             help_text="Link to an image of the person (or an avatar), for publicity purposes. Can be blank.")
+  url = models.URLField(blank=True,
+                        help_text="Link to their home page, site, blog, or whatever, for publicity purposes. Can be blank.")
+  facebook = models.URLField(blank=True,
+                             help_text="Link to the person on Facebook, for publicity purposes. Can be blank.")
+  twitter = models.CharField(blank=True, max_length=64,
+                             help_text="The person's Twitter username (no @ character at start), for publicity. Can be blank.")
   memnum = models.IntegerField(default=-1,
                                help_text="The person's membership number, or -1 if they haven't joined yet.")
   pubNotes = models.TextField(blank=True,
@@ -1445,7 +1453,6 @@ class Person(models.Model):
     log = ChangeLog(log_id=int(self.id), username=get_current_username(), field=self.deleted_field(), old_val=str(self))
     log.save()
     return super(Person, self).delete()
-
 
 class ScheduledManager(models.Manager):
   "A manager for returning only items that have been scheduled. Useful for checking for problems."

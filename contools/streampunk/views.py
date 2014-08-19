@@ -1037,6 +1037,15 @@ def xml_dump(request):
 def xsl_stylesheet(request, template):
   return render_to_response(template, locals(), context_instance=RequestContext(request), content_type='text/xsl')
 
+def konopas(request):
+  items = Item.scheduled.filter(visible=True)
+  people = Person.objects.all()
+  return render_to_response('konopas/streampunk.json',
+                            { "items": items, "people": people },
+                            context_instance=RequestContext(request),
+                            content_type='application/json')
+
+
 # ----------------------------------------------------------------------------
 # PDF output
 # ----------------------------------------------------------------------------
@@ -1115,4 +1124,3 @@ def door_listings_for_day(request, pk):
 def door_listings(request):
   "Emit all door listings, for all rooms, for all days."
   return emit_door_listings(rooms=Room.objects.filter(visible=True), days=ConDay.objects.filter(visible=True))
-

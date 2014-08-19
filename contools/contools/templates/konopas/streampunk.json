@@ -1,0 +1,57 @@
+var program = [
+{% for i in items %}
+    {
+        "id": "{{ i.id }}",
+        "title": "{{ i.title }}",
+        "tags": [ 
+  {% for t in i.tags.all %}
+           "{{ t.name }}"
+  {% endfor %}
+        ],
+        "date": "{{ i.start.day.date }}",
+        "time": "{{ i.start.startText }}",
+        "mins": "{{ i.length.length }}",
+        "loc": [ "{{ i.room.name }}" ],
+        "people": [
+  {% for p in i.people_public %}
+          { "id": "{{ p.id }}", "name": "{{ p.as_badge }}" },
+  {% endfor %}
+         ]
+         "desc": "{{ i.blurb }}"
+    },
+{% endfor %}
+];
+
+var people = [
+{% for p in people %}
+  {
+    "id": "{{ p.id }}",
+    "name": [ "{{ p.firstName }}", "{{ p.middleName }}", "{{ p.lastName }}", "" ],
+    "tags": [
+  {% for t in p.tags.all %}
+    "{{ t.name }}",
+  {% endfor %}
+    ],
+    "prog": [ 
+  {% for i in p.item_set.all %}
+    "{{ i.id }}",
+  {% endfor %}
+    ],
+        "links": {
+  {% if p.headshot %}
+    "img": "{{ p.headshot }}",
+  {% endif %}
+  {% if p.url %}
+    "url": "{{ p.url }}",
+  {% endif %}
+  {% if p.facebook %}
+    "facebook": "{{ p.facebook }}",
+  {% endif %}
+  {% if p.twitter %}
+    "twitter": "{{ p.twitter }}"
+  {% endif %}
+        },
+    "bio": "{{ p.pubNotes }}"
+  },
+{% endfor %}
+];

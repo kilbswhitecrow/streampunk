@@ -45,7 +45,7 @@ from streampunk.views import show_personlist_detail, make_personlist, make_con_g
 from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_items_tech, list_tags, list_kitthings, list_kitrequests
 from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
-from streampunk.views import list_kitbundles, xml_dump, xsl_stylesheet
+from streampunk.views import list_kitbundles, xml_dump, xsl_stylesheet, konopas
 from streampunk.views import name_cards_for_item, name_cards
 from streampunk.views import drinks_form_for_item, drinks_forms
 from streampunk.views import door_listing_for_room_and_day, door_listings
@@ -265,6 +265,7 @@ urlpatterns = patterns('',
         { 'template': 'xml/streampunk.dtd' }, name='xml_dtd'),
     url(r'^streampunk/xml_dump/streampunk.xsl$', xsl_stylesheet,
         { 'template': 'xml/streampunk.xsl' }, name='xml_xsl'),
+    url(r'^streampunk/konopas/$', konopas, name='konopas'),
 
     url(r'^streampunk/name_cards_for_item/(?P<pk>\d+)/$', name_cards_for_item, name='name_cards_for_item'),
     url(r'^streampunk/name_cards/$', name_cards, name='name_cards'),
