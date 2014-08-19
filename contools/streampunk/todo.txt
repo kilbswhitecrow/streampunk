@@ -1,3 +1,27 @@
+Comments from LonCon3
+=====================
+Eddie *also* said it was vital. Add a not-yet-existing person to an item.
+
+Query about import mechanisms; I haven't really looked at that, beyond what loaddata does.
+Need to check that it can add, rather than overwrite current content.
+
+NineWorlds would like data ownership, e.g.:
+	- There are many stream heads, and they should be able to edit their stream,
+	but not those of others.
+	- They shouldn't be able to see some aspects of the private data, e.g. email
+	addresses. (?)
+(end of comments)
+
+Let's add a social-media-type class:
+	- Name
+	- Img URL
+and a social-media-link class:
+	- social-media-type
+	- URL
+and then add a many-to-one of them to the Person class, so that a con can have
+whichever link types (twitter, facebook, myspace, whatever), and can reference
+them for people. Then we should emit all of them on the badges...
+
 Comprehensions:
 S = [ x+2 for x in range(10) ]
 T = [ x for x in S if x % 2 == 0 ]
