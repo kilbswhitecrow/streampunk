@@ -20,6 +20,9 @@ from django.views.generic import DetailView
 from django.contrib.auth.decorators import permission_required, login_required
 from django.core.urlresolvers import reverse_lazy
 
+from django_tables2 import SingleTableView
+from rest_framework.urlpatterns import format_suffix_patterns
+
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment, Check
 from streampunk.models import BundleRoomAssignment, BundleItemAssignment
@@ -50,8 +53,7 @@ from streampunk.views import name_cards_for_item, name_cards
 from streampunk.views import drinks_form_for_item, drinks_forms
 from streampunk.views import door_listing_for_room_and_day, door_listings
 from streampunk.views import door_listings_for_room, door_listings_for_day
-
-from django_tables2 import SingleTableView
+from streampunk.views import api_grid, api_slot_items, api_item
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -276,3 +278,11 @@ urlpatterns = patterns('',
     url(r'^streampunk/door_listing_for_room/(?P<rpk>\d+)/day/(?P<dpk>\d+)/$', door_listing_for_room_and_day, name='door_listing_for_room_and_day'),
     url(r'^streampunk/door_listings/$', door_listings, name='door_listings'),
 )
+
+apipatterns = patterns('',
+    url(r'^api/grid/(?P<pk>\d+)/$', api_grid.as_view(), name='api_grid'),
+    url(r'^api/item/(?P<pk>\d+)/$', api_item.as_view(), name='api_item'),
+    url(r'^api/slot_items/(?P<pk>\d+)/$', api_slot_items.as_view(), name='api_slot_items'),
+)
+
+urlpatterns += format_suffix_patterns(apipatterns)

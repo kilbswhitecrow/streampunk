@@ -340,6 +340,14 @@ class Grid(models.Model):
   def tabler_exclude(cls, request):
     return None
 
+  def items(self):
+    "List all the items that appear in this grid."
+    # Is there not a way to union QuerySets?
+    item_set = set([])
+    for slot in self.slots.all():
+      item_set |= set(slot.items())
+    return list(item_set)
+
 class Revision(models.Model):
   """
   A Revision tells us when an item was last modified. We create a new one

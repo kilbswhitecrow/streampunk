@@ -15,7 +15,7 @@
 
 from datetime import datetime, date
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template import RequestContext
@@ -25,10 +25,14 @@ from django.views.generic import DeleteView, DetailView, UpdateView, CreateView,
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import permission_required, login_required
 from django.db.models import Count, Sum
-
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+
 from django_tables2 import RequestConfig
 from reportlab.pdfgen import canvas
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from .tables import ItemTable, PersonTable, RoomTable, ItemKindTable, RoomCapacityTable
 from .tables import TagTable, KitThingTable, GridTable, GenderTable
@@ -53,6 +57,8 @@ from .forms import EmailForm, PersonListForm, UserProfileForm, UserProfileFullFo
 from .auth import add_con_groups
 from .tabler import Rower, Tabler, make_tabler
 from .pdf import StreampunkPdf
+
+from .serializers import GridSerializer, GridItemSerializer
 
 # Some diagnostic code for debugging.
 # def show_request(request):
@@ -1124,3 +1130,47 @@ def door_listings_for_day(request, pk):
 def door_listings(request):
   "Emit all door listings, for all rooms, for all days."
   return emit_door_listings(rooms=Room.objects.filter(visible=True), days=ConDay.objects.filter(visible=True))
+
+# ----------------------------------------------------------------------------
+
+class api_grid(APIView):
+  def get_object(self, pk):
+    try:
+      return Grid.objects.get(pk=pk)
+    except Grid.DoesNotExist:
+      raise Http404
+  def get(self, request, pk, format=None):
+   obj = self.get_object(pk)
+   serializer = GridSerializer(obj)
+   return Response(serializer.data)
+
+class api_item(APIView):
+  def get_object(self, pk):
+    try:
+      return Item.objects.get(pk=pk)
+    except Item.DoesNotExist:
+      raise Http404
+  def get(self, request, pk, format=None):
+    obj = self.get_object(pk)
+    serializer = GridItemSerializer(obj)
+    return Response(serializer.data)
+  def put(self, request, pk, format=None):
+    item = self.get_object(pk)
+    # Only the room and start are writable fields, so the rest
+    # are left unchanged by this.
+    serializer = GridItemSerializer(item, data=request.DATA)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class api_slot_items(APIView):
+  def get_object(self, pk):
+    try:
+      return Slot.objects.get(pk=pk)
+    except Slot.DoesNotExist:
+      raise Http404
+  def get(self, request, pk, format=None):
+    obj = self.get_object(pk)
+    serializer = GridItemSerializer(obj.items(), many=True)
+    return Response(serializer.data)
