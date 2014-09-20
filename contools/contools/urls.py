@@ -54,6 +54,7 @@ from streampunk.views import drinks_form_for_item, drinks_forms
 from streampunk.views import door_listing_for_room_and_day, door_listings
 from streampunk.views import door_listings_for_room, door_listings_for_day
 from streampunk.views import api_grid, api_slot_items, api_item
+from streampunk.views import drag_grid
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -277,6 +278,7 @@ urlpatterns = patterns('',
     url(r'^streampunk/door_listings_for_day/(?P<pk>\d+)/$', door_listings_for_day, name='door_listings_for_day'),
     url(r'^streampunk/door_listing_for_room/(?P<rpk>\d+)/day/(?P<dpk>\d+)/$', door_listing_for_room_and_day, name='door_listing_for_room_and_day'),
     url(r'^streampunk/door_listings/$', door_listings, name='door_listings'),
+    url(r'^streampunk/drag/(?P<gr>\d+)/$', drag_grid, name='drag_grid'),
 )
 
 apipatterns = patterns('',

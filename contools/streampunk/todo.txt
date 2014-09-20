@@ -1,3 +1,16 @@
+Drag and Drop
+=============
+- Current plan is to use jQuery for this part.
+- Need a back end - REST API or Tastiepie.
+- Think we need to stay on the same page while moving things, rather than
+  just re-loading, otherwise a long page will scroll back to the top left,
+  and that will be annoying. So:
+	- drag to target
+	- do request
+	- when response comes back, edit DOM so that draggable is part of the
+	target.
+- Look at rendering whole table in JavaScript instead of via templates?
+
 Comments from LonCon3
 =====================
 Eddie *also* said it was vital. Add a not-yet-existing person to an item.

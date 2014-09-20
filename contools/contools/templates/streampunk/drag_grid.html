@@ -1,0 +1,35 @@
+{% extends "streampunk/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2014 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% load streampunk_filters %}
+{% block scripts %}
+<script type="text/javascript" src="{{ STATIC_URL }}jquery-ui-1.11.1.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}drag.js"></script>
+{% endblock %}
+{% block styles %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}drag.css" />
+{% endblock %}
+{% block title %}Grid: {{ grid.name }}{% endblock %}
+{% block body_content %}
+<div id="tableloc">
+</div>
+<div id="buttons">
+<input type="submit" value="room x slot" name="roomxslot" onclick="roomxslot_table()">
+<input type="submit" value="slot x room" name="slotxroom" onclick="slotxroom_table()">
+<input type="submit" value="Clear table" name="clear" onclick="zap_table()">
+<input type="submit" value="Zap item" name="zap" onclick="clobber_item()">
+{% endblock %}

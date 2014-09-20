@@ -276,6 +276,19 @@ def show_grid(request, gr):
                             locals(),
                             context_instance=RequestContext(request))
 
+def drag_grid(request, gr):
+  gid = int(gr)
+  grid = Grid.objects.get(id = gid)
+  slots = grid.slots.all()
+  if request.user.has_perm('streampunk.read_private'):
+    rooms = Room.objects.all();
+  else:
+    rooms = Room.objects.filter(visible=True);
+      
+  return render_to_response('streampunk/drag_grid.html',
+                            locals(),
+                            context_instance=RequestContext(request))
+
 class show_slot_detail(DetailView):
   context_object_name = 'slot'
   model = Slot
