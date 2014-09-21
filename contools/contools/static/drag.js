@@ -43,6 +43,7 @@ var roomids = { };
 var slots = { };
 var slotids = { };
 var slotsarr = [];  // Only needed while this is static data.
+var keymap = { };
 
 // STATIC DATA IN THE NEW FORMAT. THIS WILL BE RETRIEVED DYNAMICALLY.
 
@@ -479,19 +480,19 @@ var gridinfo = {
 var roominfo = [
     {
         "id": 5, 
-        "name": "MainHall"
+        "name": "Main Hall"
     }, 
     {
         "id": 6, 
-        "name": "SecondHall"
+        "name": "Second Hall"
     }, 
     {
         "id": 7, 
-        "name": "Programme1"
+        "name": "Programme 1"
     }, 
     {
         "id": 8, 
-        "name": "Programme2"
+        "name": "Programme 2"
     }, 
     {
         "id": 9, 
@@ -629,7 +630,7 @@ function filltable(keyfn) {
 
 // One version of the key function, for Y x X tables.
 function normkey(x, y) {
-  return x + '_' + y;
+  return keymap[x] + '_' + keymap[y];
 }
 
 // Another version of the key function, for X x Y tables.
@@ -640,18 +641,18 @@ function swapkey(x, y) {
 // Give a key, return a room/slot object.
 function splitkey(key) {
   var bits = key.split('_');
-  return { room: bits[0], slot: bits[1] };
+  return { room: keymap[bits[0]], slot: keymap[bits[1]] };
 }
 
 // Get an id for a given item's div, using the item id and the slot.
 function itemid(item, slot) {
-  return item + '@' + slot;
+  return item + '@' + keymap[slot];
 }
 
 // Break an itemid into the iid and slot, again.
 function split_itemid(item_id) {
   var bits = item_id.split('@');
-  return { iid: bits[0], slot: bits[1] };
+  return { iid: bits[0], slot: keymap[bits[1]] };
 }
 
 // Get a class for an item's div, using the item id.
@@ -718,6 +719,12 @@ function setup_dragging() {
   $(".dropTarget").droppable(droppable_config);
 }
 
+function mkkeymap(thing) {
+  var spaceless = thing.replace(" ", "-");
+  keymap[thing] = spaceless;
+  keymap[spaceless] = thing;
+}
+
 function mkslots() {
   for (var i = 0; i < gridinfo["slots"].length; i++) {
     var id = gridinfo["slots"][i].id;
@@ -725,6 +732,7 @@ function mkslots() {
     slots[startText] = id;
     slotids[id] = startText;
     slotsarr.push(startText);  // Only needed while this is static data.
+    mkkeymap(startText);
   }
 }
 
@@ -734,6 +742,7 @@ function mkrooms() {
     var name = roominfo[i].name;
     rooms[name] = id;
     roomids[id] = name;
+    mkkeymap(name);
   }
 }
 
