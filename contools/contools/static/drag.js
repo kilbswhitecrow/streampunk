@@ -42,6 +42,7 @@ var rooms = { };
 var roomids = { };
 var slots = { };
 var slotids = { };
+var slotsarr = [];  // Only needed while this is static data.
 
 // STATIC DATA IN THE NEW FORMAT. THIS WILL BE RETRIEVED DYNAMICALLY.
 
@@ -723,6 +724,7 @@ function mkslots() {
     var startText = gridinfo["slots"][i].startText;
     slots[startText] = id;
     slotids[id] = startText;
+    slotsarr.push(startText);  // Only needed while this is static data.
   }
 }
 
