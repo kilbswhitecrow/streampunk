@@ -53,7 +53,7 @@ from streampunk.views import name_cards_for_item, name_cards
 from streampunk.views import drinks_form_for_item, drinks_forms
 from streampunk.views import door_listing_for_room_and_day, door_listings
 from streampunk.views import door_listings_for_room, door_listings_for_day
-from streampunk.views import api_grid, api_slot_items, api_item
+from streampunk.views import api_grid, api_slot_items, api_item, api_rooms
 from streampunk.views import drag_grid
 
 # Uncomment the next two lines to enable the admin:
@@ -283,6 +283,7 @@ urlpatterns = patterns('',
 
 apipatterns = patterns('',
     url(r'^api/grid/(?P<pk>\d+)/$', api_grid.as_view(), name='api_grid'),
+    url(r'^api/rooms/$', api_rooms.as_view(), name='api_rooms'),
     url(r'^api/item/(?P<pk>\d+)/$', api_item.as_view(), name='api_item'),
     url(r'^api/slot_items/(?P<pk>\d+)/$', api_slot_items.as_view(), name='api_slot_items'),
 )

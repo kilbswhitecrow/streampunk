@@ -58,7 +58,7 @@ from .auth import add_con_groups
 from .tabler import Rower, Tabler, make_tabler
 from .pdf import StreampunkPdf
 
-from .serializers import GridSerializer, GridItemSerializer
+from .serializers import GridSerializer, GridItemSerializer, GridRoomSerializer
 
 # Some diagnostic code for debugging.
 # def show_request(request):
@@ -1156,6 +1156,12 @@ class api_grid(APIView):
    obj = self.get_object(pk)
    serializer = GridSerializer(obj)
    return Response(serializer.data)
+
+class api_rooms(APIView):
+  def get(self, request, format=None):
+    objs = Room.objects.all()
+    serializer = GridRoomSerializer(objs, many=True)
+    return Response(serializer.data)
 
 class api_item(APIView):
   def get_object(self, pk):
