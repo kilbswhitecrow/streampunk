@@ -1,15 +1,13 @@
 Drag and Drop
 =============
-- Current plan is to use jQuery for this part.
-- Need a back end - REST API or Tastiepie.
-- Think we need to stay on the same page while moving things, rather than
-  just re-loading, otherwise a long page will scroll back to the top left,
-  and that will be annoying. So:
-	- drag to target
-	- do request
-	- when response comes back, edit DOM so that draggable is part of the
-	target.
-- Look at rendering whole table in JavaScript instead of via templates?
+- I have a table that renders and communicates with the server.
+- It deals with CRSF, but does not yet require authentication.
+- It needs to include the Item/Person/Room URLs in the Serialization, so that they're
+  not hard-coded.
+- The Grid needs to include
+	- Classes, for different renderings.
+	- Some means of replacing "Fill Slot", to add new items.
+	  (I favour a scrollable list of all items, from which things can be dragged.)
 
 Comments from LonCon3
 =====================
