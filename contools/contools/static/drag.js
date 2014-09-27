@@ -50,6 +50,10 @@ var keymap = { };
 
 // STATIC DATA IN THE NEW FORMAT. THIS WILL BE RETRIEVED DYNAMICALLY.
 
+function jserror(jqxhr, textstatus, errorthrown) {
+  alert(textstatus + ": " + errorthrown);
+}
+
 var gridinfo = {
 //     "slots": [
 //         {
@@ -696,11 +700,31 @@ function slotxroom_table() {
   setup_dragging();
 }
 
+// We've received an update on the item after moving it
+// so correct the arrays, then re-draw the item in its new
+// location.
+function moveditem(newitem) {
+  mkitem(newitem);
+  placeitem(newitem.id);
+}
+
 // We've dragged an item to a new location, so update its state to
 // reflect that.
 function moveitem(iid, room, slot) {
-  items[iid].room = room;
-  items[iid].slots = newslots(slot, items[iid].slots.length);
+  newitem = {
+    "id": iid,
+    "room": rooms[room],
+    "start": slots[slot]
+  };
+  // This is failing because we're omitting the csrf token.
+  $.ajax(items[iid].api, {
+     "dataType": "json",
+     "type": "PUT",
+     "data": newitem, 
+     "headers": { "X-CSRFToken": csrf_token },
+     "success": moveditem,
+     "error": jserror
+  });
 }
 
 var draggable_config = {
@@ -734,7 +758,10 @@ var droppable_config = {
 
       unplaceitem(iid);
       moveitem(iid, room_and_slot.room, room_and_slot.slot);
-      placeitem(iid);
+      // We don't re-draw the item with placeitem() here,
+      // because we've just informed the server of the change
+      // of state, and we need to wait until the response
+      // comes back.
     }
 };
 
@@ -780,6 +807,7 @@ function mkitem(item) {
   var room = roomids[item.room];
   // Should come from the Serializer, not be computed.
   var url = "/streampunk/streampunk/item/" + id + "/";
+  var api = "/streampunk/api/item/" + id + "/";
   var islots = [];
   for (var i = 0; i < item.slots.length; i++) {
     islots.push(item.slots[i].startText);
@@ -790,7 +818,13 @@ function mkitem(item) {
     person['url'] = "/streampunk/streampunk/person/" + person.id + "/";
     people.push(person);
   }
-  items[id] = { "title": title, "room": room, "slots": islots, "url": url, "people": people };
+  items[id] = {
+     "title": title,
+     "room": room,
+     "slots": islots,
+     "url": url,
+     "api": api,
+     "people": people };
 }
 
 function mkitems() {

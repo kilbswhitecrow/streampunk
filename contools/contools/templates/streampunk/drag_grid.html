@@ -21,6 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <script type="text/javascript">
 var room_info_url = "{% url "api_rooms" %}";
 var grid_info_url = "{% url "api_grid" pk=grid.id %}";
+var csrf_token = "{{ csrf_token }}";
 </script>
 <script type="text/javascript" src="{{ STATIC_URL }}drag.js"></script>
 {% endblock %}
