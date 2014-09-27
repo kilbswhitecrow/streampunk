@@ -13,8 +13,6 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-// THIS SHOWS THE LAYOUT OF PREVIOUS DATA. NEED TO REMOVE ALL OF THIS.
-
 // We have two objects listing our dimensions. They're like this
 // so we can iterate over them with "var x in things".
 // var rooms = { 'main': 1, 'prog1': 1, 'prog2':1 };
@@ -25,14 +23,14 @@
 // objects.
 
 // var items = {
-//   123: { title: "Opening ceremony", room: "main", slot: "2pm" },
-//   456: { title: "Filk concert", room: "prog1", slot: "2pm" },
-//   789: { title: "Streampunk demo", room: "main", slot: "3pm" },
-//   111: { title: "Duelling", room: "prog2", slot: "3pm" },
-//   222: { title: "Hanggliding", room: "main", slot: "4pm" },
-//   333: { title: "Fire breathing", room: "prog1", slot: "4pm" },
-//   444: { title: "Cabaret", room: "prog2", slot: "4pm" },
-//   555: { title: "Closing ceremony", room: "main", slot: "5pm" },
+//   123: { title: "Opening ceremony", room: "main", slot: "2pm", url: "/streampunk/streampunk/item/123/" },
+//   456: { title: "Filk concert", room: "prog1", slot: "2pm", url: "/streampunk/streampunk/item/456/" },
+//   789: { title: "Streampunk demo", room: "main", slot: "3pm", url: "/streampunk/streampunk/item/789/" },
+//   111: { title: "Duelling", room: "prog2", slot: "3pm", url: "/streampunk/streampunk/item/111/" },
+//   222: { title: "Hanggliding", room: "main", slot: "4pm", url: "/streampunk/streampunk/item/222/" },
+//   333: { title: "Fire breathing", room: "prog1", slot: "4pm", url: "/streampunk/streampunk/item/333/" },
+//   444: { title: "Cabaret", room: "prog2", slot: "4pm", url: "/streampunk/streampunk/item/444/" },
+//   555: { title: "Closing ceremony", room: "main", slot: "5pm", url: "/streampunk/streampunk/item/555/" },
 // };
 
 // Empty tables for populating.
@@ -580,6 +578,25 @@ function zap_table() {
   $("#item_table").remove();
 }
 
+// Given an item, return the contents of the item's cell.
+function cellcontent(item) {
+  var content = '<a href="' +
+                item.url +
+                '">' +
+                item.title +
+                '</a>';
+  for (var i = 0; i < item.people.length; i++) {
+    var person = item.people[i];
+    content += '<br />' +
+               '<a href="' +
+               person.url +
+               '">' +
+               person.name +
+               '</a>';
+  }
+  return content;
+}
+
 // Remove a given item from the drawn table, because we're going
 // to place it somewhere else.
 function unplaceitem(iid) {
@@ -614,7 +631,7 @@ function placeitem(iid) {
                   ' class="' +
                   cls +
                   ' draggable">' +
-                  item.title +
+                  cellcontent(item) +
                   '</div>');
       $(div).draggable(draggable_config);
       $('#'+key).append(div);
@@ -750,11 +767,19 @@ function mkitem(item) {
   var id = item.id;
   var title = item.title;
   var room = roomids[item.room];
+  // Should come from the Serializer, not be computed.
+  var url = "/streampunk/streampunk/item/" + id + "/";
   var islots = [];
   for (var i = 0; i < item.slots.length; i++) {
     islots.push(item.slots[i].startText);
   }
-  items[id] = { "title": title, "room": room, "slots": islots };
+  var people = [];
+  for (var i = 0; i < item.people.length; i++) {
+    var person = item.people[i];
+    person['url'] = "/streampunk/streampunk/person/" + person.id + "/";
+    people.push(person);
+  }
+  items[id] = { "title": title, "room": room, "slots": islots, "url": url, "people": people };
 }
 
 function mkitems() {
