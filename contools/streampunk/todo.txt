@@ -2,10 +2,8 @@ Drag and Drop
 =============
 - I have a table that renders and communicates with the server.
 - It deals with CRSF, but does not yet require authentication.
-- It needs to include the Item/Person/Room URLs in the Serialization, so that they're
-  not hard-coded.
 - The Grid needs to include
-	- Classes, for different renderings.
+	- CSS classes, for different renderings.
 	- Some means of replacing "Fill Slot", to add new items.
 	  (I favour a scrollable list of all items, from which things can be dragged.)
 

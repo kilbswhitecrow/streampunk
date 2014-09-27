@@ -32,22 +32,26 @@ class GridSlotLengthSerializer(serializers.ModelSerializer):
     model = SlotLength
 
 class GridRoomSerializer(serializers.ModelSerializer):
+  url = serializers.URLField(source='get_absolute_url')
   class Meta:
     model = Room
-    fields = ('id', 'name')
+    fields = ('id', 'name', 'url')
 
 class GridPersonSerializer(serializers.ModelSerializer):
   name = serializers.CharField(source='as_badge')
+  url = serializers.URLField(source='get_absolute_url')
   class Meta:
     model = Person
-    fields = ('id', 'name' )
+    fields = ('id', 'name', 'url')
 
 class GridItemSerializer(serializers.ModelSerializer):
   slots = GridSlotSerializer(many=True, source='slots', read_only=True, required=False)
   people = GridPersonSerializer(many=True, source='people', read_only=True, required=False)
+  url = serializers.URLField(source='get_absolute_url', read_only=True, required=False)
+  api = serializers.URLField(source='api', read_only=True, required=False)
   class Meta:
     model = Item
-    fields = ('id', 'title', 'room', 'start', 'length', 'slots', 'people')
+    fields = ('id', 'title', 'room', 'start', 'length', 'slots', 'people', 'url', 'api')
     # Only room and start can be written-to.
     read_only_fields = ('id', 'title', 'length')
 

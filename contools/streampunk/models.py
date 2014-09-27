@@ -1613,6 +1613,8 @@ class Item(models.Model):
       return self.shortname
   def get_absolute_url(self):
     return reverse('show_item_detail', kwargs={ "pk": self.id })
+  def api(self):
+    return reverse('api_item', kwargs={ "pk": self.id })
 
   def as_xml_public(self):
     return render_to_string('xml/item_public.xml', { "i": self } )

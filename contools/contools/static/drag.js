@@ -711,7 +711,7 @@ function moveditem(newitem) {
 // We've dragged an item to a new location, so update its state to
 // reflect that.
 function moveitem(iid, room, slot) {
-  newitem = {
+  var newitem = {
     "id": iid,
     "room": rooms[room],
     "start": slots[slot]
@@ -806,17 +806,11 @@ function mkitem(item) {
   var title = item.title;
   var room = roomids[item.room];
   // Should come from the Serializer, not be computed.
-  var url = "/streampunk/streampunk/item/" + id + "/";
-  var api = "/streampunk/api/item/" + id + "/";
+  var url = item.url;
+  var api = item.api;
   var islots = [];
   for (var i = 0; i < item.slots.length; i++) {
     islots.push(item.slots[i].startText);
-  }
-  var people = [];
-  for (var i = 0; i < item.people.length; i++) {
-    var person = item.people[i];
-    person['url'] = "/streampunk/streampunk/person/" + person.id + "/";
-    people.push(person);
   }
   items[id] = {
      "title": title,
@@ -824,7 +818,7 @@ function mkitem(item) {
      "slots": islots,
      "url": url,
      "api": api,
-     "people": people };
+     "people": item.people };
 }
 
 function mkitems() {
