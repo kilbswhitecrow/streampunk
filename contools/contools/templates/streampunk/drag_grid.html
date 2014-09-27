@@ -18,6 +18,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% load streampunk_filters %}
 {% block scripts %}
 <script type="text/javascript" src="{{ STATIC_URL }}jquery-ui-1.11.1.js"></script>
+<script type="text/javascript">
+var room_info_url = "{% url "api_rooms" %}";
+var grid_info_url = "{% url "api_grid" pk=grid.id %}";
+</script>
 <script type="text/javascript" src="{{ STATIC_URL }}drag.js"></script>
 {% endblock %}
 {% block styles %}

@@ -33,6 +33,11 @@
 //   555: { title: "Closing ceremony", room: "main", slot: "5pm", url: "/streampunk/streampunk/item/555/" },
 // };
 
+// Links defined in the grid HTML template:
+
+// var grid_info_url = "/streampunk/api/grid/<pk>/";
+// var room_info_url = "/streampunk/api/rooms/";
+
 // Empty tables for populating.
 
 var items = { };
@@ -691,6 +696,13 @@ function slotxroom_table() {
   setup_dragging();
 }
 
+// We've dragged an item to a new location, so update its state to
+// reflect that.
+function moveitem(iid, room, slot) {
+  items[iid].room = room;
+  items[iid].slots = newslots(slot, items[iid].slots.length);
+}
+
 var draggable_config = {
     // Make sure dragged things are at front.
     zIndex: 1,
@@ -721,8 +733,7 @@ var droppable_config = {
       var iid = iid_and_slot.iid;
 
       unplaceitem(iid);
-      items[iid].room = room_and_slot.room;
-      items[iid].slots = newslots(room_and_slot.slot, items[iid].slots.length);
+      moveitem(iid, room_and_slot.room, room_and_slot.slot);
       placeitem(iid);
     }
 };
@@ -811,12 +822,12 @@ function setroominfo(data) {
   // Save the retrieved info
   roominfo = data;
   // Now ask for the grid info
-  $.getJSON("/streampunk/api/grid/7/", "", setgridinfo);
+  $.getJSON(grid_info_url, "", setgridinfo);
 }
 
 // Step (a) part I - fetch the room info.
 function fetchrooms() {
-  $.getJSON("/streampunk/api/rooms/", "", setroominfo);
+  $.getJSON(room_info_url, "", setroominfo);
 }
 
 $(document).ready(
