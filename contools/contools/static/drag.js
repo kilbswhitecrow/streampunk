@@ -48,468 +48,468 @@ var keymap = { };
 // STATIC DATA IN THE NEW FORMAT. THIS WILL BE RETRIEVED DYNAMICALLY.
 
 var gridinfo = {
-    "slots": [
-        {
-            "id": 76, 
-            "start": 1080, 
-            "length": 22, 
-            "day": 1, 
-            "startText": "6pm", 
-            "slotText": "6-7pm", 
-            "visible": true, 
-            "isDefault": false, 
-            "isUndefined": false, 
-            "order": 118
-        }, 
-        {
-            "id": 77, 
-            "start": 1140, 
-            "length": 22, 
-            "day": 1, 
-            "startText": "7pm", 
-            "slotText": "7-8pm", 
-            "visible": true, 
-            "isDefault": false, 
-            "isUndefined": false, 
-            "order": 119
-        }, 
-        {
-            "id": 78, 
-            "start": 1200, 
-            "length": 22, 
-            "day": 1, 
-            "startText": "8pm", 
-            "slotText": "8-9pm", 
-            "visible": true, 
-            "isDefault": false, 
-            "isUndefined": false, 
-            "order": 120
-        }, 
-        {
-            "id": 79, 
-            "start": 1260, 
-            "length": 22, 
-            "day": 1, 
-            "startText": "9pm", 
-            "slotText": "9-10pm", 
-            "visible": true, 
-            "isDefault": false, 
-            "isUndefined": false, 
-            "order": 121
-        }
-    ], 
-    "items": [
-        {
-            "id": 1, 
-            "title": "Opening Ceremony", 
-            "room": 5, 
-            "start": 78, 
-            "length": 22, 
-            "slots": [
-                {
-                    "id": 78, 
-                    "start": 1200, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "8pm", 
-                    "slotText": "8-9pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 120
-                }
-            ], 
-            "people": [
-                {
-                    "id": 6, 
-                    "name": "Deria Book"
-                }, 
-                {
-                    "id": 3, 
-                    "name": "Jayne Cobb"
-                }
-            ]
-        }, 
-        {
-            "id": 2, 
-            "title": "Closing Ceremony", 
-            "room": 8, 
-            "start": 78, 
-            "length": 21, 
-            "slots": [
-                {
-                    "id": 78, 
-                    "start": 1200, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "8pm", 
-                    "slotText": "8-9pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 120
-                }
-            ], 
-            "people": [
-                {
-                    "id": 6, 
-                    "name": "Deria Book"
-                }, 
-                {
-                    "id": 3, 
-                    "name": "Jayne Cobb"
-                }
-            ]
-        }, 
-        {
-            "id": 3, 
-            "title": "Bid Session", 
-            "room": 7, 
-            "start": 76, 
-            "length": 22, 
-            "slots": [
-                {
-                    "id": 76, 
-                    "start": 1080, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "6pm", 
-                    "slotText": "6-7pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 118
-                }
-            ], 
-            "people": []
-        }, 
-        {
-            "id": 4, 
-            "title": "Art Auction", 
-            "room": 6, 
-            "start": 76, 
-            "length": 24, 
-            "slots": [
-                {
-                    "id": 76, 
-                    "start": 1080, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "6pm", 
-                    "slotText": "6-7pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 118
-                }, 
-                {
-                    "id": 77, 
-                    "start": 1140, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "7pm", 
-                    "slotText": "7-8pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 119
-                }
-            ], 
-            "people": [
-                {
-                    "id": 10, 
-                    "name": "Ripper"
-                }, 
-                {
-                    "id": 2, 
-                    "name": "Malcolm Reynolds"
-                }
-            ]
-        }, 
-        {
-            "id": 5, 
-            "title": "Masquerade and Cabaret", 
-            "room": 9, 
-            "start": 78, 
-            "length": 24, 
-            "slots": [
-                {
-                    "id": 78, 
-                    "start": 1200, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "8pm", 
-                    "slotText": "8-9pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 120
-                }, 
-                {
-                    "id": 79, 
-                    "start": 1260, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "9pm", 
-                    "slotText": "9-10pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 121
-                }
-            ], 
-            "people": [
-                {
-                    "id": 10, 
-                    "name": "Ripper"
-                }
-            ]
-        }, 
-        {
-            "id": 6, 
-            "title": "Disco", 
-            "room": 9, 
-            "start": 76, 
-            "length": 24, 
-            "slots": [
-                {
-                    "id": 76, 
-                    "start": 1080, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "6pm", 
-                    "slotText": "6-7pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 118
-                }, 
-                {
-                    "id": 77, 
-                    "start": 1140, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "7pm", 
-                    "slotText": "7-8pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 119
-                }
-            ], 
-            "people": [
-                {
-                    "id": 8, 
-                    "name": "Buffy Summers"
-                }, 
-                {
-                    "id": 11, 
-                    "name": "The Key"
-                }, 
-                {
-                    "id": 5, 
-                    "name": "River Tam"
-                }
-            ]
-        }, 
-        {
-            "id": 8, 
-            "title": "Tolkien: All you need?", 
-            "room": 6, 
-            "start": 78, 
-            "length": 22, 
-            "slots": [
-                {
-                    "id": 78, 
-                    "start": 1200, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "8pm", 
-                    "slotText": "8-9pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 120
-                }
-            ], 
-            "people": [
-                {
-                    "id": 10, 
-                    "name": "Ripper"
-                }
-            ]
-        }, 
-        {
-            "id": 9, 
-            "title": "Are all cons rubbish these days, or what?", 
-            "room": 5, 
-            "start": 76, 
-            "length": 22, 
-            "slots": [
-                {
-                    "id": 76, 
-                    "start": 1080, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "6pm", 
-                    "slotText": "6-7pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 118
-                }
-            ], 
-            "people": []
-        }, 
-        {
-            "id": 10, 
-            "title": "Interview with Shepherd Book", 
-            "room": 5, 
-            "start": 77, 
-            "length": 22, 
-            "slots": [
-                {
-                    "id": 77, 
-                    "start": 1140, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "7pm", 
-                    "slotText": "7-8pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 119
-                }
-            ], 
-            "people": []
-        }, 
-        {
-            "id": 11, 
-            "title": "Jayne Cobb in Conversation", 
-            "room": 7, 
-            "start": 78, 
-            "length": 22, 
-            "slots": [
-                {
-                    "id": 78, 
-                    "start": 1200, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "8pm", 
-                    "slotText": "8-9pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 120
-                }
-            ], 
-            "people": []
-        }, 
-        {
-            "id": 12, 
-            "title": "First Timers (Friday)", 
-            "room": 8, 
-            "start": 77, 
-            "length": 21, 
-            "slots": [
-                {
-                    "id": 77, 
-                    "start": 1140, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "7pm", 
-                    "slotText": "7-8pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 119
-                }
-            ], 
-            "people": []
-        }, 
-        {
-            "id": 13, 
-            "title": "First Timers (Saturday)", 
-            "room": 7, 
-            "start": 77, 
-            "length": 21, 
-            "slots": [
-                {
-                    "id": 77, 
-                    "start": 1140, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "7pm", 
-                    "slotText": "7-8pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 119
-                }
-            ], 
-            "people": []
-        }, 
-        {
-            "id": 14, 
-            "title": "Stewards' Briefing (Friday)", 
-            "room": 8, 
-            "start": 77, 
-            "length": 21, 
-            "slots": [
-                {
-                    "id": 77, 
-                    "start": 1140, 
-                    "length": 22, 
-                    "day": 1, 
-                    "startText": "7pm", 
-                    "slotText": "7-8pm", 
-                    "visible": true, 
-                    "isDefault": false, 
-                    "isUndefined": false, 
-                    "order": 119
-                }
-            ], 
-            "people": []
-        }
-    ], 
-    "id": 7, 
-    "name": "Friday 6-10pm", 
-    "gridOrder": 3
+//     "slots": [
+//         {
+//             "id": 76, 
+//             "start": 1080, 
+//             "length": 22, 
+//             "day": 1, 
+//             "startText": "6pm", 
+//             "slotText": "6-7pm", 
+//             "visible": true, 
+//             "isDefault": false, 
+//             "isUndefined": false, 
+//             "order": 118
+//         }, 
+//         {
+//             "id": 77, 
+//             "start": 1140, 
+//             "length": 22, 
+//             "day": 1, 
+//             "startText": "7pm", 
+//             "slotText": "7-8pm", 
+//             "visible": true, 
+//             "isDefault": false, 
+//             "isUndefined": false, 
+//             "order": 119
+//         }, 
+//         {
+//             "id": 78, 
+//             "start": 1200, 
+//             "length": 22, 
+//             "day": 1, 
+//             "startText": "8pm", 
+//             "slotText": "8-9pm", 
+//             "visible": true, 
+//             "isDefault": false, 
+//             "isUndefined": false, 
+//             "order": 120
+//         }, 
+//         {
+//             "id": 79, 
+//             "start": 1260, 
+//             "length": 22, 
+//             "day": 1, 
+//             "startText": "9pm", 
+//             "slotText": "9-10pm", 
+//             "visible": true, 
+//             "isDefault": false, 
+//             "isUndefined": false, 
+//             "order": 121
+//         }
+//     ], 
+//     "items": [
+//         {
+//             "id": 1, 
+//             "title": "Opening Ceremony", 
+//             "room": 5, 
+//             "start": 78, 
+//             "length": 22, 
+//             "slots": [
+//                 {
+//                     "id": 78, 
+//                     "start": 1200, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "8pm", 
+//                     "slotText": "8-9pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 120
+//                 }
+//             ], 
+//             "people": [
+//                 {
+//                     "id": 6, 
+//                     "name": "Deria Book"
+//                 }, 
+//                 {
+//                     "id": 3, 
+//                     "name": "Jayne Cobb"
+//                 }
+//             ]
+//         }, 
+//         {
+//             "id": 2, 
+//             "title": "Closing Ceremony", 
+//             "room": 8, 
+//             "start": 78, 
+//             "length": 21, 
+//             "slots": [
+//                 {
+//                     "id": 78, 
+//                     "start": 1200, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "8pm", 
+//                     "slotText": "8-9pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 120
+//                 }
+//             ], 
+//             "people": [
+//                 {
+//                     "id": 6, 
+//                     "name": "Deria Book"
+//                 }, 
+//                 {
+//                     "id": 3, 
+//                     "name": "Jayne Cobb"
+//                 }
+//             ]
+//         }, 
+//         {
+//             "id": 3, 
+//             "title": "Bid Session", 
+//             "room": 7, 
+//             "start": 76, 
+//             "length": 22, 
+//             "slots": [
+//                 {
+//                     "id": 76, 
+//                     "start": 1080, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "6pm", 
+//                     "slotText": "6-7pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 118
+//                 }
+//             ], 
+//             "people": []
+//         }, 
+//         {
+//             "id": 4, 
+//             "title": "Art Auction", 
+//             "room": 6, 
+//             "start": 76, 
+//             "length": 24, 
+//             "slots": [
+//                 {
+//                     "id": 76, 
+//                     "start": 1080, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "6pm", 
+//                     "slotText": "6-7pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 118
+//                 }, 
+//                 {
+//                     "id": 77, 
+//                     "start": 1140, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "7pm", 
+//                     "slotText": "7-8pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 119
+//                 }
+//             ], 
+//             "people": [
+//                 {
+//                     "id": 10, 
+//                     "name": "Ripper"
+//                 }, 
+//                 {
+//                     "id": 2, 
+//                     "name": "Malcolm Reynolds"
+//                 }
+//             ]
+//         }, 
+//         {
+//             "id": 5, 
+//             "title": "Masquerade and Cabaret", 
+//             "room": 9, 
+//             "start": 78, 
+//             "length": 24, 
+//             "slots": [
+//                 {
+//                     "id": 78, 
+//                     "start": 1200, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "8pm", 
+//                     "slotText": "8-9pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 120
+//                 }, 
+//                 {
+//                     "id": 79, 
+//                     "start": 1260, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "9pm", 
+//                     "slotText": "9-10pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 121
+//                 }
+//             ], 
+//             "people": [
+//                 {
+//                     "id": 10, 
+//                     "name": "Ripper"
+//                 }
+//             ]
+//         }, 
+//         {
+//             "id": 6, 
+//             "title": "Disco", 
+//             "room": 9, 
+//             "start": 76, 
+//             "length": 24, 
+//             "slots": [
+//                 {
+//                     "id": 76, 
+//                     "start": 1080, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "6pm", 
+//                     "slotText": "6-7pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 118
+//                 }, 
+//                 {
+//                     "id": 77, 
+//                     "start": 1140, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "7pm", 
+//                     "slotText": "7-8pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 119
+//                 }
+//             ], 
+//             "people": [
+//                 {
+//                     "id": 8, 
+//                     "name": "Buffy Summers"
+//                 }, 
+//                 {
+//                     "id": 11, 
+//                     "name": "The Key"
+//                 }, 
+//                 {
+//                     "id": 5, 
+//                     "name": "River Tam"
+//                 }
+//             ]
+//         }, 
+//         {
+//             "id": 8, 
+//             "title": "Tolkien: All you need?", 
+//             "room": 6, 
+//             "start": 78, 
+//             "length": 22, 
+//             "slots": [
+//                 {
+//                     "id": 78, 
+//                     "start": 1200, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "8pm", 
+//                     "slotText": "8-9pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 120
+//                 }
+//             ], 
+//             "people": [
+//                 {
+//                     "id": 10, 
+//                     "name": "Ripper"
+//                 }
+//             ]
+//         }, 
+//         {
+//             "id": 9, 
+//             "title": "Are all cons rubbish these days, or what?", 
+//             "room": 5, 
+//             "start": 76, 
+//             "length": 22, 
+//             "slots": [
+//                 {
+//                     "id": 76, 
+//                     "start": 1080, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "6pm", 
+//                     "slotText": "6-7pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 118
+//                 }
+//             ], 
+//             "people": []
+//         }, 
+//         {
+//             "id": 10, 
+//             "title": "Interview with Shepherd Book", 
+//             "room": 5, 
+//             "start": 77, 
+//             "length": 22, 
+//             "slots": [
+//                 {
+//                     "id": 77, 
+//                     "start": 1140, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "7pm", 
+//                     "slotText": "7-8pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 119
+//                 }
+//             ], 
+//             "people": []
+//         }, 
+//         {
+//             "id": 11, 
+//             "title": "Jayne Cobb in Conversation", 
+//             "room": 7, 
+//             "start": 78, 
+//             "length": 22, 
+//             "slots": [
+//                 {
+//                     "id": 78, 
+//                     "start": 1200, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "8pm", 
+//                     "slotText": "8-9pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 120
+//                 }
+//             ], 
+//             "people": []
+//         }, 
+//         {
+//             "id": 12, 
+//             "title": "First Timers (Friday)", 
+//             "room": 8, 
+//             "start": 77, 
+//             "length": 21, 
+//             "slots": [
+//                 {
+//                     "id": 77, 
+//                     "start": 1140, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "7pm", 
+//                     "slotText": "7-8pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 119
+//                 }
+//             ], 
+//             "people": []
+//         }, 
+//         {
+//             "id": 13, 
+//             "title": "First Timers (Saturday)", 
+//             "room": 7, 
+//             "start": 77, 
+//             "length": 21, 
+//             "slots": [
+//                 {
+//                     "id": 77, 
+//                     "start": 1140, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "7pm", 
+//                     "slotText": "7-8pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 119
+//                 }
+//             ], 
+//             "people": []
+//         }, 
+//         {
+//             "id": 14, 
+//             "title": "Stewards' Briefing (Friday)", 
+//             "room": 8, 
+//             "start": 77, 
+//             "length": 21, 
+//             "slots": [
+//                 {
+//                     "id": 77, 
+//                     "start": 1140, 
+//                     "length": 22, 
+//                     "day": 1, 
+//                     "startText": "7pm", 
+//                     "slotText": "7-8pm", 
+//                     "visible": true, 
+//                     "isDefault": false, 
+//                     "isUndefined": false, 
+//                     "order": 119
+//                 }
+//             ], 
+//             "people": []
+//         }
+//     ], 
+//     "id": 7, 
+//     "name": "Friday 6-10pm", 
+//     "gridOrder": 3
 };
 
 var roominfo = [
-    {
-        "id": 5, 
-        "name": "Main Hall"
-    }, 
-    {
-        "id": 6, 
-        "name": "Second Hall"
-    }, 
-    {
-        "id": 7, 
-        "name": "Programme 1"
-    }, 
-    {
-        "id": 8, 
-        "name": "Programme 2"
-    }, 
-    {
-        "id": 9, 
-        "name": "Video"
-    }, 
-    {
-        "id": 10, 
-        "name": "Ops"
-    }, 
-    {
-        "id": 4, 
-        "name": "Everywhere"
-    }, 
-    {
-        "id": 3, 
-        "name": "Nowhere"
-    }
+//     {
+//         "id": 5, 
+//         "name": "Main Hall"
+//     }, 
+//     {
+//         "id": 6, 
+//         "name": "Second Hall"
+//     }, 
+//     {
+//         "id": 7, 
+//         "name": "Programme 1"
+//     }, 
+//     {
+//         "id": 8, 
+//         "name": "Programme 2"
+//     }, 
+//     {
+//         "id": 9, 
+//         "name": "Video"
+//     }, 
+//     {
+//         "id": 10, 
+//         "name": "Ops"
+//     }, 
+//     {
+//         "id": 4, 
+//         "name": "Everywhere"
+//     }, 
+//     {
+//         "id": 3, 
+//         "name": "Nowhere"
+//     }
 ];
 
 // We've moved the item to start at the specified slot. The
@@ -763,14 +763,48 @@ function mkitems() {
   }
 }
 
+// Steps (c) and (d)
+function allinfofetched() {
+  // Create shorthand arrays
+  mkrooms();
+  mkslots();
+  mkitems();
+  // Populate our table
+  roomxslot_table();
+}
+
+// Step (b) part II - invoked when the grid info is received.
+// Kick off Step (c)
+function setgridinfo(data) {
+  gridinfo = data;
+  allinfofetched();
+}
+
+// Step (a) part II - invoked when the room info is received.
+// Step (b) part I - fetch grid info.
+function setroominfo(data) {
+  // Save the retrieved info
+  roominfo = data;
+  // Now ask for the grid info
+  $.getJSON("/streampunk/api/grid/7/", "", setgridinfo);
+}
+
+// Step (a) part I - fetch the room info.
+function fetchrooms() {
+  $.getJSON("/streampunk/api/rooms/", "", setroominfo);
+}
+
 $(document).ready(
   function() {
-    // Create shorthand arrays
-    mkrooms();
-    mkslots();
-    mkitems();
-    // Populate our table
-    roomxslot_table();
-
+    // Retrieve dynamic info
+    // Logically, our sequence is:
+    // (a) Fetch room info
+    // (b) Fetch grid info
+    // (c) Create shorthand arrays
+    // (d) Build table
+    // Because we're waiting on separate Ajax queries, 
+    // step (b) is triggered when (a) completes, and steps
+    // (c) and (d) are triggered when (b) completes.
+    fetchrooms();
   }
 );
