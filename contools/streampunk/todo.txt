@@ -19,12 +19,13 @@ dropped URL would fail if not logged in. And it doesn't fail.
   should give an error, when it's the serializer class that has the permissions?
 I've worked around it by checking the permissions directly in the put() method,
 and throwing an error there. There's probably a better way.
-Now to figure out how to not include the drag'n'drop in the JavaScript.
 
-So: I have some conditional code in drag.js that should be enabling or disabling
-the dragging, but it's not working - I suspect that's because drag.js is served
-as a static file, so doesn't get refreshed. Replace it with a view, I think. Then
-we can also make chunks of the file optionally served based on permissions.
+I have changed drag.js from a static file to a template which elides the draggable
+content if the user is not authenticated. That appears to work. There's more I could
+do, and I should remove the static drag.js file, but at least there's progress. Now
+I should check whether the drag views are hiding the data that should be hidden for
+users who don't have full permissions, and then I can move it into place as the main
+view.
 
 There are also a couple of tests failing.
 It's not clear why, since they don't appear to be streampunk tests:
