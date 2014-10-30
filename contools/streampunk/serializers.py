@@ -19,23 +19,31 @@ Serializers, to support a RESTful interface.
 
 from django.forms import widgets
 
-from rest_framework import serializers
+from rest_framework import serializers, permissions
 
 from .models import Item, Room, Person, Slot, SlotLength, Grid
+
+class ReadOnly(permissions.BasePermission):
+  "Don't allow write access via these serializers."
+  def has_permission(self, request, view):
+    return request.method in permissions.SAFE_METHODS
 
 class GridSlotSerializer(serializers.ModelSerializer):
   class Meta:
     model = Slot
+    permission_classes = (ReadOnly,)
 
 class GridSlotLengthSerializer(serializers.ModelSerializer):
   class Meta:
     model = SlotLength
+    permission_classes = (ReadOnly,)
 
 class GridRoomSerializer(serializers.ModelSerializer):
   url = serializers.URLField(source='get_absolute_url')
   class Meta:
     model = Room
     fields = ('id', 'name', 'url')
+    permission_classes = (ReadOnly,)
 
 class GridPersonSerializer(serializers.ModelSerializer):
   name = serializers.CharField(source='as_badge')
@@ -43,6 +51,7 @@ class GridPersonSerializer(serializers.ModelSerializer):
   class Meta:
     model = Person
     fields = ('id', 'name', 'url')
+    permission_classes = (ReadOnly,)
 
 class GridItemSerializer(serializers.ModelSerializer):
   slots = GridSlotSerializer(many=True, source='slots', read_only=True, required=False)
@@ -54,11 +63,13 @@ class GridItemSerializer(serializers.ModelSerializer):
     fields = ('id', 'title', 'room', 'start', 'length', 'slots', 'people', 'url', 'api')
     # Only room and start can be written-to.
     read_only_fields = ('id', 'title', 'length')
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class GridSerializer(serializers.ModelSerializer):
   slots = GridSlotSerializer(many=True, source='slots', read_only=True, required=False)
   items = GridItemSerializer(many=True, read_only=True, required=False)
   class Meta:
     model = Grid
+    permission_classes = (ReadOnly,)
 
 
