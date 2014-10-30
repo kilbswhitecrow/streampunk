@@ -37,6 +37,8 @@
 
 // var grid_info_url = "/streampunk/api/grid/<pk>/";
 // var room_info_url = "/streampunk/api/rooms/";
+// var can_drag = true;
+// var draggable_class = "draggable";
 
 // Empty tables for populating.
 
@@ -639,10 +641,13 @@ function placeitem(iid) {
                   divid +
                   ' class="' +
                   cls +
-                  ' draggable">' +
+                  ' "' +
+                  draggable_class +
+                  '">' +
                   cellcontent(item) +
                   '</div>');
-      $(div).draggable(draggable_config);
+      if (can_drag)
+        $(div).draggable(draggable_config);
       $('#'+key).append(div);
     }
   }
@@ -766,12 +771,14 @@ var droppable_config = {
 };
 
 function setup_dragging() {
-  // Allow each of the divs to be draggable.
-  $(".draggable").draggable(draggable_config);
+  if (can_drag) {
+    // Allow each of the divs to be draggable.
+    $(".draggable").draggable(draggable_config);
 
-  // Make each of the cells a target for the
-  // div being dragged.
-  $(".dropTarget").droppable(droppable_config);
+    // Make each of the cells a target for the
+    // div being dragged.
+    $(".dropTarget").droppable(droppable_config);
+  }
 }
 
 function mkkeymap(thing) {

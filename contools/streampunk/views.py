@@ -281,9 +281,10 @@ def drag_grid(request, gr):
   grid = Grid.objects.get(id = gid)
   slots = grid.slots.all()
   if request.user.has_perm('streampunk.read_private'):
-    rooms = Room.objects.all();
+    rooms = Room.objects.all()
   else:
-    rooms = Room.objects.filter(visible=True);
+    rooms = Room.objects.filter(visible=True)
+  can_drag = request.user.has_perm('streampunk.edit_programme')
       
   return render_to_response('streampunk/drag_grid.html',
                             locals(),
@@ -1174,6 +1175,8 @@ class api_item(APIView):
     serializer = GridItemSerializer(obj)
     return Response(serializer.data)
   def put(self, request, pk, format=None):
+    if not request.user.has_perm('streampunk.edit_programme'):
+      return Response({ 'non_field_errors': [u'No write access to Streampunk'] }, status=status.HTTP_401_UNAUTHORIZED)
     item = self.get_object(pk)
     # Only the room and start are writable fields, so the rest
     # are left unchanged by this.
