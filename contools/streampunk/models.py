@@ -1,5 +1,5 @@
 # This file is part of Streampunk, a Django application for convention programmes
-# Copyright (C) 2012-2014 Stephen Kilbane
+# Copyright (C) 2012-2016 Stephen Kilbane
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
 # published by the Free Software Foundation, either version 3 of the
@@ -16,6 +16,7 @@
 """
 Models for Streampunk
 """
+from __future__ import unicode_literals
 
 from datetime import timedelta, datetime
 from django.db import models
@@ -752,7 +753,7 @@ class KitThing(models.Model):
                            help_text="Any additional notes required")
   coordinator = models.CharField(max_length=64,
                                  help_text="The name of the person responsible for sourcing this bit of kit")
-  availability = models.ManyToManyField(Slot, null=True, blank=True,
+  availability = models.ManyToManyField(Slot, blank=True,
                                         help_text="The slots during when the kit is available for allocation")
 
   class Meta:
@@ -1171,15 +1172,15 @@ class Room(models.Model):
   openableWindows = models.BooleanField(default=False,help_text="true if the room has windows which you can open")
   closableCurtains = models.BooleanField(default=False,help_text="True if the room has curtains you can close")
   inRadioRange = models.BooleanField(default=False,help_text="True if the radio net can reach people in the room")
-  kit = models.ManyToManyField(KitThing, through='KitRoomAssignment', null=True, blank=True,
+  kit = models.ManyToManyField(KitThing, through='KitRoomAssignment', blank=True,
                                help_text="Kit assigned to the room for a duration. May satisfy items' kit requests.")
-  bundles = models.ManyToManyField(KitBundle, through='BundleRoomAssignment', null=True, blank=True,
+  bundles = models.ManyToManyField(KitBundle, through='BundleRoomAssignment', blank=True,
                                    help_text="Kit Bundles assigned to this room, to satisfy requests. <em>Only Tech should fill this in.</em>")
   parent = models.ForeignKey('self', null=True, blank=True,
                              help_text="If this room is really part of a larger, subdividable room, set this field to the parent room")
-  capacities = models.ManyToManyField(RoomCapacity, null=True, blank=True,
+  capacities = models.ManyToManyField(RoomCapacity, blank=True,
                                       help_text="Use room capacities to indicate how many people can fit in the room in a given layout")
-  availability = models.ManyToManyField(Slot, null=True, blank=True,
+  availability = models.ManyToManyField(Slot, blank=True,
                                         help_text="Add availabilities to indicate which slots the room is available for.")
   objects = DefUndefManager()
 
@@ -1331,9 +1332,9 @@ class Person(models.Model):
                                help_text="True if the person has confirmed that it's okay to pass on their email address to other programme participants")
   recordingOkay = models.CharField(max_length=4, choices=YesNo, default='No',
                                    help_text="True if the person has confirmed they're okay with being recorded (audio or video) on programme items")
-  tags = models.ManyToManyField(Tag,null=True,blank=True,
+  tags = models.ManyToManyField(Tag,blank=True,
                                 help_text="Allocate whatever tags you think are appropriate to this person")
-  availability = models.ManyToManyField(Slot, null=True, blank=True,
+  availability = models.ManyToManyField(Slot, blank=True,
                                         help_text="Add availability entries to this person to indicate when they're available for scheduling")
 
   class Meta:
@@ -1534,15 +1535,15 @@ class Item(models.Model):
                                help_text="Any info about needed Tech should go here.")
   pubBring = models.TextField(blank=True,
                               help_text="Information about anything the audience should bring, for this item, e.g. loose clothing, kilts for a ceilidh. Useful for putting into Progress Reports.")
-  tags = models.ManyToManyField(Tag,null=True,blank=True,
+  tags = models.ManyToManyField(Tag,blank=True,
                                 help_text="Assign any tags you think are relevant to this item.")
-  people = models.ManyToManyField(Person, through='ItemPerson', null=True, blank=True,
+  people = models.ManyToManyField(Person, through='ItemPerson', blank=True,
                                   help_text="The people participating in this item")
-  kitRequests = models.ManyToManyField(KitRequest, null=True, blank=True, editable=False,
+  kitRequests = models.ManyToManyField(KitRequest, blank=True, editable=False,
                                        help_text="Kit requested by this item. <em>Only Tech should fill this in.</em>")
-  kit = models.ManyToManyField(KitThing, through='KitItemAssignment', null=True, blank=True,
+  kit = models.ManyToManyField(KitThing, through='KitItemAssignment', blank=True,
                                help_text="Kit allocated to this item, to satisfy requests. <em>Only Tech should fill this in.</em>")
-  bundles = models.ManyToManyField(KitBundle, through='BundleItemAssignment', null=True, blank=True,
+  bundles = models.ManyToManyField(KitBundle, through='BundleItemAssignment', blank=True,
                                    help_text="Kit Bundles assigned to this item, to satisfy requests. <em>Only Tech should fill this in.</em>")
   audienceMics = models.BooleanField(default=False,
                                      help_text="True if the item probably needs roving microphones for questions from audience.")
@@ -1756,7 +1757,7 @@ class PersonList(models.Model):
   auto = models.BooleanField(default=False,help_text="If true, this list will be deleted as soon as it's been used to send email")
   created = models.DateTimeField(auto_now_add=True,
                                  help_text="We note when a PersonList is created, so we can delete old ones.")
-  people = models.ManyToManyField(Person, null=True, blank=True,
+  people = models.ManyToManyField(Person, blank=True,
                                  help_text="The people in this list")
 
   def __unicode__(self):

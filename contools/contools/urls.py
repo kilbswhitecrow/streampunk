@@ -14,14 +14,14 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib.auth.views import login, logout, logout_then_login, password_change, password_change_done, password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import permission_required, login_required
 from django.core.urlresolvers import reverse_lazy
 
 from django_tables2 import SingleTableView
-from rest_framework.urlpatterns import format_suffix_patterns
+# from rest_framework.urlpatterns import format_suffix_patterns
 
 from streampunk.models import Person, Item, Room, Tag, KitBundle, KitThing, KitRequest, ItemPerson
 from streampunk.models import Slot, PersonList, KitRoomAssignment, KitItemAssignment, Check
@@ -49,18 +49,18 @@ from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_items_tech, list_tags, list_kitthings, list_kitrequests
 from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
 from streampunk.views import list_kitbundles, xml_dump, xsl_stylesheet, konopas
-from streampunk.views import name_cards_for_item, name_cards
-from streampunk.views import drinks_form_for_item, drinks_forms
-from streampunk.views import door_listing_for_room_and_day, door_listings
-from streampunk.views import door_listings_for_room, door_listings_for_day
-from streampunk.views import api_grid, api_slot_items, api_item, api_rooms
-from streampunk.views import drag_grid
+# from streampunk.views import name_cards_for_item, name_cards
+# from streampunk.views import drinks_form_for_item, drinks_forms
+# from streampunk.views import door_listing_for_room_and_day, door_listings
+# from streampunk.views import door_listings_for_room, door_listings_for_day
+# from streampunk.views import api_grid, api_slot_items, api_item, api_rooms
+# from streampunk.views import drag_grid
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     # Examples:
     # url(r'^$', 'contools.views.home', name='home'),
     # url(r'^contools/', include('contools.foo.urls')),
@@ -270,22 +270,22 @@ urlpatterns = patterns('',
         { 'template': 'xml/streampunk.xsl' }, name='xml_xsl'),
     url(r'^streampunk/konopas/$', konopas, name='konopas'),
 
-    url(r'^streampunk/name_cards_for_item/(?P<pk>\d+)/$', name_cards_for_item, name='name_cards_for_item'),
-    url(r'^streampunk/name_cards/$', name_cards, name='name_cards'),
-    url(r'^streampunk/drinks_form_for_item/(?P<pk>\d+)/$', drinks_form_for_item, name='drinks_form_for_item'),
-    url(r'^streampunk/drinks_forms/$', drinks_forms, name='drinks_forms'),
-    url(r'^streampunk/door_listings_for_room/(?P<pk>\d+)/$', door_listings_for_room, name='door_listings_for_room'),
-    url(r'^streampunk/door_listings_for_day/(?P<pk>\d+)/$', door_listings_for_day, name='door_listings_for_day'),
-    url(r'^streampunk/door_listing_for_room/(?P<rpk>\d+)/day/(?P<dpk>\d+)/$', door_listing_for_room_and_day, name='door_listing_for_room_and_day'),
-    url(r'^streampunk/door_listings/$', door_listings, name='door_listings'),
-    url(r'^streampunk/drag/(?P<gr>\d+)/$', drag_grid, name='drag_grid'),
-)
+    # url(r'^streampunk/name_cards_for_item/(?P<pk>\d+)/$', name_cards_for_item, name='name_cards_for_item'),
+    # url(r'^streampunk/name_cards/$', name_cards, name='name_cards'),
+    # url(r'^streampunk/drinks_form_for_item/(?P<pk>\d+)/$', drinks_form_for_item, name='drinks_form_for_item'),
+    # url(r'^streampunk/drinks_forms/$', drinks_forms, name='drinks_forms'),
+    # url(r'^streampunk/door_listings_for_room/(?P<pk>\d+)/$', door_listings_for_room, name='door_listings_for_room'),
+    # url(r'^streampunk/door_listings_for_day/(?P<pk>\d+)/$', door_listings_for_day, name='door_listings_for_day'),
+    # url(r'^streampunk/door_listing_for_room/(?P<rpk>\d+)/day/(?P<dpk>\d+)/$', door_listing_for_room_and_day, name='door_listing_for_room_and_day'),
+    # url(r'^streampunk/door_listings/$', door_listings, name='door_listings'),
+    # url(r'^streampunk/drag/(?P<gr>\d+)/$', drag_grid, name='drag_grid'),
+]
 
-apipatterns = patterns('',
-    url(r'^api/grid/(?P<pk>\d+)/$', api_grid.as_view(), name='api_grid'),
-    url(r'^api/rooms/$', api_rooms.as_view(), name='api_rooms'),
-    url(r'^api/item/(?P<pk>\d+)/$', api_item.as_view(), name='api_item'),
-    url(r'^api/slot_items/(?P<pk>\d+)/$', api_slot_items.as_view(), name='api_slot_items'),
-)
+apipatterns = [
+    # url(r'^api/grid/(?P<pk>\d+)/$', api_grid.as_view(), name='api_grid'),
+    # url(r'^api/rooms/$', api_rooms.as_view(), name='api_rooms'),
+    # url(r'^api/item/(?P<pk>\d+)/$', api_item.as_view(), name='api_item'),
+    # url(r'^api/slot_items/(?P<pk>\d+)/$', api_slot_items.as_view(), name='api_slot_items'),
+]
 
-urlpatterns += format_suffix_patterns(apipatterns)
+# urlpatterns += format_suffix_patterns(apipatterns)
