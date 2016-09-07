@@ -106,6 +106,10 @@ def model_cmp(old_obj, new_obj, fields):
           log = ChangeLog(log_id=int(old_obj.id), username=get_current_username(), field=log_key, old_val=str(old_val), new_val=str(new_val))
           log.save()
   
+def defUndefMgr_find_default(self):
+  return self.get(isDefault=True)
+def defUndefMgr_find_undefined(self):
+  return self.get(isUndefined=True)
 
 class DefUndefManager(models.Manager):
   """
@@ -126,6 +130,11 @@ def avail_for_slots(avail, slots):
   slots_set = set([ s.id for s in slots ])
   not_covered = slots_set - avail_set
   return len(not_covered) == 0
+
+def ConInfoBool_show_shortname(self):
+  return ConInfoBool.objects.get(var='show_shortname').val
+def ConInfoBool_rooms_across_top(self):
+  return ConInfoBool.objects.get(var='rooms_across_top').val
 
 class ConInfoBoolManager(models.Manager):
   "A manager that knows how to look up certain flags within the database."
@@ -200,6 +209,10 @@ class ConInfoString(models.Model):
   def __unicode__(self):
     return self.name
 
+def ConDay_find_default(self):
+  return ConDay.objects.get(isDefault=True)
+def ConDay_find_undefined(self):
+  return ConDay.objects.get(isUndefined=True)
 
 class ConDayManager(DefUndefManager):
   "A manager with some convenience methods."
@@ -234,6 +247,11 @@ class ConDay(models.Model):
   def __unicode__(self):
     return self.name
 
+def SlotLength_find_default(self):
+  return SlotLength.objects.get(isDefault=True)
+def SlotLength_find_undefined(self):
+  return SlotLength.objects.get(isUndefined=True)
+
 class SlotLength(models.Model):
   "A SlotLength is how long a given item may run."
   name = models.CharField(max_length=30,
@@ -250,15 +268,20 @@ class SlotLength(models.Model):
   def __unicode__(self):
     return self.name
 
+def Slot_find_default(self):
+  return Slot.objects.get(isDefault=True)
+def Slot_find_undefined(self):
+  return Slot.objects.get(isUndefined=True)
+
 class Slot(models.Model):
   """
   a Slot is a potential position in the day at which
   an item may start.
   """
   start = models.IntegerField(help_text="When the slot will start, in minutes after midnight.")
-  length = models.ForeignKey(SlotLength, default=SlotLength.objects.find_default,
+  length = models.ForeignKey(SlotLength, default=SlotLength_find_default,
                              help_text="How long the slot lasts, in the programme")
-  day = models.ForeignKey(ConDay, default=ConDay.objects.find_default,
+  day = models.ForeignKey(ConDay, default=ConDay_find_default,
                              help_text="Which day this slot occurs on")
   startText = models.CharField(max_length=20,
                                help_text="A convenient label for the slot, e.g. 7pm")
@@ -349,6 +372,9 @@ class Grid(models.Model):
       item_set |= set(slot.items())
     return list(item_set)
 
+def Revision_latest(self):
+  return Revision.objects.latest()
+
 class Revision(models.Model):
   """
   A Revision tells us when an item was last modified. We create a new one
@@ -396,6 +422,11 @@ class EnumTable(models.Model):
       raise DeleteDefaultException
     return self.__class__.objects.get(isUndefined=True)
 
+def ItemKind_find_default(self):
+  return ItemKind.objects.get(isDefault=True)
+def ItemKind_find_undefined(self):
+  return ItemKind.objects.get(isUndefined=True)
+
 class ItemKind(EnumTable):
   """
   An Item's ItemKind tells you what kind of activity
@@ -412,6 +443,11 @@ class ItemKind(EnumTable):
   def tabler_exclude(cls, request):
     return None
 
+def SeatingKind_find_default(self):
+  return SeatingKind.objects.get(isDefault=True)
+def SeatingKind_find_undefined(self):
+  return SeatingKind.objects.get(isUndefined=True)
+
 class SeatingKind(EnumTable):
   """
   An Item's SeatingKind tells you how the item's
@@ -421,6 +457,10 @@ class SeatingKind(EnumTable):
     self.item_set.all().update(seating=self.delete_replacement())
     return super(SeatingKind, self).delete()
 
+def FrontLayoutKind_find_default(self):
+  return FrontLayoutKind.objects.get(isDefault=True)
+def FrontLayoutKind_find_undefined(self):
+  return FrontLayoutKind.objects.get(isUndefined=True)
 
 class FrontLayoutKind(EnumTable):
   """
@@ -430,6 +470,10 @@ class FrontLayoutKind(EnumTable):
     self.item_set.all().update(frontLayout=self.delete_replacement())
     return super(FrontLayoutKind, self).delete()
 
+def PersonRole_find_default(self):
+  return PersonRole.objects.get(isDefault=True)
+def PersonRole_find_undefined(self):
+  return PersonRole.objects.get(isUndefined=True)
 
 class PersonRole(EnumTable):
   """
@@ -449,6 +493,10 @@ class PersonRole(EnumTable):
   def is_moderator(self):
     return self.name == "Moderator"
 
+def PersonStatus_find_default(self):
+  return PersonStatus.objects.get(isDefault=True)
+def PersonStatus_find_undefined(self):
+  return PersonStatus.objects.get(isUndefined=True)
 
 class PersonStatus(EnumTable):
   """
@@ -462,6 +510,10 @@ class PersonStatus(EnumTable):
     self.itemperson_set.all().update(status=self.delete_replacement())
     return super(PersonStatus, self).delete()
 
+def Gender_find_default(self):
+  return Gender.objects.get(isDefault=True)
+def Gender_find_undefined(self):
+  return Gender.objects.get(isUndefined=True)
 
 class Gender(EnumTable):
   """
@@ -533,6 +585,11 @@ class Tag(models.Model):
 # want to keep track of, to make sure it's available in the right place at the
 # right time.
 
+def KitKind_find_default(self):
+  return KitKind.objects.get(isDefault=True)
+def KitKind_find_undefined(self):
+  return KitKind.objects.get(isUndefined=True)
+
 class KitKind(EnumTable):
   "What kind of kit this is, e.g. DVD player, flip chart."
   def delete(self):
@@ -541,6 +598,10 @@ class KitKind(EnumTable):
     self.kitrequest_set.all().update(kind=rep)
     return super(KitKind, self).delete()
 
+def KitRole_find_default(self):
+  return KitRole.objects.get(isDefault=True)
+def KitRole_find_undefined(self):
+  return KitRole.objects.get(isUndefined=True)
 
 class KitRole(EnumTable):
   "The purpose for this bit of kit, in the item, e.g. stage mic vs audience mic."
@@ -548,6 +609,10 @@ class KitRole(EnumTable):
     self.kitthing_set.all().update(role=self.delete_replacement())
     return super(KitRole, self).delete()
 
+def KitDepartment_find_default(self):
+  return KitDepartment.objects.get(isDefault=True)
+def KitDepartment_find_undefined(self):
+  return KitDepartment.objects.get(isUndefined=True)
 
 class KitDepartment(EnumTable):
   "Which con dept is responsible for managing this bit of kit."
@@ -555,6 +620,10 @@ class KitDepartment(EnumTable):
     self.kitthing_set.all().update(department=self.delete_replacement())
     return super(KitDepartment, self).delete()
 
+def KitSource_find_default(self):
+  return KitSource.objects.get(isDefault=True)
+def KitSource_find_undefined(self):
+  return KitSource.objects.get(isUndefined=True)
 
 class KitSource(EnumTable):
   "Where you're getting this bit of kit from."
@@ -562,6 +631,10 @@ class KitSource(EnumTable):
     self.kitthing_set.all().update(source=self.delete_replacement())
     return super(KitSource, self).delete()
 
+def KitBasis_find_default(self):
+  return KitBasis.objects.get(isDefault=True)
+def KitBasis_find_undefined(self):
+  return KitBasis.objects.get(isUndefined=True)
 
 class KitBasis(EnumTable):
   "On what basis are you obtaining this bit of kit. Borrow, hire, buy, etc."
@@ -569,6 +642,10 @@ class KitBasis(EnumTable):
     self.kitthing_set.all().update(basis=self.delete_replacement())
     return super(KitBasis, self).delete()
 
+def MediaStatus_find_default(self):
+  return MediaStatus.objects.get(isDefault=True)
+def MediaStatus_find_undefined(self):
+  return MediaStatus.objects.get(isUndefined=True)
 
 class MediaStatus(EnumTable):
   "If an item requires some media as well, what is the status of the provision of that media"
@@ -576,6 +653,10 @@ class MediaStatus(EnumTable):
     self.item_set.all().update(mediaStatus=self.delete_replacement())
     return super(MediaStatus, self).delete()
 
+def KitStatus_find_default(self):
+  return KitStatus.objects.get(isDefault=True)
+def KitStatus_find_undefined(self):
+  return KitStatus.objects.get(isUndefined=True)
 
 class KitStatus(EnumTable):
   "What is the status of this bit of kit? Is it properly sorted?"
@@ -644,14 +725,14 @@ class KitRequest(models.Model):
   item requires. The request can be satisfied by kit assigned to the room
   that the item is in, or by directly assigning kit to the item.
   """
-  kind = models.ForeignKey(KitKind, default=KitKind.objects.find_default,
+  kind = models.ForeignKey(KitKind, default=KitKind_find_default,
                            help_text="What kind of kit does this item need?")
   count = models.SmallIntegerField(default=1,
                                    help_text="How many instances of that kit does the item require?")
   setupAssistance = models.BooleanField(default=False,help_text="Set this if the item's participants require Tech Crew to come in and help set up the kit")
   notes = models.TextField(blank=True,
                            help_text="Any additional information required.")
-  status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default,
+  status = models.ForeignKey(KitStatus, default=KitStatus_find_default,
                              help_text="Has this request been sorted out?")
 
   class Meta:
@@ -731,19 +812,19 @@ class KitThing(models.Model):
                           help_text="The name of this bit of kit. Be descriptive so that you can distinguish similar things.")
   description = models.TextField(blank=True,
                                  help_text="Additional information, if necessary.")
-  kind = models.ForeignKey(KitKind, default=KitKind.objects.find_default,
+  kind = models.ForeignKey(KitKind, default=KitKind_find_default,
                            help_text="What kind of kit thing this is.")
   count = models.SmallIntegerField(default=1,
                                    help_text="How many instances are there in this thing? They must always be kept together.")
-  role = models.ForeignKey(KitRole, default=KitRole.objects.find_default,
+  role = models.ForeignKey(KitRole, default=KitRole_find_default,
                            help_text="The purpose of this bit of kit, in the item")
-  source = models.ForeignKey(KitSource, default=KitSource.objects.find_default,
+  source = models.ForeignKey(KitSource, default=KitSource_find_default,
                              help_text="Who's providing this bit of kit to the event")
-  department = models.ForeignKey(KitDepartment, default=KitDepartment.objects.find_default,
+  department = models.ForeignKey(KitDepartment, default=KitDepartment_find_default,
                                  help_text="Which dept is responsible for managing this bit of kit")
-  basis = models.ForeignKey(KitBasis, default=KitBasis.objects.find_default,
+  basis = models.ForeignKey(KitBasis, default=KitBasis_find_default,
                             help_text="Are you borrowing this kit? Buying it?")
-  status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default,
+  status = models.ForeignKey(KitStatus, default=KitStatus_find_default,
                              help_text="Is this bit of kit sorted?")
   cost = models.IntegerField(default=0,
                              help_text="How much is this going to hit the budget?")
@@ -821,7 +902,7 @@ class KitBundle(models.Model):
   """
   name = models.CharField(max_length=64,
                           help_text="The name of the bundle. Make sure you can distinguish bundles by name")
-  status = models.ForeignKey(KitStatus, default=KitStatus.objects.find_default,
+  status = models.ForeignKey(KitStatus, default=KitStatus_find_default,
                              help_text="Is this bundle sorted?")
   things = models.ManyToManyField(KitThing,
                                   help_text="The things that make up this bundle")
@@ -1110,7 +1191,7 @@ class RoomCapacity(models.Model):
   saying how many people can fit in, with that layout. This can be used to check
   against the expected audience for an item.
   """
-  layout = models.ForeignKey(SeatingKind, default=SeatingKind.objects.find_default,
+  layout = models.ForeignKey(SeatingKind, default=SeatingKind_find_default,
                              help_text="How the room is laid out")
   count = models.IntegerField(help_text="How many people can fit into the room, in this layout")
 
@@ -1135,6 +1216,10 @@ class RoomCapacity(models.Model):
   def tabler_exclude(cls, request):
     return None
 
+def Room_find_default(self):
+  return Room.objects.get(isDefault=True)
+def Room_find_undefined(self):
+  return Room.objects.get(isUndefined=True)
 
 class Room(models.Model):
   """
@@ -1324,7 +1409,7 @@ class Person(models.Model):
                                help_text="Private notes about the person, visible only to con staff.")
   contact = models.TextField(blank=True,
                              help_text="The person's contact details: address, phone number, etc.")
-  gender = models.ForeignKey(Gender, default=Gender.objects.find_default,
+  gender = models.ForeignKey(Gender, default=Gender_find_default,
                              help_text="Gender. You can use this to determine your balance on your programme.")
   complete = models.CharField(max_length=4, choices=YesNo, default='No',
                               help_text="Set this to Yes when you have gathered all the information you need about this person.")
@@ -1499,19 +1584,19 @@ class Item(models.Model):
                                help_text="Shorthand for the item. Handy for grids, back-of-badge labels, etc.") 
   blurb = models.TextField(blank=True,
                            help_text="A public description about the item, so people know what it's about")
-  start = models.ForeignKey(Slot, null=True, default=Slot.objects.find_default,
+  start = models.ForeignKey(Slot, null=True, default=Slot_find_default,
                             help_text="The slot in which the item will begin")
-  length = models.ForeignKey(SlotLength, default=SlotLength.objects.find_default,
+  length = models.ForeignKey(SlotLength, default=SlotLength_find_default,
                              help_text="The duration of the item")
-  room = models.ForeignKey(Room, default=Room.objects.find_default,
+  room = models.ForeignKey(Room, default=Room_find_default,
                            help_text="The room in which the item takes place")
-  kind = models.ForeignKey(ItemKind, default=ItemKind.objects.find_default,
+  kind = models.ForeignKey(ItemKind, default=ItemKind_find_default,
                            help_text="What kind of item is this? Panel, talk, workshop, etc.")
-  seating = models.ForeignKey(SeatingKind, default=SeatingKind.objects.find_default,
+  seating = models.ForeignKey(SeatingKind, default=SeatingKind_find_default,
                               help_text="How should the main body of the room be laid out, for the audience?")
-  frontLayout = models.ForeignKey(FrontLayoutKind, default=FrontLayoutKind.objects.find_default,
+  frontLayout = models.ForeignKey(FrontLayoutKind, default=FrontLayoutKind_find_default,
                                   help_text="How should the front of the room be laid out, for the item participants?")
-  revision = models.ForeignKey(Revision, default=Revision.objects.latest,
+  revision = models.ForeignKey(Revision, default=Revision_latest,
                                help_text="Indicates which baseline of the programme this item was last modified in")
   visible = models.BooleanField(default=True,
                                 help_text="Set to true if the item should appear on the printed programme")
@@ -1553,7 +1638,7 @@ class Item(models.Model):
                                    help_text="True if the room will need to be reset <em>before</em> the item")
   needsCleanUp = models.BooleanField(default=False,
                                      help_text="True if the room will need to be cleaned up <em>after</em> the item")
-  mediaStatus = models.ForeignKey(MediaStatus, default=MediaStatus.objects.find_default,
+  mediaStatus = models.ForeignKey(MediaStatus, default=MediaStatus_find_default,
                                   help_text="Indicates whether Tech have suitably processed any media requirements for the item")
   follows = models.ForeignKey('self', null=True, blank=True,
                               help_text="If this item must always immediately follow another item in the same room (e.g. setup, item, tear down), select the preceding item here")
@@ -1670,9 +1755,9 @@ class ItemPerson(models.Model):
                            help_text="The item the person is participating in")
   person = models.ForeignKey(Person,
                              help_text="The person participating in the item")
-  role = models.ForeignKey(PersonRole, default=PersonRole.objects.find_default,
+  role = models.ForeignKey(PersonRole, default=PersonRole_find_default,
                            help_text="What is the person's role, for this item?")
-  status = models.ForeignKey(PersonStatus, default=PersonStatus.objects.find_default,
+  status = models.ForeignKey(PersonStatus, default=PersonStatus_find_default,
                              help_text="Has the person confirmed they can participate in this item?")
   visible = models.BooleanField(default=True,
                                 help_text="True if the the person should be listed as participating, in the printed programme")
@@ -1765,6 +1850,11 @@ class PersonList(models.Model):
   def get_absolute_url(self):
     return reverse('show_personlist_detail', kwargs={"pk": self.id})
 
+def CheckResult_find_default(self):
+  return CheckResult.objects.get(isDefault=True)
+def CheckResult_find_undefined(self):
+  return CheckResult.objects.get(isUndefined=True)
+
 class CheckResult(EnumTable):
   "Indicates what kind of result we get back from a particular check, so we know how to display it."
   def delete(self):
@@ -1783,7 +1873,7 @@ class Check(models.Model):
                                  help_text="Explanation of what the check verifies")
   module = models.SlugField(max_length=48,
                             help_text="Used to identify the code to load and run, and how to render the results")
-  result = models.ForeignKey(CheckResult, default=CheckResult.objects.find_default,
+  result = models.ForeignKey(CheckResult, default=CheckResult_find_default,
                              help_text="The kind of result returned by the check")
 
   def __unicode__(self):
@@ -1808,7 +1898,7 @@ class UserProfile(models.Model):
   user = models.OneToOneField(User,
                               help_text="The User for which this profile applies")
   # personal preferences about grid rendering
-  show_shortname = models.BooleanField(default=ConInfoBool.objects.show_shortname,
+  show_shortname = models.BooleanField(default=ConInfoBool_show_shortname,
                                        help_text="True if shortnames should be displayed")
   show_tags = models.BooleanField(default=True,
                                   help_text="True if tags should be displayed on the grid")
@@ -1820,7 +1910,7 @@ class UserProfile(models.Model):
                                         help_text="True if kit bundles should be displayed on the grid")
   show_kitrequests = models.BooleanField(default=False,
                                          help_text="True if kit requests should be displayed on the grid")
-  rooms_across_top = models.BooleanField(default=ConInfoBool.objects.rooms_across_top,
+  rooms_across_top = models.BooleanField(default=ConInfoBool_rooms_across_top,
                                          help_text="True if rooms should be listed across the top of the grid, False if they should be listed down the side.")
   name_order = models.CharField(max_length=4, choices=NameOrder, default='Last',
                                 help_text="How should person-lists be sorted?")
