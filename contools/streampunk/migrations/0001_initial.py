@@ -39,12 +39,17 @@ def make_default_SlotLength(apps, schema_editor):
 
 def make_default_Slot(apps, schema_editor):
   model = apps.get_model("streampunk", "Slot")
-  obj = model(start=0, isUndefined=True, isDefault=True, startText='None', slotText='None')
+  obj = model(start=0, isUndefined=True, isDefault=True, startText='None', slotText='None', order=0)
   obj.save()
 
 def make_default_Room(apps, schema_editor):
   model = apps.get_model("streampunk", "Room")
   obj = model(name='Nowhere', isUndefined=True, isDefault=True)
+  obj.save()
+
+def make_latest_Revision(apps, schema_editor):
+  model = apps.get_model("streampunk", "Revision")
+  obj = model(baseline='1993-09-04', colour='white', description='None')
   obj.save()
 
 class Migration(migrations.Migration):
@@ -566,6 +571,7 @@ class Migration(migrations.Migration):
                 'get_latest_by': 'baseline',
             },
         ),
+        migrations.RunPython(make_latest_Revision),
 
 
         migrations.CreateModel(
@@ -600,6 +606,7 @@ class Migration(migrations.Migration):
                 'verbose_name_plural': 'rooms',
             },
         ),
+        migrations.RunPython(make_default_Room),
 
 
         migrations.CreateModel(

@@ -367,8 +367,8 @@ class Grid(models.Model):
       item_set |= set(slot.items())
     return list(item_set)
 
-def Revision_latest(self):
-  return Revision.objects.latest()
+def Revision_latest():
+  return Revision.objects.latest().pk
 
 class Revision(models.Model):
   """
