@@ -106,20 +106,15 @@ def model_cmp(old_obj, new_obj, fields):
           log = ChangeLog(log_id=int(old_obj.id), username=get_current_username(), field=log_key, old_val=str(old_val), new_val=str(new_val))
           log.save()
   
-def defUndefMgr_find_default(self):
-  return self.get(isDefault=True)
-def defUndefMgr_find_undefined(self):
-  return self.get(isUndefined=True)
-
 class DefUndefManager(models.Manager):
   """
   A manager that has extra methods for finding the default/undefined
   values based on fields.
   """
   def find_default(self):
-    return self.get(isDefault=True)
+    return self.get(isDefault=True).pk
   def find_undefined(self):
-    return self.get(isUndefined=True)
+    return self.get(isUndefined=True).pk
 
 def avail_for_slots(avail, slots):
   """
@@ -209,10 +204,10 @@ class ConInfoString(models.Model):
   def __unicode__(self):
     return self.name
 
-def ConDay_find_default(self):
-  return ConDay.objects.get(isDefault=True)
-def ConDay_find_undefined(self):
-  return ConDay.objects.get(isUndefined=True)
+def ConDay_find_default():
+  return ConDay.objects.get(isDefault=True).pk
+def ConDay_find_undefined():
+  return ConDay.objects.get(isUndefined=True).pk
 
 class ConDayManager(DefUndefManager):
   "A manager with some convenience methods."
@@ -247,10 +242,10 @@ class ConDay(models.Model):
   def __unicode__(self):
     return self.name
 
-def SlotLength_find_default(self):
-  return SlotLength.objects.get(isDefault=True)
-def SlotLength_find_undefined(self):
-  return SlotLength.objects.get(isUndefined=True)
+def SlotLength_find_default():
+  return SlotLength.objects.get(isDefault=True).pk
+def SlotLength_find_undefined():
+  return SlotLength.objects.get(isUndefined=True).pk
 
 class SlotLength(models.Model):
   "A SlotLength is how long a given item may run."
@@ -268,10 +263,10 @@ class SlotLength(models.Model):
   def __unicode__(self):
     return self.name
 
-def Slot_find_default(self):
-  return Slot.objects.get(isDefault=True)
-def Slot_find_undefined(self):
-  return Slot.objects.get(isUndefined=True)
+def Slot_find_default():
+  return Slot.objects.get(isDefault=True).pk
+def Slot_find_undefined():
+  return Slot.objects.get(isUndefined=True).pk
 
 class Slot(models.Model):
   """
@@ -422,10 +417,10 @@ class EnumTable(models.Model):
       raise DeleteDefaultException
     return self.__class__.objects.get(isUndefined=True)
 
-def ItemKind_find_default(self):
-  return ItemKind.objects.get(isDefault=True)
-def ItemKind_find_undefined(self):
-  return ItemKind.objects.get(isUndefined=True)
+def ItemKind_find_default():
+  return ItemKind.objects.get(isDefault=True).pk
+def ItemKind_find_undefined():
+  return ItemKind.objects.get(isUndefined=True).pk
 
 class ItemKind(EnumTable):
   """
@@ -443,10 +438,10 @@ class ItemKind(EnumTable):
   def tabler_exclude(cls, request):
     return None
 
-def SeatingKind_find_default(self):
-  return SeatingKind.objects.get(isDefault=True)
-def SeatingKind_find_undefined(self):
-  return SeatingKind.objects.get(isUndefined=True)
+def SeatingKind_find_default():
+  return SeatingKind.objects.get(isDefault=True).pk
+def SeatingKind_find_undefined():
+  return SeatingKind.objects.get(isUndefined=True).pk
 
 class SeatingKind(EnumTable):
   """
@@ -457,10 +452,10 @@ class SeatingKind(EnumTable):
     self.item_set.all().update(seating=self.delete_replacement())
     return super(SeatingKind, self).delete()
 
-def FrontLayoutKind_find_default(self):
-  return FrontLayoutKind.objects.get(isDefault=True)
-def FrontLayoutKind_find_undefined(self):
-  return FrontLayoutKind.objects.get(isUndefined=True)
+def FrontLayoutKind_find_default():
+  return FrontLayoutKind.objects.get(isDefault=True).pk
+def FrontLayoutKind_find_undefined():
+  return FrontLayoutKind.objects.get(isUndefined=True).pk
 
 class FrontLayoutKind(EnumTable):
   """
@@ -470,10 +465,10 @@ class FrontLayoutKind(EnumTable):
     self.item_set.all().update(frontLayout=self.delete_replacement())
     return super(FrontLayoutKind, self).delete()
 
-def PersonRole_find_default(self):
-  return PersonRole.objects.get(isDefault=True)
-def PersonRole_find_undefined(self):
-  return PersonRole.objects.get(isUndefined=True)
+def PersonRole_find_default():
+  return PersonRole.objects.get(isDefault=True).pk
+def PersonRole_find_undefined():
+  return PersonRole.objects.get(isUndefined=True).pk
 
 class PersonRole(EnumTable):
   """
@@ -493,10 +488,10 @@ class PersonRole(EnumTable):
   def is_moderator(self):
     return self.name == "Moderator"
 
-def PersonStatus_find_default(self):
-  return PersonStatus.objects.get(isDefault=True)
-def PersonStatus_find_undefined(self):
-  return PersonStatus.objects.get(isUndefined=True)
+def PersonStatus_find_default():
+  return PersonStatus.objects.get(isDefault=True).pk
+def PersonStatus_find_undefined():
+  return PersonStatus.objects.get(isUndefined=True).pk
 
 class PersonStatus(EnumTable):
   """
@@ -510,10 +505,10 @@ class PersonStatus(EnumTable):
     self.itemperson_set.all().update(status=self.delete_replacement())
     return super(PersonStatus, self).delete()
 
-def Gender_find_default(self):
-  return Gender.objects.get(isDefault=True)
-def Gender_find_undefined(self):
-  return Gender.objects.get(isUndefined=True)
+def Gender_find_default():
+  return Gender.objects.get(isDefault=True).pk
+def Gender_find_undefined():
+  return Gender.objects.get(isUndefined=True).pk
 
 class Gender(EnumTable):
   """
@@ -585,10 +580,10 @@ class Tag(models.Model):
 # want to keep track of, to make sure it's available in the right place at the
 # right time.
 
-def KitKind_find_default(self):
-  return KitKind.objects.get(isDefault=True)
-def KitKind_find_undefined(self):
-  return KitKind.objects.get(isUndefined=True)
+def KitKind_find_default():
+  return KitKind.objects.get(isDefault=True).pk
+def KitKind_find_undefined():
+  return KitKind.objects.get(isUndefined=True).pk
 
 class KitKind(EnumTable):
   "What kind of kit this is, e.g. DVD player, flip chart."
@@ -598,10 +593,10 @@ class KitKind(EnumTable):
     self.kitrequest_set.all().update(kind=rep)
     return super(KitKind, self).delete()
 
-def KitRole_find_default(self):
-  return KitRole.objects.get(isDefault=True)
-def KitRole_find_undefined(self):
-  return KitRole.objects.get(isUndefined=True)
+def KitRole_find_default():
+  return KitRole.objects.get(isDefault=True).pk
+def KitRole_find_undefined():
+  return KitRole.objects.get(isUndefined=True).pk
 
 class KitRole(EnumTable):
   "The purpose for this bit of kit, in the item, e.g. stage mic vs audience mic."
@@ -609,10 +604,10 @@ class KitRole(EnumTable):
     self.kitthing_set.all().update(role=self.delete_replacement())
     return super(KitRole, self).delete()
 
-def KitDepartment_find_default(self):
-  return KitDepartment.objects.get(isDefault=True)
-def KitDepartment_find_undefined(self):
-  return KitDepartment.objects.get(isUndefined=True)
+def KitDepartment_find_default():
+  return KitDepartment.objects.get(isDefault=True).pk
+def KitDepartment_find_undefined():
+  return KitDepartment.objects.get(isUndefined=True).pk
 
 class KitDepartment(EnumTable):
   "Which con dept is responsible for managing this bit of kit."
@@ -620,10 +615,10 @@ class KitDepartment(EnumTable):
     self.kitthing_set.all().update(department=self.delete_replacement())
     return super(KitDepartment, self).delete()
 
-def KitSource_find_default(self):
-  return KitSource.objects.get(isDefault=True)
-def KitSource_find_undefined(self):
-  return KitSource.objects.get(isUndefined=True)
+def KitSource_find_default():
+  return KitSource.objects.get(isDefault=True).pk
+def KitSource_find_undefined():
+  return KitSource.objects.get(isUndefined=True).pk
 
 class KitSource(EnumTable):
   "Where you're getting this bit of kit from."
@@ -631,10 +626,10 @@ class KitSource(EnumTable):
     self.kitthing_set.all().update(source=self.delete_replacement())
     return super(KitSource, self).delete()
 
-def KitBasis_find_default(self):
-  return KitBasis.objects.get(isDefault=True)
-def KitBasis_find_undefined(self):
-  return KitBasis.objects.get(isUndefined=True)
+def KitBasis_find_default():
+  return KitBasis.objects.get(isDefault=True).pk
+def KitBasis_find_undefined():
+  return KitBasis.objects.get(isUndefined=True).pk
 
 class KitBasis(EnumTable):
   "On what basis are you obtaining this bit of kit. Borrow, hire, buy, etc."
@@ -642,10 +637,10 @@ class KitBasis(EnumTable):
     self.kitthing_set.all().update(basis=self.delete_replacement())
     return super(KitBasis, self).delete()
 
-def MediaStatus_find_default(self):
-  return MediaStatus.objects.get(isDefault=True)
-def MediaStatus_find_undefined(self):
-  return MediaStatus.objects.get(isUndefined=True)
+def MediaStatus_find_default():
+  return MediaStatus.objects.get(isDefault=True).pk
+def MediaStatus_find_undefined():
+  return MediaStatus.objects.get(isUndefined=True).pk
 
 class MediaStatus(EnumTable):
   "If an item requires some media as well, what is the status of the provision of that media"
@@ -653,10 +648,10 @@ class MediaStatus(EnumTable):
     self.item_set.all().update(mediaStatus=self.delete_replacement())
     return super(MediaStatus, self).delete()
 
-def KitStatus_find_default(self):
-  return KitStatus.objects.get(isDefault=True)
-def KitStatus_find_undefined(self):
-  return KitStatus.objects.get(isUndefined=True)
+def KitStatus_find_default():
+  return KitStatus.objects.get(isDefault=True).pk
+def KitStatus_find_undefined():
+  return KitStatus.objects.get(isUndefined=True).pk
 
 class KitStatus(EnumTable):
   "What is the status of this bit of kit? Is it properly sorted?"
@@ -1216,10 +1211,10 @@ class RoomCapacity(models.Model):
   def tabler_exclude(cls, request):
     return None
 
-def Room_find_default(self):
-  return Room.objects.get(isDefault=True)
-def Room_find_undefined(self):
-  return Room.objects.get(isUndefined=True)
+def Room_find_default():
+  return Room.objects.get(isDefault=True).pk
+def Room_find_undefined():
+  return Room.objects.get(isUndefined=True).pk
 
 class Room(models.Model):
   """
@@ -1850,10 +1845,10 @@ class PersonList(models.Model):
   def get_absolute_url(self):
     return reverse('show_personlist_detail', kwargs={"pk": self.id})
 
-def CheckResult_find_default(self):
-  return CheckResult.objects.get(isDefault=True)
-def CheckResult_find_undefined(self):
-  return CheckResult.objects.get(isUndefined=True)
+def CheckResult_find_default():
+  return CheckResult.objects.get(isDefault=True).pk
+def CheckResult_find_undefined():
+  return CheckResult.objects.get(isUndefined=True).pk
 
 class CheckResult(EnumTable):
   "Indicates what kind of result we get back from a particular check, so we know how to display it."
