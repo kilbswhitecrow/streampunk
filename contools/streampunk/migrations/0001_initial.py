@@ -9,47 +9,286 @@ import streampunk.models
 
 def make_default_EnumTable(apps, schema_editor, cls):
   model = apps.get_model("streampunk", cls)
-  obj = model(name='Undef', gridOrder=0, isUndefined=True, isDefault=True)
+  obj = model(name='TBA', gridOrder=0, isUndefined=True, isDefault=True)
   obj.save()
 
-def make_default_ItemKind(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'ItemKind')
-def make_default_SeatingKind(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'SeatingKind')
-def make_default_FrontLayoutKind(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'FrontLayoutKind')
-def make_default_PersonRole(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'PersonRole')
-def make_default_PersonStatus(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'PersonStatus')
-def make_default_Gender(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'Gender')
-def make_default_CheckResult(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'CheckResult')
-def make_default_KitKind(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'KitKind')
 def make_default_KitRole(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'KitRole')
-def make_default_KitDepartment(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'KitDepartment')
 def make_default_KitSource(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'KitSource')
-def make_default_KitBasis(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'KitBasis')
-def make_default_KitStatus(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'KitStatus')
-def make_default_MediaStatus(apps, schema_editor): make_default_EnumTable(apps, schema_editor, 'MediaStatus')
+
+def make_default_ConInfoBool(apps, schema_editor):
+  vars = [ ( 'show_shortname', 'Show shortnames', True ),
+           ( 'rooms_across_top', 'Rooms axross top on grids', False ),
+           ( 'no_avail_means_always_avail', "No availability means 'always available'", True ) ]
+  model = apps.get_model("streampunk", "ConInfoBool")
+  for (vvar, vname, vval) in vars:
+    model(var=vvar, name=vname, val=vval)
+
+def make_default_ConInfoInt(apps, schema_editor):
+  vars = [ ( 'max_items_per_day', 'Max items per day for a person', 4 ),
+           ( 'max_items_whole_con', 'Max items for a person across the whole con', 12 ),
+           ( 'max_consecutive_items', "Max consecutive items for a person", 2 ) ]
+  model = apps.get_model("streampunk", "ConInfoInt")
+  for (vvar, vname, vval) in vars:
+    model(var=vvar, name=vname, val=vval)
+
+def make_default_ConInfoString(apps, schema_editor):
+  vars = [ ( 'con_name', 'Convention name', "MyCon 2012" ),
+           ( 'email_from', "Email 'From' address, "steve@whitecrow.demon.co.uk" ),
+           ( 'con_logo_image_file', "Con Logo image file", "logobanner.jpg" ) ]
+           ( 'con_logo_image_url_name', "Con Logo image URL", "logobanner.jpg" ) ]
+  model = apps.get_model("streampunk", "ConInfoString")
+  for (vvar, vname, vval) in vars:
+    model(var=vvar, name=vname, val=vval)
+
+
+   
+
+def make_default_CheckResult(apps, schema_editor):
+  model = apps.get_model("streampunk", "CheckResult")
+  model(name='Item List',     gridOrder=20,  isUndefined=False, isDefault=True,  description="Check returns a list of program items").save()
+  model(name='Person List',   gridOrder=30,  isUndefined=False, isDefault=False, description="Check returns a list of people").save()
+  model(name='Mixed Tuple',   gridOrder=40,  isUndefined=False, isDefault=False, description="Check returns a list of tuples, each of which contains mixed object kinds").save()
+  model(name='Room List',     gridOrder=40,  isUndefined=False, isDefault=False, description="Check returns a list of rooms").save()
+  model(name='KitThing List', gridOrder=40,  isUndefined=False, isDefault=False, description="Check returns a list of kit things").save()
+  model(name='TBA',           gridOrder=100, isUndefined=True,  isDefault=False).save()
+
+def make_default_Check(apps, schema_editor):
+  cr = apps.get_model("streampunk", "CheckResult")
+  plist = cr.objects.get(name='Person List').pk
+  ilist = cr.objects.get(name='Item List').pk
+  tlist = cr.objects.get(name='Mixed Tuple').pk
+  rlist = cr.objects.get(name='Room List').pk
+  klist = cr.objects.get(name='KitThing List').pk
+
+  model = apps.get_model("streampunk", "Check")
+  model(result=plist, module="no_email", name="People with no email address", description="List people who do not yet have an email address entered.").save()
+  model(result=plist, module="not_member", name="People who haven't joined yet", description="List people who don't have a valid membership number yet.").save()
+  model(result=plist, module="not_complete_person", name="People who aren't complete joined yet", description="List people who aren't marked as 'Complete' yet.").save()
+  model(result=ilist, module="people_clashes", name="People clashes", description="List items where the same person is programmed on two concurrent items.").save()
+  model(result=ilist, module="items_no_people", name="Items with no people", description="List items which have no people on them.").save()
+  model(result=ilist, module="items_no_room", name="Items with no room", description="List items which are not assigned to a real room yet.").save()
+  model(result=ilist, module="items_not_scheduled", name="Items not scheduled", description="List items which do not have a defined day/time start yet.").save()
+  model(result=ilist, module="items_unknown_gophers", name="Items with unknown gopher count", description="List items for which the gopher count is still -1.").save()
+  model(result=ilist, module="items_unsatisfied_kiteq", name="Items with unsatisfied kit requests", description="List items for which there are kit requests unsatisfied by either room or item assignments.").save()
+  model(result=tlist, module="kit_clashes", name="Kit clashes", description="List kit assignments which clash with other kit assignments").save()
+  model(result=plist, module="people_no_avail", name="People without availability", description="List people who have no availability info entered.").save()
+  model(result=plist, module="people_not_avail", name="People unavailable", description="List people who are programmed on items outside their available times.").save()
+  model(result=tlist, module="room_not_avail", name="Items in unavailable rooms", description="List items that are scheduled in rooms when the room is unavailable.").save()
+  model(result=tlist, module="kit_not_avail_for_item", name="Items with unavailable kit", description="List items that have kit assigned to them when the it is unavailable.").save()
+  model(result=tlist, module="kit_not_avail_for_room", name="Kit/room availability mismatch", description="List cases where kit is assigned to a room in a period when one or both are unavailable.").save()
+  model(result=rlist, module="room_no_avail", name="Rooms without availability", description="List rooms with no availability info.").save()
+  model(result=klist, module="kit_no_avail", name=KitThings without availability", description="List kit things with no availability info.").save()
+
+def make_default_ItemKind(apps, schema_editor):
+  model = apps.get_model("streampunk", "ItemKind")
+  model(name='TBA',      gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Panel',    gridOrder=20,  isUndefined=False, isDefault=False, description="Standard Panel discussion").save()
+  model(name='Talk',     gridOrder=30,  isUndefined=False, isDefault=False, description="Someone presenting a talk or speech").save()
+  model(name='Workshop', gridOrder=40,  isUndefined=False, isDefault=False, description="An activity that gets all attendees involved").save()
+  model(name='Exercise', gridOrder=50,  isUndefined=False, isDefault=False, description="A physical activity").save()
+  model(name='Game',     gridOrder=60,  isUndefined=False, isDefault=False, description="Something with rules and a winner").save()
+  model(name='Interview',gridOrder=70,  isUndefined=False, isDefault=False, description="An interview of a guest").save()
+  model(name='Other',    gridOrder=80,  isUndefined=False, isDefault=False, description="Something that doesn't fit into the other categories").save()
+
+def make_default_SeatingKind(apps, schema_editor):
+  model = apps.get_model("streampunk", "SeatingKind")
+  model(name='TBA',                gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Theatre',            gridOrder=20,  isUndefined=False, isDefault=False, description="Chairs in rows facing the front").save()
+  model(name='Chairs around wall', gridOrder=30,  isUndefined=False, isDefault=False, description="Chairs around with walls, with the centre empty").save()
+  model(name='Boardroom',          gridOrder=40,  isUndefined=False, isDefault=False, description="Chairs around a single table in the middle of the room").save()
+  model(name='Empty',              gridOrder=50,  isUndefined=False, isDefault=False, description="No chairs or tables").save()
+  model(name='Cabaret',            gridOrder=60,  isUndefined=False, isDefault=False, description="Chairs around multiple circular tables").save()
+
+def make_default_FrontLayoutKind(apps, schema_editor):
+  model = apps.get_model("streampunk", "FrontLayoutKind")
+  model(name='TBA',   gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Panel', gridOrder=20,  isUndefined=False, isDefault=False, description="Chairs, table for panellists").save()
+
+def make_default_Gender(apps, schema_editor):
+  model = apps.get_model("streampunk", "Gender")
+  model(name='TBA',    gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Male',   gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Female', gridOrder=30,  isUndefined=False, isDefault=False).save()
+
+def make_default_KitKind(apps, schema_editor):
+  model = apps.get_model("streampunk", "KitKind")
+  model(name='TBA',            gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Projector',      gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Screen',         gridOrder=30,  isUndefined=False, isDefault=False).save()
+  model(name='Television',     gridOrder=40,  isUndefined=False, isDefault=False).save()
+  model(name='DVD Player',     gridOrder=50,  isUndefined=False, isDefault=False).save()
+  model(name='Blu-Ray Player', gridOrder=60,  isUndefined=False, isDefault=False).save()
+  model(name='CD Player',      gridOrder=70,  isUndefined=False, isDefault=False).save()
+  model(name='iPod',           gridOrder=80,  isUndefined=False, isDefault=False).save()
+
+def make_default_KitBasis(apps, schema_editor):
+  model = apps.get_model("streampunk", "KitBasis")
+  model(name='TBA',  gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Hire', gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Loan', gridOrder=30,  isUndefined=False, isDefault=False).save()
+  model(name='Buy',  gridOrder=40,  isUndefined=False, isDefault=False).save()
+
+def make_default_KitStatus(apps, schema_editor):
+  model = apps.get_model("streampunk", "KitStatus")
+  model(name='TBA',  gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Awaiting sign-off', gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Awaiting delivery', gridOrder=30,  isUndefined=False, isDefault=False).save()
+  model(name='Awaiting purchase', gridOrder=40,  isUndefined=False, isDefault=False).save()
+  model(name='Delivered',         gridOrder=50,  isUndefined=False, isDefault=False).save()
+
+def make_default_KitDepartment(apps, schema_editor):
+  model = apps.get_model("streampunk", "KitDepartment")
+  model(name='TBA',        gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Tech',       gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Green Room', gridOrder=30,  isUndefined=False, isDefault=False).save()
+  model(name='Ops          gridOrder=40,  isUndefined=False, isDefault=False).save()
+
+def make_default_MediaStatus(apps, schema_editor):
+  model = apps.get_model("streampunk", "MediaStatus")
+  model(name='TBA',                         gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='No media required',           gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Media needs sending to Tech', gridOrder=20,  isUndefined=False, isDefault=False).save()
+  model(name='Media received by Tech',      gridOrder=20,  isUndefined=False, isDefault=False).save()
+
+def make_default_PersonRole(apps, schema_editor):
+  model = apps.get_model("streampunk", "PersonRole")
+  model(name='TBA',         gridOrder=100, isUndefined=True,  isDefault=False, drink=True, canClash=True, namecard=True).save()
+  model(name='Panellist',   gridOrder=20,  isUndefined=False, isDefault=True,  drink=True, canClash=True, namecard=True, description="On a panel, but not running it").save()
+  model(name='Moderator',   gridOrder=30,  isUndefined=False, isDefault=False, drink=True, canClash=True, namecard=True, description="Running the panel").save()
+  model(name='Speaker',     gridOrder=40,  isUndefined=False, isDefault=False, drink=True, canClash=True, namecard=True, description="Presenting a talk or lecture").save()
+  model(name='Interviewer', gridOrder=50,  isUndefined=False, isDefault=False, drink=True, canClash=True, namecard=True, description="Interviewing a guest").save()
+  model(name='Interviewee', gridOrder=60,  isUndefined=False, isDefault=False, drink=True, canClash=True, namecard=True, description="Guest being interviewed").save()
+  model(name='Wants to be here', gridOrder=70,  isUndefined=False, isDefault=False, drink=False, canClash=False, namecard=False, description="Person would like to attend this item, but is not participating. Would prefer not to be scheduled against this, but if they are, so be it.").save()
+  model(name='Optional Panellist',   gridOrder=80,  isUndefined=False, isDefault=True,  drink=True, canClash=False, namecard=True, description="Panellist, but optional - okay if they cannot make it because of a clash").save()
+
+def make_default_PersonStatus(apps, schema_editor):
+  model = apps.get_model("streampunk", "PersonRole")
+  model(name='TBA',    gridOrder=100, isUndefined=True,  isDefault=True).save()
+  model(name='Proposed',  gridOrder=20,  isUndefined=False, isDefault=False, description="Would be good for this item, but not contacted yet").save()
+  model(name='Invited',   gridOrder=30,  isUndefined=False, isDefault=False, description="Has been invited, not yet confirmed").save()
+  model(name='Confirmed', gridOrder=40,  isUndefined=False, isDefault=False, description="Has confirmed").save()
 
 def make_default_ConDay(apps, schema_editor):
   model = apps.get_model("streampunk", "ConDay")
-  obj = model(name='Undef', isUndefined=True, isDefault=True, date='1993-09-04', order=0)
-  obj.save()
+  model(name='TBA',      isUndefined=True,  isDefault=True,  date='1993-09-04T00:00:00Z', order=0).save()
+  model(name='Friday',   isUndefined=False, isDefault=False, date='2012-04-06T00:00:00Z', order=2).save()
+  model(name='Saturday', isUndefined=False, isDefault=False, date='2012-04-07T00:00:00Z', order=3).save()
+  model(name='Sunday',   isUndefined=False, isDefault=False, date='2012-04-08T00:00:00Z', order=4).save()
+  model(name='Monday',   isUndefined=False, isDefault=False, date='2012-04-09T00:00:00Z', order=5).save()
 
 def make_default_SlotLength(apps, schema_editor):
   model = apps.get_model("streampunk", "SlotLength")
-  obj = model(name='Undef', length=0, isUndefined=True, isDefault=True)
-  obj.save()
+  obj = model(name='TBA',     length=0,   isUndefined=True,  isDefault=False).save()
+  obj = model(name='30mins',  length=30,  isUndefined=False, isDefault=False).save()
+  obj = model(name='1 hour',  length=60,  isUndefined=True,  isDefault=False).save()
+  obj = model(name='90mins',  length=90,  isUndefined=False, isDefault=False).save()
+  obj = model(name='2 hours', length=120, isUndefined=False, isDefault=False).save()
 
 def make_default_Slot(apps, schema_editor):
+  cd = apps.get_model("streampunk", "ConDay")
+  tba = cd.objects.get(name='TBA').pk
+  fri = cd.objects.get(name='Friday').pk
+  sat = cd.objects.get(name='Saturday').pk
+  sun = cd.objects.get(name='Sunday').pk
+  mon = cd.objects.get(name='Monday').pk
   model = apps.get_model("streampunk", "Slot")
-  obj = model(start=0, isUndefined=True, isDefault=True, startText='None', slotText='None', order=0)
-  obj.save()
+  model(start=0,    isUndefined=True,  isDefault=True,  day=tba, startText='None',     slotText='None',          order=0).save()
+
+  model(start=600,  isUndefined=False, isDefault=False, day=fri, startText='10am',     slotText='10-11am',       order=110).save()
+  model(start=660,  isUndefined=False, isDefault=False, day=fri, startText='11am',     slotText='11-Noon',       order=111).save()
+  model(start=720,  isUndefined=False, isDefault=False, day=fri, startText='Noon',     slotText='Noon-1pm',      order=112).save()
+  model(start=780,  isUndefined=False, isDefault=False, day=fri, startText='1pm',      slotText='1-2pm',         order=113).save()
+  model(start=840,  isUndefined=False, isDefault=False, day=fri, startText='2pm',      slotText='2-3pm',         order=114).save()
+  model(start=900,  isUndefined=False, isDefault=False, day=fri, startText='3pm',      slotText='3-4pm',         order=115).save()
+  model(start=960,  isUndefined=False, isDefault=False, day=fri, startText='4pm',      slotText='4-5pm',         order=116).save()
+  model(start=1020, isUndefined=False, isDefault=False, day=fri, startText='5pm',      slotText='5-6pm',         order=117).save()
+  model(start=1080, isUndefined=False, isDefault=False, day=fri, startText='6pm',      slotText='6-7pm',         order=118).save()
+  model(start=1140, isUndefined=False, isDefault=False, day=fri, startText='7pm',      slotText='7-8pm',         order=119).save()
+  model(start=1200, isUndefined=False, isDefault=False, day=fri, startText='8pm',      slotText='8-9pm',         order=120).save()
+  model(start=1260, isUndefined=False, isDefault=False, day=fri, startText='9pm',      slotText='9-10pm',        order=121).save()
+  model(start=1320, isUndefined=False, isDefault=False, day=fri, startText='10pm',     slotText='10-11pm',       order=122).save()
+  model(start=1380, isUndefined=False, isDefault=False, day=fri, startText='11pm',     slotText='11pm-Midnight', order=123).save()
+  model(start=1440, isUndefined=False, isDefault=False, day=fri, startText='Midnight', slotText='Midnight-1am',  order=124).save()
+  model(start=1500, isUndefined=False, isDefault=False, day=fri, startText='1am',      slotText='1-2am',         order=125).save()
+
+  model(start=600,  isUndefined=False, isDefault=False, day=sat, startText='10am',     slotText='10-11am',       order=110).save()
+  model(start=660,  isUndefined=False, isDefault=False, day=sat, startText='11am',     slotText='11-Noon',       order=111).save()
+  model(start=720,  isUndefined=False, isDefault=False, day=sat, startText='Noon',     slotText='Noon-1pm',      order=112).save()
+  model(start=780,  isUndefined=False, isDefault=False, day=sat, startText='1pm',      slotText='1-2pm',         order=113).save()
+  model(start=840,  isUndefined=False, isDefault=False, day=sat, startText='2pm',      slotText='2-3pm',         order=114).save()
+  model(start=900,  isUndefined=False, isDefault=False, day=sat, startText='3pm',      slotText='3-4pm',         order=115).save()
+  model(start=960,  isUndefined=False, isDefault=False, day=sat, startText='4pm',      slotText='4-5pm',         order=116).save()
+  model(start=1020, isUndefined=False, isDefault=False, day=sat, startText='5pm',      slotText='5-6pm',         order=117).save()
+  model(start=1080, isUndefined=False, isDefault=False, day=sat, startText='6pm',      slotText='6-7pm',         order=118).save()
+  model(start=1140, isUndefined=False, isDefault=False, day=sat, startText='7pm',      slotText='7-8pm',         order=119).save()
+  model(start=1200, isUndefined=False, isDefault=False, day=sat, startText='8pm',      slotText='8-9pm',         order=120).save()
+  model(start=1260, isUndefined=False, isDefault=False, day=sat, startText='9pm',      slotText='9-10pm',        order=121).save()
+  model(start=1320, isUndefined=False, isDefault=False, day=sat, startText='10pm',     slotText='10-11pm',       order=122).save()
+  model(start=1380, isUndefined=False, isDefault=False, day=sat, startText='11pm',     slotText='11pm-Midnight', order=123).save()
+  model(start=1440, isUndefined=False, isDefault=False, day=sat, startText='Midnight', slotText='Midnight-1am',  order=124).save()
+  model(start=1500, isUndefined=False, isDefault=False, day=sat, startText='1am',      slotText='1-2am',         order=125).save()
+
+  model(start=600,  isUndefined=False, isDefault=False, day=sun, startText='10am',     slotText='10-11am',       order=110).save()
+  model(start=660,  isUndefined=False, isDefault=False, day=sun, startText='11am',     slotText='11-Noon',       order=111).save()
+  model(start=720,  isUndefined=False, isDefault=False, day=sun, startText='Noon',     slotText='Noon-1pm',      order=112).save()
+  model(start=780,  isUndefined=False, isDefault=False, day=sun, startText='1pm',      slotText='1-2pm',         order=113).save()
+  model(start=840,  isUndefined=False, isDefault=False, day=sun, startText='2pm',      slotText='2-3pm',         order=114).save()
+  model(start=900,  isUndefined=False, isDefault=False, day=sun, startText='3pm',      slotText='3-4pm',         order=115).save()
+  model(start=960,  isUndefined=False, isDefault=False, day=sun, startText='4pm',      slotText='4-5pm',         order=116).save()
+  model(start=1020, isUndefined=False, isDefault=False, day=sun, startText='5pm',      slotText='5-6pm',         order=117).save()
+  model(start=1080, isUndefined=False, isDefault=False, day=sun, startText='6pm',      slotText='6-7pm',         order=118).save()
+  model(start=1140, isUndefined=False, isDefault=False, day=sun, startText='7pm',      slotText='7-8pm',         order=119).save()
+  model(start=1200, isUndefined=False, isDefault=False, day=sun, startText='8pm',      slotText='8-9pm',         order=120).save()
+  model(start=1260, isUndefined=False, isDefault=False, day=sun, startText='9pm',      slotText='9-10pm',        order=121).save()
+  model(start=1320, isUndefined=False, isDefault=False, day=sun, startText='10pm',     slotText='10-11pm',       order=122).save()
+  model(start=1380, isUndefined=False, isDefault=False, day=sun, startText='11pm',     slotText='11pm-Midnight', order=123).save()
+  model(start=1440, isUndefined=False, isDefault=False, day=sun, startText='Midnight', slotText='Midnight-1am',  order=124).save()
+  model(start=1500, isUndefined=False, isDefault=False, day=sun, startText='1am',      slotText='1-2am',         order=125).save()
+
+  model(start=600,  isUndefined=False, isDefault=False, day=mon, startText='10am',     slotText='10-11am',       order=110).save()
+  model(start=660,  isUndefined=False, isDefault=False, day=mon, startText='11am',     slotText='11-Noon',       order=111).save()
+  model(start=720,  isUndefined=False, isDefault=False, day=mon, startText='Noon',     slotText='Noon-1pm',      order=112).save()
+  model(start=780,  isUndefined=False, isDefault=False, day=mon, startText='1pm',      slotText='1-2pm',         order=113).save()
+  model(start=840,  isUndefined=False, isDefault=False, day=mon, startText='2pm',      slotText='2-3pm',         order=114).save()
+  model(start=900,  isUndefined=False, isDefault=False, day=mon, startText='3pm',      slotText='3-4pm',         order=115).save()
+  model(start=960,  isUndefined=False, isDefault=False, day=mon, startText='4pm',      slotText='4-5pm',         order=116).save()
+  model(start=1020, isUndefined=False, isDefault=False, day=mon, startText='5pm',      slotText='5-6pm',         order=117).save()
+  model(start=1080, isUndefined=False, isDefault=False, day=mon, startText='6pm',      slotText='6-7pm',         order=118).save()
+  model(start=1140, isUndefined=False, isDefault=False, day=mon, startText='7pm',      slotText='7-8pm',         order=119).save()
+  model(start=1200, isUndefined=False, isDefault=False, day=mon, startText='8pm',      slotText='8-9pm',         order=120).save()
+  model(start=1260, isUndefined=False, isDefault=False, day=mon, startText='9pm',      slotText='9-10pm',        order=121).save()
+  model(start=1320, isUndefined=False, isDefault=False, day=mon, startText='10pm',     slotText='10-11pm',       order=122).save()
+  model(start=1380, isUndefined=False, isDefault=False, day=mon, startText='11pm',     slotText='11pm-Midnight', order=123).save()
+  model(start=1440, isUndefined=False, isDefault=False, day=mon, startText='Midnight', slotText='Midnight-1am',  order=124).save()
+  model(start=1500, isUndefined=False, isDefault=False, day=mon, startText='1am',      slotText='1-2am',         order=125).save()
+
+def make_default_Grid(apps, schema_editor):
+  cd = apps.get_model("streampunk", "ConDay")
+  slot = apps.get_model("streampunk", "Slot")
+  days = [ 'Friday', 'Saturday', 'Sunday', 'Monday' ]
+  grids = [ ( [ '10am', '11am', 'Noon', '1pm' ], '10am-2pm' ),
+            ( [ '2pm', '3pm', '4pm', '5pm' ],'2-6pm ),
+            ( [ '6pm', '7pm', '8pm', '9pm' ], '6-10pm' ),
+            ( [ '10pm', '11pm', 'Midnight', '1am' ], '10pm-2am' ) ]
+  order = 10
+  model = apps.get_model("streampunk", "Grid")
+  for dayname in days:
+    day = cd.objects.get(name=dayname).pk
+    for grid in grids:
+      (slotnames, gridname) = grid
+      slots = [ slot.objects.get(day=day, startText=slotname).pk for slotname in slotnames ]
+      model(gridOrder=order, slots=slots, name=gridname).save()
+      order = order + 10
 
 def make_default_Room(apps, schema_editor):
   model = apps.get_model("streampunk", "Room")
-  obj = model(name='Nowhere', isUndefined=True, isDefault=True)
+  obj = model(name='Nowhere', isUndefined=True, isDefault=True, gridOrder=99, description="For items that have not yet been allocated a room, or do not need one.", canClash=False)
+  obj = model(name='Everywhere', isUndefined=False, isDefault=False, gridOrder=99, description="For items that have no fixed location, e.g. a treasure hunt.", canClash=False)
   obj.save()
 
 def make_latest_Revision(apps, schema_editor):
   model = apps.get_model("streampunk", "Revision")
-  obj = model(baseline='1993-09-04', colour='white', description='None')
+  obj = model(baseline='1993-09-04T00:00:00Z', colour='black', description='First draft')
   obj.save()
 
 class Migration(migrations.Migration):
@@ -102,6 +341,7 @@ class Migration(migrations.Migration):
                 ('module', models.SlugField(help_text='Used to identify the code to load and run, and how to render the results', max_length=48)),
             ],
         ),
+        migrations.RunPython(make_default_Check),
 
 
         migrations.CreateModel(
@@ -150,6 +390,7 @@ class Migration(migrations.Migration):
                 ('val', models.BooleanField(default=False, help_text="The flag's value")),
             ],
         ),
+        migrations.RunPython(make_default_ConInfoBool),
 
 
         migrations.CreateModel(
@@ -161,6 +402,7 @@ class Migration(migrations.Migration):
                 ('val', models.IntegerField(help_text='The value for the variable.')),
             ],
         ),
+        migrations.RunPython(make_default_ConInfoInt),
 
 
         migrations.CreateModel(
@@ -172,6 +414,7 @@ class Migration(migrations.Migration):
                 ('val', models.CharField(help_text='The value for the variable.', max_length=256)),
             ],
         ),
+        migrations.RunPython(make_default_ConInfoString),
 
 
         migrations.CreateModel(
@@ -221,6 +464,7 @@ class Migration(migrations.Migration):
                 'ordering': ['gridOrder'],
             },
         ),
+        migrations.RunPython(make_default_Grid),
 
 
         migrations.CreateModel(
