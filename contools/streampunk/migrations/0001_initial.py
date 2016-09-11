@@ -33,8 +33,8 @@ def make_default_ConInfoInt(apps, schema_editor):
 
 def make_default_ConInfoString(apps, schema_editor):
   vars = [ ( 'con_name', 'Convention name', "MyCon 2012" ),
-           ( 'email_from', "Email 'From' address, "steve@whitecrow.demon.co.uk" ),
-           ( 'con_logo_image_file', "Con Logo image file", "logobanner.jpg" ) ]
+           ( 'email_from', "Email 'From' address", "steve@whitecrow.demon.co.uk" ),
+           ( 'con_logo_image_file', "Con Logo image file", "logobanner.jpg" ),
            ( 'con_logo_image_url_name', "Con Logo image URL", "logobanner.jpg" ) ]
   model = apps.get_model("streampunk", "ConInfoString")
   for (vvar, vname, vval) in vars:
@@ -54,11 +54,11 @@ def make_default_CheckResult(apps, schema_editor):
 
 def make_default_Check(apps, schema_editor):
   cr = apps.get_model("streampunk", "CheckResult")
-  plist = cr.objects.get(name='Person List').pk
-  ilist = cr.objects.get(name='Item List').pk
-  tlist = cr.objects.get(name='Mixed Tuple').pk
-  rlist = cr.objects.get(name='Room List').pk
-  klist = cr.objects.get(name='KitThing List').pk
+  plist = cr.objects.get(name='Person List')
+  ilist = cr.objects.get(name='Item List')
+  tlist = cr.objects.get(name='Mixed Tuple')
+  rlist = cr.objects.get(name='Room List')
+  klist = cr.objects.get(name='KitThing List')
 
   model = apps.get_model("streampunk", "Check")
   model(result=plist, module="no_email", name="People with no email address", description="List people who do not yet have an email address entered.").save()
@@ -77,7 +77,7 @@ def make_default_Check(apps, schema_editor):
   model(result=tlist, module="kit_not_avail_for_item", name="Items with unavailable kit", description="List items that have kit assigned to them when the it is unavailable.").save()
   model(result=tlist, module="kit_not_avail_for_room", name="Kit/room availability mismatch", description="List cases where kit is assigned to a room in a period when one or both are unavailable.").save()
   model(result=rlist, module="room_no_avail", name="Rooms without availability", description="List rooms with no availability info.").save()
-  model(result=klist, module="kit_no_avail", name=KitThings without availability", description="List kit things with no availability info.").save()
+  model(result=klist, module="kit_no_avail", name="KitThings without availability", description="List kit things with no availability info.").save()
 
 def make_default_ItemKind(apps, schema_editor):
   model = apps.get_model("streampunk", "ItemKind")
@@ -141,7 +141,7 @@ def make_default_KitDepartment(apps, schema_editor):
   model(name='TBA',        gridOrder=100, isUndefined=True,  isDefault=True).save()
   model(name='Tech',       gridOrder=20,  isUndefined=False, isDefault=False).save()
   model(name='Green Room', gridOrder=30,  isUndefined=False, isDefault=False).save()
-  model(name='Ops          gridOrder=40,  isUndefined=False, isDefault=False).save()
+  model(name='Ops',        gridOrder=40,  isUndefined=False, isDefault=False).save()
 
 def make_default_MediaStatus(apps, schema_editor):
   model = apps.get_model("streampunk", "MediaStatus")
@@ -162,7 +162,7 @@ def make_default_PersonRole(apps, schema_editor):
   model(name='Optional Panellist',   gridOrder=80,  isUndefined=False, isDefault=True,  drink=True, canClash=False, namecard=True, description="Panellist, but optional - okay if they cannot make it because of a clash").save()
 
 def make_default_PersonStatus(apps, schema_editor):
-  model = apps.get_model("streampunk", "PersonRole")
+  model = apps.get_model("streampunk", "PersonStatus")
   model(name='TBA',    gridOrder=100, isUndefined=True,  isDefault=True).save()
   model(name='Proposed',  gridOrder=20,  isUndefined=False, isDefault=False, description="Would be good for this item, but not contacted yet").save()
   model(name='Invited',   gridOrder=30,  isUndefined=False, isDefault=False, description="Has been invited, not yet confirmed").save()
@@ -170,11 +170,11 @@ def make_default_PersonStatus(apps, schema_editor):
 
 def make_default_ConDay(apps, schema_editor):
   model = apps.get_model("streampunk", "ConDay")
-  model(name='TBA',      isUndefined=True,  isDefault=True,  date='1993-09-04T00:00:00Z', order=0).save()
-  model(name='Friday',   isUndefined=False, isDefault=False, date='2012-04-06T00:00:00Z', order=2).save()
-  model(name='Saturday', isUndefined=False, isDefault=False, date='2012-04-07T00:00:00Z', order=3).save()
-  model(name='Sunday',   isUndefined=False, isDefault=False, date='2012-04-08T00:00:00Z', order=4).save()
-  model(name='Monday',   isUndefined=False, isDefault=False, date='2012-04-09T00:00:00Z', order=5).save()
+  model(name='TBA',      isUndefined=True,  isDefault=True,  date='1993-09-04', order=0).save()
+  model(name='Friday',   isUndefined=False, isDefault=False, date='2012-04-06', order=2).save()
+  model(name='Saturday', isUndefined=False, isDefault=False, date='2012-04-07', order=3).save()
+  model(name='Sunday',   isUndefined=False, isDefault=False, date='2012-04-08', order=4).save()
+  model(name='Monday',   isUndefined=False, isDefault=False, date='2012-04-09', order=5).save()
 
 def make_default_SlotLength(apps, schema_editor):
   model = apps.get_model("streampunk", "SlotLength")
@@ -186,11 +186,11 @@ def make_default_SlotLength(apps, schema_editor):
 
 def make_default_Slot(apps, schema_editor):
   cd = apps.get_model("streampunk", "ConDay")
-  tba = cd.objects.get(name='TBA').pk
-  fri = cd.objects.get(name='Friday').pk
-  sat = cd.objects.get(name='Saturday').pk
-  sun = cd.objects.get(name='Sunday').pk
-  mon = cd.objects.get(name='Monday').pk
+  tba = cd.objects.get(name='TBA')
+  fri = cd.objects.get(name='Friday')
+  sat = cd.objects.get(name='Saturday')
+  sun = cd.objects.get(name='Sunday')
+  mon = cd.objects.get(name='Monday')
   model = apps.get_model("streampunk", "Slot")
   model(start=0,    isUndefined=True,  isDefault=True,  day=tba, startText='None',     slotText='None',          order=0).save()
 
@@ -267,17 +267,20 @@ def make_default_Grid(apps, schema_editor):
   slot = apps.get_model("streampunk", "Slot")
   days = [ 'Friday', 'Saturday', 'Sunday', 'Monday' ]
   grids = [ ( [ '10am', '11am', 'Noon', '1pm' ], '10am-2pm' ),
-            ( [ '2pm', '3pm', '4pm', '5pm' ],'2-6pm ),
+            ( [ '2pm', '3pm', '4pm', '5pm' ],'2-6pm' ),
             ( [ '6pm', '7pm', '8pm', '9pm' ], '6-10pm' ),
             ( [ '10pm', '11pm', 'Midnight', '1am' ], '10pm-2am' ) ]
   order = 10
   model = apps.get_model("streampunk", "Grid")
   for dayname in days:
-    day = cd.objects.get(name=dayname).pk
+    day = cd.objects.get(name=dayname)
     for grid in grids:
       (slotnames, gridname) = grid
-      slots = [ slot.objects.get(day=day, startText=slotname).pk for slotname in slotnames ]
-      model(gridOrder=order, slots=slots, name=gridname).save()
+      g = model(gridOrder=order, name=gridname)
+      for slotname in slotnames:
+        s = slot.objects.get(day=day, startText=slotname)
+        g.slots.add(s)
+      g.save()
       order = order + 10
 
 def make_default_Room(apps, schema_editor):
@@ -332,17 +335,6 @@ class Migration(migrations.Migration):
         ),
 
 
-        migrations.CreateModel(
-            name='Check',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text='The name of the check.', max_length=120)),
-                ('description', models.TextField(help_text='Explanation of what the check verifies', max_length=256)),
-                ('module', models.SlugField(help_text='Used to identify the code to load and run, and how to render the results', max_length=48)),
-            ],
-        ),
-        migrations.RunPython(make_default_Check),
-
 
         migrations.CreateModel(
             name='CheckResult',
@@ -361,6 +353,22 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(make_default_CheckResult),
 
+
+        migrations.CreateModel(
+            name='Check',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(help_text='The name of the check.', max_length=120)),
+                ('description', models.TextField(help_text='Explanation of what the check verifies', max_length=256)),
+                ('module', models.SlugField(help_text='Used to identify the code to load and run, and how to render the results', max_length=48)),
+            ],
+        ),
+        migrations.AddField(
+            model_name='check',
+            name='result',
+            field=models.ForeignKey(default=streampunk.models.CheckResult_find_default, help_text='The kind of result returned by the check', on_delete=django.db.models.deletion.CASCADE, to='streampunk.CheckResult'),
+        ),
+        migrations.RunPython(make_default_Check),
 
         migrations.CreateModel(
             name='ConDay',
@@ -451,20 +459,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.RunPython(make_default_Gender),
-
-
-        migrations.CreateModel(
-            name='Grid',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(help_text="A label for the period covered by the slots, e.g. 'Midday-4pm'", max_length=40)),
-                ('gridOrder', models.IntegerField(default=1, help_text='The grids will be displayed in ascending order of this field.')),
-            ],
-            options={
-                'ordering': ['gridOrder'],
-            },
-        ),
-        migrations.RunPython(make_default_Grid),
 
 
         migrations.CreateModel(
@@ -921,6 +915,25 @@ class Migration(migrations.Migration):
 
 
         migrations.CreateModel(
+            name='Grid',
+            fields=[
+                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(help_text="A label for the period covered by the slots, e.g. 'Midday-4pm'", max_length=40)),
+                ('gridOrder', models.IntegerField(default=1, help_text='The grids will be displayed in ascending order of this field.')),
+            ],
+            options={
+                'ordering': ['gridOrder'],
+            },
+        ),
+        migrations.AddField(
+            model_name='grid',
+            name='slots',
+            field=models.ManyToManyField(help_text='The slots within the period of the grid. The slots should be consecutive.', to='streampunk.Slot'),
+        ),
+        migrations.RunPython(make_default_Grid),
+
+
+        migrations.CreateModel(
             name='Tag',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
@@ -1172,16 +1185,6 @@ class Migration(migrations.Migration):
             model_name='item',
             name='tags',
             field=models.ManyToManyField(blank=True, help_text='Assign any tags you think are relevant to this item.', to='streampunk.Tag'),
-        ),
-        migrations.AddField(
-            model_name='grid',
-            name='slots',
-            field=models.ManyToManyField(help_text='The slots within the period of the grid. The slots should be consecutive.', to='streampunk.Slot'),
-        ),
-        migrations.AddField(
-            model_name='check',
-            name='result',
-            field=models.ForeignKey(default=streampunk.models.CheckResult_find_default, help_text='The kind of result returned by the check', on_delete=django.db.models.deletion.CASCADE, to='streampunk.CheckResult'),
         ),
         migrations.AddField(
             model_name='bundleroomassignment',
