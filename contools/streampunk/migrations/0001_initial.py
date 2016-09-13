@@ -159,7 +159,7 @@ def make_default_PersonRole(apps, schema_editor):
   model(name='Interviewer', gridOrder=50,  isUndefined=False, isDefault=False, drink=True, canClash=True, namecard=True, description="Interviewing a guest").save()
   model(name='Interviewee', gridOrder=60,  isUndefined=False, isDefault=False, drink=True, canClash=True, namecard=True, description="Guest being interviewed").save()
   model(name='Wants to be here', gridOrder=70,  isUndefined=False, isDefault=False, drink=False, canClash=False, namecard=False, description="Person would like to attend this item, but is not participating. Would prefer not to be scheduled against this, but if they are, so be it.").save()
-  model(name='Optional Panellist',   gridOrder=80,  isUndefined=False, isDefault=True,  drink=True, canClash=False, namecard=True, description="Panellist, but optional - okay if they cannot make it because of a clash").save()
+  model(name='Optional Panellist',   gridOrder=80,  isUndefined=False, isDefault=False,  drink=True, canClash=False, namecard=True, description="Panellist, but optional - okay if they cannot make it because of a clash").save()
 
 def make_default_PersonStatus(apps, schema_editor):
   model = apps.get_model("streampunk", "PersonStatus")
@@ -180,7 +180,7 @@ def make_default_SlotLength(apps, schema_editor):
   model = apps.get_model("streampunk", "SlotLength")
   obj = model(name='TBA',     length=0,   isUndefined=True,  isDefault=False).save()
   obj = model(name='30mins',  length=30,  isUndefined=False, isDefault=False).save()
-  obj = model(name='1 hour',  length=60,  isUndefined=True,  isDefault=False).save()
+  obj = model(name='1 hour',  length=60,  isUndefined=False, isDefault=True).save()
   obj = model(name='90mins',  length=90,  isUndefined=False, isDefault=False).save()
   obj = model(name='2 hours', length=120, isUndefined=False, isDefault=False).save()
 
@@ -277,6 +277,7 @@ def make_default_Grid(apps, schema_editor):
     for grid in grids:
       (slotnames, gridname) = grid
       g = model(gridOrder=order, name=gridname)
+      g.save()
       for slotname in slotnames:
         s = slot.objects.get(day=day, startText=slotname)
         g.slots.add(s)
@@ -285,9 +286,8 @@ def make_default_Grid(apps, schema_editor):
 
 def make_default_Room(apps, schema_editor):
   model = apps.get_model("streampunk", "Room")
-  obj = model(name='Nowhere', isUndefined=True, isDefault=True, gridOrder=99, description="For items that have not yet been allocated a room, or do not need one.", canClash=False)
-  obj = model(name='Everywhere', isUndefined=False, isDefault=False, gridOrder=99, description="For items that have no fixed location, e.g. a treasure hunt.", canClash=False)
-  obj.save()
+  model(name='Nowhere', isUndefined=True, isDefault=True, gridOrder=99, description="For items that have not yet been allocated a room, or do not need one.", canClash=False).save()
+  model(name='Everywhere', isUndefined=False, isDefault=False, gridOrder=99, description="For items that have no fixed location, e.g. a treasure hunt.", canClash=False).save()
 
 def make_latest_Revision(apps, schema_editor):
   model = apps.get_model("streampunk", "Revision")
