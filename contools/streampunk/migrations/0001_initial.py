@@ -21,7 +21,7 @@ def make_default_ConInfoBool(apps, schema_editor):
            ( 'no_avail_means_always_avail', "No availability means 'always available'", True ) ]
   model = apps.get_model("streampunk", "ConInfoBool")
   for (vvar, vname, vval) in vars:
-    model(var=vvar, name=vname, val=vval)
+    model(var=vvar, name=vname, val=vval).save()
 
 def make_default_ConInfoInt(apps, schema_editor):
   vars = [ ( 'max_items_per_day', 'Max items per day for a person', 4 ),
@@ -29,7 +29,7 @@ def make_default_ConInfoInt(apps, schema_editor):
            ( 'max_consecutive_items', "Max consecutive items for a person", 2 ) ]
   model = apps.get_model("streampunk", "ConInfoInt")
   for (vvar, vname, vval) in vars:
-    model(var=vvar, name=vname, val=vval)
+    model(var=vvar, name=vname, val=vval).save()
 
 def make_default_ConInfoString(apps, schema_editor):
   vars = [ ( 'con_name', 'Convention name', "MyCon 2012" ),
@@ -38,7 +38,7 @@ def make_default_ConInfoString(apps, schema_editor):
            ( 'con_logo_image_url_name', "Con Logo image URL", "logobanner.jpg" ) ]
   model = apps.get_model("streampunk", "ConInfoString")
   for (vvar, vname, vval) in vars:
-    model(var=vvar, name=vname, val=vval)
+    model(var=vvar, name=vname, val=vval).save()
 
 
    
