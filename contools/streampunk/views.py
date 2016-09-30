@@ -19,7 +19,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.core.urlresolvers import reverse
 from django.core.mail import send_mail, EmailMultiAlternatives
 from django.template import RequestContext
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.views.generic import DeleteView, DetailView, UpdateView, CreateView, ListView
 from django.forms.models import modelformset_factory
@@ -70,9 +70,7 @@ from .tabler import Rower, Tabler, make_tabler
 #     k, l = t
 #     for v in l:
 #       print u"Got '%s' = '%s'\n" % (k, v)
-#   return render_to_response('streampunk/show_request.html',
-#                             locals(),
-#                             context_instance=RequestContext(request))
+#   return render(request, 'streampunk/show_request.html', locals())
 
 def get_initial_data_from_request(request, models):
   """
@@ -157,7 +155,7 @@ class AfterDeleteView(DeleteView):
       return '/streampunk/main/'
 
 def static_page(request, template):
-  return render_to_response(template, locals(), context_instance=RequestContext(request))
+  return render_to_response(request, template, locals())
 
 @login_required
 def edit_user_profile(request):
@@ -180,17 +178,13 @@ def edit_user_profile(request):
       form = UserProfileFullForm(instance=userprofile, initial=initial_data)
     else:
       form = UserProfileForm(instance=userprofile, initial=initial_data)
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 
 @login_required
 def show_profile_detail(request):
   userprofile = request.user.userprofile
-  return render_to_response('streampunk/show_userprofile.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render('streampunk/show_userprofile.html', locals())
 
 
 
@@ -223,16 +217,12 @@ def main_page(request):
   con_info = ConInfoTable(list(ConInfoBool.objects.all()) +
                           list(ConInfoInt.objects.all()) +
                           list(ConInfoString.objects.all()), prefix='ci-')
-  return render_to_response('streampunk/main_page.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/main_page.html', locals())
 
 def list_grids(request):
   gtable = make_tabler(Grid, GridTable, request=request,
                        qs=Grid.objects.all(), prefix='g-', empty='No grids')
-  return render_to_response('streampunk/list_grids.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/list_grids.html', locals())
 
 class show_room_detail(DetailView):
   context_object_name='room'
@@ -272,9 +262,7 @@ def show_grid(request, gr):
   else:
     rooms = Room.objects.filter(visible=True);
       
-  return render_to_response('streampunk/show_grid.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/show_grid.html', locals())
 
 def drag_grid(request, gr):
   gid = int(gr)
@@ -286,9 +274,7 @@ def drag_grid(request, gr):
     rooms = Room.objects.filter(visible=True)
   can_drag = request.user.has_perm('streampunk.edit_programme')
       
-  return render_to_response('streampunk/drag_grid.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/drag_grid.html', locals())
 
 class show_slot_detail(DetailView):
   context_object_name = 'slot'
@@ -558,9 +544,7 @@ class show_personlist_detail(DetailView):
 #         return HttpResponseRedirect(reverse('show_item_detail', args=(int(item.id),)))
 #   else:
 #     form = ItemPersonForm( initial = { 'item' : i, 'person' : p, 'fromPerson' : is_from_person(request) })
-#   return render_to_response('streampunk/editform.html',
-#                             locals(),
-#                             context_instance=RequestContext(request))
+#   return render(request, 'streampunk/editform.html', locals())
 
 def mkemail(request, dirvars, subject, person, file):
   context = RequestContext(request)
@@ -600,17 +584,13 @@ def email_person(request, pk):
       return HttpResponseRedirect(reverse('emailed_person', args=(int(person.id),)))
   else:
     form = EmailForm()
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 @permission_required('streampunk.send_direct_email')
 def emailed_person(request, pk):
   pid = int(pk)
   person = Person.objects.get(id = pid)
-  return render_to_response('streampunk/emailed.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/emailed.html', locals())
 
 
 def send_mail_to_personlist(request, personlist, subject=None, success_url=None, cancel_url=None, edittemplate='streampunk/mail_personlist.html'):
@@ -652,9 +632,7 @@ def send_mail_to_personlist(request, personlist, subject=None, success_url=None,
       return HttpResponseRedirect(success_url)
   else:
     form = EmailForm(initial = { 'subject' : subject })
-  return render_to_response(edittemplate,
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, edittemplate, locals())
 
 
 @permission_required('streampunk.send_item_email')
@@ -688,9 +666,7 @@ def emailed_item(request, pk):
   iid = int(pk)
   item = Item.objects.get(id = iid)
   people = item.people.exclude(email='')
-  return render_to_response('streampunk/emailed.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/emailed.html', locals())
 
 @permission_required('streampunk.edit_tags')
 def edit_tags_for_item(request, i):
@@ -704,9 +680,7 @@ def edit_tags_for_item(request, i):
   else:
     form = ItemTagForm(instance = item, initial = { 'fromTag' : False  })
   form_title = u'Edit tags for item'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 @permission_required('streampunk.edit_tags')
 def edit_tags_for_person(request, p):
@@ -720,9 +694,7 @@ def edit_tags_for_person(request, p):
   else:
     form = PersonTagForm(instance = person, initial = { 'fromTag' : False  })
   form_title = u'Edit tags for person'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def add_tags(request):
   if request.method == 'POST':
@@ -736,16 +708,12 @@ def add_tags(request):
           person.tags.add(tag)
         for item in items:
           item.tags.add(tag)
-      return render_to_response('streampunk/added_tags.html',
-                                locals(),
-                                context_instance=RequestContext(request))
+      return render(request, 'streampunk/added_tags.html', locals())
   else:
     form = AddMultipleTagsForm()
   form_intro = u'Select the tags to be added, and the items and/or people to which to add them.'
   form_title = u'Add Multiple Tags'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def add_kitbundle_to_room(request):
   if request.method == 'POST':
@@ -763,9 +731,7 @@ def add_kitbundle_to_room(request):
     data = get_initial_data_from_request(request, { 'room': Room, 'bundle': KitBundle })
     form = BundleRoomAssignmentForm(initial = data)
   form_title = u'Add Kit Bundle to Room'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def add_kitbundle_to_item(request):
   if request.method == 'POST':
@@ -780,9 +746,7 @@ def add_kitbundle_to_item(request):
     data = get_initial_data_from_request(request, { 'item': Item, 'bundle': KitBundle })
     form = BundleItemAssignmentForm(initial = data)
   form_title = u'Add Kit Bundle to Item'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def add_kitthing_to_room(request):
   if request.method == 'POST':
@@ -800,9 +764,7 @@ def add_kitthing_to_room(request):
     data = get_initial_data_from_request(request, { 'room': Room, 'thing': KitThing })
     form = KitRoomAssignmentForm(initial = data)
   form_title = u'Add Kit Thing to Room'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def add_kitthing_to_item(request):
   if request.method == 'POST':
@@ -817,9 +779,7 @@ def add_kitthing_to_item(request):
     data = get_initial_data_from_request(request, { 'item': Item, 'thing': KitThing })
     form = KitItemAssignmentForm(initial = data)
   form_title = u'Add Kit Thing to Item'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def add_kitrequest_to_item(request, pk):
   if request.method == 'POST':
@@ -839,9 +799,7 @@ def add_kitrequest_to_item(request, pk):
   else:
     form = KitRequestForm()
   form_title = u'Add a new Kit Request to Item'
-  return render_to_response('streampunk/editform.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/editform.html', locals())
 
 def fill_slot_gen(request, r, s, cls, suf):
   rid = int(r)
@@ -859,9 +817,7 @@ def fill_slot_gen(request, r, s, cls, suf):
       return HttpResponseRedirect(reverse('show_grid', args=(grid.id,)))
   else:
     form = cls()
-  return render_to_response('streampunk/fill_slot.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/fill_slot.html', locals())
 
 def fill_slot_sched(request, r, s):
   return fill_slot_gen(request, r, s, FillSlotSchedForm, 's')
@@ -884,16 +840,12 @@ def list_checks(request):
           exec(importcmd)
           exec(runcmd)
           checkOutputs.append(checkOutput)
-      return render_to_response('streampunk/checkresults.html',
-                                locals(),
-                                context_instance=RequestContext(request))
+      return render(request, 'streampunk/checkresults.html', locals())
 
   else:
     # We want to order the checks so that they're predictable for testing.
     formset = CheckFormSet(queryset=Check.objects.order_by('name'))
-  return render_to_response('streampunk/checks.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/checks.html', locals())
 
 def make_personlist(request):
   if request.method == 'POST':
@@ -926,9 +878,7 @@ def make_personlist(request):
       # we're creating the list for later use, so let's populate a form that'll
       # allow correction and renaming, before saving.
       form = PersonListForm(initial = { 'name' : name, 'people' : people, 'auto' : False })
-      return render_to_response('streampunk/edit_personlist.html',
-                                locals(),
-                                context_instance=RequestContext(request))
+      return render(request, 'streampunk/edit_personlist.html', locals())
   else:
     return HttpResponseRedirect(reverse('new_personlist'))
   
@@ -938,9 +888,7 @@ def make_con_groups(request):
     status_msg = u"Added permissions"
   else:
     status_msg = u"Permission denied!"
-  return render_to_response('streampunk/make_con_groups.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/make_con_groups.html', locals())
 
 def kit_usage(request):
   bratable = make_tabler(BundleRoomAssignment, BundleRoomAssignmentTable, request=request,
@@ -954,9 +902,7 @@ def kit_usage(request):
   krtable = make_tabler(KitRequest, KitRequestTable, request=request,
                      qs=KitRequest.objects.all(), prefix='kr-', empty='No kit requests',
                      extra_exclude=['setup', 'notes', 'status'])
-  return render_to_response('streampunk/kit_usage.html',
-                            locals(),
-                            context_instance=RequestContext(request))
+  return render(request, 'streampunk/kit_usage.html', locals())
 
 def list_people(request):
   extra_exclude = [] if request.user.has_perm('streampunk.edit_programme') else [ 'edit', 'remove' ]
@@ -1049,20 +995,18 @@ def xml_dump(request):
     template = 'xml/streampunk_public.xml'
   people = Person.objects.all()
 
-  return render_to_response(template,
+  return render(request, template,
                             { "rooms": rooms, "people": people, "items": allitems, "con_name": con_name },
-                            context_instance=RequestContext(request),
                             content_type='application/xml')
 
 def xsl_stylesheet(request, template):
-  return render_to_response(template, locals(), context_instance=RequestContext(request), content_type='text/xsl')
+  return render(request, template, locals(), content_type='text/xsl')
 
 def konopas(request):
   items = Item.scheduled.filter(visible=True)
   people = Person.objects.all()
-  return render_to_response('konopas/streampunk.json',
+  return render(request, 'konopas/streampunk.json',
                             { "items": items, "people": people },
-                            context_instance=RequestContext(request),
                             content_type='application/json')
 
 
