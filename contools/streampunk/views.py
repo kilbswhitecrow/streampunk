@@ -1031,17 +1031,19 @@ def konopas(request):
 #                    name=ip.person.as_badge(), is_mod=ip.role.is_moderator())
 #   pdf.end_namecards()
 #   return pdf.response
-# 
-# def name_cards_for_item(request, pk):
-#   "Emit name cards for all the people on this item."
+
+def name_cards_for_item(request, pk):
+  "Emit name cards for all the people on this item."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_namecards(items=Item.objects.filter(id=int(pk)))
-# 
-# def name_cards(request):
-#   "Emit name cards for all people on all items."
+
+def name_cards(request):
+  "Emit name cards for all people on all items."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_namecards(items=Item.scheduled.filter(visible=True))
-# 
+
 # # ----------------------------------------------------------------------------
-# 
+
 # def emit_drinks_forms(items):
 #   "Emit drinks forms for the selected items."
 #   pdf = pdf_response("drinks.pdf")
@@ -1052,16 +1054,18 @@ def konopas(request):
 #   pdf.end_drinks_forms()
 #   return pdf.response
 # 
-# def drinks_form_for_item(request, pk):
-#   "Emit the drinks form for this item."
+def drinks_form_for_item(request, pk):
+  "Emit the drinks form for this item."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_drinks_forms(items=Item.objects.filter(id=int(pk)))
-# 
-# def drinks_forms(request):
-#   "Emit drinks forms for all items."
+
+def drinks_forms(request):
+  "Emit drinks forms for all items."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_drinks_forms(items=Item.scheduled.filter(visible=True))
-# 
+
 # # ----------------------------------------------------------------------------
-# 
+
 # def emit_door_listings(rooms, days):
 #   "Emit door listings for the given rooms and days."
 #   pdf = pdf_response("doors.pdf")
@@ -1072,21 +1076,25 @@ def konopas(request):
 #       pdf.door_listing(day.name, room.name, items)
 #   pdf.end_door_listings()
 #   return pdf.response
-#   
-# def door_listing_for_room_and_day(request, rpk, dpk):
-#   "Emit the door listing for a given room, on a given day."
+  
+def door_listing_for_room_and_day(request, rpk, dpk):
+  "Emit the door listing for a given room, on a given day."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_door_listings(rooms=Room.objects.filter(id=int(rpk)), days=ConDay.objects.filter(id=int(dpk)))
-# 
-# def door_listings_for_room(request, pk):
-#   "Emit the door listings for a given room, for all days."
+
+def door_listings_for_room(request, pk):
+  "Emit the door listings for a given room, for all days."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_door_listings(rooms=Room.objects.filter(id=int(pk)), days=ConDay.objects.filter(visible=True))
-# 
-# def door_listings_for_day(request, pk):
-#   "Emit the door listings for all rooms, for a given day."
+
+def door_listings_for_day(request, pk):
+  "Emit the door listings for all rooms, for a given day."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_door_listings(rooms=Room.objects.filter(visible=True), days=ConDay.objects.filter(id=int(pk)))
-# 
-# def door_listings(request):
-#   "Emit all door listings, for all rooms, for all days."
+
+def door_listings(request):
+  "Emit all door listings, for all rooms, for all days."
+  return render(request, 'streampunk/pdf.html')
 #   return emit_door_listings(rooms=Room.objects.filter(visible=True), days=ConDay.objects.filter(visible=True))
 
 # ----------------------------------------------------------------------------

@@ -49,10 +49,10 @@ from streampunk.views import show_profile_detail, edit_user_profile
 from streampunk.views import list_people, list_items, list_items_tech, list_tags, list_kitthings, list_kitrequests
 from streampunk.views import list_rooms, list_rooms_prog, list_rooms_tech
 from streampunk.views import list_kitbundles, xml_dump, xsl_stylesheet, konopas
-# from streampunk.views import name_cards_for_item, name_cards
-# from streampunk.views import drinks_form_for_item, drinks_forms
-# from streampunk.views import door_listing_for_room_and_day, door_listings
-# from streampunk.views import door_listings_for_room, door_listings_for_day
+from streampunk.views import name_cards_for_item, name_cards
+from streampunk.views import drinks_form_for_item, drinks_forms
+from streampunk.views import door_listing_for_room_and_day, door_listings
+from streampunk.views import door_listings_for_room, door_listings_for_day
 # from streampunk.views import api_grid, api_slot_items, api_item, api_rooms
 # from streampunk.views import drag_grid
 
@@ -270,14 +270,14 @@ urlpatterns = [
         { 'template': 'xml/streampunk.xsl' }, name='xml_xsl'),
     url(r'^streampunk/konopas/$', konopas, name='konopas'),
 
-    # url(r'^streampunk/name_cards_for_item/(?P<pk>\d+)/$', name_cards_for_item, name='name_cards_for_item'),
-    # url(r'^streampunk/name_cards/$', name_cards, name='name_cards'),
-    # url(r'^streampunk/drinks_form_for_item/(?P<pk>\d+)/$', drinks_form_for_item, name='drinks_form_for_item'),
-    # url(r'^streampunk/drinks_forms/$', drinks_forms, name='drinks_forms'),
-    # url(r'^streampunk/door_listings_for_room/(?P<pk>\d+)/$', door_listings_for_room, name='door_listings_for_room'),
-    # url(r'^streampunk/door_listings_for_day/(?P<pk>\d+)/$', door_listings_for_day, name='door_listings_for_day'),
-    # url(r'^streampunk/door_listing_for_room/(?P<rpk>\d+)/day/(?P<dpk>\d+)/$', door_listing_for_room_and_day, name='door_listing_for_room_and_day'),
-    # url(r'^streampunk/door_listings/$', door_listings, name='door_listings'),
+    url(r'^streampunk/name_cards_for_item/(?P<pk>\d+)/$', name_cards_for_item, name='name_cards_for_item'),
+    url(r'^streampunk/name_cards/$', name_cards, name='name_cards'),
+    url(r'^streampunk/drinks_form_for_item/(?P<pk>\d+)/$', drinks_form_for_item, name='drinks_form_for_item'),
+    url(r'^streampunk/drinks_forms/$', drinks_forms, name='drinks_forms'),
+    url(r'^streampunk/door_listings_for_room/(?P<pk>\d+)/$', door_listings_for_room, name='door_listings_for_room'),
+    url(r'^streampunk/door_listings_for_day/(?P<pk>\d+)/$', door_listings_for_day, name='door_listings_for_day'),
+    url(r'^streampunk/door_listing_for_room/(?P<rpk>\d+)/day/(?P<dpk>\d+)/$', door_listing_for_room_and_day, name='door_listing_for_room_and_day'),
+    url(r'^streampunk/door_listings/$', door_listings, name='door_listings'),
     # url(r'^streampunk/drag/(?P<gr>\d+)/$', drag_grid, name='drag_grid'),
 ]
 
