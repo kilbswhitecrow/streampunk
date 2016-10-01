@@ -126,9 +126,9 @@ def avail_for_slots(avail, slots):
   not_covered = slots_set - avail_set
   return len(not_covered) == 0
 
-def ConInfoBool_show_shortname(self):
+def ConInfoBool_show_shortname():
   return ConInfoBool.objects.get(var='show_shortname').val
-def ConInfoBool_rooms_across_top(self):
+def ConInfoBool_rooms_across_top():
   return ConInfoBool.objects.get(var='rooms_across_top').val
 
 class ConInfoBoolManager(models.Manager):
