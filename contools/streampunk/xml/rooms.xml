@@ -1,15 +1,5 @@
 <rooms>
 <room techNotes=""
-    gridOrder="99"
-    description="For items that have not yet been allocated a room, or that do not need one."
-    name="Nowhere"
-    privNotes="" />
-<room techNotes=""
-    gridOrder="95"
-    description="For items that are in no fixed location, e.g. a treasure hunt."
-    name="Everywhere"
-    privNotes="" />
-<room techNotes=""
     gridOrder="10"
     description="Where your main set pieces go"
     name="Main Hall"
