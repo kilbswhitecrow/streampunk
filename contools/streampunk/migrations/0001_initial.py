@@ -17,7 +17,7 @@ def make_default_KitSource(apps, schema_editor): make_default_EnumTable(apps, sc
 
 def make_default_ConInfoBool(apps, schema_editor):
   vars = [ ( 'show_shortname', 'Show shortnames', True ),
-           ( 'rooms_across_top', 'Rooms axross top on grids', False ),
+           ( 'rooms_across_top', 'Rooms across top on grids', False ),
            ( 'no_avail_means_always_avail', "No availability means 'always available'", True ) ]
   model = apps.get_model("streampunk", "ConInfoBool")
   for (vvar, vname, vval) in vars:
