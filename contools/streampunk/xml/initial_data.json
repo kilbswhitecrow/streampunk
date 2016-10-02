@@ -1,0 +1,4367 @@
+[
+{
+  "pk": 1, 
+  "model": "streampunk.conday", 
+  "fields": {
+    "name": "Friday", 
+    "visible": true, 
+    "date": "2012-04-06", 
+    "order": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.conday", 
+  "fields": {
+    "name": "Saturday", 
+    "visible": true, 
+    "date": "2012-04-07", 
+    "order": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.conday", 
+  "fields": {
+    "name": "Sunday", 
+    "visible": true, 
+    "date": "2012-04-08", 
+    "order": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.conday", 
+  "fields": {
+    "name": "Monday", 
+    "visible": true, 
+    "date": "2012-04-09", 
+    "order": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.conday", 
+  "fields": {
+    "name": "TBA", 
+    "visible": false, 
+    "date": "2012-04-09", 
+    "order": 0, 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 21, 
+  "model": "streampunk.slotlength", 
+  "fields": {
+    "length": 30, 
+    "name": "30mins", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 22, 
+  "model": "streampunk.slotlength", 
+  "fields": {
+    "length": 60, 
+    "name": "1 hour", 
+    "isDefault": true, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 23, 
+  "model": "streampunk.slotlength", 
+  "fields": {
+    "length": 90, 
+    "name": "90mins", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 24, 
+  "model": "streampunk.slotlength", 
+  "fields": {
+    "length": 120, 
+    "name": "2 hours", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 25, 
+  "model": "streampunk.slotlength", 
+  "fields": {
+    "length": 0, 
+    "name": "None", 
+    "isDefault": false, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 68, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11am", 
+    "visible": true, 
+    "order": 110, 
+    "startText": "10am", 
+    "start": 600, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 69, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11am-Noon", 
+    "visible": true, 
+    "order": 111, 
+    "startText": "11am", 
+    "start": 660, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 70, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Noon-1pm", 
+    "visible": true, 
+    "order": 112, 
+    "startText": "Noon", 
+    "start": 720, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 71, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2pm", 
+    "visible": true, 
+    "order": 113, 
+    "startText": "1pm", 
+    "start": 780, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 72, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "2-3pm", 
+    "visible": true, 
+    "order": 114, 
+    "startText": "2pm", 
+    "start": 840, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 73, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "3-4pm", 
+    "visible": true, 
+    "order": 115, 
+    "startText": "3pm", 
+    "start": 900, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 74, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "4-5pm", 
+    "visible": true, 
+    "order": 116, 
+    "startText": "4pm", 
+    "start": 960, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 75, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "5-6pm", 
+    "visible": true, 
+    "order": 117, 
+    "startText": "5pm", 
+    "start": 1020, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 76, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "6-7pm", 
+    "visible": true, 
+    "order": 118, 
+    "startText": "6pm", 
+    "start": 1080, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 77, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "7-8pm", 
+    "visible": true, 
+    "order": 119, 
+    "startText": "7pm", 
+    "start": 1140, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 78, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "8-9pm", 
+    "visible": true, 
+    "order": 120, 
+    "startText": "8pm", 
+    "start": 1200, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 79, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "9-10pm", 
+    "visible": true, 
+    "order": 121, 
+    "startText": "9pm", 
+    "start": 1260, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 80, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11pm", 
+    "visible": true, 
+    "order": 122, 
+    "startText": "10pm", 
+    "start": 1320, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 81, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11pm-Midnight", 
+    "visible": true, 
+    "order": 123, 
+    "startText": "11pm", 
+    "start": 1380, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 82, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Midnight-1am", 
+    "visible": true, 
+    "order": 124, 
+    "startText": "Midnight", 
+    "start": 1440, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 83, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2am", 
+    "visible": true, 
+    "order": 125, 
+    "startText": "1am", 
+    "start": 1500, 
+    "length": 22, 
+    "day": 1, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 84, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "TBA", 
+    "visible": false, 
+    "order": 0, 
+    "startText": "TBA", 
+    "start": 0, 
+    "length": 22, 
+    "day": 5, 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 85, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11am", 
+    "visible": true, 
+    "order": 210, 
+    "startText": "10am", 
+    "start": 600, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 86, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11am-Noon", 
+    "visible": true, 
+    "order": 211, 
+    "startText": "11am", 
+    "start": 660, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 87, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Noon-1pm", 
+    "visible": true, 
+    "order": 212, 
+    "startText": "Noon", 
+    "start": 720, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 88, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2pm", 
+    "visible": true, 
+    "order": 213, 
+    "startText": "1pm", 
+    "start": 780, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 89, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "2-3pm", 
+    "visible": true, 
+    "order": 214, 
+    "startText": "2pm", 
+    "start": 840, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 90, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "3-4pm", 
+    "visible": true, 
+    "order": 215, 
+    "startText": "3pm", 
+    "start": 900, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 91, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "4-5pm", 
+    "visible": true, 
+    "order": 216, 
+    "startText": "4pm", 
+    "start": 960, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 92, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "5-6pm", 
+    "visible": true, 
+    "order": 217, 
+    "startText": "5pm", 
+    "start": 1020, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 93, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "6-7pm", 
+    "visible": true, 
+    "order": 218, 
+    "startText": "6pm", 
+    "start": 1080, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 94, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "7-8pm", 
+    "visible": true, 
+    "order": 219, 
+    "startText": "7pm", 
+    "start": 1140, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 95, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "8-9pm", 
+    "visible": true, 
+    "order": 220, 
+    "startText": "8pm", 
+    "start": 1200, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 96, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "9-10pm", 
+    "visible": true, 
+    "order": 221, 
+    "startText": "9pm", 
+    "start": 1260, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 97, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11pm", 
+    "visible": true, 
+    "order": 222, 
+    "startText": "10pm", 
+    "start": 1320, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 98, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11pm-Midnight", 
+    "visible": true, 
+    "order": 223, 
+    "startText": "11pm", 
+    "start": 1380, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 99, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Midnight-1am", 
+    "visible": true, 
+    "order": 224, 
+    "startText": "Midnight", 
+    "start": 1440, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 100, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2am", 
+    "visible": true, 
+    "order": 225, 
+    "startText": "1am", 
+    "start": 1500, 
+    "length": 22, 
+    "day": 2, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 101, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11am", 
+    "visible": true, 
+    "order": 310, 
+    "startText": "10am", 
+    "start": 600, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 102, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11am-Noon", 
+    "visible": true, 
+    "order": 311, 
+    "startText": "11am", 
+    "start": 660, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 103, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Noon-1pm", 
+    "visible": true, 
+    "order": 312, 
+    "startText": "Noon", 
+    "start": 720, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 104, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2pm", 
+    "visible": true, 
+    "order": 313, 
+    "startText": "1pm", 
+    "start": 780, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 105, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "2-3pm", 
+    "visible": true, 
+    "order": 314, 
+    "startText": "2pm", 
+    "start": 840, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 106, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "3-4pm", 
+    "visible": true, 
+    "order": 315, 
+    "startText": "3pm", 
+    "start": 900, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 107, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "4-5pm", 
+    "visible": true, 
+    "order": 316, 
+    "startText": "4pm", 
+    "start": 960, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 108, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "5-6pm", 
+    "visible": true, 
+    "order": 317, 
+    "startText": "5pm", 
+    "start": 1020, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 109, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "6-7pm", 
+    "visible": true, 
+    "order": 318, 
+    "startText": "6pm", 
+    "start": 1080, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 110, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "7-8pm", 
+    "visible": true, 
+    "order": 319, 
+    "startText": "7pm", 
+    "start": 1140, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 111, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "8-9pm", 
+    "visible": true, 
+    "order": 320, 
+    "startText": "8pm", 
+    "start": 1200, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 112, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "9-10pm", 
+    "visible": true, 
+    "order": 321, 
+    "startText": "9pm", 
+    "start": 1260, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 113, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11pm", 
+    "visible": true, 
+    "order": 322, 
+    "startText": "10pm", 
+    "start": 1320, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 114, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11pm-Midnight", 
+    "visible": true, 
+    "order": 323, 
+    "startText": "11pm", 
+    "start": 1380, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 115, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Midnight-1am", 
+    "visible": true, 
+    "order": 324, 
+    "startText": "Midnight", 
+    "start": 1440, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 116, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2am", 
+    "visible": true, 
+    "order": 325, 
+    "startText": "1am", 
+    "start": 1500, 
+    "length": 22, 
+    "day": 3, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 117, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11am", 
+    "visible": true, 
+    "order": 410, 
+    "startText": "10am", 
+    "start": 600, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 118, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11am-Noon", 
+    "visible": true, 
+    "order": 411, 
+    "startText": "11am", 
+    "start": 660, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 119, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Noon-1pm", 
+    "visible": true, 
+    "order": 412, 
+    "startText": "Noon", 
+    "start": 720, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 120, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2pm", 
+    "visible": true, 
+    "order": 413, 
+    "startText": "1pm", 
+    "start": 780, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 121, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "2-3pm", 
+    "visible": true, 
+    "order": 414, 
+    "startText": "2pm", 
+    "start": 840, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 122, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "3-4pm", 
+    "visible": true, 
+    "order": 415, 
+    "startText": "3pm", 
+    "start": 900, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 123, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "4-5pm", 
+    "visible": true, 
+    "order": 416, 
+    "startText": "4pm", 
+    "start": 960, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 124, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "5-6pm", 
+    "visible": true, 
+    "order": 417, 
+    "startText": "5pm", 
+    "start": 1020, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 125, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "6-7pm", 
+    "visible": true, 
+    "order": 418, 
+    "startText": "6pm", 
+    "start": 1080, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 126, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "7-8pm", 
+    "visible": true, 
+    "order": 419, 
+    "startText": "7pm", 
+    "start": 1140, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 127, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "8-9pm", 
+    "visible": true, 
+    "order": 420, 
+    "startText": "8pm", 
+    "start": 1200, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 128, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "9-10pm", 
+    "visible": true, 
+    "order": 421, 
+    "startText": "9pm", 
+    "start": 1260, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 129, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "10-11pm", 
+    "visible": true, 
+    "order": 422, 
+    "startText": "10pm", 
+    "start": 1320, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 130, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "11pm-Midnight", 
+    "visible": true, 
+    "order": 423, 
+    "startText": "11pm", 
+    "start": 1380, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 131, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "Midnight-1am", 
+    "visible": true, 
+    "order": 424, 
+    "startText": "Midnight", 
+    "start": 1440, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 132, 
+  "model": "streampunk.slot", 
+  "fields": {
+    "slotText": "1-2am", 
+    "visible": true, 
+    "order": 425, 
+    "startText": "1am", 
+    "start": 1500, 
+    "length": 22, 
+    "day": 4, 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 1, 
+    "slots": [
+      68, 
+      69, 
+      70, 
+      71
+    ], 
+    "name": "Friday 10am-2pm"
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 2, 
+    "slots": [
+      72, 
+      73, 
+      74, 
+      75
+    ], 
+    "name": "Friday 2-6pm"
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 3, 
+    "slots": [
+      76, 
+      77, 
+      78, 
+      79
+    ], 
+    "name": "Friday 6-10pm"
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 4, 
+    "slots": [
+      80, 
+      81, 
+      82, 
+      83
+    ], 
+    "name": "Friday 10pm-2am"
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 5, 
+    "slots": [
+      85, 
+      86, 
+      87, 
+      88
+    ], 
+    "name": "Saturday 10am-2pm"
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 6, 
+    "slots": [
+      89, 
+      90, 
+      91, 
+      92
+    ], 
+    "name": "Saturday 2-6pm"
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 7, 
+    "slots": [
+      93, 
+      94, 
+      95, 
+      96
+    ], 
+    "name": "Saturday 6-10pm"
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 8, 
+    "slots": [
+      97, 
+      98, 
+      99, 
+      100
+    ], 
+    "name": "Saturday 10pm-2am"
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 9, 
+    "slots": [
+      101, 
+      102, 
+      103, 
+      104
+    ], 
+    "name": "Sunday 10am-2pm"
+  }
+},
+{
+  "pk": 14, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 10, 
+    "slots": [
+      105, 
+      106, 
+      107, 
+      108
+    ], 
+    "name": "Sunday 2-6pm"
+  }
+},
+{
+  "pk": 15, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 11, 
+    "slots": [
+      109, 
+      110, 
+      111, 
+      112
+    ], 
+    "name": "Sunday 6-10pm"
+  }
+},
+{
+  "pk": 16, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 12, 
+    "slots": [
+      113, 
+      114, 
+      115, 
+      116
+    ], 
+    "name": "Sunday 10pm-2am"
+  }
+},
+{
+  "pk": 17, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 13, 
+    "slots": [
+      117, 
+      118, 
+      119, 
+      120
+    ], 
+    "name": "Monday 10am-2pm"
+  }
+},
+{
+  "pk": 18, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 14, 
+    "slots": [
+      121, 
+      122, 
+      123, 
+      124
+    ], 
+    "name": "Monday 2-6pm"
+  }
+},
+{
+  "pk": 19, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 15, 
+    "slots": [
+      125, 
+      126, 
+      127, 
+      128
+    ], 
+    "name": "Monday 6-10pm"
+  }
+},
+{
+  "pk": 20, 
+  "model": "streampunk.grid", 
+  "fields": {
+    "gridOrder": 16, 
+    "slots": [
+      129, 
+      130, 
+      131, 
+      132
+    ], 
+    "name": "Monday 10pm-2am"
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.gender", 
+  "fields": {
+    "gridOrder": 100, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.gender", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "", 
+    "name": "Male", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.gender", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "", 
+    "name": "Female", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "Standard Panel discussion", 
+    "name": "Panel", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "Someone presenting a talk or speech", 
+    "name": "Talk", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "An activity that involves everyone attending", 
+    "name": "Workshop", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 40, 
+    "description": "A physical activity", 
+    "name": "Exercise", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 50, 
+    "description": "A item with rules and a winner", 
+    "name": "Game", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 200, 
+    "description": "Something that doesn't fit into these categories", 
+    "name": "Other", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.itemkind", 
+  "fields": {
+    "gridOrder": 0, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.seatingkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "Chairs in rows facing the front", 
+    "name": "Theatre", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.seatingkind", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "Chairs against the walls, with the centre space empty", 
+    "name": "Chairs around wall", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.seatingkind", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "Chairs around a single table in the middle of the room", 
+    "name": "Boardroom", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.seatingkind", 
+  "fields": {
+    "gridOrder": 40, 
+    "description": "No chairs or tables", 
+    "name": "Empty", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.seatingkind", 
+  "fields": {
+    "gridOrder": 50, 
+    "description": "Chairs around circular tables", 
+    "name": "Cabaret", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.seatingkind", 
+  "fields": {
+    "gridOrder": 0, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.frontlayoutkind", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "Unknown layout for front of room.", 
+    "name": "TBA", 
+    "isDefault": false, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.frontlayoutkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "Table, chairs for panellists, microphones if necessary.", 
+    "name": "Panel", 
+    "isDefault": true, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "On a panel, but not running it", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": true, 
+    "name": "Panellist"
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "Running a panel", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "Moderator"
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "Presenting a talk or lecture", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "Speaker"
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 40, 
+    "description": "Interviewing a guest", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "Interviewer"
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 50, 
+    "description": "Being interviewed", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "Interviewee"
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 0, 
+    "description": "", 
+    "drink": true, 
+    "canClash": true, 
+    "namecard": true, 
+    "isUndefined": true, 
+    "isDefault": false, 
+    "name": "TBA"
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 70, 
+    "description": "Person would like to attend the item, but is not participating. Would prefer that they're not scheduled against this item, but if they are, so be it.", 
+    "drink": false, 
+    "canClash": false, 
+    "namecard": false, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "Wants to be here"
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.personrole", 
+  "fields": {
+    "gridOrder": 60, 
+    "description": "Panellist, but optional - it's okay if they can't make it because they're scheduled on another item.", 
+    "drink": true, 
+    "canClash": false, 
+    "namecard": true, 
+    "isUndefined": false, 
+    "isDefault": false, 
+    "name": "OptionalPanellist"
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.personstatus", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "Would be good for this item, but not contacted yet", 
+    "name": "Proposed", 
+    "isDefault": true, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.personstatus", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "Has been invited, not yet confirmed", 
+    "name": "Invited", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.personstatus", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "Has confirmed item participation", 
+    "name": "Confirmed", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.personstatus", 
+  "fields": {
+    "gridOrder": 0, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": false, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.revision", 
+  "fields": {
+    "colour": "black", 
+    "baseline": "2012-03-01T00:00:00Z", 
+    "description": "First draft"
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Projector", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "Screen", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "Computer-to-stereo XLR converter", 
+    "name": "DI Box", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "10", 
+    "name": "Microphone", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Roving Microphone", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Television", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "DVD player", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "Portable CD player", 
+    "name": "Boom-box", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "iPod", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.kitkind", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Blu-Ray player", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitrole", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitdepartment", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": false, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitdepartment", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Tech", 
+    "isDefault": true, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitdepartment", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "", 
+    "name": "Green Room", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitdepartment", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "", 
+    "name": "Programme Ops", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitsource", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitbasis", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitbasis", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Hire", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitbasis", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "20", 
+    "name": "Borrow", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitbasis", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "", 
+    "name": "Buy", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.kitstatus", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.kitstatus", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "Awaiting Sign-off", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.kitstatus", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "", 
+    "name": "Awaiting delivery", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.kitstatus", 
+  "fields": {
+    "gridOrder": 15, 
+    "description": "", 
+    "name": "Awaiting purchase", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.kitstatus", 
+  "fields": {
+    "gridOrder": 40, 
+    "description": "", 
+    "name": "Delivered", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.mediastatus", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "", 
+    "name": "TBA", 
+    "isDefault": true, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.mediastatus", 
+  "fields": {
+    "gridOrder": 10, 
+    "description": "", 
+    "name": "No media required", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.mediastatus", 
+  "fields": {
+    "gridOrder": 20, 
+    "description": "", 
+    "name": "Media needs sending to Tech", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.mediastatus", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "", 
+    "name": "Media received by Tech", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.checkresult", 
+  "fields": {
+    "gridOrder": 1, 
+    "description": "Check returns a list of programme items.", 
+    "name": "Item List", 
+    "isDefault": true, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.checkresult", 
+  "fields": {
+    "gridOrder": 2, 
+    "description": "Check returns a list of people.", 
+    "name": "Person List", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.checkresult", 
+  "fields": {
+    "gridOrder": 30, 
+    "description": "Check will return a list of tuples, each of which contains mixed object kinds.", 
+    "name": "Mixed Tuple", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.checkresult", 
+  "fields": {
+    "gridOrder": 2, 
+    "description": "Check returns a list of rooms.", 
+    "name": "Room List", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.checkresult", 
+  "fields": {
+    "gridOrder": 2, 
+    "description": "Check returns a list of kit things.", 
+    "name": "KitThing List", 
+    "isDefault": false, 
+    "isUndefined": false
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.checkresult", 
+  "fields": {
+    "gridOrder": 2, 
+    "description": "Something got deleted", 
+    "name": "TBA", 
+    "isDefault": false, 
+    "isUndefined": true
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 2, 
+    "name": "People with no email address", 
+    "module": "no_email", 
+    "description": "List people who do not yet have an email address entered."
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 2, 
+    "name": "People who haven't joined yet", 
+    "module": "not_member", 
+    "description": "List people who don't have a valid membership number registered yet."
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 2, 
+    "name": "People who aren't complete yet", 
+    "module": "not_complete_person", 
+    "description": "List people who aren't marked as \"Complete\" yet."
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 3, 
+    "name": "People clashes", 
+    "module": "person_clashes", 
+    "description": "List items where the same person is programmed on two concurrent items."
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 1, 
+    "name": "Items with no people", 
+    "module": "items_no_people", 
+    "description": "List items which have no people on them."
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 1, 
+    "name": "Items with no room", 
+    "module": "items_no_room", 
+    "description": "List items that are not assigned to a real room yet."
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 1, 
+    "name": "Items not scheduled", 
+    "module": "items_not_scheduled", 
+    "description": "List items that do not yet have a defined day/start time."
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 1, 
+    "name": "Items with unknown gopher count", 
+    "module": "items_unknown_gophers", 
+    "description": "List items for which the gopher count is -1"
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 1, 
+    "name": "Items with unsatisfied kit requests", 
+    "module": "items_unsatisfied_kitreq", 
+    "description": "List items for which there are kit requests unsatisfied by either room or item assignments"
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 3, 
+    "name": "Kit clashes", 
+    "module": "kit_clashes", 
+    "description": "List kit assignments which clash with other kit assignments"
+  }
+},
+{
+  "pk": 11, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 2, 
+    "name": "People without availability", 
+    "module": "person_no_avail", 
+    "description": "List people who have no availability info entered"
+  }
+},
+{
+  "pk": 12, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 3, 
+    "name": "People unavailable", 
+    "module": "person_not_avail", 
+    "description": "List people who have items assigned outside available slots"
+  }
+},
+{
+  "pk": 13, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 3, 
+    "name": "Items in unavailable rooms", 
+    "module": "room_not_avail", 
+    "description": "List items that are scheduled in rooms when the room is unavailable"
+  }
+},
+{
+  "pk": 14, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 3, 
+    "name": "Items with unavailable kit", 
+    "module": "kit_not_avail_for_item", 
+    "description": "List items that have kit assigned to them when the kit is unavailable"
+  }
+},
+{
+  "pk": 15, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 3, 
+    "name": "Kit/room availability mismatch", 
+    "module": "kit_not_avail_for_room", 
+    "description": "List cases where kit is assigned to a room, in a period where one or both is unavailable"
+  }
+},
+{
+  "pk": 16, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 4, 
+    "name": "Rooms without availability", 
+    "module": "room_no_avail", 
+    "description": "List rooms with no availabiliy info"
+  }
+},
+{
+  "pk": 17, 
+  "model": "streampunk.check", 
+  "fields": {
+    "result": 5, 
+    "name": "KitThings without availability", 
+    "module": "kit_no_avail", 
+    "description": "List kit things with no availability info"
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.coninfobool", 
+  "fields": {
+    "var": "show_shortname", 
+    "name": "Show shortnames", 
+    "val": true
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.coninfobool", 
+  "fields": {
+    "var": "rooms_across_top", 
+    "name": "Rooms across top on grids", 
+    "val": false
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.coninfobool", 
+  "fields": {
+    "var": "no_avail_means_always_avail", 
+    "name": "No availability means \"always available\"", 
+    "val": true
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.coninfoint", 
+  "fields": {
+    "var": "max_items_per_day", 
+    "name": "Max items per day for a person", 
+    "val": 4
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.coninfoint", 
+  "fields": {
+    "var": "max_items_whole_con", 
+    "name": "Max items for a person across the whole con", 
+    "val": 12
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.coninfoint", 
+  "fields": {
+    "var": "max_consecutive_items", 
+    "name": "Max consecutive items for a person", 
+    "val": 2
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.coninfostring", 
+  "fields": {
+    "var": "con_name", 
+    "name": "Convention name", 
+    "val": "MyCon 2012"
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.coninfostring", 
+  "fields": {
+    "var": "email_from", 
+    "name": "Email 'From' address", 
+    "val": "steve@whitecrow.demon.co.uk"
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.coninfostring", 
+  "fields": {
+    "var": "con_logo_image_file", 
+    "name": "Con Logo Image File", 
+    "val": "/Users/steve/sites/olympus/logobanner.jpg"
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.coninfostring", 
+  "fields": {
+    "var": "con_logo_image_url_name", 
+    "name": "Con Logo Image URL Name", 
+    "val": "logo_image"
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": false, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": false, 
+    "availability": [], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": true, 
+    "isUndefined": true, 
+    "gridOrder": 99, 
+    "description": "For items that have not yet been allocated a room, or that do not need one.", 
+    "parent": null, 
+    "capacities": [], 
+    "openableWindows": false, 
+    "name": "Nowhere", 
+    "controlAirConInRoom": false, 
+    "canClash": false, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": false
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": true, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": false, 
+    "availability": [], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 95, 
+    "description": "For items that are in no fixed location, e.g. a treasure hunt.", 
+    "parent": null, 
+    "capacities": [], 
+    "openableWindows": false, 
+    "name": "Everywhere", 
+    "controlAirConInRoom": false, 
+    "canClash": false, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": false
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": true, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": true, 
+    "availability": [
+      72, 
+      73, 
+      74, 
+      75, 
+      76, 
+      77, 
+      78, 
+      79, 
+      80, 
+      81, 
+      82, 
+      83, 
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99, 
+      100, 
+      101, 
+      102, 
+      103, 
+      104, 
+      105, 
+      106, 
+      107, 
+      108, 
+      109, 
+      110, 
+      111, 
+      112, 
+      113, 
+      114, 
+      115, 
+      116, 
+      117, 
+      118, 
+      119, 
+      120, 
+      121
+    ], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 10, 
+    "description": "Where your main set pieces go", 
+    "parent": null, 
+    "capacities": [
+      1, 
+      2, 
+      3
+    ], 
+    "openableWindows": false, 
+    "name": "Main Hall", 
+    "controlAirConInRoom": false, 
+    "canClash": true, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": true
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": true, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": false, 
+    "availability": [
+      68, 
+      69, 
+      70, 
+      71, 
+      72, 
+      73, 
+      74, 
+      75, 
+      76, 
+      77, 
+      78, 
+      79, 
+      80, 
+      81, 
+      82, 
+      83, 
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99, 
+      100, 
+      101, 
+      102, 
+      103, 
+      104, 
+      105, 
+      106, 
+      107, 
+      108, 
+      109, 
+      110, 
+      111, 
+      112, 
+      113, 
+      114, 
+      115, 
+      116, 
+      117, 
+      118, 
+      119, 
+      120, 
+      121, 
+      122, 
+      123, 
+      124, 
+      125, 
+      126, 
+      127, 
+      128, 
+      129, 
+      130, 
+      131
+    ], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 20, 
+    "description": "Where your medium-sized items go.", 
+    "parent": null, 
+    "capacities": [], 
+    "openableWindows": false, 
+    "name": "Second Hall", 
+    "controlAirConInRoom": false, 
+    "canClash": true, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": true
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": true, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": true, 
+    "availability": [
+      85, 
+      86, 
+      87, 
+      88, 
+      89, 
+      90, 
+      91, 
+      92, 
+      93, 
+      94, 
+      95, 
+      96, 
+      97, 
+      98, 
+      99, 
+      100
+    ], 
+    "hasCableRuns": false, 
+    "securable": true, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 30, 
+    "description": "Small room for panels", 
+    "parent": null, 
+    "capacities": [
+      4
+    ], 
+    "openableWindows": false, 
+    "name": "Programme 1", 
+    "controlAirConInRoom": false, 
+    "canClash": true, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": false
+  }
+},
+{
+  "pk": 8, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": true, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": false, 
+    "availability": [], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 40, 
+    "description": "Another small room for panels", 
+    "parent": null, 
+    "capacities": [
+      5, 
+      6
+    ], 
+    "openableWindows": false, 
+    "name": "Programme 2", 
+    "controlAirConInRoom": false, 
+    "canClash": true, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": false
+  }
+},
+{
+  "pk": 9, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": true, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": false, 
+    "availability": [], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 60, 
+    "description": "Room set up for showing videos, movies, etc.", 
+    "parent": null, 
+    "capacities": [
+      5
+    ], 
+    "openableWindows": false, 
+    "name": "Video", 
+    "controlAirConInRoom": false, 
+    "canClash": true, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": false
+  }
+},
+{
+  "pk": 10, 
+  "model": "streampunk.room", 
+  "fields": {
+    "disabledAccess": true, 
+    "closableCurtains": false, 
+    "accessibleOnFlat": false, 
+    "visible": false, 
+    "techNotes": "", 
+    "naturalLight": false, 
+    "hasWifi": false, 
+    "inRadioRange": false, 
+    "availability": [], 
+    "hasCableRuns": false, 
+    "securable": false, 
+    "isDefault": false, 
+    "isUndefined": false, 
+    "gridOrder": 80, 
+    "description": "Operations room. Scheduled public items should not appear here.", 
+    "parent": null, 
+    "capacities": [
+      7
+    ], 
+    "openableWindows": false, 
+    "name": "Ops", 
+    "controlAirConInRoom": false, 
+    "canClash": false, 
+    "controlLightsInRoom": false, 
+    "privNotes": "", 
+    "needsSound": false
+  }
+},
+{
+  "pk": 1, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 500, 
+    "layout": 9
+  }
+},
+{
+  "pk": 2, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 300, 
+    "layout": 6
+  }
+},
+{
+  "pk": 3, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 200, 
+    "layout": 10
+  }
+},
+{
+  "pk": 4, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 80, 
+    "layout": 6
+  }
+},
+{
+  "pk": 5, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 60, 
+    "layout": 6
+  }
+},
+{
+  "pk": 6, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 20, 
+    "layout": 8
+  }
+},
+{
+  "pk": 7, 
+  "model": "streampunk.roomcapacity", 
+  "fields": {
+    "count": 50, 
+    "layout": 9
+  }
+},
+{
+  "pk": 1, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_permission", 
+    "name": "Can add permission", 
+    "content_type": 1
+  }
+},
+{
+  "pk": 2, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_permission", 
+    "name": "Can change permission", 
+    "content_type": 1
+  }
+},
+{
+  "pk": 3, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_permission", 
+    "name": "Can delete permission", 
+    "content_type": 1
+  }
+},
+{
+  "pk": 4, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_group", 
+    "name": "Can add group", 
+    "content_type": 2
+  }
+},
+{
+  "pk": 5, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_group", 
+    "name": "Can change group", 
+    "content_type": 2
+  }
+},
+{
+  "pk": 6, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_group", 
+    "name": "Can delete group", 
+    "content_type": 2
+  }
+},
+{
+  "pk": 7, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_user", 
+    "name": "Can add user", 
+    "content_type": 3
+  }
+},
+{
+  "pk": 8, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_user", 
+    "name": "Can change user", 
+    "content_type": 3
+  }
+},
+{
+  "pk": 9, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_user", 
+    "name": "Can delete user", 
+    "content_type": 3
+  }
+},
+{
+  "pk": 10, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_contenttype", 
+    "name": "Can add content type", 
+    "content_type": 4
+  }
+},
+{
+  "pk": 11, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_contenttype", 
+    "name": "Can change content type", 
+    "content_type": 4
+  }
+},
+{
+  "pk": 12, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_contenttype", 
+    "name": "Can delete content type", 
+    "content_type": 4
+  }
+},
+{
+  "pk": 13, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_session", 
+    "name": "Can add session", 
+    "content_type": 5
+  }
+},
+{
+  "pk": 14, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_session", 
+    "name": "Can change session", 
+    "content_type": 5
+  }
+},
+{
+  "pk": 15, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_session", 
+    "name": "Can delete session", 
+    "content_type": 5
+  }
+},
+{
+  "pk": 16, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_site", 
+    "name": "Can add site", 
+    "content_type": 6
+  }
+},
+{
+  "pk": 17, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_site", 
+    "name": "Can change site", 
+    "content_type": 6
+  }
+},
+{
+  "pk": 18, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_site", 
+    "name": "Can delete site", 
+    "content_type": 6
+  }
+},
+{
+  "pk": 19, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_logentry", 
+    "name": "Can add log entry", 
+    "content_type": 7
+  }
+},
+{
+  "pk": 20, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_logentry", 
+    "name": "Can change log entry", 
+    "content_type": 7
+  }
+},
+{
+  "pk": 21, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_logentry", 
+    "name": "Can delete log entry", 
+    "content_type": 7
+  }
+},
+{
+  "pk": 22, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_coninfobool", 
+    "name": "Can add con info bool", 
+    "content_type": 8
+  }
+},
+{
+  "pk": 23, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_coninfobool", 
+    "name": "Can change con info bool", 
+    "content_type": 8
+  }
+},
+{
+  "pk": 24, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_coninfobool", 
+    "name": "Can delete con info bool", 
+    "content_type": 8
+  }
+},
+{
+  "pk": 25, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_coninfoint", 
+    "name": "Can add con info int", 
+    "content_type": 9
+  }
+},
+{
+  "pk": 26, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_coninfoint", 
+    "name": "Can change con info int", 
+    "content_type": 9
+  }
+},
+{
+  "pk": 27, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_coninfoint", 
+    "name": "Can delete con info int", 
+    "content_type": 9
+  }
+},
+{
+  "pk": 28, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_coninfostring", 
+    "name": "Can add con info string", 
+    "content_type": 10
+  }
+},
+{
+  "pk": 29, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_coninfostring", 
+    "name": "Can change con info string", 
+    "content_type": 10
+  }
+},
+{
+  "pk": 30, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_coninfostring", 
+    "name": "Can delete con info string", 
+    "content_type": 10
+  }
+},
+{
+  "pk": 31, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_conday", 
+    "name": "Can add con day", 
+    "content_type": 11
+  }
+},
+{
+  "pk": 32, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_conday", 
+    "name": "Can change con day", 
+    "content_type": 11
+  }
+},
+{
+  "pk": 33, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_conday", 
+    "name": "Can delete con day", 
+    "content_type": 11
+  }
+},
+{
+  "pk": 34, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_slotlength", 
+    "name": "Can add slot length", 
+    "content_type": 12
+  }
+},
+{
+  "pk": 35, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_slotlength", 
+    "name": "Can change slot length", 
+    "content_type": 12
+  }
+},
+{
+  "pk": 36, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_slotlength", 
+    "name": "Can delete slot length", 
+    "content_type": 12
+  }
+},
+{
+  "pk": 37, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_slot", 
+    "name": "Can add slot", 
+    "content_type": 13
+  }
+},
+{
+  "pk": 38, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_slot", 
+    "name": "Can change slot", 
+    "content_type": 13
+  }
+},
+{
+  "pk": 39, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_slot", 
+    "name": "Can delete slot", 
+    "content_type": 13
+  }
+},
+{
+  "pk": 40, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_grid", 
+    "name": "Can add grid", 
+    "content_type": 14
+  }
+},
+{
+  "pk": 41, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_grid", 
+    "name": "Can change grid", 
+    "content_type": 14
+  }
+},
+{
+  "pk": 42, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_grid", 
+    "name": "Can delete grid", 
+    "content_type": 14
+  }
+},
+{
+  "pk": 43, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_revision", 
+    "name": "Can add revision", 
+    "content_type": 15
+  }
+},
+{
+  "pk": 44, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_revision", 
+    "name": "Can change revision", 
+    "content_type": 15
+  }
+},
+{
+  "pk": 45, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_revision", 
+    "name": "Can delete revision", 
+    "content_type": 15
+  }
+},
+{
+  "pk": 46, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_itemkind", 
+    "name": "Can add item kind", 
+    "content_type": 16
+  }
+},
+{
+  "pk": 47, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_itemkind", 
+    "name": "Can change item kind", 
+    "content_type": 16
+  }
+},
+{
+  "pk": 48, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_itemkind", 
+    "name": "Can delete item kind", 
+    "content_type": 16
+  }
+},
+{
+  "pk": 49, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_seatingkind", 
+    "name": "Can add seating kind", 
+    "content_type": 17
+  }
+},
+{
+  "pk": 50, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_seatingkind", 
+    "name": "Can change seating kind", 
+    "content_type": 17
+  }
+},
+{
+  "pk": 51, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_seatingkind", 
+    "name": "Can delete seating kind", 
+    "content_type": 17
+  }
+},
+{
+  "pk": 52, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_frontlayoutkind", 
+    "name": "Can add front layout kind", 
+    "content_type": 18
+  }
+},
+{
+  "pk": 53, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_frontlayoutkind", 
+    "name": "Can change front layout kind", 
+    "content_type": 18
+  }
+},
+{
+  "pk": 54, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_frontlayoutkind", 
+    "name": "Can delete front layout kind", 
+    "content_type": 18
+  }
+},
+{
+  "pk": 55, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_personrole", 
+    "name": "Can add person role", 
+    "content_type": 19
+  }
+},
+{
+  "pk": 56, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_personrole", 
+    "name": "Can change person role", 
+    "content_type": 19
+  }
+},
+{
+  "pk": 57, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_personrole", 
+    "name": "Can delete person role", 
+    "content_type": 19
+  }
+},
+{
+  "pk": 58, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_personstatus", 
+    "name": "Can add Person Status", 
+    "content_type": 20
+  }
+},
+{
+  "pk": 59, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_personstatus", 
+    "name": "Can change Person Status", 
+    "content_type": 20
+  }
+},
+{
+  "pk": 60, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_personstatus", 
+    "name": "Can delete Person Status", 
+    "content_type": 20
+  }
+},
+{
+  "pk": 61, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_gender", 
+    "name": "Can add gender", 
+    "content_type": 21
+  }
+},
+{
+  "pk": 62, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_gender", 
+    "name": "Can change gender", 
+    "content_type": 21
+  }
+},
+{
+  "pk": 63, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_gender", 
+    "name": "Can delete gender", 
+    "content_type": 21
+  }
+},
+{
+  "pk": 64, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_tag", 
+    "name": "Can add tag", 
+    "content_type": 22
+  }
+},
+{
+  "pk": 65, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_tag", 
+    "name": "Can change tag", 
+    "content_type": 22
+  }
+},
+{
+  "pk": 66, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_tag", 
+    "name": "Can delete tag", 
+    "content_type": 22
+  }
+},
+{
+  "pk": 67, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitkind", 
+    "name": "Can add kit kind", 
+    "content_type": 23
+  }
+},
+{
+  "pk": 68, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitkind", 
+    "name": "Can change kit kind", 
+    "content_type": 23
+  }
+},
+{
+  "pk": 69, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitkind", 
+    "name": "Can delete kit kind", 
+    "content_type": 23
+  }
+},
+{
+  "pk": 70, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitrole", 
+    "name": "Can add kit role", 
+    "content_type": 24
+  }
+},
+{
+  "pk": 71, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitrole", 
+    "name": "Can change kit role", 
+    "content_type": 24
+  }
+},
+{
+  "pk": 72, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitrole", 
+    "name": "Can delete kit role", 
+    "content_type": 24
+  }
+},
+{
+  "pk": 73, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitdepartment", 
+    "name": "Can add kit department", 
+    "content_type": 25
+  }
+},
+{
+  "pk": 74, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitdepartment", 
+    "name": "Can change kit department", 
+    "content_type": 25
+  }
+},
+{
+  "pk": 75, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitdepartment", 
+    "name": "Can delete kit department", 
+    "content_type": 25
+  }
+},
+{
+  "pk": 76, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitsource", 
+    "name": "Can add kit source", 
+    "content_type": 26
+  }
+},
+{
+  "pk": 77, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitsource", 
+    "name": "Can change kit source", 
+    "content_type": 26
+  }
+},
+{
+  "pk": 78, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitsource", 
+    "name": "Can delete kit source", 
+    "content_type": 26
+  }
+},
+{
+  "pk": 79, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitbasis", 
+    "name": "Can add kit basis", 
+    "content_type": 27
+  }
+},
+{
+  "pk": 80, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitbasis", 
+    "name": "Can change kit basis", 
+    "content_type": 27
+  }
+},
+{
+  "pk": 81, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitbasis", 
+    "name": "Can delete kit basis", 
+    "content_type": 27
+  }
+},
+{
+  "pk": 82, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_mediastatus", 
+    "name": "Can add media status", 
+    "content_type": 28
+  }
+},
+{
+  "pk": 83, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_mediastatus", 
+    "name": "Can change media status", 
+    "content_type": 28
+  }
+},
+{
+  "pk": 84, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_mediastatus", 
+    "name": "Can delete media status", 
+    "content_type": 28
+  }
+},
+{
+  "pk": 85, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitstatus", 
+    "name": "Can add kit status", 
+    "content_type": 29
+  }
+},
+{
+  "pk": 86, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitstatus", 
+    "name": "Can change kit status", 
+    "content_type": 29
+  }
+},
+{
+  "pk": 87, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitstatus", 
+    "name": "Can delete kit status", 
+    "content_type": 29
+  }
+},
+{
+  "pk": 88, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitrequest", 
+    "name": "Can add kitrequest", 
+    "content_type": 30
+  }
+},
+{
+  "pk": 89, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitrequest", 
+    "name": "Can change kitrequest", 
+    "content_type": 30
+  }
+},
+{
+  "pk": 90, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitrequest", 
+    "name": "Can delete kitrequest", 
+    "content_type": 30
+  }
+},
+{
+  "pk": 91, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitthing", 
+    "name": "Can add kitthing", 
+    "content_type": 31
+  }
+},
+{
+  "pk": 92, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitthing", 
+    "name": "Can change kitthing", 
+    "content_type": 31
+  }
+},
+{
+  "pk": 93, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitthing", 
+    "name": "Can delete kitthing", 
+    "content_type": 31
+  }
+},
+{
+  "pk": 94, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitbundle", 
+    "name": "Can add kitbundle", 
+    "content_type": 32
+  }
+},
+{
+  "pk": 95, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitbundle", 
+    "name": "Can change kitbundle", 
+    "content_type": 32
+  }
+},
+{
+  "pk": 96, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitbundle", 
+    "name": "Can delete kitbundle", 
+    "content_type": 32
+  }
+},
+{
+  "pk": 97, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kitroomassignment", 
+    "name": "Can add kit room assignment", 
+    "content_type": 33
+  }
+},
+{
+  "pk": 98, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kitroomassignment", 
+    "name": "Can change kit room assignment", 
+    "content_type": 33
+  }
+},
+{
+  "pk": 99, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kitroomassignment", 
+    "name": "Can delete kit room assignment", 
+    "content_type": 33
+  }
+},
+{
+  "pk": 100, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_kititemassignment", 
+    "name": "Can add kit item assignment", 
+    "content_type": 34
+  }
+},
+{
+  "pk": 101, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_kititemassignment", 
+    "name": "Can change kit item assignment", 
+    "content_type": 34
+  }
+},
+{
+  "pk": 102, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_kititemassignment", 
+    "name": "Can delete kit item assignment", 
+    "content_type": 34
+  }
+},
+{
+  "pk": 103, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_roomcapacity", 
+    "name": "Can add room-capacity", 
+    "content_type": 35
+  }
+},
+{
+  "pk": 104, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_roomcapacity", 
+    "name": "Can change room-capacity", 
+    "content_type": 35
+  }
+},
+{
+  "pk": 105, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_roomcapacity", 
+    "name": "Can delete room-capacity", 
+    "content_type": 35
+  }
+},
+{
+  "pk": 106, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_room", 
+    "name": "Can add room", 
+    "content_type": 36
+  }
+},
+{
+  "pk": 107, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_room", 
+    "name": "Can change room", 
+    "content_type": 36
+  }
+},
+{
+  "pk": 108, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_room", 
+    "name": "Can delete room", 
+    "content_type": 36
+  }
+},
+{
+  "pk": 109, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_person", 
+    "name": "Can add person", 
+    "content_type": 37
+  }
+},
+{
+  "pk": 110, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_person", 
+    "name": "Can change person", 
+    "content_type": 37
+  }
+},
+{
+  "pk": 111, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_person", 
+    "name": "Can delete person", 
+    "content_type": 37
+  }
+},
+{
+  "pk": 112, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_item", 
+    "name": "Can add item", 
+    "content_type": 38
+  }
+},
+{
+  "pk": 113, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_item", 
+    "name": "Can change item", 
+    "content_type": 38
+  }
+},
+{
+  "pk": 114, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_item", 
+    "name": "Can delete item", 
+    "content_type": 38
+  }
+},
+{
+  "pk": 115, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_itemperson", 
+    "name": "Can add itemperson", 
+    "content_type": 39
+  }
+},
+{
+  "pk": 116, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_itemperson", 
+    "name": "Can change itemperson", 
+    "content_type": 39
+  }
+},
+{
+  "pk": 117, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_itemperson", 
+    "name": "Can delete itemperson", 
+    "content_type": 39
+  }
+},
+{
+  "pk": 118, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_personlist", 
+    "name": "Can add person list", 
+    "content_type": 40
+  }
+},
+{
+  "pk": 119, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_personlist", 
+    "name": "Can change person list", 
+    "content_type": 40
+  }
+},
+{
+  "pk": 120, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_personlist", 
+    "name": "Can delete person list", 
+    "content_type": 40
+  }
+},
+{
+  "pk": 121, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_checkresult", 
+    "name": "Can add check result", 
+    "content_type": 41
+  }
+},
+{
+  "pk": 122, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_checkresult", 
+    "name": "Can change check result", 
+    "content_type": 41
+  }
+},
+{
+  "pk": 123, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_checkresult", 
+    "name": "Can delete check result", 
+    "content_type": 41
+  }
+},
+{
+  "pk": 124, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_check", 
+    "name": "Can add check", 
+    "content_type": 42
+  }
+},
+{
+  "pk": 125, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_check", 
+    "name": "Can change check", 
+    "content_type": 42
+  }
+},
+{
+  "pk": 126, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_check", 
+    "name": "Can delete check", 
+    "content_type": 42
+  }
+},
+{
+  "pk": 127, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "add_userprofile", 
+    "name": "Can add user profile", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 128, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "change_userprofile", 
+    "name": "Can change user profile", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 129, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "delete_userprofile", 
+    "name": "Can delete user profile", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 130, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_private", 
+    "name": "Can edit private data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 131, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_public", 
+    "name": "Can edit public data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 132, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "read_public", 
+    "name": "Can read public data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 133, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "read_private", 
+    "name": "Can read private data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 134, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "config_db", 
+    "name": "Can configure the database", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 135, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_programme", 
+    "name": "Can edit programme data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 136, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_kit", 
+    "name": "Can edit kit-related data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 137, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_direct_email", 
+    "name": "Can send email to individuals", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 138, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_item_email", 
+    "name": "Can send email to everyone on an item", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 139, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_mass_email", 
+    "name": "Can send email to everyone", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 140, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "import_data", 
+    "name": "Can import data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 141, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "export_data", 
+    "name": "Can export data", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 142, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_room", 
+    "name": "Can edit room info", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 143, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_tags", 
+    "name": "Can tag items/people and edit tags", 
+    "content_type": 43
+  }
+},
+{
+  "pk": 144, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_programme", 
+    "name": "Can edit programme data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 145, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_kit", 
+    "name": "Can edit kit-related data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 146, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_direct_email", 
+    "name": "Can send email to individuals", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 147, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_item_email", 
+    "name": "Can send email to everyone on an item", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 148, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "send_mass_email", 
+    "name": "Can send email to everyone", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 149, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "import_data", 
+    "name": "Can import data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 150, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "export_data", 
+    "name": "Can export data", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 151, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_room", 
+    "name": "Can edit room info", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 152, 
+  "model": "auth.permission", 
+  "fields": {
+    "codename": "edit_tags", 
+    "name": "Can tag items/people and edit tags", 
+    "content_type": 46
+  }
+},
+{
+  "pk": 1, 
+  "model": "auth.group", 
+  "fields": {
+    "name": "participant", 
+    "permissions": [
+      132, 
+      137, 
+      138
+    ]
+  }
+},
+{
+  "pk": 2, 
+  "model": "auth.group", 
+  "fields": {
+    "name": "constaff", 
+    "permissions": [
+      133, 
+      132, 
+      137, 
+      138, 
+      139
+    ]
+  }
+},
+{
+  "pk": 3, 
+  "model": "auth.group", 
+  "fields": {
+    "name": "tech", 
+    "permissions": [
+      136, 
+      130, 
+      131, 
+      142, 
+      143, 
+      133, 
+      132, 
+      137, 
+      138, 
+      139
+    ]
+  }
+},
+{
+  "pk": 4, 
+  "model": "auth.group", 
+  "fields": {
+    "name": "concom", 
+    "permissions": [
+      136, 
+      130, 
+      135, 
+      131, 
+      142, 
+      143, 
+      141, 
+      140, 
+      133, 
+      132, 
+      137, 
+      138, 
+      139
+    ]
+  }
+},
+{
+  "pk": 5, 
+  "model": "auth.group", 
+  "fields": {
+    "name": "progops", 
+    "permissions": [
+      130, 
+      135, 
+      131, 
+      142, 
+      143, 
+      133, 
+      132, 
+      137, 
+      138, 
+      139
+    ]
+  }
+},
+{
+  "pk": 6, 
+  "model": "auth.group", 
+  "fields": {
+    "name": "streampunkadmin", 
+    "permissions": [
+      134, 
+      136, 
+      130, 
+      135, 
+      131, 
+      142, 
+      143, 
+      141, 
+      140, 
+      133, 
+      132, 
+      137, 
+      138, 
+      139
+    ]
+  }
+},
+{
+  "pk": 2, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "fury", 
+    "first_name": "Nick", 
+    "last_name": "Fury", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": true, 
+    "last_login": "2014-05-24T15:58:02Z", 
+    "groups": [
+      4
+    ], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$12000$YaPaoPum4B4K$nerbd9e5x1GyAcxCJ5BZkkAHc4f5skrThGWFZU/M0p4=", 
+    "email": "", 
+    "date_joined": "2014-05-24T15:58:02Z"
+  }
+},
+{
+  "pk": 3, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "phil", 
+    "first_name": "Phil", 
+    "last_name": "Coulson", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": true, 
+    "last_login": "2014-05-24T15:58:37Z", 
+    "groups": [
+      2
+    ], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$12000$l3SQnVmVbaaK$vpbhxx5zNYCZgeEi6RF7dnEgKAF+E93G5VBQnR81EtM=", 
+    "email": "", 
+    "date_joined": "2014-05-24T15:58:37Z"
+  }
+},
+{
+  "pk": 4, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "mel", 
+    "first_name": "Melinda", 
+    "last_name": "May", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2014-05-24T15:59:32Z", 
+    "groups": [
+      1
+    ], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$12000$hsAPGxuwivkn$fUkQDBpOGOZ6nBIuVTxu8tZ68qq2LlWRU6z6BGCc/Pc=", 
+    "email": "", 
+    "date_joined": "2014-05-24T15:59:32Z"
+  }
+},
+{
+  "pk": 5, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "grant", 
+    "first_name": "Grant", 
+    "last_name": "Ward", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2014-05-24T16:00:01Z", 
+    "groups": [
+      5
+    ], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$12000$RFNVNWi8mpNe$MOk4WPoaMNVhLjB/LalVV+2nMoksj0k9DBLBi5DCSjk=", 
+    "email": "", 
+    "date_joined": "2014-05-24T16:00:01Z"
+  }
+},
+{
+  "pk": 6, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "fitz", 
+    "first_name": "Fitz", 
+    "last_name": "Simmons", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2014-05-24T16:00:29Z", 
+    "groups": [
+      6
+    ], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$12000$0y5nKSxKzadD$Yth0sS0qM4Z8k4AVhfXsKDPdFGe+o+fyM3lVn0dVvno=", 
+    "email": "", 
+    "date_joined": "2014-05-24T16:00:29Z"
+  }
+},
+{
+  "pk": 7, 
+  "model": "auth.user", 
+  "fields": {
+    "username": "sky", 
+    "first_name": "Sky", 
+    "last_name": "", 
+    "is_active": true, 
+    "is_superuser": false, 
+    "is_staff": false, 
+    "last_login": "2014-05-24T16:01:03Z", 
+    "groups": [
+      3
+    ], 
+    "user_permissions": [], 
+    "password": "pbkdf2_sha256$12000$8EXZBWdNKRjA$zI4tzPcxFD90TMY7kyjAuyuMfS3dtwp+dYXoGxCYkN0=", 
+    "email": "", 
+    "date_joined": "2014-05-24T16:01:03Z"
+  }
+}
+]

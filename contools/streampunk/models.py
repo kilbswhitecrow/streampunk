@@ -31,6 +31,7 @@ from django.core.urlresolvers import reverse
 from .currentusermiddleware import get_current_username
 from .tabler import Rower
 from .exceptions import DeleteDefaultException, DeleteUndefException
+from .importer import XMLImporter
 
 YesNo = (
   ( 'TBA', 'TBA'),
@@ -573,6 +574,17 @@ class Tag(models.Model):
         return ['edit', 'remove']
     else:
         return ['edit', 'remove', 'visible']
+
+  @classmethod
+  def importer_mapping(cls):
+    return dict([ ('name', 'name'),
+                  ('description', 'description')])
+  @classmethod
+  def import_xml(cls, file):
+    kwargs = cls.importer_mapping()
+    importer = XMLImporter()
+    importer.parse(file, 'tag', None, kwargs, cls)
+    importer.import_data()
 
 
 # Kit is physical stuff. It can be technical equipment, like a DVD player, or
@@ -1369,6 +1381,18 @@ class Room(models.Model):
     else:
       return ['visible', 'isDefault', 'isUndefined', 'canClash', 'edit', 'remove']
 
+  @classmethod
+  def importer_mapping(cls):
+    return dict([ ('name', 'name'),
+                  ('description', 'description')])
+
+  @classmethod
+  def import_xml(cls, file):
+    kwargs = cls.importer_mapping()
+    importer = XMLImporter()
+    importer.parse(file, 'room', None, kwargs, cls)
+    importer.import_data()
+
 class Person(models.Model):
   """
   A Person is someone who is a candidate for being scheduled on
@@ -1542,6 +1566,22 @@ class Person(models.Model):
     log = ChangeLog(log_id=int(self.id), username=get_current_username(), field=self.deleted_field(), old_val=str(self))
     log.save()
     return super(Person, self).delete()
+
+  @classmethod
+  def importer_mapping(cls):
+    return dict([ ('memnum', 'memnum'),
+                  ('firstName', 'firstName'),
+                  ('middleName', 'middleName'),
+                  ('lastName', 'lastName'),
+                  ('badge', 'badge')])
+
+  @classmethod
+  def import_xml(cls, file):
+    kwargs = cls.importer_mapping()
+    importer = XMLImporter()
+    importer.parse(file, 'person', None, kwargs, cls)
+    importer.import_data()
+
 
 class ScheduledManager(models.Manager):
   "A manager for returning only items that have been scheduled. Useful for checking for problems."
@@ -1740,6 +1780,19 @@ class Item(models.Model):
   def people_public(self):
     "Return all the people who are publicly visible on this item."
     return [ ip.person for ip in self.itempeople() if ip.visible ]
+
+  @classmethod
+  def importer_mapping(cls):
+    return dict([ ('title', 'title'),
+                  ('shortname', 'shortname'),
+                  ('blurb', 'blurb')])
+
+  @classmethod
+  def import_xml(cls, file):
+    kwargs = cls.importer_mapping()
+    importer = XMLImporter()
+    importer.parse(file, 'item', None, kwargs, cls)
+    importer.import_data()
 
 
 class ItemPerson(models.Model):
