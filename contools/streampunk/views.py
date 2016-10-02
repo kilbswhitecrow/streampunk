@@ -155,7 +155,7 @@ class AfterDeleteView(DeleteView):
       return '/streampunk/main/'
 
 def static_page(request, template):
-  return render_to_response(request, template, locals())
+  return render(request, template, locals())
 
 @login_required
 def edit_user_profile(request):
