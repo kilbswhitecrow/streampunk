@@ -20,8 +20,6 @@ http://localhost:8000/mimo/live/
 http://localhost:8000/mimo/mo/
 
 Let’s have some operations for:
-- viewing the defaults.
-- viewing the contents of the current mode.
 - Changing the mode.
 - Changing the current crate.
 
@@ -32,3 +30,11 @@ $ python ./manage.py migrate mimo
 
 Add mimo/templates/mimo and some basic files, and populate the first view.
 Change Settings to use a Manager to return settings().
+
+I’ve set up basic index/detail views.
+
+I should namespace the URLs, by adding
+
+app_name = ‘mimo’
+
+and using ‘mimo:index’ instead of ‘index’ in url tags. And do the same for steampunk.

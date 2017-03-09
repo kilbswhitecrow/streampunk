@@ -1,0 +1,39 @@
+{% extends "mimo/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012-2017 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Plan Detail{% endblock %}
+{% block body_content %}
+Mode: {{ settings.mode }}.
+Container: {{ settings.container }}.
+Room: {{ settings.room }}.
+<hr />
+<p>
+{{ item }}
+</p>
+<table border="1">
+<tr><th>Group</th><td>{{ item.group }}</td></tr>
+<tr><th>Supplier</th><td>{{ item.supplier }}</td></tr>
+<tr><th>Code</th><td>{{ item.code }}</td></tr>
+<tr><th>Kind</th><td>{{ item.kind }}</td></tr>
+<tr><th>Subkind</th><td>{{ item.subkind }}</td></tr>
+<tr><th>Container</th><td>{{ item.container }}</td></tr>
+<tr><th>Room</th><td>{{ item.room }}</td></tr>
+<tr><th>Count</th><td>{{ item.count }}</td></tr>
+<tr><th>State</th><td>{{ item.state }}</td></tr>
+</table>
+</p>
+{% endblock %}

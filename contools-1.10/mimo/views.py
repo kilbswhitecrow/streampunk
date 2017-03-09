@@ -13,27 +13,72 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 
 from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 
-# Create your views here.
+# ----------- TOP LEVEL -------------
 
 def index(request):
   settings = Settings.objects.settings()
   context = { 'settings': settings, }
   return render(request, 'mimo/index.html', context)
 
+# ----------- PLANNING -------------
+
 def plan_index(request):
-  return HttpResponse("Mimo plan_Index view needs writing.")
+  settings = Settings.objects.settings()
+  items = PlanItem.objects.all()
+  context = { 'settings': settings, 'items': items, }
+  return render(request, 'mimo/plan_index.html', context)
+
+def plan_detail(request, pk):
+  settings = Settings.objects.settings()
+  item = get_object_or_404(PlanItem, pk=pk)
+  context = { 'settings': settings, 'item': item, }
+  return render(request, 'mimo/plan_detail.html', context)
+
+# ----------- MOVE IN -------------
 
 def mi_index(request):
-  return HttpResponse("Mimo mi_Index view needs writing.")
+  settings = Settings.objects.settings()
+  items = MoveInItem.objects.all()
+  context = { 'settings': settings, 'items': items, }
+  return render(request, 'mimo/mi_index.html', context)
+
+def mi_detail(request, pk):
+  settings = Settings.objects.settings()
+  item = get_object_or_404(MoveInItem, pk=pk)
+  context = { 'settings': settings, 'item': item, }
+  return render(request, 'mimo/mi_detail.html', context)
+
+# ----------- LIVE -------------
 
 def live_index(request):
-  return HttpResponse("Mimo live_Index view needs writing.")
+  settings = Settings.objects.settings()
+  items = LiveItem.objects.all()
+  context = { 'settings': settings, 'items': items, }
+  return render(request, 'mimo/live_index.html', context)
+
+def live_detail(request, pk):
+  settings = Settings.objects.settings()
+  item = get_object_or_404(LiveItem, pk=pk)
+  context = { 'settings': settings, 'item': item, }
+  return render(request, 'mimo/live_detail.html', context)
+
+# ----------- MOVE OUT -------------
 
 def mo_index(request):
-  return HttpResponse("Mimo mo_Index view needs writing.")
+  settings = Settings.objects.settings()
+  items = MoveOutItem.objects.all()
+  context = { 'settings': settings, 'items': items, }
+  return render(request, 'mimo/mo_index.html', context)
+
+def mo_detail(request, pk):
+  settings = Settings.objects.settings()
+  item = get_object_or_404(MoveOutItem, pk=pk)
+  context = { 'settings': settings, 'item': item, }
+  return render(request, 'mimo/mo_detail.html', context)
+

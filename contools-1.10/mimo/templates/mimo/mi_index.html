@@ -1,0 +1,33 @@
+{% extends "mimo/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012-2017 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Move In Index{% endblock %}
+{% block body_content %}
+Mode: {{ settings.mode }}.
+Container: {{ settings.container }}.
+Room: {{ settings.room }}.
+<hr />
+{% if items %}
+  <ul>
+  {% for item in items %}
+    <li> <a href="{% url "mi_detail" item.id %}">{{ item }}</a> </li>
+  {% endfor %}
+  </ul>
+{% else %}
+  <p>No items yet.</p>
+{% endif %}
+{% endblock %}

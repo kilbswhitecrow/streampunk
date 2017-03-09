@@ -175,27 +175,30 @@ class TechItem(models.Model):
       desc = '(unknown)'
     return '%s%s' % (desc, num)
 
+  def __str__(self):
+    return 'Misc:%s' % (self.name())
+
 class PlanItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   def __str__(self):
-    return 'Plan:%s' % (self.name())
+    return 'Plan:%s' % (self.item.name())
 
 class MoveInItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   plan = models.ForeignKey(PlanItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
-    return 'Plan:%s' % (self.name())
+    return 'Plan:%s' % (self.item.name())
 
 class LiveItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   mi = models.ForeignKey(MoveInItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
-    return 'Plan:%s' % (self.name())
+    return 'Plan:%s' % (self.item.name())
 
 class MoveOutItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   live = models.ForeignKey(LiveItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
-    return 'Plan:%s' % (self.name())
+    return 'Plan:%s' % (self.item.name())
 
 
