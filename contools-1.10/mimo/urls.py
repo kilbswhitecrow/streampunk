@@ -19,6 +19,9 @@ from . import views
 
 urlpatterns = [
   url(r'^$', views.index, name='index'),
+  url(r'^settings/mode/$', views.set_mode, name='settings_mode'),
+  url(r'^settings/container/$', views.set_container, name='settings_container'),
+  url(r'^settings/room/$', views.set_room, name='settings_room'),
   url(r'^plan/$', views.PlanIndexView.as_view(), name='plan_index'),
   url(r'^plan/(?P<pk>[0-9]+)/$', views.PlanDetailView.as_view(), name='plan_detail'),
   url(r'^mi/$', views.MoveInIndexView.as_view(), name='mi_index'),

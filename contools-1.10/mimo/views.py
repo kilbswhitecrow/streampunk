@@ -16,11 +16,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from django.http import HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic
 
 from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
+from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
 
 # ----------- TOP LEVEL -------------
 
@@ -124,4 +125,44 @@ class MoveOutDetailView(generic.DetailView):
   template_name = 'mimo/mo_detail.html'
   context_object_name = 'item'
   model = MoveOutItem
+
+# ----------- SETTINGS -------------
+
+def set_mode(request):
+  if request.method == 'POST':
+    form = SettingsModeForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetMode(form.cleaned_data['mode'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsModeForm(initial={'mode': settings.mode})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
+
+
+def set_container(request):
+  if request.method == 'POST':
+    form = SettingsContainerForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetContainer(form.cleaned_data['container'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsContainerForm(initial={'container': settings.container})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
+
+
+def set_room(request):
+  if request.method == 'POST':
+    form = SettingsRoomForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetRoom(form.cleaned_data['room'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsRoomForm(initial={'room': settings.room})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
 

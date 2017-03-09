@@ -16,6 +16,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.urls import reverse
+from django.forms import ModelForm
 
 from streampunk.models import Room
 
@@ -73,6 +75,18 @@ class SettingsManager(models.Manager):
   """
   def settings(self):
     return self.all()[0]
+  def SetMode(self, mode):
+    current_settings = self.settings()
+    current_settings.mode = mode
+    current_settings.save()
+  def SetContainer(self, container):
+    current_settings = self.settings()
+    current_settings.container = container
+    current_settings.save()
+  def SetRoom(self, room):
+    current_settings = self.settings()
+    current_settings.room = room
+    current_settings.save()
 
 class Settings(models.Model):
   """
@@ -87,6 +101,30 @@ class Settings(models.Model):
 
   def __str__(self):
     return 'Settings'
+
+  def PlanMode(self):
+    self.objects.SetMode('Plan')
+  def MiMode(self):
+    self.objects.SetMode('MI')
+  def LiveMove(self):
+    self.objects.SetMode('Live')
+  def MoMode(self):
+    self.objects.SetMode('MO')
+
+class SettingsModeForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'mode' ]
+
+class SettingsContainerForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'container' ]
+
+class SettingsRoomForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'room' ]
 
 class TechKind(models.Model):
   """
@@ -178,27 +216,42 @@ class TechItem(models.Model):
   def __str__(self):
     return 'Misc:%s' % (self.name())
 
+class TechItemForm(ModelForm):
+  class Meta:
+    model = TechItem
+    fields = [ 'group', 'supplier', 'code', 'kind', 'subkind', 'container',
+               'room', 'count', 'state', ]
+
+
 class PlanItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   def __str__(self):
     return 'Plan:%s' % (self.item.name())
+  def get_absolute_url(self):
+    return reverse('plan_detail', kwargs={'pk': self.pk})
 
 class MoveInItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   plan = models.ForeignKey(PlanItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
     return 'Plan:%s' % (self.item.name())
+  def get_absolute_url(self):
+    return reverse('mi_detail', kwargs={'pk': self.pk})
 
 class LiveItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   mi = models.ForeignKey(MoveInItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
     return 'Plan:%s' % (self.item.name())
+  def get_absolute_url(self):
+    return reverse('live_detail', kwargs={'pk': self.pk})
 
 class MoveOutItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   live = models.ForeignKey(LiveItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
     return 'Plan:%s' % (self.item.name())
+  def get_absolute_url(self):
+    return reverse('mo_detail', kwargs={'pk': self.pk})
 
 

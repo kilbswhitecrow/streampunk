@@ -38,3 +38,14 @@ I should namespace the URLs, by adding
 app_name = ‘mimo’
 
 and using ‘mimo:index’ instead of ‘index’ in url tags. And do the same for steampunk.
+
+Don’t really want to use class-based views for add/update/delete for Move In/Live/Move Out - instead, there’ll be more custom operations.
+
+For the Index display, we want something similar to a spreadsheet:
+- Collect them by group.
+- One item per row, columns are the details.
+- Can insert a new row via AJAX, typing directly into the fields in-place.
+- We probably want to be filtering by Supplier, too. cf tabs on a spreadsheet.
+	
+So the “PlanItem” CreateView makes no sense - that relies on existing TechItems - it doesn’t create new TechItems. Instead, we want to create a new TechItem which also creates the appropriate higher-level item according to the mode.
+

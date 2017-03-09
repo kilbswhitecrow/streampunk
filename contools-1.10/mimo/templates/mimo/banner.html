@@ -23,8 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% comment %}
 Settings is populated by banner_info() in context_processors.py.
 {% endcomment %}
-Mode: <em>{{ settings.mode }}</em>.
-Container: <em>{{ settings.container }}</em>.
-Room: <em>{{ settings.room }}</em>.
+Mode: <em><a href="{% url "settings_mode" %}">{{ settings.mode }}</a></em>.
+Container: <em><a href="{% url "settings_container" %}">{{ settings.container }}</a></em>.
+Room: <em><a href="{% url "settings_room" %}">{{ settings.room }}</a></em>.
 <hr />
 </div>

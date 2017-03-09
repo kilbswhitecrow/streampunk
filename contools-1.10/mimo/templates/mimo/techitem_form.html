@@ -15,29 +15,15 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
-{% block title %}Plan Index{% endblock %}
+{% block title %}Tech Item Form{% endblock %}
 {% block body_content %}
-{% if items %}
-  <table border="1">
-  <tr>
-  <th>Code</th>
-  <th>Kind</th>
-  <th>Subkind</th>
-  <th>Count</th>
-  <th>State</th>
-  <th>Room</th>
-  {% for item in items %}
-    <tr>
-    <td> <a href="{% url "plan_detail" item.item.id %}">{{ item.item.code }}</a> </td>
-    <td>{{ item.item.kind }}</td>
-    <td>{{ item.item.subkind }}</td>
-    <td align="right">{{ item.item.count }}</td>
-    <td>{{ item.item.state }}</td>
-    <td>{{ item.item.room }}</td>
-    </tr>
-  {% endfor %}
-  </table>
-{% else %}
-  <p>No items yet.</p>
-{% endif %}
+<p>
+{{ item }}
+</p>
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Submit" />
+</form>
+</p>
 {% endblock %}
