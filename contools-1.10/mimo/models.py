@@ -109,7 +109,7 @@ class TechGroup(models.Model):
   description = models.CharField(max_length=256, blank=True)
 
   def __str__(self):
-    return name
+    return self.name
 
 MoveInStateValues = (
                                     # MOVE IN STATES

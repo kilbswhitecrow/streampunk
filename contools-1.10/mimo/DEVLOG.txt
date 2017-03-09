@@ -10,4 +10,6 @@ $ python ./manage.py startpap mimo
 - Added placeholder URLs in urls.py
 
 $ python ./manage.py makemigrations mimo
- 
+$ python ./manage.py migrate mimo
+$ python /.manage.py rumserver
+
