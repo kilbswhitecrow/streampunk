@@ -1,0 +1,13 @@
+MIMO development log
+
+$ python ./manage.py startpap mimo
+
+- Created the models in models.py
+- Importing mimo/urls.py
+- Added memo to INSTALLED_APPS
+- Registered models with admin.py
+- Added placeholder views in views.py
+- Added placeholder URLs in urls.py
+
+$ python ./manage.py makemigrations mimo
+ 
