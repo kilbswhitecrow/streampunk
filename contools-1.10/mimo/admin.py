@@ -14,10 +14,20 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from django.contrib import admin
 
+from .models import Settings
 from .models import ContainerType, TechKind, TechSubkind, TechGroup, Supplier
+from .models import Container
+from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 
+admin.site.register(Settings)
 admin.site.register(ContainerType)
 admin.site.register(TechKind)
 admin.site.register(TechSubkind)
 admin.site.register(TechGroup)
 admin.site.register(Supplier)
+admin.site.register(Container)
+admin.site.register(TechItem)
+admin.site.register(PlanItem)
+admin.site.register(MoveInItem)
+admin.site.register(LiveItem)
+admin.site.register(MoveOutItem)

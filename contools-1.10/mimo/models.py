@@ -54,7 +54,7 @@ class Container(models.Model):
   """
   name = models.CharField(max_length=64)
   type = models.ForeignKey(ContainerType, on_delete=models.CASCADE)
-  parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True)
+  parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
   room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
   def __str__(self):
@@ -67,6 +67,13 @@ SettingModes = (
   ('MO',   'Move Out'),
 )
 
+class SettingsManager(models.Manager):
+  """
+  A manager that knows how to retrieve the settings info.
+  """
+  def settings(self):
+    return self.all()[0]
+
 class Settings(models.Model):
   """
   MIMO is a modal app; we want the user to be selecting
@@ -74,8 +81,9 @@ class Settings(models.Model):
   operations.
   """
   mode = models.CharField(max_length=16, choices=SettingModes, default='Plan')
-  container = models.ForeignKey(Container, on_delete=models.SET_NULL, null=True)
-  room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
+  container = models.ForeignKey(Container, on_delete=models.SET_NULL, null=True, blank=True)
+  room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
+  objects = SettingsManager()
 
   def __str__(self):
     return 'Settings'
@@ -142,13 +150,13 @@ class TechItem(models.Model):
   a count during Planning, for convenience, and then divided up into smaller
   groups during Move In.
   """
-  group = models.ForeignKey(TechGroup, on_delete=models.SET_NULL, null=True)
+  group = models.ForeignKey(TechGroup, on_delete=models.SET_NULL, null=True, blank=True)
   supplier = models.ForeignKey(Supplier, on_delete=models.CASCADE)
   code = models.CharField(max_length=32, blank=True)
   kind = models.ForeignKey(TechKind, on_delete=models.CASCADE)
   subkind = models.ForeignKey(TechSubkind, on_delete=models.CASCADE)
-  container = models.ForeignKey(Container, on_delete=models.SET_NULL, null=True)
-  room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True)
+  container = models.ForeignKey(Container, on_delete=models.SET_NULL, null=True, blank=True)
+  room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
   count = models.IntegerField(default=1)
   state = models.CharField(max_length=32, blank=True)
 
@@ -174,19 +182,19 @@ class PlanItem(models.Model):
 
 class MoveInItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
-  plan = models.ForeignKey(PlanItem, on_delete=models.SET_NULL, null=True)
+  plan = models.ForeignKey(PlanItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
     return 'Plan:%s' % (self.name())
 
 class LiveItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
-  mi = models.ForeignKey(MoveInItem, on_delete=models.SET_NULL, null=True)
+  mi = models.ForeignKey(MoveInItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
     return 'Plan:%s' % (self.name())
 
 class MoveOutItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
-  live = models.ForeignKey(LiveItem, on_delete=models.SET_NULL, null=True)
+  live = models.ForeignKey(LiveItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
     return 'Plan:%s' % (self.name())
 

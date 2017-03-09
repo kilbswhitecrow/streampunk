@@ -22,7 +22,9 @@ from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 # Create your views here.
 
 def index(request):
-  return HttpResponse("Mimo Index view needs writing.")
+  settings = Settings.objects.settings()
+  context = { 'settings': settings, }
+  return render(request, 'mimo/index.html', context)
 
 def plan_index(request):
   return HttpResponse("Mimo plan_Index view needs writing.")

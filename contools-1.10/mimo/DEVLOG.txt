@@ -11,5 +11,24 @@ $ python ./manage.py startpap mimo
 
 $ python ./manage.py makemigrations mimo
 $ python ./manage.py migrate mimo
-$ python /.manage.py rumserver
+$ python /.manage.py runserver
 
+Can now edit the admin elements and view the (dummy) views through URLS:
+http://localhost:8000/mimo/plan/
+http://localhost:8000/mimo/mi/
+http://localhost:8000/mimo/live/
+http://localhost:8000/mimo/mo/
+
+Let’s have some operations for:
+- viewing the defaults.
+- viewing the contents of the current mode.
+- Changing the mode.
+- Changing the current crate.
+
+Turns out I need blank=True to allow blank foreign keys - NULL is only used to determine how such non-references are represented in the database. So:
+
+$ python ./manage.py makemigrations mimo
+$ python ./manage.py migrate mimo
+
+Add mimo/templates/mimo and some basic files, and populate the first view.
+Change Settings to use a Manager to return settings().
