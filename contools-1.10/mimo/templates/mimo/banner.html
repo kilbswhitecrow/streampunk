@@ -20,4 +20,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <a href="{% url "mi_index" %}">Move in</a>
 <a href="{% url "live_index" %}">Live</a>
 <a href="{% url "mo_index" %}">Move out</a>
+{% comment %}
+Settings is populated by banner_info() in context_processors.py.
+{% endcomment %}
+Mode: <em>{{ settings.mode }}</em>.
+Container: <em>{{ settings.container }}</em>.
+Room: <em>{{ settings.room }}</em>.
+<hr />
 </div>

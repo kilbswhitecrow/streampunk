@@ -17,10 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% block title %}Live Index{% endblock %}
 {% block body_content %}
-Mode: {{ settings.mode }}.
-Container: {{ settings.container }}.
-Room: {{ settings.room }}.
-<hr />
 {% if items %}
   <ul>
   {% for item in items %}

@@ -19,12 +19,12 @@ from . import views
 
 urlpatterns = [
   url(r'^$', views.index, name='index'),
-  url(r'^plan/$', views.plan_index, name='plan_index'),
-  url(r'^plan/(?P<pk>[0-9]+)/$', views.plan_detail, name='plan_detail'),
-  url(r'^mi/$', views.mi_index, name='mi_index'),
-  url(r'^mi/(?P<pk>[0-9]+)/$', views.mi_detail, name='mi_detail'),
-  url(r'^live/$', views.live_index, name='live_index'),
-  url(r'^live/(?P<pk>[0-9]+)/$', views.live_detail, name='live_detail'),
-  url(r'^mo/$', views.mo_index, name='mo_index'),
-  url(r'^mo/(?P<pk>[0-9]+)/$', views.mo_detail, name='mo_detail'),
+  url(r'^plan/$', views.PlanIndexView.as_view(), name='plan_index'),
+  url(r'^plan/(?P<pk>[0-9]+)/$', views.PlanDetailView.as_view(), name='plan_detail'),
+  url(r'^mi/$', views.MoveInIndexView.as_view(), name='mi_index'),
+  url(r'^mi/(?P<pk>[0-9]+)/$', views.MoveInDetailView.as_view(), name='mi_detail'),
+  url(r'^live/$', views.LiveIndexView.as_view(), name='live_index'),
+  url(r'^live/(?P<pk>[0-9]+)/$', views.LiveDetailView.as_view(), name='live_detail'),
+  url(r'^mo/$', views.MoveOutIndexView.as_view(), name='mo_index'),
+  url(r'^mo/(?P<pk>[0-9]+)/$', views.MoveOutDetailView.as_view(), name='mo_detail'),
 ]

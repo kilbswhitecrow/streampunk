@@ -17,23 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% block title %}Plan Detail{% endblock %}
 {% block body_content %}
-Mode: {{ settings.mode }}.
-Container: {{ settings.container }}.
-Room: {{ settings.room }}.
-<hr />
 <p>
 {{ item }}
 </p>
 <table border="1">
-<tr><th>Group</th><td>{{ item.group }}</td></tr>
-<tr><th>Supplier</th><td>{{ item.supplier }}</td></tr>
-<tr><th>Code</th><td>{{ item.code }}</td></tr>
-<tr><th>Kind</th><td>{{ item.kind }}</td></tr>
-<tr><th>Subkind</th><td>{{ item.subkind }}</td></tr>
-<tr><th>Container</th><td>{{ item.container }}</td></tr>
-<tr><th>Room</th><td>{{ item.room }}</td></tr>
-<tr><th>Count</th><td>{{ item.count }}</td></tr>
-<tr><th>State</th><td>{{ item.state }}</td></tr>
+<tr><th>Group</th><td>{{ item.item.group }}</td></tr>
+<tr><th>Supplier</th><td>{{ item.item.supplier }}</td></tr>
+<tr><th>Code</th><td>{{ item.item.code }}</td></tr>
+<tr><th>Kind</th><td>{{ item.item.kind }}</td></tr>
+<tr><th>Subkind</th><td>{{ item.item.subkind }}</td></tr>
+<tr><th>Container</th><td>{{ item.item.container }}</td></tr>
+<tr><th>Room</th><td>{{ item.item.room }}</td></tr>
+<tr><th>Count</th><td>{{ item.item.count }}</td></tr>
+<tr><th>State</th><td>{{ item.item.state }}</td></tr>
 </table>
 </p>
 {% endblock %}
