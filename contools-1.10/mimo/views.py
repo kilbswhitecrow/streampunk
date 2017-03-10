@@ -22,6 +22,8 @@ from django.views import generic
 from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
+from .models import SettingsKindForm, SettingsSubkindForm, SettingsGroupForm
+from .models import SettingsSupplierForm
 
 # ----------- TOP LEVEL -------------
 
@@ -164,5 +166,57 @@ def set_room(request):
     # Initialise the form from Settings.object.settings()
     settings = Settings.objects.settings()
     form = SettingsRoomForm(initial={'room': settings.room})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
+
+
+def set_kind(request):
+  if request.method == 'POST':
+    form = SettingsKindForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetKind(form.cleaned_data['kind'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsKindForm(initial={'kind': settings.kind})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
+
+
+def set_subkind(request):
+  if request.method == 'POST':
+    form = SettingsSubkindForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetSubkind(form.cleaned_data['subkind'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsSubkindForm(initial={'subkind': settings.subkind})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
+
+
+def set_group(request):
+  if request.method == 'POST':
+    form = SettingsGroupForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetGroup(form.cleaned_data['group'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsGroupForm(initial={'group': settings.group})
+    return render(request, 'mimo/settings_form.html', { 'form': form })
+
+
+def set_supplier(request):
+  if request.method == 'POST':
+    form = SettingsSupplierForm(request.POST)
+    if form.is_valid():
+      Settings.objects.SetSupplier(form.cleaned_data['supplier'])
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = SettingsSupplierForm(initial={'supplier': settings.supplier})
     return render(request, 'mimo/settings_form.html', { 'form': form })
 

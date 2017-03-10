@@ -62,70 +62,6 @@ class Container(models.Model):
   def __str__(self):
     return self.name
 
-SettingModes = (
-  ('Plan', 'Planning'),
-  ('MI',   'Move In'),
-  ('Live', 'Live event'),
-  ('MO',   'Move Out'),
-)
-
-class SettingsManager(models.Manager):
-  """
-  A manager that knows how to retrieve the settings info.
-  """
-  def settings(self):
-    return self.all()[0]
-  def SetMode(self, mode):
-    current_settings = self.settings()
-    current_settings.mode = mode
-    current_settings.save()
-  def SetContainer(self, container):
-    current_settings = self.settings()
-    current_settings.container = container
-    current_settings.save()
-  def SetRoom(self, room):
-    current_settings = self.settings()
-    current_settings.room = room
-    current_settings.save()
-
-class Settings(models.Model):
-  """
-  MIMO is a modal app; we want the user to be selecting
-  defaults so that we can apply them when carrying out
-  operations.
-  """
-  mode = models.CharField(max_length=16, choices=SettingModes, default='Plan')
-  container = models.ForeignKey(Container, on_delete=models.SET_NULL, null=True, blank=True)
-  room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
-  objects = SettingsManager()
-
-  def __str__(self):
-    return 'Settings'
-
-  def PlanMode(self):
-    self.objects.SetMode('Plan')
-  def MiMode(self):
-    self.objects.SetMode('MI')
-  def LiveMove(self):
-    self.objects.SetMode('Live')
-  def MoMode(self):
-    self.objects.SetMode('MO')
-
-class SettingsModeForm(ModelForm):
-  class Meta:
-    model = Settings
-    fields = [ 'mode' ]
-
-class SettingsContainerForm(ModelForm):
-  class Meta:
-    model = Settings
-    fields = [ 'container' ]
-
-class SettingsRoomForm(ModelForm):
-  class Meta:
-    model = Settings
-    fields = [ 'room' ]
-
 class TechKind(models.Model):
   """
   An extensible enumeration of the sort of thing that an item can be.
@@ -156,6 +92,109 @@ class TechGroup(models.Model):
 
   def __str__(self):
     return self.name
+SettingModes = (
+  ('Plan', 'Planning'),
+  ('MI',   'Move In'),
+  ('Live', 'Live event'),
+  ('MO',   'Move Out'),
+)
+
+class SettingsManager(models.Manager):
+  """
+  A manager that knows how to retrieve the settings info.
+  """
+  def settings(self):
+    return self.all()[0]
+  def SetMode(self, mode):
+    current_settings = self.settings()
+    current_settings.mode = mode
+    current_settings.save()
+  def SetContainer(self, container):
+    current_settings = self.settings()
+    current_settings.container = container
+    current_settings.save()
+  def SetRoom(self, room):
+    current_settings = self.settings()
+    current_settings.room = room
+    current_settings.save()
+  def SetKind(self, kind):
+    current_settings = self.settings()
+    current_settings.kind = kind
+    current_settings.save()
+  def SetSubkind(self, subkind):
+    current_settings = self.settings()
+    current_settings.subkind = subkind
+    current_settings.save()
+  def SetSupplier(self, supplier):
+    current_settings = self.settings()
+    current_settings.supplier = supplier
+    current_settings.save()
+  def SetGroup(self, group):
+    current_settings = self.settings()
+    current_settings.group = group
+    current_settings.save()
+
+class Settings(models.Model):
+  """
+  MIMO is a modal app; we want the user to be selecting
+  defaults so that we can apply them when carrying out
+  operations.
+  """
+  mode = models.CharField(max_length=16, choices=SettingModes, default='Plan')
+  container = models.ForeignKey(Container, on_delete=models.SET_NULL, null=True, blank=True)
+  room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
+  supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, null=True, blank=True)
+  kind = models.ForeignKey(TechKind, on_delete=models.SET_NULL, null=True, blank=True)
+  subkind = models.ForeignKey(TechSubkind, on_delete=models.SET_NULL, null=True, blank=True)
+  group = models.ForeignKey(TechGroup, on_delete=models.SET_NULL, null=True, blank=True)
+  objects = SettingsManager()
+
+  def __str__(self):
+    return 'Settings'
+
+  def PlanMode(self):
+    self.objects.SetMode('Plan')
+  def MiMode(self):
+    self.objects.SetMode('MI')
+  def LiveMove(self):
+    self.objects.SetMode('Live')
+  def MoMode(self):
+    self.objects.SetMode('MO')
+
+class SettingsModeForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'mode' ]
+
+class SettingsContainerForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'container' ]
+
+class SettingsRoomForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'room' ]
+
+class SettingsKindForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'kind' ]
+
+class SettingsSubkindForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'subkind' ]
+
+class SettingsGroupForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'group' ]
+
+class SettingsSupplierForm(ModelForm):
+  class Meta:
+    model = Settings
+    fields = [ 'supplier' ]
 
 MoveInStateValues = (
                                     # MOVE IN STATES

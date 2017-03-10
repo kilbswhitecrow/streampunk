@@ -49,3 +49,10 @@ For the Index display, we want something similar to a spreadsheet:
 	
 So the “PlanItem” CreateView makes no sense - that relies on existing TechItems - it doesn’t create new TechItems. Instead, we want to create a new TechItem which also creates the appropriate higher-level item according to the mode.
 
+I have the link in the index view go to plan_detail; it should go to the edit mode,
+but I don’t have that form yet.
+
+Realised that the Settings should be recording the defaults for all fields in a
+TechItem, and that those defaults should really be the last entered, so added more
+fields to Settings, then created a migration for it. Also moved all the Settings
+stuff to later in models.py, because it now references a lot more models.
