@@ -31,5 +31,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <tr><th>Count</th><td>{{ item.item.count }}</td></tr>
 <tr><th>State</th><td>{{ item.item.state }}</td></tr>
 </table>
+<a href="{% url "plan_edit" item.item.pk %}">Edit</a>
 </p>
 {% endblock %}

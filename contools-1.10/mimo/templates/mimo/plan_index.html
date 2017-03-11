@@ -34,10 +34,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <td align="right">{{ item.item.count }}</td>
     <td>{{ item.item.state }}</td>
     <td>{{ item.item.room }}</td>
+    <td><a href="{% url "plan_edit" item.item.pk %}">Edit</a></td>
     </tr>
   {% endfor %}
   </table>
 {% else %}
   <p>No items yet.</p>
 {% endif %}
+<a href="{% url "plan_add" %}">Add Item</a>
 {% endblock %}

@@ -23,7 +23,7 @@ from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
 from .models import SettingsKindForm, SettingsSubkindForm, SettingsGroupForm
-from .models import SettingsSupplierForm
+from .models import SettingsSupplierForm, TechItemForm
 
 # ----------- TOP LEVEL -------------
 
@@ -55,6 +55,68 @@ class PlanDetailView(generic.DetailView):
   template_name = 'mimo/plan_detail.html'
   context_object_name = 'item'
   model = PlanItem
+
+
+def add_techitem(request):
+  if request.method == 'POST':
+    form = TechItemForm(request.POST)
+    if form.is_valid():
+      group = form.cleaned_data['group']
+      supplier = form.cleaned_data['supplier']
+      count = form.cleaned_data['count']
+      code = form.cleaned_data['code']
+      kind = form.cleaned_data['kind']
+      subkind = form.cleaned_data['subkind']
+      room = form.cleaned_data['room']
+      container = form.cleaned_data['container']
+      item = TechItem(group=group, supplier=supplier, count=count, code=code,
+                      kind=kind, subkind=subkind, room=room, container=container)
+      item.save()
+      planitem = PlanItem(item=item)
+      planitem.save()
+      return HttpResponseRedirect(reverse('plan_index'))
+  else:
+    # Initialise the form from Settings.object.settings()
+    settings = Settings.objects.settings()
+    form = TechItemForm(initial={
+      'supplier': settings.supplier,
+      'group': settings.group,
+      'room': settings.room,
+      'kind': settings.kind,
+      'subkind': settings.subkind,
+      'container': settings.container,
+    })
+    return render(request, 'mimo/techitem_form.html', { 'form': form })
+
+
+def edit_techitem(request, pk):
+  item = get_object_or_404(TechItem, pk=pk)
+  if request.method == 'POST':
+    form = TechItemForm(request.POST)
+    if form.is_valid():
+      item.group = form.cleaned_data['group']
+      item.supplier = form.cleaned_data['supplier']
+      item.count = form.cleaned_data['count']
+      item.code = form.cleaned_data['code']
+      item.kind = form.cleaned_data['kind']
+      item.subkind = form.cleaned_data['subkind']
+      item.room = form.cleaned_data['room']
+      item.container = form.cleaned_data['container']
+      item.save()
+      return HttpResponseRedirect(reverse('plan_detail', args=(item.pk,)))
+  else:
+    # Initialise the form from the item
+    form = TechItemForm(initial={
+      'supplier': item.supplier,
+      'group': item.group,
+      'room': item.room,
+      'kind': item.kind,
+      'subkind': item.subkind,
+      'container': item.container,
+      'count': item.count,
+      'code': item.code,
+    })
+    return render(request, 'mimo/techitem_form.html', { 'form': form })
 
 # ----------- MOVE IN -------------
 
