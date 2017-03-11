@@ -26,8 +26,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <th>Count</th>
   <th>State</th>
   <th>Room</th>
-  <th colspan="2">Operations</th>
+  <th colspan="3">Operations</th>
+  </tr>
   {% for item in items %}
+  {% ifchanged %}
+    <tr><td colspan="9" align="center"><em>{{ item.item.group}}</em></td></tr>
+  {% endifchanged %}
     <tr>
     <td> <a href="{% url "plan_detail" item.item.id %}">{{ item.item.code }}</a> </td>
     <td>{{ item.item.kind }}</td>
@@ -35,6 +39,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <td align="right">{{ item.item.count }}</td>
     <td>{{ item.item.state }}</td>
     <td>{{ item.item.room }}</td>
+    <td><form action="{% url "techitem_dup" item.item.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="Dup" />
+        </form></td>
     <td><a href="{% url "plan_edit" item.item.pk %}">Edit</a></td>
     <td><a href="{% url "techitem_delete" item.item.pk %}">Delete</a></td>
     </tr>

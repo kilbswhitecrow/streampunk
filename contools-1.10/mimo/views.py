@@ -45,6 +45,9 @@ class PlanIndexView(generic.ListView):
   context_object_name = 'items'
   model = PlanItem
 
+  def get_queryset(self):
+    return PlanItem.objects.order_by('item__group', 'item__kind', 'item__subkind')
+
 def plan_detail(request, pk):
   settings = Settings.objects.settings()
   item = get_object_or_404(PlanItem, pk=pk)
@@ -92,6 +95,16 @@ def add_techitem(request):
     })
     return render(request, 'mimo/techitem_form.html', { 'form': form })
 
+def dup_techitem(request, pk):
+  if request.method == 'POST':
+    item = get_object_or_404(TechItem, pk=pk)
+    newitem = TechItem(supplier=item.supplier, group=item.group, code=item.code,
+                       count=item.count, kind=item.kind, subkind=item.subkind,
+                       room=item.room, container=item.container)
+    newitem.save()
+    planitem = PlanItem(item=newitem)
+    planitem.save()
+  return HttpResponseRedirect(reverse('plan_index'))
 
 def edit_techitem(request, pk):
   item = get_object_or_404(TechItem, pk=pk)
