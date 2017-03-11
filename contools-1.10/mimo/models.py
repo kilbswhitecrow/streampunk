@@ -282,7 +282,6 @@ class PlanItemForm(ModelForm):
     fields = [ 'group', 'supplier', 'code', 'kind', 'subkind', 'container',
                'room', 'count', 'state', ]
     widgets = { 'state': Select(choices=PlanStateValues) }
-      
 
 class MoveInItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
@@ -291,6 +290,12 @@ class MoveInItem(models.Model):
     return 'Plan:%s' % (self.item.name())
   def get_absolute_url(self):
     return reverse('mi_detail', kwargs={'pk': self.pk})
+
+class MoveInItemForm(ModelForm):
+  class Meta:
+    model = TechItem
+    fields = [ 'group', 'supplier', 'code', 'kind', 'subkind', 'container',
+               'room', 'count', ]
 
 class LiveItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)

@@ -65,7 +65,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </form>
 {% endif %}
     </td>
-    <td>Other</td>
+    <td>
+    <form action="{% url "mi_replace" item.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Replace" />
+    </form>
+    </td>
     </tr>
   {% endfor %}
   </table>

@@ -38,6 +38,7 @@ urlpatterns = [
   url(r'^mi/(?P<pk>[0-9]+)/received/$', views.mark_received_movein, name='mi_received'),
   url(r'^mi/(?P<pk>[0-9]+)/notreceived/$', views.mark_not_received_movein, name='mi_not_received'),
   url(r'^mi/(?P<pk>[0-9]+)/reset/$', views.mark_reset_movein, name='mi_reset'),
+  url(r'^mi/(?P<pk>[0-9]+)/replace/$', views.rep_movein, name='mi_replace'),
   url(r'^live/$', views.LiveIndexView.as_view(), name='live_index'),
   url(r'^live/(?P<pk>[0-9]+)/$', views.LiveDetailView.as_view(), name='live_detail'),
   url(r'^mo/$', views.MoveOutIndexView.as_view(), name='mo_index'),

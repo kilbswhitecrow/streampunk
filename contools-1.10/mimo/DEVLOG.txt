@@ -62,4 +62,7 @@ Thinking now about MOVE IN, but I’m not sure how to do it.
 - For Move In, I’m showing all the MoveIn items, which is none.
 How to set up all the Move-In items? Have an actual setup operation?
 I’ve decided to have a copy operation that sets up all the MoveIn items if there
-aren’t any theree.
+aren’t any there.
+
+So we want to be able to add new items that are replacements for an existing one.
+Let’s go to a page where you can add a new one, and others.

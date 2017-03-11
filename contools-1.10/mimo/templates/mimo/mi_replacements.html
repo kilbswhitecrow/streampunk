@@ -1,0 +1,73 @@
+{% extends "mimo/base.html" %}
+{% comment %}
+This file is part of Streampunk, a Django application for convention programmes
+Copyright (C) 2012-2017 Stephen Kilbane
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+{% endcomment %}
+{% block title %}Move In Replacement{% endblock %}
+{% block body_content %}
+<p>
+Replacing...<br/>
+  <table border="1">
+  <tr>
+  <th>Code</th>
+  <th>Kind</th>
+  <th>Subkind</th>
+  <th>Count</th>
+  <th>State</th>
+  <th>Room</th>
+  </tr>
+    <tr>
+    <td> <a href="{% url "mi_detail" planitem.item.id %}">{{ planitem.item.code }}</a> </td>
+    <td>{{ planitem.item.kind }}</td>
+    <td>{{ planitem.item.subkind }}</td>
+    <td align="right">{{ planitem.item.count }}</td>
+    <td>{{ planitem.item.state }}</td>
+    <td>{{ planitem.item.room }}</td>
+    </tr>
+  </table>
+  <br/>
+with....<br/>
+
+{% if repitems %}
+  <table border="1">
+  <tr>
+  <th>Code</th>
+  <th>Kind</th>
+  <th>Subkind</th>
+  <th>Count</th>
+  <th>State</th>
+  <th>Room</th>
+  </tr>
+  {% for rep in repitems %}
+    <tr>
+    <td> <a href="{% url "mi_detail" rep.item.id %}">{{ rep.item.code }}</a> </td>
+    <td>{{ rep.item.kind }}</td>
+    <td>{{ rep.item.subkind }}</td>
+    <td align="right">{{ rep.item.count }}</td>
+    <td>{{ rep.item.state }}</td>
+    <td>{{ rep.item.room }}</td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endif %}
+</p>
+<p>
+<form action="{% url "mi_replace" mi.pk %}" method="POST">
+{% csrf_token %}
+{{ form }}
+<input type="submit" value="Add" />
+</form>
+</p>
+{% endblock %}

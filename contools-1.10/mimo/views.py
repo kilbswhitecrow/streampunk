@@ -23,7 +23,7 @@ from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
 from .models import SettingsKindForm, SettingsSubkindForm, SettingsGroupForm
-from .models import SettingsSupplierForm, PlanItemForm
+from .models import SettingsSupplierForm, PlanItemForm, MoveInItemForm
 
 # ----------- TOP LEVEL -------------
 
@@ -193,7 +193,59 @@ def mark_not_received_movein(request, pk):
 def mark_reset_movein(request, pk):
   mi = get_object_or_404(MoveInItem, pk=pk)
   return mark_movein(request, pk, mi.plan.item.state)
-    
+
+def rep_movein(request, pk):
+  mi = get_object_or_404(MoveInItem, pk=pk)
+  planitem = mi.plan
+  repitems = MoveInItem.objects.filter(plan=planitem, item__state='Replaced')
+  if request.method == 'POST':
+    form = MoveInItemForm(request.POST)
+    if form.is_valid():
+      group = form.cleaned_data['group']
+      supplier = form.cleaned_data['supplier']
+      count = form.cleaned_data['count']
+      code = form.cleaned_data['code']
+      kind = form.cleaned_data['kind']
+      subkind = form.cleaned_data['subkind']
+      room = form.cleaned_data['room']
+      container = form.cleaned_data['container']
+      state = 'Replaced'
+      if repitems.count() == 0:
+        # this is the first replacement, so overwrite the existing one.
+        mi.item.group = group
+        mi.item.supplier = supplier
+        mi.item.count = count
+        mi.item.code = code
+        mi.item.kind = kind
+        mi.item.subkind = subkind
+        mi.item.room = room
+        mi.item.container = container
+        mi.item.state = 'Replaced'
+        mi.item.save()
+      else:
+        # other replacements already exist, so add a new one.
+        newitem = TechItem(group=group, supplier=supplier, count=count, code=code,
+                           kind=kind, subkind=subkind, room=room, container=container,
+                           state='Replaced')
+        newitem.save()
+        newmi = MoveInItem(plan=planitem, item=newitem)
+        newmi.save()
+    return HttpResponseRedirect(reverse('mi_replace', args=(pk,)))
+
+  else:
+    form = MoveInItemForm(initial={ 'state': 'Replaced',
+                                    'group': planitem.item.group,
+                                    'supplier': planitem.item.supplier,
+                                    'container': planitem.item.container,
+                                    'room': planitem.item.room,
+                                    'kind': planitem.item.kind,
+                                    'subkind': planitem.item.subkind,
+                                    'code': planitem.item.code,
+                                    'count': planitem.item.count,
+                          })
+    context = { 'mi': mi, 'planitem': planitem, 'repitems': repitems, 'form': form }
+    return render(request, 'mimo/mi_replacements.html', context)
+  
 # ----------- LIVE -------------
 
 def live_index(request):
