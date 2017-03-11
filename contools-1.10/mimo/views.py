@@ -56,6 +56,10 @@ class PlanDetailView(generic.DetailView):
   context_object_name = 'item'
   model = PlanItem
 
+class TechItemDeleteView(generic.DeleteView):
+  context_object_name = 'item'
+  model = TechItem
+  success_url = reverse_lazy('plan_index')
 
 def add_techitem(request):
   if request.method == 'POST':

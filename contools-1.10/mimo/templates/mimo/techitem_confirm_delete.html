@@ -15,33 +15,22 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
-{% block title %}Plan Index{% endblock %}
+{% block title %}Delete Tech Item{% endblock %}
 {% block body_content %}
-{% if items %}
-  <table border="1">
-  <tr>
-  <th>Code</th>
-  <th>Kind</th>
-  <th>Subkind</th>
-  <th>Count</th>
-  <th>State</th>
-  <th>Room</th>
-  <th colspan="2">Operations</th>
-  {% for item in items %}
-    <tr>
-    <td> <a href="{% url "plan_detail" item.item.id %}">{{ item.item.code }}</a> </td>
-    <td>{{ item.item.kind }}</td>
-    <td>{{ item.item.subkind }}</td>
-    <td align="right">{{ item.item.count }}</td>
-    <td>{{ item.item.state }}</td>
-    <td>{{ item.item.room }}</td>
-    <td><a href="{% url "plan_edit" item.item.pk %}">Edit</a></td>
-    <td><a href="{% url "techitem_delete" item.item.pk %}">Delete</a></td>
-    </tr>
-  {% endfor %}
-  </table>
-{% else %}
-  <p>No items yet.</p>
-{% endif %}
-<a href="{% url "plan_add" %}">Add Item</a>
+<p>
+Delete {{ item }}?
+</p>
+<form action="" method="post">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Delete" />
+</form>
+<br />
+<br />
+<br />
+
+
+
+<a href="{% url "plan_index" %}">Oops, nope</a>
+</p>
 {% endblock %}
