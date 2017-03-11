@@ -18,6 +18,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.urls import reverse
 from django.forms import ModelForm
+from django.forms.widgets import Select
 
 from streampunk.models import Room
 
@@ -196,6 +197,12 @@ class SettingsSupplierForm(ModelForm):
     model = Settings
     fields = [ 'supplier' ]
 
+PlanStateValues = (
+                                    # PLAN STATES
+  ('Planned',      'Planned'),
+  ('Arranged',     'Arranged'),
+)
+
 MoveInStateValues = (
                                     # MOVE IN STATES
   ('Received',     'Received'),     # Turned up as expected.
@@ -268,6 +275,14 @@ class PlanItem(models.Model):
     return 'Plan:%s' % (self.item.name())
   def get_absolute_url(self):
     return reverse('plan_detail', kwargs={'pk': self.pk})
+
+class PlanItemForm(ModelForm):
+  class Meta:
+    model = TechItem
+    fields = [ 'group', 'supplier', 'code', 'kind', 'subkind', 'container',
+               'room', 'count', 'state', ]
+    widgets = { 'state': Select(choices=PlanStateValues) }
+      
 
 class MoveInItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)

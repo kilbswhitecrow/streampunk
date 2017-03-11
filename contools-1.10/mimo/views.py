@@ -23,7 +23,7 @@ from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
 from .models import SettingsKindForm, SettingsSubkindForm, SettingsGroupForm
-from .models import SettingsSupplierForm, TechItemForm
+from .models import SettingsSupplierForm, PlanItemForm
 
 # ----------- TOP LEVEL -------------
 
@@ -66,7 +66,7 @@ class TechItemDeleteView(generic.DeleteView):
 
 def add_techitem(request):
   if request.method == 'POST':
-    form = TechItemForm(request.POST)
+    form = PlanItemForm(request.POST)
     if form.is_valid():
       group = form.cleaned_data['group']
       supplier = form.cleaned_data['supplier']
@@ -76,7 +76,8 @@ def add_techitem(request):
       subkind = form.cleaned_data['subkind']
       room = form.cleaned_data['room']
       container = form.cleaned_data['container']
-      item = TechItem(group=group, supplier=supplier, count=count, code=code,
+      state = form.cleaned_data['state']
+      item = TechItem(group=group, supplier=supplier, count=count, code=code, state=state,
                       kind=kind, subkind=subkind, room=room, container=container)
       item.save()
       planitem = PlanItem(item=item)
@@ -85,13 +86,14 @@ def add_techitem(request):
   else:
     # Initialise the form from Settings.object.settings()
     settings = Settings.objects.settings()
-    form = TechItemForm(initial={
+    form = PlanItemForm(initial={
       'supplier': settings.supplier,
       'group': settings.group,
       'room': settings.room,
       'kind': settings.kind,
       'subkind': settings.subkind,
       'container': settings.container,
+      'state': 'Planned',
     })
     return render(request, 'mimo/techitem_form.html', { 'form': form })
 
@@ -100,7 +102,7 @@ def dup_techitem(request, pk):
     item = get_object_or_404(TechItem, pk=pk)
     newitem = TechItem(supplier=item.supplier, group=item.group, code=item.code,
                        count=item.count, kind=item.kind, subkind=item.subkind,
-                       room=item.room, container=item.container)
+                       room=item.room, container=item.container, state=item.state)
     newitem.save()
     planitem = PlanItem(item=newitem)
     planitem.save()
@@ -109,7 +111,7 @@ def dup_techitem(request, pk):
 def edit_techitem(request, pk):
   item = get_object_or_404(TechItem, pk=pk)
   if request.method == 'POST':
-    form = TechItemForm(request.POST)
+    form = PlanItemForm(request.POST)
     if form.is_valid():
       item.group = form.cleaned_data['group']
       item.supplier = form.cleaned_data['supplier']
@@ -119,11 +121,12 @@ def edit_techitem(request, pk):
       item.subkind = form.cleaned_data['subkind']
       item.room = form.cleaned_data['room']
       item.container = form.cleaned_data['container']
+      item.state = form.cleaned_data['state']
       item.save()
-      return HttpResponseRedirect(reverse('plan_detail', args=(item.pk,)))
+      return HttpResponseRedirect(reverse('plan_index'))
   else:
     # Initialise the form from the item
-    form = TechItemForm(initial={
+    form = PlanItemForm(initial={
       'supplier': item.supplier,
       'group': item.group,
       'room': item.room,
@@ -132,6 +135,7 @@ def edit_techitem(request, pk):
       'container': item.container,
       'count': item.count,
       'code': item.code,
+      'state': item.state,
     })
     return render(request, 'mimo/techitem_form.html', { 'form': form })
 
