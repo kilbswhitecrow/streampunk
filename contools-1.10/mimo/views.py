@@ -152,6 +152,9 @@ class MoveInIndexView(generic.ListView):
   context_object_name = 'items'
   model = MoveInItem
 
+  def get_queryset(self):
+    return MoveInItem.objects.order_by('item__group', 'item__kind', 'item__subkind')
+
 def mi_detail(request, pk):
   settings = Settings.objects.settings()
   item = get_object_or_404(MoveInItem, pk=pk)
@@ -174,6 +177,23 @@ def setup_movein(request):
       mi.save()
   return HttpResponseRedirect(reverse('mi_index'))
 
+def mark_movein(request, pk, newstate):
+  mi = get_object_or_404(MoveInItem, pk=pk)
+  if request.method == 'POST':
+    mi.item.state = newstate
+    mi.item.save()
+  return HttpResponseRedirect(reverse('mi_index'))
+
+def mark_received_movein(request, pk):
+  return mark_movein(request, pk, 'Received')
+
+def mark_not_received_movein(request, pk):
+  return mark_movein(request, pk, 'Not Received')
+
+def mark_reset_movein(request, pk):
+  mi = get_object_or_404(MoveInItem, pk=pk)
+  return mark_movein(request, pk, mi.plan.item.state)
+    
 # ----------- LIVE -------------
 
 def live_index(request):

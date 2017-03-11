@@ -39,8 +39,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <td align="right">{{ item.item.count }}</td>
     <td>{{ item.item.state }}</td>
     <td>{{ item.item.room }}</td>
-    <td>Received</td>
-    <td>Missing</td>
+    <td>
+{% if item.item.state == 'Arranged' or item.item.state == 'Planned' %}
+    <form action="{% url "mi_received" item.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Mark Received" />
+    </form>
+{% else %}
+    <form action="{% url "mi_reset" item.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Reset" />
+    </form>
+{% endif %}
+    </td>
+    <td>
+{% if item.item.state == 'Arranged' or item.item.state == 'Planned' %}
+    <form action="{% url "mi_not_received" item.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Mark Not Received" />
+    </form>
+{% else %}
+    <form action="{% url "mi_reset" item.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Reset" />
+    </form>
+{% endif %}
+    </td>
     <td>Other</td>
     </tr>
   {% endfor %}
