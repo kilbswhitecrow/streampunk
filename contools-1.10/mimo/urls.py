@@ -33,6 +33,7 @@ urlpatterns = [
   url(r'^plan/(?P<pk>[0-9]+)/delete/$', views.TechItemDeleteView.as_view(), name='techitem_delete'),
   url(r'^plan/(?P<pk>[0-9]+)/dup/$', views.dup_techitem, name='techitem_dup'),
   url(r'^mi/$', views.MoveInIndexView.as_view(), name='mi_index'),
+  url(r'^mi/setup/$', views.setup_movein, name='mi_setup'),
   url(r'^mi/(?P<pk>[0-9]+)/$', views.MoveInDetailView.as_view(), name='mi_detail'),
   url(r'^live/$', views.LiveIndexView.as_view(), name='live_index'),
   url(r'^live/(?P<pk>[0-9]+)/$', views.LiveDetailView.as_view(), name='live_detail'),

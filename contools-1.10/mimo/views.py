@@ -163,6 +163,17 @@ class MoveInDetailView(generic.DetailView):
   context_object_name = 'item'
   model = MoveInItem
 
+def setup_movein(request):
+  if request.method == 'POST':
+    for pl in PlanItem.objects.all():
+      newitem = TechItem(supplier=pl.item.supplier, group=pl.item.group, code=pl.item.code,
+                         count=pl.item.count, kind=pl.item.kind, subkind=pl.item.subkind,
+                         room=pl.item.room, container=pl.item.container, state=pl.item.state)
+      newitem.save()
+      mi = MoveInItem(plan=pl, item=newitem)
+      mi.save()
+  return HttpResponseRedirect(reverse('mi_index'))
+
 # ----------- LIVE -------------
 
 def live_index(request):

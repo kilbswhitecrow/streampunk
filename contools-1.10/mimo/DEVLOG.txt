@@ -56,3 +56,10 @@ Realised that the Settings should be recording the defaults for all fields in a
 TechItem, and that those defaults should really be the last entered, so added more
 fields to Settings, then created a migration for it. Also moved all the Settings
 stuff to later in models.py, because it now references a lot more models.
+
+Thinking now about MOVE IN, but I’m not sure how to do it.
+- For Plan, I’m showing all the Plan items;
+- For Move In, I’m showing all the MoveIn items, which is none.
+How to set up all the Move-In items? Have an actual setup operation?
+I’ve decided to have a copy operation that sets up all the MoveIn items if there
+aren’t any theree.

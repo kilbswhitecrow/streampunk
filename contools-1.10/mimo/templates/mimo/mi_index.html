@@ -18,12 +18,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}Move In Index{% endblock %}
 {% block body_content %}
 {% if items %}
-  <ul>
+  <table border="1">
+  <tr>
+  <th>Code</th>
+  <th>Kind</th>
+  <th>Subkind</th>
+  <th>Count</th>
+  <th>State</th>
+  <th>Room</th>
+  <th colspan="3">Operations</th>
+  </tr>
   {% for item in items %}
-    <li> <a href="{% url "mi_detail" item.id %}">{{ item }}</a> </li>
+  {% ifchanged %}
+    <tr><td colspan="9" align="center"><em>{{ item.item.group}}</em></td></tr>
+  {% endifchanged %}
+    <tr>
+    <td> <a href="{% url "mi_detail" item.item.id %}">{{ item.item.code }}</a> </td>
+    <td>{{ item.item.kind }}</td>
+    <td>{{ item.item.subkind }}</td>
+    <td align="right">{{ item.item.count }}</td>
+    <td>{{ item.item.state }}</td>
+    <td>{{ item.item.room }}</td>
+    <td>Received</td>
+    <td>Missing</td>
+    <td>Other</td>
+    </tr>
   {% endfor %}
-  </ul>
+  </table>
 {% else %}
   <p>No items yet.</p>
+  <p>
+  <form action="{% url "mi_setup" %}" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Setup" />
+  </form>
+  </p>
 {% endif %}
 {% endblock %}
