@@ -294,8 +294,7 @@ class MoveInItem(models.Model):
 class MoveInItemForm(ModelForm):
   class Meta:
     model = TechItem
-    fields = [ 'group', 'supplier', 'code', 'kind', 'subkind', 'container',
-               'room', 'count', ]
+    fields = [ 'code', 'kind', 'subkind', 'container', 'room', 'count', ]
 
 class LiveItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)

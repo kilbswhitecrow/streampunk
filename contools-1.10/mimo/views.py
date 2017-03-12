@@ -157,18 +157,28 @@ class MoveInDetailView(generic.DetailView):
   context_object_name = 'item'
   model = MoveInItem
 
-def received_movein(request, pk):
+def mark_movein(request, pk, state, room, container):
   # pk is the PlanItem pk.
   pl = get_object_or_404(PlanItem, pk=pk)
-  settings = Settings.objects.settings()
   if request.method == 'POST':
     newitem = TechItem(supplier=pl.item.supplier, group=pl.item.group, code=pl.item.code,
                        count=pl.item.count, kind=pl.item.kind, subkind=pl.item.subkind,
-                       room=settings.room, container=settings.container, state='Received')
+                       room=room, container=container, state=state)
     newitem.save()
     mi = MoveInItem(plan=pl, item=newitem)
     mi.save()
   return HttpResponseRedirect(reverse('mi_index'))
+
+def faulty_movein(request, pk):
+  settings = Settings.objects.settings()
+  return mark_movein(request, pk, state='Faulty', room=settings.room, container=settings.container)
+
+def received_movein(request, pk):
+  settings = Settings.objects.settings()
+  return mark_movein(request, pk, state='Received', room=settings.room, container=settings.container)
+
+def missing_movein(request, pk):
+  return mark_movein(request, pk, state='Not Received', room=None, container=None)
 
 def not_received_movein(request, pk):
   # pk is the PlanItem pk.
@@ -191,14 +201,14 @@ def rep_movein(request, pk):
   if request.method == 'POST':
     form = MoveInItemForm(request.POST)
     if form.is_valid():
-      group = form.cleaned_data['group']
-      supplier = form.cleaned_data['supplier']
       count = form.cleaned_data['count']
       code = form.cleaned_data['code']
       kind = form.cleaned_data['kind']
       subkind = form.cleaned_data['subkind']
       room = form.cleaned_data['room']
       container = form.cleaned_data['container']
+      group = pl.item.group       # Doesn't change
+      supplier = pl.item.supplier # Doesn't change
       state = 'Replaced'
       newitem = TechItem(group=group, supplier=supplier, count=count, code=code,
                          kind=kind, subkind=subkind, room=room, container=container,
@@ -222,6 +232,38 @@ def rep_movein(request, pk):
     context = { 'planitem': pl, 'repitems': repitems, 'form': form }
     return render(request, 'mimo/mi_replacements.html', context)
   
+def edit_movein(request, pk):
+  mi = get_object_or_404(MoveInItem, pk=pk)
+  item = mi.item
+  if request.method == 'POST':
+    form = MoveInItemForm(request.POST)
+    if form.is_valid():
+      item.count = form.cleaned_data['count']
+      item.code = form.cleaned_data['code']
+      item.kind = form.cleaned_data['kind']
+      item.subkind = form.cleaned_data['subkind']
+      item.room = form.cleaned_data['room']
+      item.container = form.cleaned_data['container']
+      # supplier is fixed
+      # group is fixed
+      # state will still be Replaced
+      item.save()
+      return HttpResponseRedirect(reverse('mi_index'))
+  else:
+    # Initialise the form from the item
+    form = MoveInItemForm(initial={
+      'supplier': item.supplier,
+      'group': item.group,
+      'room': item.room,
+      'kind': item.kind,
+      'subkind': item.subkind,
+      'container': item.container,
+      'count': item.count,
+      'code': item.code,
+      'state': item.state,
+    })
+    return render(request, 'mimo/techitem_form.html', { 'form': form })
+
 # ----------- LIVE -------------
 
 def live_index(request):

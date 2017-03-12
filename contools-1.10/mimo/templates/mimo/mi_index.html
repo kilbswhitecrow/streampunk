@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <tr>
   <th colspan="4">Plan</th>
   <th>Operations</th>
-  <th colspan="6">Move In</th>
+  <th colspan="7">Move In</th>
   </tr>
   <tr> <!-- Plan -->
   <th>Code</th>
@@ -30,7 +30,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <th>Subkind</th>
   <th>Count</th>
   <th></th>
-  <th>Code</th> <!-- Move In -->
+  <th>State</th> <!-- Move In -->
+  <th>Code</th>
   <th>Kind</th>
   <th>Subkind</th>
   <th>Count</th>
@@ -39,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   </tr>
   {% for pl in planitems %}
   {% ifchanged %}
-    <tr><td colspan="11" align="center"><em>{{ pl.item.group }}</em></td></tr>
+    <tr><td colspan="12" align="center"><em>{{ pl.item.group }}</em></td></tr>
   {% endifchanged %}
     <tr>
     <!-- Plan for {{ pl.pk }} -->
@@ -56,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <td>
       <form action="{% url "mi_not_received" pl.pk %}" method="POST">
       {% csrf_token %}
-      <input type="submit" value="Undo Mark Received" />
+      <input type="submit" value="Clear" />
       </form>
     </td>
   {% else %}
@@ -68,7 +69,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </td>
   {% endif %}
     <!-- Move in for {{ item.pk }} -->
-    <td>{{ mi.item.code }}</a> </td>
+    <td>{{ mi.item.state }}</a> </td>
+    <td><a href="{% url "mi_edit" mi.pk %}">{{ mi.item.code }}</a> </td>
     <td>{{ mi.item.kind }}</td>
     <td>{{ mi.item.subkind }}</td>
     <td align="right">{{ mi.item.count }}</td>
@@ -86,11 +88,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     {% csrf_token %}
     <input type="submit" value="Mark Received" />
     </form>
+    <form action="{% url "mi_missing" pl.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Mark Missing" />
+    </form>
+    <form action="{% url "mi_faulty" pl.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Mark Faulty" />
+    </form>
     <form action="{% url "mi_replace" pl.pk %}" method="POST">
     {% csrf_token %}
     <input type="submit" value="Mark Replaced" />
     </form>
     </td>
+    <td><!-- Move In state --></td>
     <td><!-- Move In code --></td>
     <td><!-- Move In kind --></td>
     <td><!-- Move In subkind --></td>
