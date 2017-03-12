@@ -287,7 +287,7 @@ class MoveInItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   plan = models.ForeignKey(PlanItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
-    return 'Plan:%s' % (self.item.name())
+    return 'Plan:%d-MI:%d:%s' % (self.plan.item.pk, self.item.id, self.item.name())
   def get_absolute_url(self):
     return reverse('mi_detail', kwargs={'pk': self.pk})
 

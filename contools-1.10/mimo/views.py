@@ -153,7 +153,7 @@ class MoveInIndexView(generic.ListView):
   model = MoveInItem
 
   def get_queryset(self):
-    return MoveInItem.objects.order_by('item__group', 'item__kind', 'item__subkind')
+    return MoveInItem.objects.order_by('plan', 'item__group', 'item__kind', 'item__subkind')
 
 def mi_detail(request, pk):
   settings = Settings.objects.settings()

@@ -66,3 +66,6 @@ aren’t any there.
 
 So we want to be able to add new items that are replacements for an existing one.
 Let’s go to a page where you can add a new one, and others.
+
+My previous thoughts - which I’d forgotten about - had a two-column display: planned
+items on the left, received items on the right, with operations to move across from left to right to indicate receipt or replacement with other things.

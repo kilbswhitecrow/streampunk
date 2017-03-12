@@ -20,25 +20,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% if items %}
   <table border="1">
   <tr>
+  <th colspan="4">Plan</th>
+  <th colspan="4">Move In</th>
+{% comment %}
+  <td colspan="3"></td>
+{% endcomment %}
+  </tr>
+  <tr> <!-- Plan -->
   <th>Code</th>
   <th>Kind</th>
   <th>Subkind</th>
   <th>Count</th>
-  <th>State</th>
-  <th>Room</th>
+  <th>Code</th> <!-- Move In -->
+  <th>Kind</th>
+  <th>Subkind</th>
+  <th>Count</th>
+{% comment %}
   <th colspan="3">Operations</th>
+{% endcomment %}
   </tr>
   {% for item in items %}
   {% ifchanged %}
-    <tr><td colspan="9" align="center"><em>{{ item.item.group}}</em></td></tr>
+    <tr><td colspan="8" align="center"><em>{{ item.item.group}}</em></td></tr>
   {% endifchanged %}
     <tr>
+  {% ifchanged %}
+    <!-- Plan for {{ item.plan.pk }} -->
+    <td rowspan="{{ item.plan.moveinitem_set.count }}">{{ item.plan.item.code }}</td>
+    <td rowspan="{{ item.plan.moveinitem_set.count }}">{{ item.plan.item.kind }}</td>
+    <td rowspan="{{ item.plan.moveinitem_set.count }}">{{ item.plan.item.subkind }}</td>
+    <td rowspan="{{ item.plan.moveinitem_set.count }}" align="right">{{ item.plan.item.count }}</td>
+  {% endifchanged %}
+    <!-- Move in for {{ item.pk }} -->
     <td> <a href="{% url "mi_detail" item.item.id %}">{{ item.item.code }}</a> </td>
     <td>{{ item.item.kind }}</td>
     <td>{{ item.item.subkind }}</td>
     <td align="right">{{ item.item.count }}</td>
-    <td>{{ item.item.state }}</td>
-    <td>{{ item.item.room }}</td>
+{% comment %}
     <td>
 {% if item.item.state == 'Arranged' or item.item.state == 'Planned' %}
     <form action="{% url "mi_received" item.pk %}" method="POST">
@@ -71,6 +89,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <input type="submit" value="Replace" />
     </form>
     </td>
+{% endcomment %}
     </tr>
   {% endfor %}
   </table>
