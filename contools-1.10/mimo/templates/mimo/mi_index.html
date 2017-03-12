@@ -49,16 +49,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <td rowspan="{{ pl.moveinitem_set.count }}">{{ pl.item.subkind }}</td>
     <td rowspan="{{ pl.moveinitem_set.count }}" align="right">{{ pl.item.count }}</td>
 {% for mi in pl.moveinitem_set.all %}
-  {% if forloop.first %}
+  {% if not forloop.first %}
+    <tr>
+  {% endif %}
+  {% if pl.moveinitem_set.count == 1 %}
     <td>
-    <form action="{% url "mi_not_received" pl.pk %}" method="POST">
-    {% csrf_token %}
-    <input type="submit" value="Undo Mark Received" />
-    </form>
+      <form action="{% url "mi_not_received" pl.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="Undo Mark Received" />
+      </form>
     </td>
   {% else %}
-    <tr>
-    <td></td>
+    <td>
+      <form action="{% url "mi_zap" mi.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="Zap Replacement" />
+      </form>
+    </td>
   {% endif %}
     <!-- Move in for {{ item.pk }} -->
     <td>{{ mi.item.code }}</a> </td>
@@ -78,6 +85,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <form action="{% url "mi_received" pl.pk %}" method="POST">
     {% csrf_token %}
     <input type="submit" value="Mark Received" />
+    </form>
+    <form action="{% url "mi_replace" pl.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="submit" value="Mark Replaced" />
     </form>
     </td>
     <td><!-- Move In code --></td>

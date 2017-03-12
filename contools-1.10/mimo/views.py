@@ -196,6 +196,13 @@ def not_received_movein(request, pk):
     MoveInItem.objects.filter(plan=pl).delete()
   return HttpResponseRedirect(reverse('mi_index'))
 
+def zap_replacement(request, pk):
+  if request.method == 'POST':
+    mi = get_object_or_404(MoveInItem, pk=pk)
+    mi.item.delete()
+    mi.delete()
+  return HttpResponseRedirect(reverse('mi_index'))
+
 def mark_movein(request, pk, newstate):
   mi = get_object_or_404(MoveInItem, pk=pk)
   if request.method == 'POST':
@@ -214,9 +221,9 @@ def mark_reset_movein(request, pk):
   return mark_movein(request, pk, mi.plan.item.state)
 
 def rep_movein(request, pk):
-  mi = get_object_or_404(MoveInItem, pk=pk)
-  planitem = mi.plan
-  repitems = MoveInItem.objects.filter(plan=planitem, item__state='Replaced')
+  pl = get_object_or_404(PlanItem, pk=pk)
+  settings = Settings.objects.settings()
+  repitems = pl.moveinitem_set.all()
   if request.method == 'POST':
     form = MoveInItemForm(request.POST)
     if form.is_valid():
@@ -229,40 +236,26 @@ def rep_movein(request, pk):
       room = form.cleaned_data['room']
       container = form.cleaned_data['container']
       state = 'Replaced'
-      if repitems.count() == 0:
-        # this is the first replacement, so overwrite the existing one.
-        mi.item.group = group
-        mi.item.supplier = supplier
-        mi.item.count = count
-        mi.item.code = code
-        mi.item.kind = kind
-        mi.item.subkind = subkind
-        mi.item.room = room
-        mi.item.container = container
-        mi.item.state = 'Replaced'
-        mi.item.save()
-      else:
-        # other replacements already exist, so add a new one.
-        newitem = TechItem(group=group, supplier=supplier, count=count, code=code,
-                           kind=kind, subkind=subkind, room=room, container=container,
-                           state='Replaced')
-        newitem.save()
-        newmi = MoveInItem(plan=planitem, item=newitem)
-        newmi.save()
+      newitem = TechItem(group=group, supplier=supplier, count=count, code=code,
+                         kind=kind, subkind=subkind, room=room, container=container,
+                         state='Replaced')
+      newitem.save()
+      newmi = MoveInItem(plan=pl, item=newitem)
+      newmi.save()
     return HttpResponseRedirect(reverse('mi_replace', args=(pk,)))
 
   else:
     form = MoveInItemForm(initial={ 'state': 'Replaced',
-                                    'group': planitem.item.group,
-                                    'supplier': planitem.item.supplier,
-                                    'container': planitem.item.container,
-                                    'room': planitem.item.room,
-                                    'kind': planitem.item.kind,
-                                    'subkind': planitem.item.subkind,
-                                    'code': planitem.item.code,
-                                    'count': planitem.item.count,
+                                    'group': pl.item.group,
+                                    'supplier': settings.supplier,
+                                    'container': settings.container,
+                                    'room': settings.room,
+                                    'kind': pl.item.kind,
+                                    'subkind': pl.item.subkind,
+                                    'code': pl.item.code,
+                                    'count': pl.item.count,
                           })
-    context = { 'mi': mi, 'planitem': planitem, 'repitems': repitems, 'form': form }
+    context = { 'planitem': pl, 'repitems': repitems, 'form': form }
     return render(request, 'mimo/mi_replacements.html', context)
   
 # ----------- LIVE -------------
