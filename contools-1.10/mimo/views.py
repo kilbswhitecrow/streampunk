@@ -143,7 +143,8 @@ def edit_techitem(request, pk):
 
 def mi_index(request):
   planitems = PlanItem.objects.order_by('item__group','item__kind','item__subkind')
-  context = { 'planitems': planitems, }
+  extraitems = MoveInItem.objects.filter(plan__isnull=True).order_by('item__container','item__kind','item__subkind')
+  context = { 'planitems': planitems, 'extraitems': extraitems }
   return render(request, 'mimo/mi_index.html', context)
 
 def mi_detail(request, pk):
@@ -261,6 +262,37 @@ def edit_movein(request, pk):
       'count': item.count,
       'code': item.code,
       'state': item.state,
+    })
+    return render(request, 'mimo/techitem_form.html', { 'form': form })
+
+def add_extra_movein(request):
+  settings = Settings.objects.settings()
+  if request.method == 'POST':
+    form = MoveInItemForm(request.POST)
+    if form.is_valid():
+      newitem=TechItem(count=form.cleaned_data['count'],
+                       code=form.cleaned_data['code'],
+                       kind=form.cleaned_data['kind'],
+                       subkind=form.cleaned_data['subkind'],
+                       room=form.cleaned_data['room'],
+                       container=form.cleaned_data['container'],
+                       supplier=settings.supplier,
+                       state='Extra')
+      newitem.save()
+      mi = MoveInItem(item=newitem)
+      mi.save()
+      return HttpResponseRedirect(reverse('mi_index'))
+  else:
+    # Initialise the form to defaults
+    form = MoveInItemForm(initial={
+      'supplier': settings.supplier,
+      'group': settings.group,
+      'room': settings.room,
+      'kind': settings.kind,
+      'subkind': settings.subkind,
+      'container': settings.container,
+      'count': 1,
+      'state': 'Extra'
     })
     return render(request, 'mimo/techitem_form.html', { 'form': form })
 

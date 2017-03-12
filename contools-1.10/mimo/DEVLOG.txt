@@ -69,3 +69,12 @@ Let’s go to a page where you can add a new one, and others.
 
 My previous thoughts - which I’d forgotten about - had a two-column display: planned
 items on the left, received items on the right, with operations to move across from left to right to indicate receipt or replacement with other things.
+
+I now have a rough model for Move In:
+  - Items can be marked as received, faulty, missing.
+  - This can also be undone.
+  - Items can be marked as being replaced by one or more other things.
+  - Those replacements can be removed or edited.
+  - Extra items can be added and removed.
+
+Next up: Deploy.
