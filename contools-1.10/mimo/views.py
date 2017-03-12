@@ -142,9 +142,8 @@ def edit_techitem(request, pk):
 # ----------- MOVE IN -------------
 
 def mi_index(request):
-  settings = Settings.objects.settings()
-  items = MoveInItem.objects.all()
-  context = { 'settings': settings, 'items': items, }
+  planitems = PlanItem.objects.order_by('item__group','item__kind','item__subkind')
+  context = { 'planitems': planitems, }
   return render(request, 'mimo/mi_index.html', context)
 
 class MoveInIndexView(generic.ListView):

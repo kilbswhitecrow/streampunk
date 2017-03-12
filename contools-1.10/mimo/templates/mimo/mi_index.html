@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
 {% block title %}Move In Index{% endblock %}
 {% block body_content %}
-{% if items %}
+{% if planitems %}
   <table border="1">
   <tr>
   <th colspan="4">Plan</th>
@@ -39,23 +39,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
   <th colspan="3">Operations</th>
 {% endcomment %}
   </tr>
-  {% for item in items %}
+  {% for pl in planitems %}
   {% ifchanged %}
-    <tr><td colspan="8" align="center"><em>{{ item.item.group}}</em></td></tr>
+    <tr><td colspan="8" align="center"><em>{{ pl.item.group }}</em></td></tr>
   {% endifchanged %}
     <tr>
-  {% ifchanged %}
-    <!-- Plan for {{ item.plan.pk }} -->
-    <td rowspan="{{ item.plan.moveinitem_set.count }}">{{ item.plan.item.code }}</td>
-    <td rowspan="{{ item.plan.moveinitem_set.count }}">{{ item.plan.item.kind }}</td>
-    <td rowspan="{{ item.plan.moveinitem_set.count }}">{{ item.plan.item.subkind }}</td>
-    <td rowspan="{{ item.plan.moveinitem_set.count }}" align="right">{{ item.plan.item.count }}</td>
-  {% endifchanged %}
+    <!-- Plan for {{ pl.pk }} -->
+{% if pl.moveinitem_set.count %}
+    <td rowspan="{{ pl.moveinitem_set.count }}">{{ pl.item.code }}</td>
+    <td rowspan="{{ pl.moveinitem_set.count }}">{{ pl.item.kind }}</td>
+    <td rowspan="{{ pl.moveinitem_set.count }}">{{ pl.item.subkind }}</td>
+    <td rowspan="{{ pl.moveinitem_set.count }}" align="right">{{ pl.item.count }}</td>
+{% for mi in pl.moveinitem_set.all %}
+  {% if not forloop.first %}
+    <tr>
+  {% endif %}
     <!-- Move in for {{ item.pk }} -->
-    <td> <a href="{% url "mi_detail" item.item.id %}">{{ item.item.code }}</a> </td>
-    <td>{{ item.item.kind }}</td>
-    <td>{{ item.item.subkind }}</td>
-    <td align="right">{{ item.item.count }}</td>
+    <td>{{ mi.item.code }}</a> </td>
+    <td>{{ mi.item.kind }}</td>
+    <td>{{ mi.item.subkind }}</td>
+    <td align="right">{{ mi.item.count }}</td>
+    </tr>
+{% endfor %}
+{% else %}
+    <td>{{ pl.item.code }}</td>
+    <td>{{ pl.item.kind }}</td>
+    <td>{{ pl.item.subkind }}</td>
+    <td align="right">{{ pl.item.count }}</td>
+    <td><!-- Move In code --></td>
+    <td><!-- Move In kind --></td>
+    <td><!-- Move In subkind --></td>
+    <td><!-- Move In count --></td>
+    </tr>
+{% endif %}
 {% comment %}
     <td>
 {% if item.item.state == 'Arranged' or item.item.state == 'Planned' %}
