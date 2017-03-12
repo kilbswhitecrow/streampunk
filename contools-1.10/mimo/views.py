@@ -146,14 +146,6 @@ def mi_index(request):
   context = { 'planitems': planitems, }
   return render(request, 'mimo/mi_index.html', context)
 
-class MoveInIndexView(generic.ListView):
-  template_name = 'mimo/mi_index.html'
-  context_object_name = 'items'
-  model = MoveInItem
-
-  def get_queryset(self):
-    return MoveInItem.objects.order_by('plan', 'item__group', 'item__kind', 'item__subkind')
-
 def mi_detail(request, pk):
   settings = Settings.objects.settings()
   item = get_object_or_404(MoveInItem, pk=pk)
@@ -164,17 +156,6 @@ class MoveInDetailView(generic.DetailView):
   template_name = 'mimo/mi_detail.html'
   context_object_name = 'item'
   model = MoveInItem
-
-def setup_movein(request):
-  if request.method == 'POST':
-    for pl in PlanItem.objects.all():
-      newitem = TechItem(supplier=pl.item.supplier, group=pl.item.group, code=pl.item.code,
-                         count=pl.item.count, kind=pl.item.kind, subkind=pl.item.subkind,
-                         room=pl.item.room, container=pl.item.container, state=pl.item.state)
-      newitem.save()
-      mi = MoveInItem(plan=pl, item=newitem)
-      mi.save()
-  return HttpResponseRedirect(reverse('mi_index'))
 
 def received_movein(request, pk):
   # pk is the PlanItem pk.
@@ -202,23 +183,6 @@ def zap_replacement(request, pk):
     mi.item.delete()
     mi.delete()
   return HttpResponseRedirect(reverse('mi_index'))
-
-def mark_movein(request, pk, newstate):
-  mi = get_object_or_404(MoveInItem, pk=pk)
-  if request.method == 'POST':
-    mi.item.state = newstate
-    mi.item.save()
-  return HttpResponseRedirect(reverse('mi_index'))
-
-def mark_received_movein(request, pk):
-  return mark_movein(request, pk, 'Received')
-
-def mark_not_received_movein(request, pk):
-  return mark_movein(request, pk, 'Not Received')
-
-def mark_reset_movein(request, pk):
-  mi = get_object_or_404(MoveInItem, pk=pk)
-  return mark_movein(request, pk, mi.plan.item.state)
 
 def rep_movein(request, pk):
   pl = get_object_or_404(PlanItem, pk=pk)
