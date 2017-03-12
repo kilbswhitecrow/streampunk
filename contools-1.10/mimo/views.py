@@ -176,6 +176,26 @@ def setup_movein(request):
       mi.save()
   return HttpResponseRedirect(reverse('mi_index'))
 
+def received_movein(request, pk):
+  # pk is the PlanItem pk.
+  pl = get_object_or_404(PlanItem, pk=pk)
+  settings = Settings.objects.settings()
+  if request.method == 'POST':
+    newitem = TechItem(supplier=pl.item.supplier, group=pl.item.group, code=pl.item.code,
+                       count=pl.item.count, kind=pl.item.kind, subkind=pl.item.subkind,
+                       room=settings.room, container=settings.container, state='Received')
+    newitem.save()
+    mi = MoveInItem(plan=pl, item=newitem)
+    mi.save()
+  return HttpResponseRedirect(reverse('mi_index'))
+
+def not_received_movein(request, pk):
+  # pk is the PlanItem pk.
+  pl = get_object_or_404(PlanItem, pk=pk)
+  if request.method == 'POST':
+    MoveInItem.objects.filter(plan=pl).delete()
+  return HttpResponseRedirect(reverse('mi_index'))
+
 def mark_movein(request, pk, newstate):
   mi = get_object_or_404(MoveInItem, pk=pk)
   if request.method == 'POST':
