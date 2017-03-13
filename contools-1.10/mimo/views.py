@@ -24,6 +24,7 @@ from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
 from .models import SettingsKindForm, SettingsSubkindForm, SettingsGroupForm
 from .models import SettingsSupplierForm, PlanItemForm, MoveInItemForm, LiveItemForm
+from .models import SplitForm
 
 # ----------- TOP LEVEL -------------
 
@@ -349,7 +350,27 @@ def live_edit(request, pk):
                         'container': li.item.container})
   context = { 'liveitem': li, 'form': form }
   return render(request, 'mimo/live_edit.html', context)
-    
+
+def live_split(request, pk):
+  li = get_object_or_404(LiveItem, pk=pk)
+  i = li.item
+  if request.method == 'POST':
+    form = SplitForm(request.POST)
+    if form.is_valid():
+      split_off = form.cleaned_data['count']
+      if split_off > 0 and split_off < i.count:
+        i.count = i.count - split_off
+        i.save()
+        newitem = TechItem(supplier=i.supplier, group=i.group, room=i.room,
+                           kind=i.kind, subkind=i.subkind, state=i.state,
+                           code=i.code,count=split_off)
+        newitem.save()
+        newli = LiveItem(item=newitem)
+        newli.save()
+      return HttpResponseRedirect(reverse('live_index'))
+  form = SplitForm(initial={ 'count': 1 })
+  context = { 'liveitem': li, 'form': form }
+  return render(request, 'mimo/live_split.html', context)
 
 # ----------- MOVE OUT -------------
 

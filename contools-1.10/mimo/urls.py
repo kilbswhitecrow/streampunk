@@ -46,6 +46,7 @@ urlpatterns = [
   url(r'^live/setup/$', views.live_setup, name='live_setup'),
   url(r'^live/(?P<pk>[0-9]+)/$', views.LiveDetailView.as_view(), name='live_detail'),
   url(r'^live/(?P<pk>[0-9]+)/edit/$', views.live_edit, name='live_edit'),
+  url(r'^live/(?P<pk>[0-9]+)/split/$', views.live_split, name='live_split'),
   url(r'^mo/$', views.MoveOutIndexView.as_view(), name='mo_index'),
   url(r'^mo/(?P<pk>[0-9]+)/$', views.MoveOutDetailView.as_view(), name='mo_detail'),
 ]

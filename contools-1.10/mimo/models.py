@@ -311,6 +311,11 @@ class LiveItemForm(ModelForm):
     fields = [ 'state', 'container', 'room' ]
     widgets = { 'state': Select(choices=LiveStateValues) }
 
+class SplitForm(ModelForm):
+  class Meta:
+    model = TechItem
+    fields = [ 'count' ]
+
 class MoveOutItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   live = models.ForeignKey(LiveItem, on_delete=models.SET_NULL, null=True, blank=True)

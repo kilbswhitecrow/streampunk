@@ -15,44 +15,18 @@ GNU Affero General Public License for more details.
 You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% endcomment %}
-{% block title %}Live Index{% endblock %}
+{% block title %}Live Split Form{% endblock %}
 {% block body_content %}
-{% if items %}
-  <table border="1">
-  <tr>
-  <th>Code</th>
-  <th>Kind</th>
-  <th>Subkind</th>
-  <th>Count</th>
-  <th>State</th>
-  <th>Room</th>
-  <th>Container</th>
-  <th>Operations</th>
-  </tr>
-  {% for i in items %}
-  <tr>
-  <td>{{ i.item.code }}</td>
-  <td>{{ i.item.kind }}</td>
-  <td>{{ i.item.subkind }}</td>
-  <td align="right">{{ i.item.count }}</td>
-  <td>{{ i.item.state }}</td>
-  <td>{{ i.item.room }}</td>
-  <td>{{ i.item.container }}</td>
-  <td>
-  <a href="{% url "live_edit" i.pk %}">Edit</a>
-  {% if i.item.count > 1 %}
-  <a href="{% url "live_split" i.pk %}">Split</a>
-  {% endif %}
-  </td>
-  </tr>
-  {% endfor %}
-  </table>
-{% else %}
-  <p>
-  <form action="{% url "live_setup" %}" method="POST">
+<p>
+Splitting {{ liveitem }} which has a count of {{ liveitem.item.count }}.
+</p>
+<p>
+Select how many to separate off:
+</p>
+<form action="" method="post">
   {% csrf_token %}
-  <input type="submit" value="Setup" />
-  </form>
-  </p>
-{% endif %}
+  {{ form }}
+  <input type="submit" value="Submit" />
+</form>
+</p>
 {% endblock %}
