@@ -77,4 +77,23 @@ I now have a rough model for Move In:
   - Those replacements can be removed or edited.
   - Extra items can be added and removed.
 
-Next up: Deploy.
+Next up: Live Mode
+
+In Live mode, an item is either:
+  - Spare, and potentially in a container
+  - Deployed
+  - Scratched, after being torn down again, and potentially back in a container.
+
+Actions are:
+- Move to a room
+- Mark as Spare
+- Mark as Deployed
+- Mark as Scratched
+- Move to a container
+- Split an item into two, where count > 1
+
+Everything starts off Spare.
+
+Not sure whether it makes sense to do:
+- Deploy/Move with just a room
+- Scratch with just a container

@@ -216,6 +216,7 @@ LiveStateValues = (
                                     # LIVE STATES
   ('Deployed',     'Deployed'),     # Now in use in the event.
   ('Spare',        'Spare'),        # Awaiting use.
+  ('Scratched',    'Scratched'),    # Torn down again.
 )
 
 MoveOutStateValues = (
@@ -300,15 +301,21 @@ class LiveItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   mi = models.ForeignKey(MoveInItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
-    return 'Plan:%s' % (self.item.name())
+    return 'Live:%s' % (self.item.name())
   def get_absolute_url(self):
     return reverse('live_detail', kwargs={'pk': self.pk})
+
+class LiveItemForm(ModelForm):
+  class Meta:
+    model = TechItem
+    fields = [ 'state', 'container', 'room' ]
+    widgets = { 'state': Select(choices=LiveStateValues) }
 
 class MoveOutItem(models.Model):
   item = models.ForeignKey(TechItem, on_delete=models.CASCADE)
   live = models.ForeignKey(LiveItem, on_delete=models.SET_NULL, null=True, blank=True)
   def __str__(self):
-    return 'Plan:%s' % (self.item.name())
+    return 'MO:%s' % (self.item.name())
   def get_absolute_url(self):
     return reverse('mo_detail', kwargs={'pk': self.pk})
 

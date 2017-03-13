@@ -18,12 +18,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {% block title %}Live Index{% endblock %}
 {% block body_content %}
 {% if items %}
-  <ul>
-  {% for item in items %}
-    <li> <a href="{% url "plan_detail" item.id %}">{{ item }}</a> </li>
+  <table border="1">
+  <tr>
+  <th>Code</th>
+  <th>Kind</th>
+  <th>Subkind</th>
+  <th>Count</th>
+  <th>State</th>
+  <th>Room</th>
+  <th>Container</th>
+  <th>Operations</th>
+  </tr>
+  {% for i in items %}
+  <tr>
+  <td>{{ i.item.code }}</td>
+  <td>{{ i.item.kind }}</td>
+  <td>{{ i.item.subkind }}</td>
+  <td>{{ i.item.count }}</td>
+  <td>{{ i.item.state }}</td>
+  <td>{{ i.item.room }}</td>
+  <td>{{ i.item.container }}</td>
+  <td>
+  <a href="{% url "live_edit" i.pk %}">Edit</a><br/>
+  {% if i.item.state == 'Spare' or i.item.state == 'Scratched' %}
+  Deploy<br/>
+  {% else %}
+  Spare<br/>
+  Scratch<br/>
+  {% endif %}
+  {% if i.item.count > 1 %}
+  Split<br>
+  {% endif %}
+  Move
+  </td>
+  </tr>
   {% endfor %}
-  </ul>
+  </table>
 {% else %}
-  <p>No items yet.</p>
+  <p>
+  <form action="{% url "live_setup" %}" method="POST">
+  {% csrf_token %}
+  <input type="submit" value="Setup" />
+  </form>
+  </p>
 {% endif %}
 {% endblock %}

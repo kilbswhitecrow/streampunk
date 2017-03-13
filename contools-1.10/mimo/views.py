@@ -23,7 +23,7 @@ from .models import Settings
 from .models import TechItem, PlanItem, MoveInItem, LiveItem, MoveOutItem
 from .models import SettingsModeForm, SettingsContainerForm, SettingsRoomForm
 from .models import SettingsKindForm, SettingsSubkindForm, SettingsGroupForm
-from .models import SettingsSupplierForm, PlanItemForm, MoveInItemForm
+from .models import SettingsSupplierForm, PlanItemForm, MoveInItemForm, LiveItemForm
 
 # ----------- TOP LEVEL -------------
 
@@ -298,6 +298,19 @@ def add_extra_movein(request):
 
 # ----------- LIVE -------------
 
+def live_setup(request):
+  if request.method == 'POST':
+    for mi in MoveInItem.objects.all():
+      item = mi.item
+      newitem = TechItem(code=item.code, kind=item.kind, subkind=item.subkind,
+                         room=item.room, container=item.container,
+                         supplier=item.supplier, group=item.group,
+                         count=item.count, state='Spare')
+      newitem.save()
+      li = LiveItem(item=newitem, mi=mi)
+      li.save()
+  return HttpResponseRedirect(reverse('live_index'))
+
 def live_index(request):
   settings = Settings.objects.settings()
   items = LiveItem.objects.all()
@@ -319,6 +332,24 @@ class LiveDetailView(generic.DetailView):
   template_name = 'mimo/live_detail.html'
   context_object_name = 'item'
   model = LiveItem
+
+def live_edit(request, pk):
+  li = get_object_or_404(LiveItem, pk=pk)
+  if request.method == 'POST':
+    form = LiveItemForm(request.POST)
+    if form.is_valid():
+      li.item.state = form.cleaned_data['state']
+      li.item.container = form.cleaned_data['container']
+      li.item.room = form.cleaned_data['room']
+      li.item.save()
+      return HttpResponseRedirect(reverse('live_index'))
+  form = LiveItemForm(initial={
+                        'state': li.item.state,
+                        'room': li.item.room,
+                        'container': li.item.container})
+  context = { 'liveitem': li, 'form': form }
+  return render(request, 'mimo/live_edit.html', context)
+    
 
 # ----------- MOVE OUT -------------
 

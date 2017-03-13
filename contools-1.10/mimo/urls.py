@@ -43,7 +43,9 @@ urlpatterns = [
   url(r'^mi/(?P<pk>[0-9]+)/faulty/$', views.faulty_movein, name='mi_faulty'),
   url(r'^mi/(?P<pk>[0-9]+)/edit/$', views.edit_movein, name='mi_edit'),
   url(r'^live/$', views.LiveIndexView.as_view(), name='live_index'),
+  url(r'^live/setup/$', views.live_setup, name='live_setup'),
   url(r'^live/(?P<pk>[0-9]+)/$', views.LiveDetailView.as_view(), name='live_detail'),
+  url(r'^live/(?P<pk>[0-9]+)/edit/$', views.live_edit, name='live_edit'),
   url(r'^mo/$', views.MoveOutIndexView.as_view(), name='mo_index'),
   url(r'^mo/(?P<pk>[0-9]+)/$', views.MoveOutDetailView.as_view(), name='mo_detail'),
 ]
